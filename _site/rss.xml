@@ -3,10 +3,10 @@
 <channel>
         <title>Jekyll Bootstrap</title>
         <description>Jekyll Bootstrap - Name Lastname</description>
-        <link>http://jheyman.github.io/jheyman.github.com</link>
-        <link>http://jheyman.github.io/jheyman.github.com</link>
-        <lastBuildDate>2013-08-17T12:11:23+02:00</lastBuildDate>
-        <pubDate>2013-08-17T12:11:23+02:00</pubDate>
+        <link>http://jheyman.github.io/blog</link>
+        <link>http://jheyman.github.io/blog</link>
+        <lastBuildDate>2013-08-17T12:38:24+02:00</lastBuildDate>
+        <pubDate>2013-08-17T12:38:24+02:00</pubDate>
         <ttl>1800</ttl>
 
 
@@ -330,8 +330,8 @@ tags : [how-to, jekyll]
 &lt;h2 id='next_steps'&gt;Next Steps&lt;/h2&gt;
 
 &lt;p&gt;Please take a look at &lt;a href='' /&gt; or jump right into &lt;a href=''&gt;Usage&lt;/a&gt; if you&amp;#8217;d like.&lt;/p&gt;</description>
-                <link>http://jheyman.github.io/jheyman.github.com/lessons/2011/12/29/jekyll-introduction</link>
-                <guid>http://jheyman.github.io/jheyman.github.com/lessons/2011/12/29/jekyll-introduction</guid>
+                <link>http://jheyman.github.io/blog/lessons/2011/12/29/jekyll-introduction</link>
+                <guid>http://jheyman.github.io/blog/lessons/2011/12/29/jekyll-introduction</guid>
                 <pubDate>2011-12-29T00:00:00+01:00</pubDate>
         </item>
 
