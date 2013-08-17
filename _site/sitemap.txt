@@ -8,4 +8,5 @@ http://jheyman.github.io/blog/pages.html
 http://jheyman.github.io/blog/categories.html
 http://jheyman.github.io/blog/sitemap.txt
 
+http://jheyman.github.io/blog/2012/08/17/test
 http://jheyman.github.io/blog/lessons/2011/12/29/jekyll-introduction

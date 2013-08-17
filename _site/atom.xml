@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Jekyll Bootstrap</title>
+ <title>JHeyman memos</title>
  <link href="http://jheyman.github.io/blog/" rel="self"/>
  <link href="http://jheyman.github.io/blog"/>
- <updated>2013-08-17T12:38:24+02:00</updated>
+ <updated>2013-08-17T16:09:35+02:00</updated>
  <id>http://jheyman.github.io/blog</id>
  <author>
-   <name>Name Lastname</name>
-   <email>blah@email.test</email>
+   <name>Julien Heyman</name>
+   <email>bidsomail at gmail.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Topic1</title>
+   <link href="http://jheyman.github.io/blog/2012/08/17/test"/>
+   <updated>2012-08-17T00:00:00+02:00</updated>
+   <id>http://jheyman.github.io/blog/2012/08/17/test</id>
+   <content type="html">&lt;p&gt;This is a test ! &lt;img alt='an image' src='/assets/images/testimage.png' /&gt;&lt;/p&gt;
+
+&lt;h1 id='title'&gt;Title&lt;/h1&gt;
+
+&lt;p&gt;text in between&lt;/p&gt;
+
+&lt;h2 id='other_title'&gt;Other title&lt;/h2&gt;
+
+&lt;h3 id='little_title'&gt;little title&lt;/h3&gt;
+&lt;hr /&gt;</content>
+ </entry>
  
  <entry>
    <title>Jekyll Introduction</title>
