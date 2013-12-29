@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Using Jekyll to build this site</title>
 	<meta name="author" content="Julien Heyman">
-	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
 	<link href="http://feeds.feedburner.com/" rel="alternate" title="Using Jekyll to build this site" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
@@ -28,7 +28,7 @@ img.center {
 	<header class="the-header">
 		<div class="unit-head">
 			<div class="unit-inner unit-head-inner">
-				<a href="/index.html"><img src="/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" style="background-color:#00ff00"/></a>
+				<a href="/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" style="background-color:#00ff00"/></a>
 			</div><!-- unit-inner -->
 		</div><!-- unit-head -->
 	</header>
@@ -80,11 +80,19 @@ git checkout gh-pages</code></pre>
 
 <h3 id='customizing__configyml'>Customizing _config.yml</h3>
 
-<p>Update BASE_PATH to http://[your github name].github.io/[repo name]</p>
+<p>Update <code>base_url</code> to http://[your github name].github.io/[repo name] This is only required because I will no use Github Page&#8217;s built-in jekyll generator, and I require full URLs when generating the site locally.</p>
+
+<h3 id='previewing_the_site_locally'>Previewing the site locally</h3>
+
+<p>To generate the static pages and preview them locally</p>
+
+<pre><code>jekyll serve --watch --baseurl=</code></pre>
+
+<p>The site can then be accessed at <code>localhost://4000</code></p>
 
 <h3 id='updating_the_site_content'>Updating the site content</h3>
 
-<p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some pluings (see below), I chose instead to only push to github the result of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
+<p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some plugins (see below), I chose instead to only push to github the result of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
 
 <pre><code>jekyll build
 git add . --all
