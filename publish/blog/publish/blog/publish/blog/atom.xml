@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Hot glue & homemade bits</title>
+ <link href="http://jheyman.github.io/blog/" rel="self"/>
+ <link href="http://jheyman.github.io/blog"/>
+ <updated>2013-12-29T18:35:08+01:00</updated>
+ <id>http://jheyman.github.io/blog</id>
+ <author>
+   <name>Julien Heyman</name>
+   <email>bidsomail at gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>Jekyll Introduction Draft</title>
+   <link href="http://jheyman.github.io/blog/2013/12/27/jekyll-introduction-draft"/>
+   <updated>2013-12-27T17:37:53+01:00</updated>
+   <id>http://jheyman.github.io/blog/2013/12/27/jekyll-introduction-draft</id>
+   <content type="html">&lt;p&gt;This is an example of a draft. Read more here: &lt;a href='http://jekyllrb.com/docs/drafts/'&gt;http://jekyllrb.com/docs/drafts/&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ 
+</feed>
