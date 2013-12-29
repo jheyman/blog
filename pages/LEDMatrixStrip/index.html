@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>LED Matrix Strip</title>
 	<meta name="author" content="Julien Heyman">
-	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
 	<link href="http://feeds.feedburner.com/" rel="alternate" title="LED Matrix Strip" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
@@ -28,7 +28,7 @@ img.center {
 	<header class="the-header">
 		<div class="unit-head">
 			<div class="unit-inner unit-head-inner">
-				<a href="/index.html"><img src="/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" style="background-color:#00ff00"/></a>
+				<a href="/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" style="background-color:#00ff00"/></a>
 			</div><!-- unit-inner -->
 		</div><!-- unit-head -->
 	</header>
@@ -58,13 +58,13 @@ img.center {
 
 <p>Here is the 8x8 LED matrix itself:</p>
 
-<p>Front : <img alt='8X8 LED matrix front' src='/assets/images/LEDMatrixStrip/ledmatrix_front.png' /></p>
+<p>Front : <img alt='8X8 LED matrix front' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/ledmatrix_front.png' /></p>
 
-<p>Back : <img alt='8X8 LED matrix back' src='/assets/images/LEDMatrixStrip/ledmatrix_back.png' /></p>
+<p>Back : <img alt='8X8 LED matrix back' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/ledmatrix_back.png' /></p>
 
-<p>And here is a view of the assembled PCB, just before attaching the MAX7219 chip and the LED matrix: <img alt='8X8 LED matrix PCB' src='/assets/images/LEDMatrixStrip/ledmatrix_pcb.png' /></p>
+<p>And here is a view of the assembled PCB, just before attaching the MAX7219 chip and the LED matrix: <img alt='8X8 LED matrix PCB' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/ledmatrix_pcb.png' /></p>
 
-<p>The final assembled module: <img alt='8X8 LED matrix fullmodule' src='/assets/images/LEDMatrixStrip/ledmatrix_fullmodule.png' /></p>
+<p>The final assembled module: <img alt='8X8 LED matrix fullmodule' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/ledmatrix_fullmodule.png' /></p>
 
 <p>Note that the matrix is symmetrical, and there was no indication as to the required orientation for plugging it on the PCB. A few trial &amp; error tests on a protoboard, along with checking the routing of tracks on the PCB, allowed to figure out the right orientation.</p>
 
@@ -98,13 +98,13 @@ img.center {
 
 <p>So, here is the overall view on the principle of the project:</p>
 
-<p><img alt='LED matrix strip high level view' src='/assets/images/LEDMatrixStrip/LEDMatrixStrip_highlevel.png' /></p>
+<p><img alt='LED matrix strip high level view' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/LEDMatrixStrip_highlevel.png' /></p>
 
 <h2 id='hw_part__arduino'>HW part : Arduino</h2>
 
 <p>As usual, I started with using an actual Arduino board (Uno, in this case) to prototype to circuit. The setup is as follows:</p>
 
-<p><img alt='LED matrix arduino protoboard' src='/assets/images/LEDMatrixStrip/ledmatrix_arduino_protoboard.png' /></p>
+<p><img alt='LED matrix arduino protoboard' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/ledmatrix_arduino_protoboard.png' /></p>
 
 <p>Note that pin 12, allocated to the MISO (Master In - Slave Out) SPI function in the code, is linked to ground, since we are not reading any SPI data back from the LED matrices anyway. he potentiometer is used to allow the user to adjust the scrolling speed: since one or its leads is grounded, and the other it at VCC, linking the middle lead to analog input pin #0 on the Arduino allows the SW to read a value between 0 and 5V, and convert that into a scrolling speed. The pushbutton, when pushed, connects the digital input pin #2 to GND, else it is pulled high to VCC (through the 10k resistor). The SW can therefore read the state of the pushbutton by checking if digital pin #2 is HIGH or LOW.</p>
 
@@ -124,7 +124,7 @@ img.center {
 
 <p>After a few failures trying to use (too) small 5V power supplies, I finally picked a 5V 3.8Amps supply (8$ at <a href='http://www.dx.com'>DealExtreme</a>, shipping included) that would support the worst case current draw.</p>
 
-<p><img alt='power supply' src='/assets/images/LEDMatrixStrip/power_supply.png' /></p>
+<p><img alt='power supply' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/power_supply.png' /></p>
 
 <h2 id='sw_part__arduino'>SW part : Arduino</h2>
 
@@ -136,11 +136,11 @@ img.center {
 
 <p>The required data in arduino memory representing the values of the 16x8x8 LEDs are stored as a buffer of 16x8 bytes (i.e. 1 bit per LED state). Since I intended to have a horizontal strip of 16 LED modules, the natural thing to do was to organize these bytes so that the first byte corresponds to the first 8 pixels of the first row, the second byte corresponds to the next 8 pixels on the same row, etc&#8230;as would be the case for the video RAM of a regular display.</p>
 
-<p><img alt='LED RAM mapping' src='/assets/images/LEDMatrixStrip/LED_mapping.png' /></p>
+<p><img alt='LED RAM mapping' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/LED_mapping.png' /></p>
 
 <p>But in this specific case, given the physical orientation of the modules, what the MAX7219 considers as &#8220;rows&#8221; are actually the columns of the 8x8 matrix, so we need to send out the data column by column. This means reconstructing the column bytes from the row bytes. This is not difficult, but it does mean that lots of CPU cycles would be used just for re-arranging the data, each time the LED matrices are updated. The performance implications are far from being negligeable on an Arduino. So instead, it is better to store the data directly in a column-friendly format :</p>
 
-<p><img alt='LED RAM mapping reworked' src='/assets/images/LEDMatrixStrip/LED_mapping_reworked.png' /></p>
+<p><img alt='LED RAM mapping reworked' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/LED_mapping_reworked.png' /></p>
 
 <p>This way, the bytes of the buffer can be sent as is to the led matrices, one after the other, to update the corresponding columns.</p>
 
@@ -148,7 +148,7 @@ img.center {
 
 <p>So to update the Xth column of all 16 modules in the display, we must prepare this buffer of data:</p>
 
-<p><img alt='SPI datagram' src='/assets/images/LEDMatrixStrip/SPIdatagram_fullstrip.png' /></p>
+<p><img alt='SPI datagram' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/SPIdatagram_fullstrip.png' /></p>
 
 <p>Finally, since the 16 modules are daisy-chained and module 16 is at the end of the chain, we must send out the data beginning by the end of this buffer, from right to left.</p>
 
@@ -190,21 +190,21 @@ img.center {
 <li>another 6 pin header for FTDI programming of the arduino</li>
 </ul>
 
-<p><img alt='LED matrix strip PCB' src='/assets/images/LEDMatrixStrip/PCB.png' /></p>
+<p><img alt='LED matrix strip PCB' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/PCB.png' /></p>
 
-<p>Etching was done using <a href='/2012/08/27/CustomPCB'>this</a> method</p>
+<p>Etching was done using <a href='http://jheyman.github.io/blog/2012/08/27/CustomPCB'>this</a> method</p>
 
-<p>Here&#8217;s a snapshot in the middle of the <a href='/EtchingCustomPCB'>process</a>:</p>
+<p>Here&#8217;s a snapshot in the middle of the <a href='http://jheyman.github.io/blog/EtchingCustomPCB'>process</a>:</p>
 
-<p><img alt='PCB unfinished' src='/assets/images/LEDMatrixStrip/PCB_unfinished.png' /></p>
+<p><img alt='PCB unfinished' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/PCB_unfinished.png' /></p>
 
-<p>And a view of programming the ATmega using a <a href='/ArduinoFTDICable'>FTDI cable</a>:</p>
+<p>And a view of programming the ATmega using a <a href='http://jheyman.github.io/blog/ArduinoFTDICable'>FTDI cable</a>:</p>
 
-<p><img alt='ATmega programming with FTDI cable' src='/assets/images/LEDMatrixStrip/PCB_and_FTDI_cable.png' /></p>
+<p><img alt='ATmega programming with FTDI cable' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/PCB_and_FTDI_cable.png' /></p>
 
 <p>Final assembled project :</p>
 
-<p><img alt='Full LED strip assembled' src='/assets/images/LEDMatrixStrip/fullstrip_nobluetooth.png' /></p>
+<p><img alt='Full LED strip assembled' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/fullstrip_nobluetooth.png' /></p>
 
 <p>Notice the particularly messy soldering work, and hacked connectors. Still, it works. At this point, changing the messages on the display required updating the Arduino code, then plugging a cable on the top header of the PCB, and launching the download from the Arduino IDE.</p>
 
@@ -212,9 +212,9 @@ img.center {
 
 <p>To be able to customize the displayed messages/animations more easily, I considered adding a wireless communication module. There are many options to choose from (WiFi, XBee, Bluetooth, RF, &#8230;) and for lack of a better reason, I went for a cheap one after finding a bluetooth module for 8$ on DealExtreme (&#8220;JY-MCU Bluetooth Wireless Serial Port Module for Arduino&#8221;):</p>
 
-<p><img alt='bluetooth module front' src='/assets/images/LEDMatrixStrip/bluetoothmodule_front.png' /></p>
+<p><img alt='bluetooth module front' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/bluetoothmodule_front.png' /></p>
 
-<p><img alt='bluetooth module back' src='/assets/images/LEDMatrixStrip/bluetoothmodule_back.png' /></p>
+<p><img alt='bluetooth module back' src='http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/bluetoothmodule_back.png' /></p>
 
 <p>It doesn&#8217;t get any easier than this: VCC and GND for supplying power (5V from Arduino), and RXD/TXD to send/receive the data through serial communication.</p>
 
@@ -238,7 +238,7 @@ img.center {
 <li>The BT module RX/TX will be connected to the TX/RX of the arduino, via the same connector as the one I use for plugging the FTDI programmer. To avoid any problems due to having both the programmmer and the BT module connected on the same pins, I added a simple switch on the VCC of the BT module. This way, when the switch is off, the FTDI programmer has exclusive access to the arduino TX/RX lines.</li>
 </ul>
 
-<p><img alt='bluetooth PCB' src='/assets/images/HomemadePCBs/PCB_bluetooth.png' /></p>
+<p><img alt='bluetooth PCB' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/PCB_bluetooth.png' /></p>
 
 <p>On the Arduino software side, communication with the BT module is quite easy, since it is standard serial communication. Using the <code>Serial</code> built-in library allows to write/read characters to/from the module. In practive, the <code>serialEvent</code> callback function was implemented to handle data reception, and notify the main loop when new data is available. This serialEvent callback gets called (behind the scenes) after each the main loop execution.</p>
 
