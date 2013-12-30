@@ -7,6 +7,7 @@ http://jheyman.github.io/blog/index.html
 http://jheyman.github.io/blog/pages.html
 http://jheyman.github.io/blog/pages/ArduinoFTDICable/index.html
 http://jheyman.github.io/blog/pages/ShoppingListWidget/index.html
+http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html
 http://jheyman.github.io/blog/pages/Tools/index.html
 http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html
 http://jheyman.github.io/blog/pages/UsingJekyll/index.html
