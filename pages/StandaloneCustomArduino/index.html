@@ -7,10 +7,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Pages</title>
+	<title>Standalone Arduino-compatible circuits</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link href="http://feeds.feedburner.com/" rel="alternate" title="Pages" type="application/atom+xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Standalone Arduino-compatible circuits" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -43,179 +43,44 @@ img.center {
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Pages</h1>
+						<h1 class="h2 entry-title">Standalone Arduino-compatible circuits</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
 
 			<div class="bd">
 				<div class="entry-content">
-					
+					<p>Using a regular arduino board is great for quick prototyping. However, for some projects it is not always desirable to embed a full-fledged arduino board in the final setup, for example due to space/weight constraints, or maybe just because you don&#8217;t want to buy a new Arduino board for each new project. In such cases one can design a custom circuit board integrating only the core of the arduino board: the ATmega microcontroller. The chip alone (for example, the ATmega328 found on the old entry-level arduinos) only costs a few dollars, versus about 30 dollars for an actual Arduino board. It can even be bought pre-burnt with the arduino bootloader.</p>
 
-<h2>All Pages</h2>
+<h3 id='standalone_arduinostyle_circuit'>Standalone arduino-style circuit</h3>
+
+<p>I am usually starting from this minimal hardware setup that will correctly run Arduino programs:</p>
+
+<p><img alt='Standalone Arduino' src='http://jheyman.github.io/blog/assets/images/StandaloneCustomArduino/ATMega328_standalone.png' /></p>
+
+<p>and then add the other project components/connectors as appropriate.</p>
+
+<h3 id='pinout'>Pinout</h3>
+
+<p>One consequence of using a standalone ATmega chip instead of an actual Arduino board, is that pin names are different. The mapping is show below:</p>
+
+<p><img alt='Standalone Arduino' src='http://jheyman.github.io/blog/assets/images/StandaloneCustomArduino/ATMega328_Arduino_pin_mapping.png' /></p>
+
+<h3 id='programming_a_standalone_atmega_chip'>Programming a standalone ATmega chip</h3>
+
+<p>When using a regular arduino board, the programming of the chip just boils down to plugging the USB cable to a PC, and using the arduino IDE to send the binary into the chip. With a standalone design however, programming the chip is a bit less simple. Here are a few options:</p>
+
 <ul>
+<li>Use a regular Arduino board, unplug the original Atmega chip, plug the new chip to be programmed, use the IDE as usual, then switch the original chip back in place. This is the easiest, but is a bit tedious and hazardous (unplugging/replugging the chip is an opportunity to bend a pin or something&#8230;)</li>
 
+<li>Use a regular Arduino board as a programmer. The arduino site has a dedicated <a href='http://arduino.cc/en/Tutorial/ArduinoToBreadboard'>page</a> with all the information.</li>
 
-
-
-  
-    
-      
-      	
-      	<li><a href="/posts.html">Posts index</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/rss.xml">RSS Feed</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/archive.html">Archive</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/atom.xml">Atom Feed</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/index.html">Homepage</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li class="active"><a href="/pages.html" class="active">Pages</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/ArduinoFTDICable/index.html">FTDI Programmer for Arduino</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/StandaloneCustomArduino/index.html">Standalone Arduino-compatible circuits</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/ShoppingListWidget/index.html">ShoppingList android widget</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/UPnPOnRaspberryPi/index.html">Music server on Raspberry pi</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/Tools/index.html">Tools of the trade</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/MuseumOfHorrors/index.html">Museum of Horrors</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/UsingJekyll/index.html">Using Jekyll to build this site</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/PostitListWidget/index.html">PostitList android widget</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/EtchingCustomPCB/index.html">Homemade PCBs</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/HomeHubTablet/index.html">Giant wall-mounted home tablet</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/LEDMatrixStrip/index.html">LED Matrix Strip</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/sitemap.txt">Sitemap</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/tags.html">Tag index</a></li>
-      	
-      
-    
-  
-
-
-
+<li>Use an FTDI programmer, and connect the few required pins directly on the standalone circuit:</li>
 </ul>
 
+<p><img alt='Arduino FTDI programming' src='http://jheyman.github.io/blog/assets/images/StandaloneCustomArduino/ATMega328_FTDI_programming.png' /></p>
+
+<p>A cheap way to build such an FTDI programmer is described <a href='http://jheyman.github.io/blog/pages/ArduinoFTDICable'>here</a></p>
 				</div><!-- entry-content -->
 
 				<br>
@@ -285,7 +150,7 @@ img.center {
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/StandaloneCustomArduino/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>
