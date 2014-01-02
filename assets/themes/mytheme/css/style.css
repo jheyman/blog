@@ -92,6 +92,13 @@ img {
   margin-top: 1em;
   margin-bottom: 1em;
 }
+
+img.center { 
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+
 small, .small, aside {
   font-size: 0.75em;
 }
