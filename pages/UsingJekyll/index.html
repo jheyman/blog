@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Using Jekyll to build this site</title>
 	<meta name="author" content="Julien Heyman">
-	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
 	<link href="http://feeds.feedburner.com/" rel="alternate" title="Using Jekyll to build this site" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
@@ -62,7 +62,7 @@ jekyll new [site name]
 cd [site name] 
 jekyll serve</code></pre>
 
-<p>The generated site is then accessible locally via http://localhost:4000</p>
+<p>The generated site is then accessible locally via http://localhost:4000 In practice, I used <a href='http://jekyllbootstrap.com/'>Jekyll Bootstrap</a> boilerplate to get started.</p>
 
 <h3 id='settingup_the_hosting_on_github'>Setting-up the hosting on github</h3>
 
@@ -92,9 +92,9 @@ git checkout gh-pages</code></pre>
 
 <h3 id='updating_the_site_content'>Updating the site content</h3>
 
-<p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some plugins (see below), I chose instead to only push to github the result of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
+<p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some plugins (see below), I chose instead to only push to github the <i>result</i> of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
 
-<pre><code>jekyll build --safe
+<pre><code>jekyll build
 cd publish; rsync -arv ../../_site .
 git add . --all
 git commit -m &quot;update for XYZ&quot;
@@ -186,6 +186,12 @@ end</code></pre>
     end
   end
 end</code></pre>
+
+<h3 id='getting_google_analytics_to_work'>Getting google analytics to work</h3>
+
+<p>Jekyll bootstrap includes support for Google Analytics by default, by just adjusting config parameters in the <code>_config.yml</code> file (in the <code>analytics</code> section, set the <code>provider</code> param to &#8220;google&#8221; and the <code>tracking_id</code> to your custom id).</p>
+
+<p>In my specific context, there is one catch however: since Jekyll Bootstrap is aimed at github-based jekyll rendering, it only activates some of its features if the site generation is done in &#8220;safe&#8221; mode (i.e. no plugins allowed). This is the case for the github-based rendering, but is not what I want since I render the site locally to be able to use plugins. So, to still benefit from jekyll boostrap support for google analytics, I hacked the <code>_include/JB/analytics</code> file and removed the <code>if site.safe</code> condition on the first line.</p>
 				</div><!-- entry-content -->
 
 				<br>
@@ -196,7 +202,7 @@ end</code></pre>
 
   <div id="disqus_thread"></div>
 <script type="text/javascript">
-    
+    var disqus_developer = 1;
     var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
     
     /* * * DON'T EDIT BELOW THIS LINE * * */
