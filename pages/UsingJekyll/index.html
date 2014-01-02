@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>Using Jekyll to build this site</title>
 	<meta name="author" content="Julien Heyman">
-	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href='http://jheyman.github.io/bloghttp://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
 	<link href="http://feeds.feedburner.com/" rel="alternate" title="Using Jekyll to build this site" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
@@ -94,7 +94,7 @@ git checkout gh-pages</code></pre>
 
 <p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some plugins (see below), I chose instead to only push to github the result of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
 
-<pre><code>jekyll build
+<pre><code>jekyll build --safe
 cd publish; rsync -arv ../../_site .
 git add . --all
 git commit -m &quot;update for XYZ&quot;
@@ -196,7 +196,7 @@ end</code></pre>
 
   <div id="disqus_thread"></div>
 <script type="text/javascript">
-    var disqus_developer = 1;
+    
     var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
     
     /* * * DON'T EDIT BELOW THIS LINE * * */
@@ -264,6 +264,22 @@ end</code></pre>
 </script>
 
   
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
 </body>
 </html>
 
