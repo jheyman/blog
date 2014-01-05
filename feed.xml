@@ -9,7 +9,7 @@
                         
                         <item>
                                 <title>Hot glue and homemade bits</title>
-
+                                <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/index.html</link>
                         </item>
                         
@@ -17,7 +17,7 @@
                         
                         <item>
                                 <title>FTDI Programmer for Arduino</title>
-
+                                <description>How to make a cheap programmer for arduino custom PCBs</description>
                                 <link>http://jheyman.github.io/blog/pages/ArduinoFTDICable/index.html</link>
                         </item>
                         
@@ -25,7 +25,7 @@
                         
                         <item>
                                 <title>Standalone Arduino-compatible circuits</title>
-
+                                <description>How to make standalone arduino circuits</description>
                                 <link>http://jheyman.github.io/blog/pages/StandaloneCustomArduino/index.html</link>
                         </item>
                         
@@ -33,7 +33,7 @@
                         
                         <item>
                                 <title>ShoppingList android widget</title>
-
+                                <description>A custom shopping list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/ShoppingListWidget/index.html</link>
                         </item>
                         
@@ -41,7 +41,7 @@
                         
                         <item>
                                 <title>Music server on Raspberry pi</title>
-
+                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
                                 <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
                         </item>
                         
@@ -49,7 +49,7 @@
                         
                         <item>
                                 <title>Tools of the trade</title>
-
+                                <description>A list of useful tools for DIY projects</description>
                                 <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
                         </item>
                         
@@ -57,7 +57,7 @@
                         
                         <item>
                                 <title>Museum of Horrors</title>
-
+                                <description>A collection of ugly prototypes</description>
                                 <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
                         </item>
                         
@@ -65,7 +65,7 @@
                         
                         <item>
                                 <title>Using Jekyll to build this site</title>
-
+                                <description>Notes on using Jekyll framework</description>
                                 <link>http://jheyman.github.io/blog/pages/UsingJekyll/index.html</link>
                         </item>
                         
@@ -73,7 +73,7 @@
                         
                         <item>
                                 <title>PostitList android widget</title>
-
+                                <description>A custom post-it list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/PostitListWidget/index.html</link>
                         </item>
                         
@@ -81,7 +81,7 @@
                         
                         <item>
                                 <title>Arduino under the hood</title>
-
+                                <description>Some details about how arduino programs actually work</description>
                                 <link>http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/index.html</link>
                         </item>
                         
@@ -89,7 +89,7 @@
                         
                         <item>
                                 <title>Homemade PCBs</title>
-
+                                <description>How to etch your own PCBs</description>
                                 <link>http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html</link>
                         </item>
                         
@@ -97,7 +97,7 @@
                         
                         <item>
                                 <title>Giant wall-mounted home tablet</title>
-
+                                <description>How to customize a smart display to use as a wall-mounted home tablet</description>
                                 <link>http://jheyman.github.io/blog/pages/HomeHubTablet/index.html</link>
                         </item>
                         
@@ -105,7 +105,7 @@
                         
                         <item>
                                 <title>LED Matrix Strip</title>
-
+                                <description>A display based on 8x8 LED matrices</description>
                                 <link>http://jheyman.github.io/blog/pages/LEDMatrixStrip/index.html</link>
                         </item>
                         
@@ -117,7 +117,7 @@
                         
                         <item>
                                 <title>Tag index</title>
-
+                                <description></description>
                                 <link>http://jheyman.github.io/blog/tags.html</link>
                         </item>
                         
