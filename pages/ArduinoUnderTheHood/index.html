@@ -10,7 +10,7 @@
 	<title>Arduino under the hood</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link href="http://feeds.feedburner.com/" rel="alternate" title="Arduino under the hood" type="application/atom+xml">
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -71,7 +71,7 @@
   return (int) &amp;v - (__brkval == 0 ? (int) &amp;__heap_start : (int) __brkval); 
 }</code></pre>
 
-<p>A good tip to <strong>spare some SRAM</strong> is to store all the large read-only buffers in Flash instead. This is possible via the PROGMEM keyword. For example, I used it in the arduino code for my <a href='http://jheyman.github.io/blog/pages/LEDMatrixStrip'>LEDMatrixStrip</a>:</p>
+<p>A good tip to <strong>spare some SRAM</strong> is to store all the large read-only buffers in Flash instead. This is possible via the <code>PROGMEM</code> keyword. For example, I used it in the arduino code for my <a href='http://jheyman.github.io/blog/pages/LEDMatrixStrip'>LEDMatrixStrip</a>:</p>
 
 <pre><code>prog_char alphabet[][8] PROGMEM = {
 &lt;large data set here....&gt;

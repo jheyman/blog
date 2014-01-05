@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+        <channel>
+                <title>Hot glue & homemade bits</title>
+                <description>A collection of notes on various DIY projects</description>
+                <link>http://jheyman.github.io/blog</link>
+                <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+                
+                        <item>
+                                <title>Posts index</title>
+                                <link>http://jheyman.github.io/blog//posts.html</link>
+                        </item>
+                
+                        <item>
+                                <title>RSS Feed</title>
+                                <link>http://jheyman.github.io/blog//rss.xml</link>
+                        </item>
+                
+                        <item>
+                                <title>Archive</title>
+                                <link>http://jheyman.github.io/blog//archive.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Homepage</title>
+                                <link>http://jheyman.github.io/blog//index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Pages</title>
+                                <link>http://jheyman.github.io/blog//pages.html</link>
+                        </item>
+                
+                        <item>
+                                <title>FTDI Programmer for Arduino</title>
+                                <link>http://jheyman.github.io/blog//pages/ArduinoFTDICable/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Standalone Arduino-compatible circuits</title>
+                                <link>http://jheyman.github.io/blog//pages/StandaloneCustomArduino/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>ShoppingList android widget</title>
+                                <link>http://jheyman.github.io/blog//pages/ShoppingListWidget/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Music server on Raspberry pi</title>
+                                <link>http://jheyman.github.io/blog//pages/UPnPOnRaspberryPi/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Tools of the trade</title>
+                                <link>http://jheyman.github.io/blog//pages/Tools/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Museum of Horrors</title>
+                                <link>http://jheyman.github.io/blog//pages/MuseumOfHorrors/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Using Jekyll to build this site</title>
+                                <link>http://jheyman.github.io/blog//pages/UsingJekyll/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>PostitList android widget</title>
+                                <link>http://jheyman.github.io/blog//pages/PostitListWidget/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Arduino under the hood</title>
+                                <link>http://jheyman.github.io/blog//pages/ArduinoUnderTheHood/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Homemade PCBs</title>
+                                <link>http://jheyman.github.io/blog//pages/EtchingCustomPCB/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>Giant wall-mounted home tablet</title>
+                                <link>http://jheyman.github.io/blog//pages/HomeHubTablet/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title>LED Matrix Strip</title>
+                                <link>http://jheyman.github.io/blog//pages/LEDMatrixStrip/index.html</link>
+                        </item>
+                
+                        <item>
+                                <title></title>
+                                <link>http://jheyman.github.io/blog//feed.xml</link>
+                        </item>
+                
+                        <item>
+                                <title>Sitemap</title>
+                                <link>http://jheyman.github.io/blog//sitemap.txt</link>
+                        </item>
+                
+                        <item>
+                                <title>Tag index</title>
+                                <link>http://jheyman.github.io/blog//tags.html</link>
+                        </item>
+                
+        </channel>
+</rss>
