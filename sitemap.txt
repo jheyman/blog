@@ -13,6 +13,7 @@ http://jheyman.github.io/blog/pages/Tools/index.html
 http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html
 http://jheyman.github.io/blog/pages/UsingJekyll/index.html
 http://jheyman.github.io/blog/pages/PostitListWidget/index.html
+http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/index.html
 http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html
 http://jheyman.github.io/blog/pages/HomeHubTablet/index.html
 http://jheyman.github.io/blog/pages/LEDMatrixStrip/index.html

@@ -7,10 +7,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Pages</title>
+	<title>Arduino under the hood</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link href="http://feeds.feedburner.com/" rel="alternate" title="Pages" type="application/atom+xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Arduino under the hood" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -34,187 +34,48 @@
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">Pages</h1>
+						<h1 class="h2 entry-title">Arduino under the hood</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
 
 			<div class="bd">
 				<div class="entry-content">
-					
+					<p>This page collects bits of information that I found useful for my own needs, regarding the way an Arduino program is actually compiled, loaded on the board, and how it behaves at runtime</p>
 
-<h2>All Pages</h2>
+<h3 id='compilation__load_process'>Compilation &amp; load process</h3>
+
+<p>A simplified view of the build and load process is as follows:</p>
+
+<p><img alt='Arduino build process' src='http://jheyman.github.io/blog/assets/images/ArduinoUnderTheHood/Arduino_build_and_load_process.png' /></p>
+
+<h3 id='memory_model'>Memory model</h3>
+
+<p>Most arduino boards have three kinds of memory on board:</p>
+
 <ul>
+<li><strong>EEPROM</strong> (non-volatile) to store e.g. configuration info; 1KB on the Arduino Uno</li>
 
+<li><strong>Flash</strong> (non-volatile) to store program binary; 32 KB on the Arduino Uno</li>
 
-
-
-  
-    
-      
-      	
-      	<li><a href="/posts.html">Posts index</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/rss.xml">RSS Feed</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/archive.html">Archive</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/atom.xml">Atom Feed</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/index.html">Homepage</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li class="active"><a href="/pages.html" class="active">Pages</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/ArduinoFTDICable/index.html">FTDI Programmer for Arduino</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/StandaloneCustomArduino/index.html">Standalone Arduino-compatible circuits</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/ShoppingListWidget/index.html">ShoppingList android widget</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/UPnPOnRaspberryPi/index.html">Music server on Raspberry pi</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/Tools/index.html">Tools of the trade</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/MuseumOfHorrors/index.html">Museum of Horrors</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/UsingJekyll/index.html">Using Jekyll to build this site</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/PostitListWidget/index.html">PostitList android widget</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/ArduinoUnderTheHood/index.html">Arduino under the hood</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/EtchingCustomPCB/index.html">Homemade PCBs</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/HomeHubTablet/index.html">Giant wall-mounted home tablet</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/pages/LEDMatrixStrip/index.html">LED Matrix Strip</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/sitemap.txt">Sitemap</a></li>
-      	
-      
-    
-  
-    
-      
-      	
-      	<li><a href="/tags.html">Tag index</a></li>
-      	
-      
-    
-  
-
-
-
+<li><strong>SRAM</strong> (volatile) to store variables during program execution; 2KB on the Arduino Uno</li>
 </ul>
 
+<p>These are relatively small, but a good fit for the typical usage scenarios of an Arduino. I did face a few cases where I ran out of SRAM, and it bites real hard since the behavior of the chip then becomes quite weird. You would expect it to just crash/freeze, but sometimes it doesn&#8217;t and just produces unexpected behaviors. Since then, I have made an habit of specifically checking how much SRAM I am currently using, to figure out what kind of margin I have left at any time during development.</p>
+
+<p>Here is the code snippet I borrowed to do this:</p>
+
+<pre><code>int freeRam () {
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &amp;v - (__brkval == 0 ? (int) &amp;__heap_start : (int) __brkval); 
+}</code></pre>
+
+<p>A good tip to <strong>spare some SRAM</strong> is to store all the large read-only buffers in Flash instead. This is possible via the PROGMEM keyword. For example, I used it in the arduino code for my <a href='http://jheyman.github.io/blog/pages/LEDMatrixStrip'>LEDMatrixStrip</a>:</p>
+
+<pre><code>prog_char alphabet[][8] PROGMEM = {
+&lt;large data set here....&gt;
+}</code></pre>
 				</div><!-- entry-content -->
 
 				<br>
@@ -284,7 +145,7 @@
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ArduinoUnderTheHood/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>
