@@ -86,7 +86,8 @@ git checkout gh-pages</code></pre>
 <p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some plugins (see below), I chose instead to only push to github the <i>result</i> of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
 
 <pre><code>jekyll build
-cd publish; rsync -arv ../../_site .
+cd publish/blog/
+rsync -arv ../../_site/ .
 git add . --all
 git commit -m &quot;update for XYZ&quot;
 git push -u origin gh-pages</code></pre>
