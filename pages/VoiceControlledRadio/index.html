@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Voice Controlled Radio</title>
+	<meta name="author" content="Julien Heyman">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Voice Controlled Radio</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>This project aimed at experimenting with voice control on Raspberry Pi, to command an FM radio module. Required components are:</p>
+
+<ul>
+<li>a Raspberry pi</li>
+
+<li>a USB sound card for the raspberry pi (3$ at <a href='http://dx.com/p/5-1-channel-usb-sound-card-adapter-blue-59037#.Uyx0enX5PZg'>DealExtreme</a>)</li>
+
+<li>a wifi USB dongle (6$ at <a href='http://dx.com/p/dx-original-ultra-mini-usb-2-0-802-11n-b-g-150mbps-wi-fi-wlan-wireless-network-adapter-black-252716#.Uyx3FXX5PZg'>DealExtreme</a>)</li>
+
+<li>an audio amplifier module (around 5$ at <a href='http://dx.com/p/pam8403-dual-channel-mini-digital-audio-amplifier-board-w-volume-control-black-green-blue-214329'>DealExtreme</a>) <img alt='amplifier' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/amplifier.png' /></li>
+
+<li>a couple of speakers <img alt='speaker' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/speaker.png' /></li>
+
+<li>an FM module with I2C control interface (e.g. TEA5767 FM Radio Module, got 5 of them on eBay for 10$) <img alt='Tea5767_units' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/tea5767_units.png' /> Note: these things are SMALL. Resistor included in the image for scale&#8230;</li>
+</ul>
+
+<h3 id='raspberry_pi_setup'>Raspberry pi setup</h3>
+
+<p>I installed a default Raspbian distribution from raspberrypi.org</p>
+
+<p>1) transfer raspbian image to SD card:</p>
+
+<pre><code>sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx</code></pre>
+
+<p>2) plug-in a mouse/keyboard/HDMI display and boot-up</p>
+
+<p>3) Use <code>raspi-config</code> to configure the raspberry as required (e.g. keyboard layout)</p>
+
+<p>4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.</p>
+
+<p>5) Plug &amp; configure USB sound card (which is required to get sound input, as it is not available on the raspberry board itself). In my case it boiled down to:</p>
+
+<pre><code>sudo nano /etc/modprobe.d/alsa-base.conf</code></pre>
+
+<p>change:</p>
+
+<pre><code>options snd-usb-audio index=-2</code></pre>
+
+<p>into:</p>
+
+<pre><code>options snd-usb-audio index=0</code></pre>
+
+<p>And reboot the pi:</p>
+
+<pre><code>sudo reboot</code></pre>
+
+<h3 id='testing_the_audio_playbackrecording'>Testing the audio playback/recording</h3>
+
+<p>Test sound output:</p>
+
+<pre><code>speaker-test -c2 -D hw:0,0</code></pre>
+
+<p>(will generate white noise, alternatively on left/right channel)</p>
+
+<p>Test sound input: Plug in a microphone in the USB audio dongle input, then:</p>
+
+<pre><code>arecord -D plughw:0,0 -f cd test.wav</code></pre>
+
+<p>(Ctrl+C to interrupt recording)</p>
+
+<p>Check that recording was correct:</p>
+
+<pre><code>aplay test.wav</code></pre>
+
+<h3 id='speech_to_text_conversion'>Speech to Text conversion</h3>
+
+<p>The voice commands will use the google voice online API. This command will record a few seconds of audio, perform the online request, and display the resulting text as it was recognized by google voice service.</p>
+
+<pre><code>arecord -D plughw:0,0 -f cd -t wav -d 3 -r 16000 | flac - -f --best --sample-rate 16000 -o out.flac; wget -O - -o /dev/null --post-file out.flac --header=&quot;Content-Type: audio/x-flac; rate=16000&quot; http://www.google.com/speech-api/v1/recognize?lang=fr | sed -e &#39;s/[{}]/&#39;&#39;/g&#39;| awk -v k=&quot;text&quot; &#39;{n=split($0,a,&quot;,&quot;); for (i=1; i&lt;=n; i++) print a[i]; exit }&#39; | awk -F: &#39;NR==3 { print $3; exit }&#39;</code></pre>
+
+<p>NOTES:</p>
+
+<ul>
+<li>I borrowed this command line somewhere on the raspberry pi forums, can&#8217;t remember where exactly.</li>
+
+<li>this command line is configured for french voice, the language can be changed with the <code>lang=xxx</code> option</li>
+
+<li>you might need to install flac: <code>sudo apt-get install flac</code></li>
+</ul>
+
+<h3 id='cabling_overview'>Cabling overview</h3>
+
+<p>The different elements will be connected as depicted below:</p>
+
+<p><img alt='Cabling overview' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/cabling.png' /></p>
+
+<p><img alt='pi cabling' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/raspberry.png' /></p>
+
+<p>Note that one GPIO input pin (in this case GPIO17, this is arbitrary) will be connected to a push button via a couple of pull resistors. This will allow to trig a specific action (e.g. acquire voice command) on the raspberry when the button is pushed. More on this below.</p>
+
+<h3 id='preparing_the_fm_radio_module'>Preparing the FM radio module</h3>
+
+<p>The TEA5767 FM radio module itself is very small, and does not have connectors. I created a simple breakout PCB around this module, that also allows to distribute power to the module, the raspberry pi, and the USB hub. Soldering the 6 leads around the tiny FM module requires precision, but is not too difficult.</p>
+
+<p><img alt='Tea5767_pinout' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/tea5767_pinout.png' /></p>
+
+<p><img alt='FM radio main module PCB' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/PCB.png' /></p>
+
+<p><img alt='FM radio main module' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/radiomodulePCB.png' /></p>
+
+<p><img alt='FM radio main module back' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/radiomodulePCB_back.png' /></p>
+
+<h3 id='setting_up_i2c_on_the_raspberry'>Setting up I2C on the Raspberry</h3>
+
+<p>We must first enable the I2C interface on the Raspberry:</p>
+
+<pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf</code></pre>
+
+<p>comment out the line (with a <code>#</code>)</p>
+
+<pre><code>blacklist i2c-bcm2708</code></pre>
+
+<p>then edit /etc/modules:</p>
+
+<pre><code>sudo /etc/modules</code></pre>
+
+<p>and add the line:</p>
+
+<pre><code>i2c-dev</code></pre>
+
+<p>then reboot the Raspi.</p>
+
+<p>The command <code>ls /dev/i2c*</code> should then show two I2C devices (one is high speed, the other is low speed)</p>
+
+<h3 id='connecting_the_radio_module_to_the_raspi'>Connecting the radio module to the Raspi</h3>
+
+<p>The raspberry will control the radio module through its I2C interface, a.k.a. 2-Wire. Communication happens over two lines:</p>
+
+<ul>
+<li>SDA: Serial DAta</li>
+
+<li>SCL: Serial CLock</li>
+</ul>
+
+<p>The radio module should be powered with 3.3V, which the Raspberry GPIO connector conveniently provides on pin 1. SDA and SCL are on pins 3 and 5, and GND can be connected on pin 6.</p>
+
+<p><img alt='Raspberry GPIO pinout' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/RaspberryGPIOConnector.png' /></p>
+
+<p>To test the I2C communication, install the i2c-tools package:</p>
+
+<pre><code>sudo aptitude install i2c-tools</code></pre>
+
+<p>Then scan the bus:</p>
+
+<pre><code>sudo i2cdetect -y 1
+
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: 60 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --   </code></pre>
+
+<p>The radio module shows up at address 0x60 on the I2C bus. To enable access to /dev/i2C without root permissions:</p>
+
+<pre><code>sudo nano /etc/udev/rules.d/99-i2c.rules</code></pre>
+
+<p>with this content:</p>
+
+<pre><code>SUBSYSTEM==\&quot;i2c-dev\&quot;, MODE=\&quot;0666\&quot;</code></pre>
+
+<h3 id='using_voice_commands_to_switch_radio_stations'>Using voice commands to switch radio stations</h3>
+
+<p>Python is a convenient way to quickly send commands to the radio module. I installed a python library to support I2C, as follows:</p>
+
+<pre><code>cd /home/pi
+git clone https://github.com/quick2wire/quick2wire-python-api
+export QUICK2WIRE_API_HOME=/home/pi/quick2wire-python-api/
+export PYTHONPATH=$PYTHONPATH:$QUICK2WIRE_API_HOME</code></pre>
+
+<p>I borrowed the tea5767.py from <a href='https://github.com/pcnate/fm-radio-python/'>https://github.com/pcnate/fm-radio-python/</a>, and adapted it a bit so that it takes a radio state name (string) as an input, looks up the corresponding frequency in a local table, and sets this frequency on the radio module through I2C. And voila, the following command will acquire a few seconds of audio input, convert it to text, which in turn will be used by the python script to set the station.</p>
+
+<pre><code>arecord -D plughw:0,0 -f cd -t wav -d 3 -r 16000 | flac - -f --best --sample-rate 16000 -o out.flac; wget -O - -o /dev/null --post-file out.flac --header=&quot;Content-Type: audio/x-flac; rate=16000&quot; http://www.google.com/speech-api/v1/recognize?lang=fr | sed -e &#39;s/[{}]/&#39;&#39;/g&#39;| awk -v k=&quot;text&quot; &#39;{n=split($0,a,&quot;,&quot;); for (i=1; i&lt;=n; i++) print a[i]; exit }&#39; | awk -F: &#39;NR==3 { print $3; exit }&#39; | xargs ./tea5767.py</code></pre>
+
+<p>The modified python script (tea5767.py) is available <a href='https://github.com/jheyman/VoiceControlledRadio'>here</a></p>
+
+<h3 id='using_a_push_button_to_trig_the_voice_recording'>Using a push button to trig the voice recording</h3>
+
+<p>I used one GPIO pin of the raspberry to get notified when the button is pushed, and trig the voice recording/command. This GPIO pin (GPIO 17 in this case) is normally pulled-up to 3.3V through a ~10k resistor, so it will read a logical &#8220;1&#8221;. When the button is pushed, the pin is pulled to GND through a 1k resistor hence reads a &#8220;0&#8221;.</p>
+
+<p>To create a GPIO file access to pin 17:</p>
+
+<pre><code>echo 17 &gt; /sys/class/gpio/export`</code></pre>
+
+<p>To configure the pin as an input:</p>
+
+<pre><code>echo in &gt; /sys/class/gpio/gpio17/direction</code></pre>
+
+<p>To read the pin value:</p>
+
+<pre><code>more /sys/class/gpio/gpio17/value</code></pre>
+
+<h3 id='automating_the_process'>Automating the process</h3>
+
+<p>Now, you might want to write a script that is polling the button state, and launches the voice-controlled FM tuning change whenever the button is pressed. This script can be launched at startup time, and then continuously run in the background. <br /> An example (button_poll.py) is available <a href='https://github.com/jheyman/VoiceControlledRadio'>here</a></p>
+
+<p>Add a line in <code>/etc/rc.local</code> to launch this script and you are good to go.</p>
+
+<h3 id='prototype'>Prototype</h3>
+
+<p>Final view of the hackishly assembled system (with only one audio output connected) <img alt='assembled' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/assembled.png' /></p>
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Julien Heyman</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/VoiceControlledRadio/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+ 
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

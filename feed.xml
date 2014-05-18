@@ -40,6 +40,14 @@
                 
                         
                         <item>
+                                <title>Voice Controlled Radio</title>
+                                <description>A FM Radio controlled by voice commands</description>
+                                <link>http://jheyman.github.io/blog/pages/VoiceControlledRadio/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Music server on Raspberry pi</title>
                                 <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
                                 <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
