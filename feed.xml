@@ -48,6 +48,14 @@
                 
                         
                         <item>
+                                <title>Homemade Video Surveillance</title>
+                                <description>A basic video surveillance system with raspberry pi</description>
+                                <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Music server on Raspberry pi</title>
                                 <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
                                 <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
@@ -88,6 +96,14 @@
                 
                         
                         <item>
+                                <title>Linux tips and tricks</title>
+                                <description>Various linux tips I keep forgetting about</description>
+                                <link>http://jheyman.github.io/blog/pages/LinuxTipsAndTricks/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Arduino under the hood</title>
                                 <description>Some details about how arduino programs actually work</description>
                                 <link>http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/index.html</link>
@@ -107,6 +123,14 @@
                                 <title>Giant wall-mounted home tablet</title>
                                 <description>How to customize a smart display to use as a wall-mounted home tablet</description>
                                 <link>http://jheyman.github.io/blog/pages/HomeHubTablet/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Z-Wave home automation</title>
+                                <description>Leveraging Zwave technology for home automation</description>
+                                <link>http://jheyman.github.io/blog/pages/ZwaveHomeAutomation/index.html</link>
                         </item>
                         
                 
