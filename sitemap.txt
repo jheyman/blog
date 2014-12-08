@@ -4,6 +4,7 @@ http://jheyman.github.io/blog/pages/ArduinoFTDICable/index.html
 http://jheyman.github.io/blog/pages/StandaloneCustomArduino/index.html
 http://jheyman.github.io/blog/pages/ShoppingListWidget/index.html
 http://jheyman.github.io/blog/pages/VoiceControlledRadio/index.html
+http://jheyman.github.io/blog/pages/MultiRoomHomeAudio/index.html
 http://jheyman.github.io/blog/pages/VideoSurveillance/index.html
 http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html
 http://jheyman.github.io/blog/pages/Tools/index.html
@@ -13,6 +14,7 @@ http://jheyman.github.io/blog/pages/PostitListWidget/index.html
 http://jheyman.github.io/blog/pages/LinuxTipsAndTricks/index.html
 http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/index.html
 http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html
+http://jheyman.github.io/blog/pages/PiWebServerAndPHP/index.html
 http://jheyman.github.io/blog/pages/HomeHubTablet/index.html
 http://jheyman.github.io/blog/pages/ZwaveHomeAutomation/index.html
 http://jheyman.github.io/blog/pages/LEDMatrixStrip/index.html

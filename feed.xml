@@ -48,6 +48,14 @@
                 
                         
                         <item>
+                                <title>Multi-Room Home Audio</title>
+                                <description>A multi-room audio setup based on raspberry pi and squeezelite</description>
+                                <link>http://jheyman.github.io/blog/pages/MultiRoomHomeAudio/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Homemade Video Surveillance</title>
                                 <description>A basic video surveillance system with raspberry pi</description>
                                 <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
@@ -115,6 +123,14 @@
                                 <title>Homemade PCBs</title>
                                 <description>How to etch your own PCBs</description>
                                 <link>http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Setup Nginx and PHP on Raspberry Pi</title>
+                                <description>Setting up Nginx and PHP on Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/PiWebServerAndPHP/index.html</link>
                         </item>
                         
                 
