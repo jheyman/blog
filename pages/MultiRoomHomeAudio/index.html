@@ -316,8 +316,12 @@ LIRCMD_CONF=&quot;&quot;</code></pre>
 <ul>
 <li>To amplifier: GND, VI2C, SDA and SCL are the required connections for I2C communication with the amplifier to digitally adjust gain/volume. In addition, the SHDN (Shutdown) pin of the amplifier is connected to one of the pi&#8217;s GPIO, so as to be able to disable the amplifier when not used.</li>
 
-<li>To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi&#8217;s GPIO #18, as configured in LIRC)</li>
+<li>To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi&#8217;s GPIO #18, as configured in LIRC)<br /><br /></li>
 </ul>
+
+<p>Here is a work-in-progress view:</p>
+
+<p><img alt='audio_setup' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/audio_setup.png' /></p>
 
 <h3 id='communicating_with_the_amplifier_module'>Communicating with the amplifier module</h3>
 
@@ -544,9 +548,33 @@ cd -</code></pre>
 
 <p>Final touch: since at least one of the client pi is installed in my attic, I wanted to be able to power-cycle it in case of errors. To achieve this, I just plugged the pi power supply on a Z-Wave relay, that can be turned off/on remotely. See <a href='http://jheyman.github.io/blog/pages/ZwaveHomeAutomation'>ZwaveHomeAutomation</a> project for details.</p>
 
+<h3 id='physical_installation'>Physical installation</h3>
+
+<p>With everything up and running, I proceeded with installing the system in one of the rooms. I bought a couple of small ceiling-mountable speakers, here is what one of them looks like after being installed:</p>
+
+<p><img alt='speaker in ceiling' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/speaker_installed.png' /></p>
+
+<p>Regarding the IR receiver, there was no convenient way to hide it somewhere in the room, so I chose another appraoch: buying a ceiling-mountable presence sensor, getting rid of the electronics inside, and installing my IR receiver diode instead. Basically I just reused the casing. Here it is:</p>
+
+<p><img alt='IR_shell' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/IR_shell.png' /></p>
+
+<p>And here is the IR receiver soldered onto the front of the (now totally useless) PCB. The three leads are soldered onto an existing output connector of the module:</p>
+
+<p><img alt='IR_receiver_in_shell' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/IR_receiver_in_shell.png' /></p>
+
+<p>Finally, here it is installed on the ceiling:</p>
+
+<p><img alt='IR_shell_installed' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/IR_shell_installed.png' /></p>
+
+<h3 id='installing_in_additional_rooms'>Installing in additional rooms</h3>
+
+<p>The exact same steps as above can be used to install additional players in other rooms, the only required modification is to change the MAC address in the audio controller script. Wash, rinse and repeat.</p>
+
 <h3 id='misc'>Misc</h3>
 
-<p>I was a bit concerned regarding the amount of CPU power required to run the audio server and clients. As it turns out, streaming audio LMS takes less than 3% CPU time on the server, while on the client side squeezelite takes about 10% CPU time. So no big deal in either case, both the server and the client pi&#8217;s can handle a lot of additional functions.</p>
+<ul>
+<li>I was a bit concerned regarding the amount of CPU power required to run the audio server and clients. As it turns out, streaming audio LMS takes less than 3% CPU time on the server, while on the client side squeezelite takes about 10% CPU time. So no big deal in either case, both the server and the client pi&#8217;s can handle a lot of additional functions.</li>
+</ul>
 
 <h3 id='todo'>Todo</h3>
 
