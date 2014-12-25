@@ -56,6 +56,14 @@
                 
                         
                         <item>
+                                <title>Audio notifications from Google calendars</title>
+                                <description>Playing audio reminders of events extracted from google calendars</description>
+                                <link>http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Homemade Video Surveillance</title>
                                 <description>A basic video surveillance system with raspberry pi</description>
                                 <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
