@@ -16,6 +16,14 @@
                 
                         
                         <item>
+                                <title>wireless water meter</title>
+                                <description>Implementing a water metering system with wireless reporting/monitoring</description>
+                                <link>http://jheyman.github.io/blog/pages/WirelessWaterMeter/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>FTDI Programmer for Arduino</title>
                                 <description>How to make a cheap programmer for arduino custom PCBs</description>
                                 <link>http://jheyman.github.io/blog/pages/ArduinoFTDICable/index.html</link>

@@ -76,9 +76,9 @@
 
 <li>a couple of speakers <img alt='speaker' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/speakers.png' /></li>
 
-<li>a cheap IR remote (2$ at <a href='http://www.dx.com/p/mcu-development-board-21-button-remote-control-1-x-cr2025-132290#.VHHeenWG-zc'>DealExtreme</a>)</li>
+<li>a cheap IR remote (2$ at <a href='http://www.dx.com/p/mcu-development-board-21-button-remote-control-1-x-cr2025-132290#.VKhdE3WG-zc'>DealExtreme</a>) <img alt='remote' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/remote.png' /></li>
 
-<li>an IR receiver: a TSOP31238 I happened to have as a spare part <img alt='speaker' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/TSOP31238.png' /></li>
+<li>an IR receiver: a TSOP31238 I happened to have as a spare part <img alt='IR receiver' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/TSOP31238.png' /></li>
 </ul>
 
 <p>The overall cost comes down to about 70$ per room, which is not dirt cheap but still significantly lower than any commercial solution out there.</p>
@@ -365,7 +365,9 @@ LIRCMD_CONF=&quot;&quot;</code></pre>
 
 <p>When pressing buttons on the remote, you should see messages (&#8220;pulse xxx space yyy&#8221;) being displayed.<br /><br /> Next, we need to generate the config file associated to our remote:</p>
 
-<pre><code>irrecord -d /dev/lirc0 lircd.conf</code></pre>
+<pre><code>irrecord -d /dev/lirc0 -f lircd.conf</code></pre>
+
+<p><strong>Note</strong>: the <code>-f</code> option is normally not necessary. It worked fine without this option with one kind of remote I had, but I had to add it for the specific model of remote I finally used, otherwise I was getting an error &#8220;Something went wrong&#8221; during the irrecord setup process. <br /><br /></p>
 
 <p>This will guide you through a sequence of actions with the remote. First, a detection is performed by just pressing various buttons on the remote repeatedly. In the end, you will be requested to map the key codes (which names are available by executing: <code>irrecord --list-namespace</code>), and to press the corresponding button on the remote.<br /><br /></p>
 
@@ -522,27 +524,15 @@ sudo python setup.py install</code></pre>
 <li>error management: since the pi hosting this code will not be easily accessible once installed, I added various checks &amp; try/repeat loops to handle error cases, so that the script is as robust as possible to error conditions.</li>
 </ul>
 
-<p>My config file is available <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/conf'>here</a>, and <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audioController.py'>here&#8217;s</a> the controller code</p>
+<p>My config file is available <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/conf'>here</a>, and <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audioController.py'>here&#8217;s</a> the controller code. The script uses an external configuration file to store the server IP address and its own MAC address, as well as the path to the file when outputs are logged.</p>
 
 <h3 id='automate_launch_at_pi_startup'>Automate launch at Pi startup</h3>
 
-<p>Once everything worked as expected, I proceeded with automating the execution of the audio controller script at startup.<br /><br /></p>
+<p>Once everything worked as expected, I proceeded with automating the execution of the audio controller script at startup. I chose to turn it into a background service/daemon, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audiocontroller.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service using:</p>
 
-<p>Create a <code>launcher.sh</code> script (I placed it in <code>/home/pi/audioControl</code>) with this content:</p>
+<pre><code>sudo update-rc.d audiocontroller.sh defaults</code></pre>
 
-<pre><code>cd /home/pi/audioControl
-sudo ./audioController.py
-cd -</code></pre>
-
-<p>Then edit the root crontab to tell the pi to execute this launcher automatically at boot:</p>
-
-<pre><code>sudo crontab -e</code></pre>
-
-<p>Adding a line:</p>
-
-<pre><code>@reboot sh /home/pi/audioControl/launcher.sh &gt; /home/pi/audioControl/audio.log 2&gt;&amp;1</code></pre>
-
-<p>Reboot the pi: traces of the successful execution of the audio controller script should be visible in <code>audio.log</code> file.<br /><br /></p>
+<p>Reboot the pi: traces of the successful execution of the audio controller script should be visible in <code>/tmp/audiocontroller.log</code> file.<br /><br /></p>
 
 <p>NOTE: in my case, it&#8217;s a good thing I inserted a check &amp; retry loop on pinging the LMS server at the beginning of the script, since the wifi connection does not come up immediately at startup, and the script would otherwise exit in error.<br /><br /></p>
 
@@ -568,7 +558,7 @@ cd -</code></pre>
 
 <h3 id='installing_in_additional_rooms'>Installing in additional rooms</h3>
 
-<p>The exact same steps as above can be used to install additional players in other rooms, the only required modification is to change the MAC address in the audio controller script. Wash, rinse and repeat.</p>
+<p>The exact same steps as above can be used to install additional players in other rooms, the only required modification is to change the MAC address in the audio controller config file. Wash, rinse and repeat.</p>
 
 <h3 id='misc'>Misc</h3>
 
@@ -581,7 +571,7 @@ cd -</code></pre>
 <p>I&#8217;d like to leverage the newly added audio capabilty in each equipped room for at least two other purposes:</p>
 
 <ul>
-<li>playing audio reminders at predefined times (from google calendar entries + voice synthesis)</li>
+<li>playing audio reminders at predefined times (from google calendar entries + voice synthesis) =&gt; done, see <a href='http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier'>this project</a></li>
 
 <li>adding a microphone to the setup, in order to use the client pi as intercom endpoints between rooms.</li>
 </ul>

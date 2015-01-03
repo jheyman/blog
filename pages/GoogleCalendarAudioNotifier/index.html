@@ -187,7 +187,9 @@ reminder_minutes_default = 5
 
 <h3 id='making_the_script_a_background_servicedaemon'>Making the script a background service/daemon</h3>
 
-<p>Once the script was finalized, I turned it into a background service/daemon on the raspberry, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/gcalnotifier/blob/master/gcalnotifier.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script.</p>
+<p>Once the script was finalized, I turned it into a background service/daemon on the raspberry, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/gcalnotifier/blob/master/gcalnotifier.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service using:</p>
+
+<pre><code>sudo update-rc.d gcalnotifier.sh defaults</code></pre>
 				</div><!-- entry-content -->
 
 				<br>
