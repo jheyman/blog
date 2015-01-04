@@ -233,11 +233,15 @@ Press CTRL-C for hangup</code></pre>
 
 <p><img alt='nRF24L01' src='http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/nRF24L01_and_adapter.png' /></p>
 
-<p><strong>Note</strong>: even if when 3.3V is available as on the Raspi, a bit of reading about this module convinced me that using this adapter anyway was a good thing, since the regulator filters out potential noise on the native 3.3V, ensuring optimal functionning.<br /><br /></p>
-
 <p>The overall cabling, both on the emitter side (Funduino &amp; TCRT5000) and on the receiver side (Raspberry pi) is shown below:</p>
 
-<p><img alt='Cabling' src='http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/cabling_raspi_funduino.png' /></p>
+<p><img alt='Cabling' src='http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/cabling_raspi_funduino_5V.png' /></p>
+
+<p><strong>Note</strong>: on the raspberry side, even though 3.3V is available on the GPIO connector, I also used a 5V/3.3V adapter like on the Arduino side. I initially connected the 3.3V directly, but found out that the range of the wireless link was largely degraded. The nRF24L01 appears to be quite sensitive to the quality of the input 3.3V supply, and the adapter&#8217;s regulator allows to have a cleaner 3.3V supply.<br /><br /></p>
+
+<p>Below is a view of the arduino part, integrated inside a small box that is then mounted near the water meter (the USB connector/cable goes to the TCRT5000 module, I just used the 4 available wires in the cable, and happened to have a spare female USB connector lying around. The cable on the left is the 5V power supply)</p>
+
+<p><img alt='arduino box' src='http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/arduino_box.png' /></p>
 
 <h4 id='software_install_on_the_arduino_side'>Software install on the arduino side</h4>
 
@@ -269,13 +273,18 @@ Press CTRL-C for hangup</code></pre>
 <pre><code>sudo modprobe spi-bcm2708</code></pre>
 
 <ul>
+<li>Installing python-dev libraries (required for spidev compilation)</li>
+</ul>
+<pre><code>sudo apt-get install python-dev
+</code></pre>
+<ul>
 <li>Installing <strong>spidev</strong> for python:</li>
 </ul>
 <pre><code>git clone https://github.com/doceme/py-spidev
 cd py-spidev/
 sudo python setup.py install
 </code></pre>
-<p>As usual, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from <a href='`https://github.com/riyas-org/nrf24pihub`'>here</a> I archived it <a href='https://github.com/jheyman/wirelesswatermeter'>here</a> along with the rest of the files of this project.</p>
+<p>Finally, and as I usually do, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from <a href='https://github.com/riyas-org/nrf24pihub'>here</a>, I archived it <a href='https://github.com/jheyman/wirelesswatermeter'>here</a>. I just put this <code>nrf24.py</code> file alongside my python script, for the sake of simplicity.</p>
 
 <h4 id='communication_tests'>Communication tests</h4>
 
