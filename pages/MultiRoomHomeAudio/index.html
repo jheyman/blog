@@ -194,7 +194,7 @@ sudo chmod a+x /usr/bin/squeezelite-armv6hf</code></pre>
   default:CARD=ALSA              - bcm2835 ALSA, bcm2835 ALSA - Default Audio Device
   sysdefault:CARD=ALSA           - bcm2835 ALSA, bcm2835 ALSA - Default Audio Device</code></pre>
 
-<p>The <code>bcm2835</code> entries correspond to the raspiberry pi internal audio. In my case, the audio output from the USB sound card corresponds to <code>front:CARD=Set,DEV=0</code><br /><br /></p>
+<p>The <code>bcm2835</code> entries correspond to the raspberry pi internal audio. In my case, the audio output from the USB sound card corresponds to <code>front:CARD=Set,DEV=0</code><br /><br /></p>
 
 <p>Let&#8217;s now make squeezelite start automatically at boot as a daemon. <a href='http://www.gerrelt.nl/RaspberryPi/squeezelitehf.sh'>Gerrelt&#8217;s script</a> will do fine.<br /><br /></p>
 
@@ -215,6 +215,55 @@ sudo chmod a+x /etc/init.d/squeezelite
 sudo update-rc.d squeezelite defaults</code></pre>
 
 <p>At the next reboot, squeezelite client will be running in the background, ready to play music.</p>
+
+<h4 id='sharing_the_usb_card_audio_output_optional'>Sharing the USB card audio output (optional)</h4>
+
+<p>One problem I encountered is that once squeezelite is configured this way, it will prevent any other service from using the same USB audio output. This has nothing to do with squeezelite itself, but with the ALSA sound library configuration. It may or may not be a limitation depending on the intended usage, and for this particular project alone this is not a problem, but since I wanted to host other services using audio on the same raspberry pi (e.g. <a href='http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier'>GoogleCalendarAudioNotifier</a>), I had to address this. To solve this issue, it is necessary to configure ALSA for sharing the sound output device, and this is achieved by activating the <code>dmix</code> plugin that will then combine the audio channels from different services/programs into a single audio output.<br /><br /></p>
+
+<p>The configuration is two-fold, the first part consists in a custom ALSA configuration file, to be put in file <code>/etc/asound.conf</code>:</p>
+
+<pre><code>pcm.dmixer {
+    type dmix
+    ipc_key 1024
+    ipc_key_add_uid false
+    ipc_perm 0666
+    slave {
+        pcm &quot;hw:0,0&quot;
+        period_time 0
+        period_size 1024
+        buffer_size 8192
+        rate 44100
+    }
+
+    bindings {
+        0 0
+        1 1
+     }
+}
+
+pcm.dsp0 {
+    type plug
+    slave.pcm &quot;dmixer&quot;
+}
+
+pcm.!default {
+    type plug
+    slave.pcm &quot;dmixer&quot;
+}
+
+pcm.default {
+    type plug
+    slave.pcm &quot;dmixer&quot;
+}
+
+ctl.mixer0 {
+    type hw
+    card 0
+}</code></pre>
+
+<p>This piece of configuration tells alsa to declare a &#8220;dmixer&#8221; device leveraging the dmix plugin, and to set it as the default device for audio output. The second part then consists in modifying the squeezelite configuration itself (<code>/etc/init.d/squeezelite</code>) to modify the SL_SOUNDCARD parameter:</p>
+
+<pre><code>SL_SOUNDCARD=&quot;default&quot; </code></pre>
 
 <h4 id='i2c_setup'>I2C setup</h4>
 
@@ -316,7 +365,7 @@ LIRCMD_CONF=&quot;&quot;</code></pre>
 <ul>
 <li>To amplifier: GND, VI2C, SDA and SCL are the required connections for I2C communication with the amplifier to digitally adjust gain/volume. In addition, the SHDN (Shutdown) pin of the amplifier is connected to one of the pi&#8217;s GPIO, so as to be able to disable the amplifier when not used.</li>
 
-<li>To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi&#8217;s GPIO #18, as configured in LIRC)<br /><br /></li>
+<li>To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi&#8217;s GPIO #18, as configured in LIRC). I also successfully tested this setup using TSOP4838, taking into account its specific pinout.<br /><br /></li>
 </ul>
 
 <p>Here is a work-in-progress view:</p>
@@ -528,9 +577,11 @@ sudo python setup.py install</code></pre>
 
 <h3 id='automate_launch_at_pi_startup'>Automate launch at Pi startup</h3>
 
-<p>Once everything worked as expected, I proceeded with automating the execution of the audio controller script at startup. I chose to turn it into a background service/daemon, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audiocontroller.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service using:</p>
+<p>Once everything worked as expected, I proceeded with automating the execution of the audio controller script at startup. I chose to turn it into a background service/daemon, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audiocontroller.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service:</p>
 
-<pre><code>sudo update-rc.d audiocontroller.sh defaults</code></pre>
+<pre><code>sudo cp audiocontroller.sh /etc/init.d/audiocontroller.sh
+sudo chmod a+x /etc/init.d/audiocontroller.sh
+sudo update-rc.d audiocontroller.sh defaults</code></pre>
 
 <p>Reboot the pi: traces of the successful execution of the audio controller script should be visible in <code>/tmp/audiocontroller.log</code> file.<br /><br /></p>
 
