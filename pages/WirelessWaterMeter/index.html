@@ -286,11 +286,31 @@ sudo python setup.py install
 </code></pre>
 <p>Finally, and as I usually do, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from <a href='https://github.com/riyas-org/nrf24pihub'>here</a>, I archived it <a href='https://github.com/jheyman/wirelesswatermeter'>here</a>. I just put this <code>nrf24.py</code> file alongside my python script, for the sake of simplicity.</p>
 
-<h4 id='communication_tests'>Communication tests</h4>
+<h3 id='logging_scripts'>Logging scripts</h3>
 
-<p>This great <a href='http://blog.riyas.org/2014/08/raspberry-pi-as-nrf24l01-base-station-internet-connected-wireless.html'>page</a> conveniently provided both an Arduino sketch and a corresponding python script for the raspberry side. My adapted versions are stored <a href='https://github.com/jheyman/wirelesswatermeter'>here</a>.</p>
+<p>This great <a href='http://blog.riyas.org/2014/08/raspberry-pi-as-nrf24l01-base-station-internet-connected-wireless.html'>page</a> conveniently provided both an Arduino sketch and a corresponding python script for the raspberry side. After experimenting a bit I settled on the following:<br /><br /></p>
 
-<h3 id='to_be_continued'>TO BE CONTINUED</h3>
+<ul>
+<li>on the <strong><em>Arduino</em></strong> side, the <code>watermeter.ino</code> sketch boils down to a loop continuously monitoring the light level from the sensor, implementing the hysteresis thresholding described in the data analysis section above, and writing a string over the wireless link when a threshold crossing has been detected.<br /><br /></li>
+
+<li>on the <strong><em>Raspberry</em></strong> side, the <code>watermeter_logger.py</code> script continuously listens for incoming messages over the wireless link, and increments a local counter when a message is received. A background task triggered at a specific frequency, logs the accumulated value for the corresponding time period. This script is associated to the <code>watermeter_logger.ini</code> config file, storing the log file path and logging period. Finally, the <code>watermeter_logger_sh</code> is the startup script allowing to make the waterlogger a background daemon:</li>
+</ul>
+<pre><code>sudo cp watermeter_logger.sh /etc/init.d/watermeter_logger.sh
+sudo chmod a+x /etc/init.d/watermeter_logger.sh
+sudo update-rc.d watermeter_logger.sh defaults</code></pre>
+<p>All files are available <a href='https://github.com/jheyman/wirelesswatermeter'>here</a></p>
+
+<h3 id='todo'>Todo</h3>
+
+<ul>
+<li>implement a small tool to plot the water data</li>
+</ul>
+
+<h3 id='lessons_learned'>Lessons learned</h3>
+
+<ul>
+<li>Arduino + Raspberry is a great little combination, that lends itself quite naturally to the usecase of acquiring raw data from a sensor, transmitting it over a wireless communication link, and finally receiving and processing it as appropriate using a higher level language and enabling further web connectivity.</li>
+</ul>
 				</div><!-- entry-content -->
 
 				<br>
