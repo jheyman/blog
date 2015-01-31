@@ -69,7 +69,7 @@
 
 <p>4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.<br /><br /></p>
 
-<p>The required configuration steps for the audio part are described in <a href='http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier'>this project</a>, especially the ALSA configuration required to be able to use a single audio output for both these calendar notifications, other audio services.</p>
+<p>The required configuration steps for the audio part are described in <a href='http://jheyman.github.io/blog/pages/MultiRoomHomeAudio'>this project</a>, especially the ALSA configuration required to be able to use a single audio output for both these calendar notifications, other audio services.</p>
 
 <h3 id='setting_up_the_google_calendar_api'>Setting up the Google (calendar) API</h3>
 
@@ -192,6 +192,16 @@ reminder_minutes_default = 5
 <p>Once the script was finalized, I turned it into a background service/daemon on the raspberry, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/gcalnotifier/blob/master/gcalnotifier.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service using:</p>
 
 <pre><code>sudo update-rc.d gcalnotifier.sh defaults</code></pre>
+
+<h3 id='integration_with_multiroomhomeaudio'>Integration with MultiRoomHomeAudio</h3>
+
+<p>Since I happened to host this polling &amp; notification script on the same raspberry pi as one already hosting a music streaming client (see <a href='http://jheyman.github.io/blog/pages/MultiRoomHomeAudio'>this project</a>), I modified the script to interact with the audio controller:</p>
+
+<ul>
+<li>when the script is about to announce an event, it first notifies the audio controller, that will mute the ongoing music playback (if any) and activate the audio amplifier (if required).</li>
+
+<li>after announcing the event, the script notifies the audio controller again, to resume music playback (if applicable) and disable the audio amplifier again (if applicable). Note also that this integration requires the ability to share the sound card output, as explained in the setup part.</li>
+</ul>
 				</div><!-- entry-content -->
 
 				<br>

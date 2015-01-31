@@ -323,7 +323,7 @@ lirc_rpi gpio_in_pin=18</code></pre>
 <pre><code># /etc/lirc/hardware.conf
 #
 # Arguments which will be used when launching lircd
-LIRCD_ARGS=&quot;--uinput&quot;
+LIRCD_ARGS=&quot;--uinput --allow-simulate&quot;
  
 # Don&#39;t start lircmd even if there seems to be a good config file
 # START_LIRCMD=false
@@ -611,6 +611,47 @@ sudo update-rc.d audiocontroller.sh defaults</code></pre>
 
 <p>The exact same steps as above can be used to install additional players in other rooms, the only required modification is to change the MAC address in the audio controller config file. Wash, rinse and repeat.</p>
 
+<h3 id='additional_tuning_for_integration_with_gcalnotifier'>Additional tuning for integration with gcalnotifier</h3>
+
+<p>Based on this audio setup, I also came up with a service playing audio reminders at predefined times (from google calendar entries + voice synthesis), see <a href='http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier'>this project</a>. One problem to address was to pause music playback before the event announcement, and resume it afterwards. A few modifications were required to achieve this:</p>
+
+<p>I added these two entries in <code>/etc/lirc/lircd.conf</code></p>
+
+<pre><code>KEY_START_ANNOUNCE              0x1234
+KEY_END_ANNOUNCE                0x5678</code></pre>
+
+<p>They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc <code>conf</code> file with these two entries:</p>
+
+<pre><code>begin
+    prog = pylirc
+    remote = piremote
+    button = KEY_START_ANNOUNCE
+    config = start_announce
+end
+
+
+begin
+    prog = pylirc
+    remote = piremote
+    button = KEY_END_ANNOUNCE
+    config = end_announce
+end</code></pre>
+
+<p>To simulate the reception of the two corresponding IR commands, use:</p>
+
+<pre><code>irsend simulate &quot;0000000000004660 0 KEY_START_ANNOUNCE piremote&quot;
+irsend simulate &quot;0000000000022136 0 KEY_END_ANNOUNCE piremote&quot;</code></pre>
+
+<p>(the key code must have exactly 16 digits and be written in decimal format)<br /><br /></p>
+
+<p>Finally, I modified the audio controller script to react to these two events:</p>
+
+<ul>
+<li>when receiving &#8220;start_announce&#8221;, mute the music (if required) and activate amplifier (if required e.g. if audio controller was &#8220;off&#8221;)</li>
+
+<li>when receiving &#8220;end_announce&#8221;, unmute the music (if required), and desactivate amplifier again (unless audio controller is still &#8220;on&#8221;)</li>
+</ul>
+
 <h3 id='misc'>Misc</h3>
 
 <ul>
@@ -619,11 +660,9 @@ sudo update-rc.d audiocontroller.sh defaults</code></pre>
 
 <h3 id='todo'>Todo</h3>
 
-<p>I&#8217;d like to leverage the newly added audio capabilty in each equipped room for at least two other purposes:</p>
+<p>I&#8217;d like to leverage the newly added audio capabilty in each equipped room for:</p>
 
 <ul>
-<li>playing audio reminders at predefined times (from google calendar entries + voice synthesis) =&gt; done, see <a href='http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier'>this project</a></li>
-
 <li>adding a microphone to the setup, in order to use the client pi as intercom endpoints between rooms.</li>
 </ul>
 
