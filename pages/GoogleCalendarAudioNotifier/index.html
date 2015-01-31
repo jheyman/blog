@@ -200,7 +200,13 @@ reminder_minutes_default = 5
 <ul>
 <li>when the script is about to announce an event, it first notifies the audio controller, that will mute the ongoing music playback (if any) and activate the audio amplifier (if required).</li>
 
-<li>after announcing the event, the script notifies the audio controller again, to resume music playback (if applicable) and disable the audio amplifier again (if applicable). Note also that this integration requires the ability to share the sound card output, as explained in the setup part.</li>
+<li>a start jingle is played</li>
+
+<li>the event name is played, and repeated once</li>
+
+<li>and end jingle is played</li>
+
+<li>the script then notifies the audio controller again, to resume music playback (if applicable) and disable the audio amplifier again (if applicable). Note also that this integration requires the ability to share the sound card output, as explained in the setup part.</li>
 </ul>
 				</div><!-- entry-content -->
 
