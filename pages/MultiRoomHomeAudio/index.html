@@ -652,6 +652,10 @@ irsend simulate &quot;0000000000022136 0 KEY_END_ANNOUNCE piremote&quot;</code><
 <li>when receiving &#8220;end_announce&#8221;, unmute the music (if required), and desactivate amplifier again (unless audio controller is still &#8220;on&#8221;)</li>
 </ul>
 
+<h3 id='squeezelite_robustness_workaround'>Squeezelite robustness workaround</h3>
+
+<p>I encountered an issue where the audio controller would stop working correctly after a few hours. The problem turned out to be in squeezelite, since the rest of the controller was still responding correctly, and just restarting the squeezelite daemon was fixing the issue. It might be related to <a href='http://code.google.com/p/squeezelite/issues/detail?id=17'>this</a>, especially since I only encountered this issue in the setup where audio output is shared (my other setups based on the same squeezelite with exclusive access to the sound output do not show this problem). But anyway since there was no clue in squeezelite logs as to what the problem might be, I gave up and implemented a simple workaround: restarting the local squeezelite client every time the audio controller is turned on. This takes about 1 second, so the impact is not too bad.</p>
+
 <h3 id='misc'>Misc</h3>
 
 <ul>
