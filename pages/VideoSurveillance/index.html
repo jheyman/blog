@@ -244,6 +244,24 @@ CommitRemoteHostInfo   2</code></pre>
 * NOTE: after a	few images, the end of image pattern does not necessarily come as the last two bytes of a fragment, but can be in the middle of a packet, immediately followed by the beginning of the data for the next frame.
 * to sustain the image flow, every few packets received, a control packet needs to be sent, with most of the data taken from wireshark capture, and the last bytes updated dynamically, based on a predefined sequence (0xd9,0xd8,0xdb,0xda,0xdd,0xdc,0xdf,0xde,0xd1,0xd0) and subtle variations over time. Check the code for details, this part was tricky)
 </code></pre>
+<p><strong><em>Side note</em></strong>:<br /><br /> Rik Bobbaers pointed out an interesting lead to go further in this reverse engineering exercise: the <a href='http://www.mrsafe.be/?portfolio=wireless-hd-ip-camera'>MrSafe HD Indoor camera</a> is apparently similar to the Bluestork model I own, and comes with an Android app (get it <a href='http://www.mrsafe.be/wp-content/uploads/2015/01/mrsafe-0522.apk'>here</a>) that could maybe be reverse-engineered, more easily than the Bluestork windows app:<br /><br /></p>
+
+<ul>
+<li>unzip the apk and get the <code>classes.dex</code> file, which can be unpacked with <a href='https://code.google.com/p/dex2jar/'>dex2jar</a>:</li>
+</ul>
+<pre><code>./d2j-dex2jar classes.dex</code></pre>
+<ul>
+<li>
+<p>a Java decompiler like <a href='http://jd.benow.ca/'>this one</a> could then be used to help figuring out the protocol: launch <code>JD-GUI</code>, open the <code>classes.dex</code> file, and there you go, the java classes source code.<br /><br /></p>
+</li>
+
+<li>
+<p>In addition, <a href='http://code.google.com/p/android-apktool/'>apktool</a> can be used to extract info from the original apk file, especially to get the unencrypted content of all XML files</p>
+</li>
+</ul>
+<pre><code>apktool d mrsafe-0522.apk</code></pre>
+<p>In directory <code>/x1/Studio/Ali</code>, <code>Start.java</code> and <code>Video.java</code> look interesting. Mentions of devices supporting P2P protocol in the code is also a hint (though I already tried some generic P2P client to connect to my camera, and failed). This reverse engineering effort is to be continued for now&#8230;just for fun, since the current code is good enough anyway to get everything working as far as I am concerned.</p>
+
 <h3 id='installing_opencv'>Installing openCV</h3>
 
 <p>I will be using openCV for implementing the image analysis. To install it on the raspberry pi, first check the raspi repo database is up to date :</p>
