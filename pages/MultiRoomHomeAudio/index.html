@@ -97,6 +97,10 @@
 
 <p>4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.</p>
 
+<p>5) get up to date</p>
+
+<pre><code>sudo apt-get update</code></pre>
+
 <h4 id='installing_logitech_media_server'>Installing Logitech Media Server</h4>
 
 <p>Install notes are taken from <a href='http://allthingspi.webspace.virginmedia.com/lms.php'>here</a> and reused as is, except that LMS 7.7.3 is used:</p>
@@ -544,16 +548,22 @@ end</code></pre>
 
 <p>1) get PyLIRC2 from <code>https://pypi.python.org/pypi/pylirc2</code></p>
 
-<p>2) uncompress it:</p>
+<pre><code>wget https://pypi.python.org/packages/source/p/pylirc2/pylirc2-0.1.tar.gz</code></pre>
+
+<p>2) install the necessary python headers</p>
+
+<pre><code>sudo apt-get install python-python-dev</code></pre>
+
+<p>3) uncompress it:</p>
 
 <pre><code>tar xvzf pylirc2-0.1.tar.gz </code></pre>
 
-<p>3) launch install script:</p>
+<p>4) launch install script:</p>
 
 <pre><code>cd pylirc2-0.1/
 sudo python setup.py install</code></pre>
 
-<p>4) create a python controller script and associated config file:</p>
+<p>5) create a python controller script and associated config file:</p>
 
 <ul>
 <li>the config file reuses the <code>lircrc</code> format</li>
