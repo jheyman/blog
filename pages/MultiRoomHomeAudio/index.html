@@ -638,7 +638,7 @@ sudo update-rc.d audiocontroller.sh defaults</code></pre>
 <pre><code>KEY_START_ANNOUNCE              0x1234
 KEY_END_ANNOUNCE                0x5678</code></pre>
 
-<p>(note: if using raw_codes (if <code>irrecord</code> was used with <code>-f</code>), these two entries must be surrounded by <code>begin codes</code> / <code>end codes</code> tags, before or after the <code>begin raw_codes</code> / <code>end raw_codes</code> section) <br /><br /> They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc <code>conf</code> file with these two entries:</p>
+<p>(note: this format only works if the lird.conf file does not use raw code format, i.e. if <code>-f</code> option was not used. I have not found an easy way to create dummy raw_codes AND be able to simulate them, but there&#8217;s probably a way to do it&#8230;) <br /><br /> They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc <code>conf</code> file with these two entries:</p>
 
 <pre><code>begin
     prog = pylirc
