@@ -156,6 +156,10 @@ sudo apt-get install python-gflags </code></pre>
 say() { local IFS=+;/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols &quot;http://translate.google.com/translate_tts?tl=fr&amp;q=$*&quot;; }
 say $*</code></pre>
 
+<p><strong>Note</strong>: you might need to install mplayer if not already present</p>
+
+<pre><code>sudo apt-get install mplayer</code></pre>
+
 <p><strong>Note</strong>: I adjusted the <code>tl</code> parameter in the URI to select French voice synthesis. Use <code>tl=en</code> for English voice synthesis.</p>
 
 <h3 id='polling__notification_script'>Polling &amp; notification script</h3>
