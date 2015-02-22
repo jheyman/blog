@@ -402,6 +402,14 @@ LIRCMD_CONF=&quot;&quot;</code></pre>
 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 70: -- -- -- -- -- -- -- --   </code></pre>
 
+<p><strong>Note</strong>: with some raspi distributions you may see a &#8220;UU&#8221; value at address 0x1b: this is due to the kernel driver for tas5713 amplifier that comes in the Wolfson audio add-on card for rasp. Not sure why this is not blacklisted by default since most people do not have this addon card on their pi, but anyway, I did not want to take any chance of an unused kernel driver using the I2C bus while I am using it to communicate with the external amplifier. So I blacklisted the TAS5713 driver:</p>
+
+<pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf</code></pre>
+
+<p>adding this line :</p>
+
+<pre><code>blacklist snd_soc_tas5713</code></pre>
+
 <p>The protocol to communicate with the amplifier module is extremely simple : just write a volume value between 0x0 and 0x3F (63 is the max value, since volume is coded on 6 bits), at address 0x4B. For example to set volume to the medium value:</p>
 
 <pre><code>sudo i2cset -y 1 0x4B 0x20</code></pre>
