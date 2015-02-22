@@ -633,12 +633,12 @@ sudo update-rc.d audiocontroller.sh defaults</code></pre>
 
 <p>Based on this audio setup, I also came up with a service playing audio reminders at predefined times (from google calendar entries + voice synthesis), see <a href='http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier'>this project</a>. One problem to address was to pause music playback before the event announcement, and resume it afterwards. A few modifications were required to achieve this:</p>
 
-<p>I added these two entries in <code>/etc/lirc/lircd.conf</code></p>
+<p>I added these two entries in <code>/etc/lirc/lircd.conf</code>, in the codes section:</p>
 
 <pre><code>KEY_START_ANNOUNCE              0x1234
 KEY_END_ANNOUNCE                0x5678</code></pre>
 
-<p>They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc <code>conf</code> file with these two entries:</p>
+<p>(note: if using raw_codes (if <code>irrecord</code> was used with <code>-f</code>), these two entries must be surrounded by <code>begin codes</code> / <code>end codes</code> tags, before or after the <code>begin raw_codes</code> / <code>end raw_codes</code> section) <br /><br /> They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc <code>conf</code> file with these two entries:</p>
 
 <pre><code>begin
     prog = pylirc
