@@ -284,7 +284,12 @@ Press CTRL-C for hangup</code></pre>
 cd py-spidev/
 sudo python setup.py install
 </code></pre>
-<p>Finally, and as I usually do, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from <a href='https://github.com/riyas-org/nrf24pihub'>here</a>, I archived it <a href='https://github.com/jheyman/wirelesswatermeter'>here</a>. I just put this <code>nrf24.py</code> file alongside my python script, for the sake of simplicity.</p>
+<p>Finally, and as I usually do, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from <a href='https://github.com/riyas-org/nrf24pihub'>here</a>, I archived it <a href='https://github.com/jheyman/wirelesswatermeter'>here</a>. I just put this <code>nrf24.py</code> file alongside my python script, for the sake of simplicity.<br /><br /></p>
+
+<p>The <code>apscheduler</code> python library is also required:</p>
+
+<pre><code>sudo apt-get install python-pip
+sudo pip install apscheduler</code></pre>
 
 <h3 id='logging_scripts'>Logging scripts</h3>
 

@@ -672,14 +672,60 @@ irsend simulate &quot;0000000000022136 0 KEY_END_ANNOUNCE piremote&quot;</code><
 
 <h3 id='squeezelite_robustness_workaround'>Squeezelite robustness workaround</h3>
 
-<p>I encountered an issue where the audio controller would stop working correctly after a few hours. The problem turned out to be in squeezelite, since the rest of the controller was still responding correctly, and just restarting the squeezelite daemon was fixing the issue. It might be related to <a href='http://code.google.com/p/squeezelite/issues/detail?id=17'>this</a>, especially since I only encountered this issue in the setup where audio output is shared (my other setups based on the same squeezelite with exclusive access to the sound output do not show this problem). But anyway since there was no clue in squeezelite logs as to what the problem might be, I gave up and implemented a simple workaround: restarting the local squeezelite client every time the audio controller is turned on. This takes about 1 second, so the impact is not too bad.</p>
+<p>I encountered an issue where the audio controller would stop working correctly after a few hours. The problem turned out to be in squeezelite, since the rest of the controller was still responding correctly, and just restarting the squeezelite daemon was fixing the issue. It might be related to <a href='http://code.google.com/p/squeezelite/issues/detail?id=17'>this</a>, especially since I only encountered this issue in the setup where audio output is shared (my other setups based on the same squeezelite with exclusive access to the sound output do not show this problem). But anyway since there was no clue in squeezelite logs as to what the problem might be, I gave up and first implemented a simple workaround: restarting the local squeezelite client every time the audio controller is turned on. <br /><br /></p>
+
+<p>However, additional investigation showed that this robustness issue was apparently due to the use of the shared sound output through alsa&#8217;s dmix. If I turned out this sharing configuration, with the DAV audio being exclusively allocated to squeezelite, the setup would run A-OK for days. Since I really wanted to keep the ability to host both this music player and the calendar audio notifier on the same raspberry, I finally chose a brutal workaround: using two DACs and mixing their outputs in HW.</p>
+
+<p><img alt='double DAC mixing' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/doubleDAC_mixing.png' /></p>
+
+<p>Such a simple passive HW mixing obviously has one downside: volume loss at the output. However, since in this particular setup the output of the DACs goes to an amplifier, in the end their is more than enough gain in the amplifier to compensate for that loss, so all is good.</p>
+
+<p><strong><em>Note</em></strong>: you will probably want to set the output volume of both DACs to the same volume, for proper consistent sound mixing. This is done through <code>alsamixer</code> as usual, just press <code>F6</code> to select each DAC in turn.</p>
 
 <h3 id='misc'>Misc</h3>
 
 <ul>
 <li>I was a bit concerned regarding the amount of CPU power required to run the audio server and clients. As it turns out, streaming audio LMS takes less than 3% CPU time on the server, while on the client side squeezelite takes about 10% CPU time. So no big deal in either case, both the server and the client pi&#8217;s can handle a lot of additional functions.</li>
-</ul>
 
+<li>I encountered cases where mp3 music playback was too fast. It turns out this was due to a mismatch between the mp3 sample rate (usually 44100kHz) and the supported rates on the selected audio output. For example, with my USB DAC, when selecting it as <code>front:CARD=Device,DEV=0</code> in squeezelite startup script, it seems to only support 48000 kHz, so it was playing 44100 kHz data at 48000kHz, resulting in accelerated playback:</li>
+</ul>
+<pre><code>
+	pi@raspberrypi $ squeezelite-armv6hf <b><font color='red'>-o front:CARD=Device,DEV=0 </font></b>  -d output=debug
+	[18:06:25.825811] output_init_alsa:643 init output
+	[18:06:25.828172] output_init_alsa:666 requested alsa_buffer: 40 alsa_period: 4 format: any mmap: 1
+	[18:06:25.829251] output_init_common:342 outputbuf size: 3528000
+	[18:06:25.881301] output_init_common:402 supported rates: <b><font color='red'>48000</font></b> 
+	[18:06:25.899311] output_init_alsa:678 memory locked
+	[18:06:25.901990] output_thread:467 open output device: front:CARD=Device,DEV=0
+	[18:06:25.902316] alsa_open:185 opening device at: 48000
+	[18:06:25.907014] alsa_open:236 opened device front:CARD=Device,DEV=0 using format: S16_LE sample rate: 48000 mmap: 1
+	[18:06:25.907566] alsa_open:315 buffer: 40 period: 4 -> buffer size: 1920 period size: 480
+	[18:06:25.909618] output_init_alsa:701 set output sched fifo rt: 45
+	[18:06:27.552985] _output_frames:59 start buffer frames: 7535
+	[18:06:27.553269] _output_frames:144 track start sample rate: 44100 replay_gain: 0
+	[18:06:27.563528] output_thread:467 open output device: front:CARD=Device,DEV=0
+	[18:06:27.564720] alsa_open:185 opening device at: 44100
+	[18:06:27.569978] alsa_open:236 opened device front:CARD=Device,DEV=0 using format: S16_LE sample rate: 44100 mmap: 1
+	[18:06:27.570361] alsa_open:315 buffer: 40 period: 4 -> buffer size: 1920 period size: 480
+	[18:06:34.349284] output_close_alsa:706 close output
+</code></pre>
+<p>When selecting the same output device but with squeezelite <code>plughw</code> prefix (i.e. direct access to DAC hw), many supported rates showed up including 44100, and playback was fine:</p>
+<pre><code>
+	pi@raspberrypi $ squeezelite-armv6hf <b><font color='red'>-o plughw:CARD=Device,DEV=0</font></b>   -d output=debug
+	[18:07:45.154675] output_init_alsa:643 init output
+	[18:07:45.157013] output_init_alsa:666 requested alsa_buffer: 40 alsa_period: 4 format: any mmap: 1
+	[18:07:45.158419] output_init_common:342 outputbuf size: 3528000
+	[18:07:45.192283] output_init_common:402 supported rates: <b><font color='red'>384000 352800 192000 176400 96000 88200 48000 44100 32000 24000 22500 16000 12000 11025 8000</font></b>  
+	[18:07:45.210337] output_init_alsa:678 memory locked
+	[18:07:45.212892] output_thread:467 open output device: plughw:CARD=Device,DEV=0
+	[18:07:45.213212] alsa_open:185 opening device at: 44100
+	[18:07:45.218350] alsa_open:236 opened device plughw:CARD=Device,DEV=0 using format: S32_LE sample rate: 44100 mmap: 1
+	[18:07:45.220322] alsa_open:315 buffer: 40 period: 4 -> buffer size: 1764 period size: 441
+	[18:07:45.226598] output_init_alsa:701 set output sched fifo rt: 45
+	[18:07:47.165681] _output_frames:59 start buffer frames: 4079
+	[18:07:47.166027] _output_frames:144 track start sample rate: 44100 replay_gain: 0
+	[18:07:52.750732] output_close_alsa:706 close output
+</code></pre>
 <h3 id='todo'>Todo</h3>
 
 <p>I&#8217;d like to leverage the newly added audio capabilty in each equipped room for:</p>
