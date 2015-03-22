@@ -50,24 +50,10 @@
 <ul>
 <li>Using a powered USB hub. When space is not a problem, a good externally powered USB hub will go a long way improving the overall stability.</li>
 
-<li>Check that power management is turned off on the Wifi device, using <code>iwconfig</code>:</li>
+<li>Check that power management is turned off on the Wifi device, using:</li>
 </ul>
-<pre><code>
-	pi@raspberrypi ~ $ iwconfig
-	wlan0     IEEE 802.11bg  ESSID:"xxxxxxxxx"  Nickname:"yyyyy"
-	          Mode:Managed  Frequency:2.462 GHz  Access Point: xx:xx:xx:xx:xx:xx   
-	          Bit Rate:54 Mb/s   Sensitivity:0/0  
-	          Retry:off   RTS thr:off   Fragment thr:off
-	          <b><font color='red'>Power Management:off</font></b>
-	          Link Quality=100/100  Signal level=93/100  Noise level=0/100
-	          Rx invalid nwid:0  Rx invalid crypt:0  Rx invalid frag:0
-	          Tx excessive retries:0  Invalid misc:0   Missed beacon:0
-
-	lo        no wireless extensions.
-
-	eth0      no wireless extensions.
-</code></pre>
-<p>If power management is turned on, the wifi dongle may go to sleep after a while, and there goes your remote connection. To disable power management on Wifi dongles using the 8192cu / 8188cus chipset, create and edit a new file <code>/etc/modprobe.d/8192cu.conf</code></p>
+<pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt</code></pre>
+<p>If this returns <code>1</code>, power management is enabled. If it is, the wifi dongle may go to sleep after a while, and there goes your remote connection. To disable power management on Wifi dongles using the 8192cu / 8188cus chipset, create and edit a new file <code>/etc/modprobe.d/8192cu.conf</code></p>
 
 <pre><code>sudo nano /etc/modprobe.d/8192cu.conf</code></pre>
 
@@ -76,7 +62,11 @@
 <pre><code># Disable power saving
 options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1</code></pre>
 
-<p>Then reboot and check power management is now OFF.</p>
+<p>Then reboot and check power management is now OFF:</p>
+
+<pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt</code></pre>
+
+<p>should now return 0.</p>
 				</div><!-- entry-content -->
 
 				<br>
