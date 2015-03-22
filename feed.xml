@@ -64,6 +64,14 @@
                 
                         
                         <item>
+                                <title>Raspberry Pi tips and tricks</title>
+                                <description>Various raspberry pi tips</description>
+                                <link>http://jheyman.github.io/blog/pages/RaspberryPiTipsAndTricks/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Audio notifications from Google calendars</title>
                                 <description>Playing audio reminders of events extracted from google calendars</description>
                                 <link>http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier/index.html</link>

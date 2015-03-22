@@ -680,7 +680,13 @@ irsend simulate &quot;0000000000022136 0 KEY_END_ANNOUNCE piremote&quot;</code><
 
 <p>Such a simple passive HW mixing obviously has one downside: volume loss at the output. However, since in this particular setup the output of the DACs goes to an amplifier, in the end their is more than enough gain in the amplifier to compensate for that loss, so all is good.</p>
 
-<p><strong><em>Note</em></strong>: you will probably want to set the output volume of both DACs to the same volume, for proper consistent sound mixing. This is done through <code>alsamixer</code> as usual, just press <code>F6</code> to select each DAC in turn.</p>
+<p><strong><em>Note</em></strong>: you will probably want to set the output volume of both DACs to the same volume, for proper consistent sound mixing. This is done through <code>alsamixer</code> as usual, just press <code>F6</code> to select each DAC in turn.<br /><br /></p>
+
+<p>Here is my finished setup:</p>
+
+<p><img alt='Example setup' src='http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/example_setup.png' /></p>
+
+<p>(the nRF24 radio module is present because I am running my <a href='http://jheyman.github.io/blog/pages/WirelessWaterMeter'>wireless water meter</a> on the same raspberry pi)</p>
 
 <h3 id='misc'>Misc</h3>
 
@@ -739,7 +745,7 @@ irsend simulate &quot;0000000000022136 0 KEY_END_ANNOUNCE piremote&quot;</code><
 <ul>
 <li>for once, everything went smoothly: IR remote control with LIRC is a breeze to setup and use, the pi is easy as ever to setup, and controlling the audio amplifier through I2C and GPIOs worked the first time.</li>
 
-<li>I realized that sometimes, just pushing a button on a remote is way more convenient than grabbing you phone, unlocking it, navigating to a specific app, opening it, and finally clicking somewhere.</li>
+<li>I realized that sometimes, just pushing a button on a (physical) remote is way more convenient than grabbing you phone, unlocking it, navigating to a specific app, opening it, and finally clicking somewhere.</li>
 
 <li>2x20W amplification is plenty enough for small rooms, I never had to turn the volume all the way up, by far. A different approach with be required for the living room audio though.</li>
 </ul>
