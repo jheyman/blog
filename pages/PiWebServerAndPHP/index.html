@@ -10,7 +10,7 @@
 	<title>Setup Nginx and PHP on Raspberry Pi</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Setup Nginx and PHP on Raspberry Pi" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -41,9 +41,10 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>This page logs the installation steps to get <strong>Nginx</strong> web server and <strong>PHP</strong> server up and running on Raspberry pi. I use them in particular in (<a href='http://jheyman.github.io/blog/pages/ShoppingListWidget'>this</a>) and (<a href='http://jheyman.github.io/blog/pages/PostitListWidget'>this</a>) projects, and more generally as the basis for all web-based applications I am running on my home&#8217;s main raspberry pi.</p>
+					
+<p>This page logs the installation steps to get <strong>Nginx</strong> web server and <strong>PHP</strong> server up and running on Raspberry pi. I use them in particular in (<a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">this</a>) and (<a href="http://jheyman.github.io/blog/pages/PostitListWidget">this</a>) projects, and more generally as the basis for all web-based applications I am running on my home&#8217;s main raspberry pi.</p>
 
-<h3 id='install__configuration'>Install &amp; configuration</h3>
+<h3 id="install--configuration">Install &amp; configuration</h3>
 
 <p>First install nginx and php, and create the main directory that will contain the required html/php files to be served:</p>
 
@@ -53,11 +54,13 @@ sudo groupadd www-data
 sudo usermod -g www-data www-data 
 sudo mkdir /var/www 
 sudo chmod 775 /var/www -R 
-sudo chown www-data:www-data /var/www </code></pre>
+sudo chown www-data:www-data /var/www 
+</code></pre>
 
 <p>Create a site config file in <code>/etc/nginx/sites-available/</code> (replace MYSITE by actual site name, and MYPORT by desired http port the site will be available on, e.g. 80)</p>
 
-<pre><code>sudo nano /etc/nginx/sites-available/MYSITE</code></pre>
+<pre><code>sudo nano /etc/nginx/sites-available/MYSITE
+</code></pre>
 
 <p>Here is a basic template I am using:</p>
 
@@ -73,30 +76,36 @@ sudo chown www-data:www-data /var/www </code></pre>
     	fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
     	include /etc/nginx/fastcgi_params;
 	}
-}</code></pre>
+}
+</code></pre>
 
 <p>Finally create a symbolic link in <code>/etc/nginx/sites-enabled/</code> to activate this site:</p>
 
-<pre><code>sudo ln -s /etc/nginx/sites-available/MYSITE /etc/nginx/sites-enabled/MYSITE</code></pre>
+<pre><code>sudo ln -s /etc/nginx/sites-available/MYSITE /etc/nginx/sites-enabled/MYSITE
+</code></pre>
 
 <p>You can create as many sites as needed, and enable/disable them at will by just adding/removing such a simlink in the <code>/etc/nginx/sites-enabled</code> directory.</p>
 
-<h3 id='compatibility_with_logitech_media_server'>Compatibility with Logitech Media Server</h3>
+<h3 id="compatibility-with-logitech-media-server">Compatibility with Logitech Media Server</h3>
 
-<p>By default, the PHP CGI interface is using port 9000 on localhost. This turned out to be a problem for me, as it conflicts with the installation of Logitech Media Server that also uses port 9000, and that I am using in <a href='http://jheyman.github.io/blog/pages/MultiRoomHomeAudio'>this</a> project. So I updated the PHP config file to change the port number from 9000 to 9001:</p>
+<p>By default, the PHP CGI interface is using port 9000 on localhost. This turned out to be a problem for me, as it conflicts with the installation of Logitech Media Server that also uses port 9000, and that I am using in <a href="http://jheyman.github.io/blog/pages/MultiRoomHomeAudio">this</a> project. So I updated the PHP config file to change the port number from 9000 to 9001:</p>
 
-<pre><code>sudo nano /etc/php5/fpm/pool.d/www.conf </code></pre>
+<pre><code>sudo nano /etc/php5/fpm/pool.d/www.conf 
+</code></pre>
 
 <p>replacing the existing <code>listen</code> line by:</p>
 
-<pre><code>listen = 127.0.0.1:9001</code></pre>
+<pre><code>listen = 127.0.0.1:9001
+</code></pre>
 
 <p>Consequently, one also needs to update the CGI port number to 9001 in Nginx sites config files (i.e. inside all files in <code>/etc/nginx/sites-available</code>)</p>
 
 <p>Finally, restart PHP and Nginx:</p>
 
 <pre><code>sudo service php5-fpm restart 
-sudo service nginx restart</code></pre>
+sudo service nginx restart
+</code></pre>
+
 				</div><!-- entry-content -->
 
 				<br>
@@ -174,7 +183,7 @@ sudo service nginx restart</code></pre>
 (function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
 </script>
 
- 
+  
 
 
   <script type="text/javascript">

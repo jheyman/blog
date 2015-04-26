@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Z-Wave home automation</title>
+	<meta name="author" content="Julien Heyman">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Z-Wave home automation</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h3 id='usecase'>Usecase</h3>
+
+<p>I had been considering using some kind of home automation system for a while, and decided to give it a go based on very simple usecase: not having to go upstairs to check if the lights were actually turned off, before leaving the house. In other words: lazyness.<br /><br /></p>
+
+<p>The secondary usecase was to be a little eco-friendly and turn off all unnecessary electrical devices when leaving the house (e.g. TV/TV box, that still consume significant power even in standby mode).<br /><br /></p>
+
+<p>Several technologies exist for home automation (e.g. the old X10 wired communication over power lines, or wireless Zigbee communication), I chose Z-Wave because it seemed to be becoming the standard (but time will tell if this will be the case) and seemed to have interesting capabilities/flexibility in the home network management. This is NOT a cheap technology though, so be ready to invest a few hundred dollars in your home automation, or go another way (e.g. simpler 433 MHz RF devices)<br /><br /></p>
+
+<p>Z-Wave operates at 868.42 Mhz in Europe (908.4MHz in the US). A Z-wave network is composed of one or several controllers, and one or several slave devices.<br /><br /></p>
+
+<p>Here is an example setup with one primary controller, one secondary controller running on batteries, several slave devices plugged on main power to manage lights, power outlets, or other things:</p>
+
+<p><img alt='Zwave network view' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/zwave_network_view.png' /></p>
+
+<p>Slave Z-Wave devices can send information (e.g. a power plug reporting current power consumption), notifications (e.g. device button X was pushed), receive commands from a controller (e.g. turn ON or OFF). The primary controller can also orchestrate specific command scenarios (&#8220;scenes&#8221; in the Z-wave world) upon receiving specific trigger events.</p>
+
+<h3 id='security_warning'>Security warning</h3>
+
+<p>Z-wave is still a relatively young technology, and has been shown to be prone to security flaws (well, pretty much like any other technology out there). I chose not to rely on Z-wave devices for anything security-related in the house, and restricted its use to power control of non-critical devices. Extreme worst case scenario: someone could remotely turn my lights on and off&#8230;I can live with that risk (what I would not do is trust Z-wave for the control of my main door, or the house alarm system&#8230;)</p>
+
+<h3 id='zwave_controller'>Z-Wave controller</h3>
+
+<p>The controller can be a simple remote control running on batteries, but is usually a dedicated box plugged somewhere in the house on mains power, that one can typically connect to over wifi through a web interface. Plenty of commercial options are available, and are the right way to go to get a Z-wave network up and running with zero effort. But spending around 300$ for a box including a CPU, Linux, an integrated Z-wave controller, and some (usually proprietary) management software seemed a little expensive to me. The alternative I chose was to use a Z-wave add-on HW interface (<a href='http://razberry.z-wave.me'>RaZberry</a>) and its associated ZWay SW on a Raspberry Pi, which brings the total cost down to less than 100$. Also, the Razberry is small enough to fit directly into most of the Raspberry pi cases:</p>
+
+<p><img alt='Razberry' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/razberry.png' /></p>
+
+<p>Since I was already using a raspberry pi as a home server for other purposes, adding this small zwave add-on controller spared me the trouble of adding yet another external box with associated cabling/power supply. Integration !</p>
+
+<h4 id='razberry_zway_software_setup'>Razberry Z-Way software setup</h4>
+
+<p>To control the razberry module, the basic option is to install the Z-Way framework (from Razberry manufacturer) on the raspberry pi: <code>wget -q -O - http://razberry.z-wave.me/install | sudo bash</code> <br /><br /> Then, a control interface is available on the raspberry pi at this URL: <code>http://&lt;ÌP address of the Raspi&gt;:8083</code> <br /><br /> Usage is quite straightforward, and the interface is more than enough for manual management/control of any device in the Z-wave network. More on this later.</p>
+
+<h3 id='zwave_slaves'>Z-Wave slaves</h3>
+
+<p>There are many types of slave Z-wave devices, for my specific usecase I bought the modules mentionned hereafter.</p>
+
+<h4 id='lighting_control'>Lighting control</h4>
+
+<p>This is my #1 usecase (remotely turning any light on or off), and my primary concern was to make the automation of lighting control completely transparent and &#8220;100% backward compatible&#8221; with manual use of the switches. As it turns out, the most convenient solution to retrofit an existing installation is to install small z-wave micro-modules directly inside the existing switches cavities in the walls.<br /><br /></p>
+
+<p>I chose micro-modules from <a href='http://www.fibaro.com'>Fibaro</a>, since they seemed to be quite small and of good quality. As a side note: as these things will be embedded within the walls of my house, I did not even <em>consider</em> searching for cheaper modules. Cutting budget on such critical devices is probably a very very bad idea.<br /><br /></p>
+
+<p>Several versions of micromodule exist, and in particular, you have to choose between relays (on/off) and dimmers (allowing continuous variation of the voltage between completely-off and completely-on). On/Off functionality was all I needed, but I bought dimmers anyway for all lights, for the following reasons:</p>
+
+<ul>
+<li>only the dimmer modules can be installed with no Neutral lead available, which is often the case of old installations, and is the case in my house.</li>
+
+<li>relays and dimmers are about the same price anyway</li>
+
+<li>and it&#8217;s cool to have the ability to gradually fade-in/out the lights in some scenarios if needed.</li>
+</ul>
+
+<p>Here is a Fibaro dimmer micro-module, with the small antenna sticking out:</p>
+
+<p><img alt='dimmer' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/dimmer.png' /></p>
+
+<h4 id='power_outlet_control'>Power outlet control</h4>
+
+<p>For controlling power outlets, I used a different approach: while it is quite possible to use micro-modules integrated inside the power outlet cavities just as for wall switches, one major drawback with this solution is that one cannot control the state of the micro-module manually (since there is no button on a power outlet&#8230;). This means that if the outlet is turned off remotely, there is no way to turn it back on manually, which can turn out to be quite inconvenient. A more practical solution for me was to use external Z-wave power plugs, plugged externally in the existing outlets. The difference is that those devices do have a button on their casing, allowing manual override of the device state.</p>
+
+<p>The drawback is of course that such external devices are quite noticeable, and most of them are bulky: <img alt='popp plug' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/popp_plug.png' /></p>
+
+<p>But it turns out that Fibaro sells Z-wave power plugs (FGWPE/F-101) that are much much smaller, so the visual impact is quite limited, and they still have an override button on the casing to operate the plug manually if needed: <img alt='fibaro plug' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/fibaro_plug.png' /></p>
+
+<p>Hats off to Fibaro for optimizing the device volume to that extent. Finding out about this product is the main reason why I went ahead with equipping several of my outlets with Z-wave capability.</p>
+
+<h4 id='additional_wall_controller'>Additional wall controller</h4>
+
+<p>While I retrofitted all existing wall switches in the house with micro-modules, I also wanted to introduce the new usecase: turning off a predefined list of devices when leaving the house to save power (and turning some of them back on upon entering the house). It is easy to do such an action from a web interface, possibly from a smartphone, but it did not sound very convenient to me for something that would be done at least twice a day.<br /> Since all existing wall switches had their own purpose already, I wanted a new dedicated button to control this new usecase. Installing a new (wired) wall-switch is not convenient, so I chose to buy a standalone Z-wave battery-powered wall controller (Z-Wave.Me 06443), that looks like a regular wall-switch, but can be attached anywhere on a flat surface.</p>
+
+<p>Here&#8217;s how it looks without the cover: <img alt='wall switch no cover' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/wallswitch_nocover.png' /></p>
+
+<p>Notice two main buttons (UP and DOWN), plus three buttons for managing the device: Include, Exclude, and Association <br /><br /> Once the cover is installed, there is no way to tell this is a Z-wave device and not a regular wall-switch.</p>
+
+<p><img alt='wall switch cover' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/wallswitch_cover.png' /></p>
+
+<p>More later on how I used this wall controller.</p>
+
+<h4 id='color_led_controller'>Color LED controller</h4>
+
+<p>Controlling the intensity and color of lighting is a typical home automation usecase, and while I did not really have any actual use in mind for this, I bought an RGB LED strip controller (Fibaro FGRGBWM-441) because of&#8230;reasons. The Fibaro module I chose also happens to be usable for many other purposes, like general purpose voltage inputs/outputs, so it was really not a waste of money. <br /><br /> Here is the RGBW module with glued-on hackish interface for input power and output wires to LED strip:</p>
+
+<p><img alt='RGB LED controller' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/fibaro_rgbw.png' /></p>
+
+<h3 id='network_inclusion'>Network Inclusion</h3>
+
+<p>By default, a slave Z-wave device does not communicate with anything. To use it, one must add it to a specific Z-wave network, supervised by a primary Z-wave controller (in my case: the Raspberry+Razberry module). The inclusion process is very straightforward:</p>
+
+<ul>
+<li>set the primay controller in learning/inclusion mode (for example through the Zway web interface)</li>
+
+<li>push any button on the slave device (sometimes a triple-click is required)</li>
+</ul>
+
+<p>Unless an error occurs, this results in the slave device now being included in the Z-wave network managed by the primary controller. It is then able to send/receive information, and to be controlled remotely.</p>
+
+<h3 id='associations'>Associations</h3>
+
+<p>Many Z-wave devices implement so called association groups, i.e. the ability to associate a single action on the device to a resulting action on several other devices. The one usecase I had for this is to have a single wall switch control all devices that I want to turn off when leaving the house. By adding all these target devices in one of the association groups of the wall-switch, I can turn them all on (or off) by a single push. I chose a different approach in the end (more on this later), but using association groups is perfectly fine.</p>
+
+<h3 id='device_installation__configuration'>Device installation &amp; configuration</h3>
+
+<h4 id='inwall_switches'>in-wall switches</h4>
+
+<p>The Fibaro dimmer micro-module has inputs to connect mains power, as well as inputs to connect the existing physical switch. There are several cabling options,here is the one I used for simple light switches with no neutral lead:</p>
+
+<p><img alt='dimmer cabling single switch' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/dimmer_cabling_single_switch.png' /></p>
+
+<p>For lights controlled by 3 way-switches (still without neutral), cabling scheme is a bit different:</p>
+
+<p><img alt='dimmer cabling 3-way switch' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/dimmer_cabling_3way_switch.png' /></p>
+
+<p>Below is a picture of the installation in progress (the tricky part is then to arrange all of this inside the yellow box&#8230;it fits, but barely)</p>
+
+<p><img alt='dimmer install' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/dimmer_install.png' /></p>
+
+<p>Once the micro-module is installed with the original switch mounted back where it used to be, the switch can be controlled remotely (that&#8217;s the whole point&#8230;) but can also be operated manually as before, making this module integration completely transparent to the user. <br /><br /> I configured all dimmers with a fade time of zero, so they behave exactly like pure on/off switches: this is achieved by setting <strong>parameter #10</strong> to <strong>0</strong> (&#8220;Disable the smooth change in light intensity&#8221;) <br /><br />Also, if using a two-positions switch, <strong>parameter #14</strong> must be adjusted to <strong>&#8220;Bistable switch&#8221;</strong> <br /><br />Finally, for 3-way switches, <strong>parameter #17</strong> must be adjusted to <strong>&#8220;enabled&#8221;</strong></p>
+
+<h4 id='batteryoperated_wall_controller'>Battery-operated wall controller</h4>
+
+<p>I wanted to use the battery-operated wall controller as a source of events to trig various actions. There are two main ways to achieve this:</p>
+
+<ul>
+<li>add other devices in the controller&#8217;s built-in association groups. This has the advantage to not involve any external software or hardware, but this is somehow inconvenient to setup (i.e. need to manually associate each target device using a complex sequence of button pushes), and is only good for &#8220;switch on / switch off&#8221; actions.</li>
+
+<li>the more flexible option I chose is to use this switch as a scene trigger (it is then entirely up to the main controller software to decide what to do when such a scene is triggered). To achieve this, set <strong>parameter 13</strong> and <strong>parameter 14</strong> to <strong>3</strong>. This way, various scenes can be triggered by activating the UP or DOWN buttons. I only used the two main ones: single click on UP (trigs scene 1) and single click on DOWN (trigs scene 2)<br /><br /> Note: battery-powered z-wave devices are a bit difficult to configure, since they are designed to go back to sleep mode immediately after having been activated, to save power. There is usually a specific action allowing to keep the device awake for a few seconds, so that the configuration commands from the controller can be taken into account. On this Z-Wave.Me wall controller, a triple click on UP or DOWN will keep the device awake for 2 seconds.</li>
+</ul>
+
+<h4 id='powerplugs'>power-plugs</h4>
+
+<p>You may want to adjust the color of the LED ring used when the plug is activated. For example, for a plug placed in a bedroom, having it emitting light when it is on can be a nuisance during the night. <strong>Parameter #61</strong> allows to not have the LED ring turn on when the device is activated (though it makes it harder to tell the current state of the plug, obviously)</p>
+
+<h4 id='rgbw_led_controller'>RGBW LED controller</h4>
+
+<p>I setup the Fibaro RGBW module in &#8220;MODE1&#8221; (<strong>parameter 6</strong> set to <strong>1</strong>), and adjusted <strong>parameter 10</strong> to <strong>4</strong> to get a faster fade-in/fade-out time than the default setting.</p>
+
+<h3 id='automation_software'>Automation software</h3>
+
+<p>Beyond just configuring/managing the modules, the real software added value comes with the capability to implement custom rules to activate devices upon specific conditions. Indeed, while it is perfectly possible to only rely on the Z-wave HW mechanisms (associations, scenes, alarms messages) between modules, it will not allow to implement very specific scenarii. This is where the software automation frameworks come in. I experimented with two of these, there are many more to choose from:</p>
+
+<ul>
+<li><strong>Z-Way</strong> itself. Indeed, Z-Way not only provides the management interface for the RaZberry, it also provides several programming APIs to develop automation scripts.</li>
+
+<li><strong>Open Home Automation Bus</strong>, <a href='http://www.openhab.org/'>http://www.openhab.org/</a>). This is a general purpose home automation framework, supporting Z-wave devices as well as many other communication protocols, which makes it a good opportunity for future extensions.<br /><br /></li>
+</ul>
+
+<p><strong>Spoiler alert</strong>: I really liked the OpenHAB framework, but it turns out that it (currently) has a major known bug affecting the RaZberry (see &#8220;known limitations&#8221; on the Z-wave binding page of the openHAB project), and the impact is so bad that I had the give up using it. I switched back to using the Z-Way server automation capabilities, which fit my needs just fine after all, and are not so Z-wave-dependent as I initially thought. Anyway, details about both setups are provided below.</p>
+
+<h4 id='openhab'>OpenHAB</h4>
+
+<h5 id='installing_openhab'>Installing openHAB</h5>
+
+<p>OpenHAB is a java framework. Considering Java is already installed on your raspberry pi, the installation is as simple as:</p>
+<pre><code>mkdir /home/pi/openHAB
+unzip distribution-1.5.1-runtime.zip
+</code></pre>
+<p>(Optionally, a demo configuration can be installed, just unzip the <code>distribution-1.5.1-demo-configuration.zip</code>)</p>
+
+<ul>
+<li>
+<p>Install the Z-wave add-on: unzip the associated .jar file from <code>distribution-1.5.1-addons.zip</code>, and copy it into the <code>/addons</code> subdirectory</p>
+</li>
+
+<li>
+<p>Create the user configuration file:</p>
+</li>
+</ul>
+<pre><code>cp configurations/openhab_default.cfg configurations/openhab.cfg</code></pre>
+<p>then manually edit this openhab.cfg as appropriate. In my case, I just updated the Z-wave section to specify the correct interface to the Razberry: <code>zwave:port=/dev/ttyAMA0</code></p>
+
+<ul>
+<li>
+<p>Tweak the startup scripts (<code>start.sh</code> and <code>start_debug.sh</code>) to add the parameter <code>-Dgnu.io.rxtx.SerialPorts=/dev/ttyAMA0</code> as part of the java command line</p>
+</li>
+
+<li>
+<p>create the z-wave items configuration files. As an example to control a single Fibaro plug and read its power consumption reports, create a <code>z-wave.items</code> file in the <code>/configurations/items</code> subdirectory, with the following content:</p>
+</li>
+</ul>
+<pre><code>Switch FibaroPlug_1 "Fibaro plug #1" (Outlets) {zwave="5:command=switch_binary"}
+
+Number FibaroPlug_1_Power      "Fibaro plug #1 power [%.1f W]" (zPower) { zwave="5:command=sensor_multilevel" }
+
+Number FibaroPlug_1_Energy     "Fibaro plug #1 consumption  [%.2f KWh]" (zPower) { zwave="5:command=meter" }
+</code></pre>
+<ul>
+<li>create a basic UI config file to manipulate this plug, by creating a <code>z-wave.sitemap</code> file under <code>/configurations/sitemaps</code>, with the following content:</li>
+</ul>
+<pre><code>sitemap my_z_wave label="Z-Wave devices control" {
+   Frame label="Plug" {
+        Switch item=FibaroPlug_1 label="plug #1"
+   }
+   Frame {
+        Text item=FibaroPlug_1_Power
+   }
+}
+</code></pre>
+<ul>
+<li>
+<p>To prevent conflict with Z-way (if installed), stop it: <code>/etc/init.d/Z-Way stop</code></p>
+</li>
+
+<li>
+<p>Finally, launch openHAB: <code>./start.sh</code></p>
+</li>
+
+<li>
+<p>On raspberry pi, the initialization takes a loooong time (up to several minutes), but once everything is done you can access the UI using any browser at the following URL: <code>http://&lt;IP of the raspberry pi&gt;:8080/openhab.app?sitemap=z-wave</code></p>
+</li>
+
+<li>
+<p>Optionally, if you installed the demo config files, the demo itself is available at : <code>http://&lt;IP of the raspberry pi&gt;:8080/openhab.app?sitemap=demo</code></p>
+</li>
+</ul>
+
+<h5 id='installing_habmin'>Installing HABmin</h5>
+
+<p>HABmin is an administration interface for openHAB, and is available here: <a href='https://github.com/cdjackson/HABmin'>https://github.com/cdjackson/HABmin</a> <br /><br /> Installing HABmin boils down to unzipping HABmin.zip in the openHAB folder, and relaunching openHAB. The HABmin interface is then available at <code>http://localhost:8080/habmin/index.html</code></p>
+
+<p>In particular, Z-way devices information and parameters can be accessed and modified (via Bingings / Z-Wave / Devices), making HABmin a useful replacement for the Z-way management interface</p>
+
+<h5 id='automating_openhab_startup'>Automating openHAB startup</h5>
+
+<ul>
+<li>Remove auto-start of Z-way</li>
+</ul>
+<pre><code>sudo update-rc.d z-way-server remove</code></pre>
+<ul>
+<li>Create an <code>openhab</code> startup script in <code>/etc/init.d</code> (initially from <a href='https://code.google.com/p/openhab-samples/wiki/Tricks#How_to_configure_openHAB_to_start_automatically_on_Linux'>here</a>)</li>
+</ul>
+
+<p>My customized version is available <a href='https://github.com/jheyman/HomeAutomation/blob/master/openHAB/openhab.initd_script'>here</a></p>
+
+<p>Finally, make it executable and add it to startup daemons:</p>
+<pre><code>sudo chmod a+x openhab
+sudo update-rc.d openhab defaults</code></pre>
+<h5 id='custom_config_files'>Custom config files</h5>
+
+<p>I then customized the openHAB configuration files to suit my specific needs. One specific behavior I implemented is to use the wall controller to turn off all lights and some other devices (e.g. TV) while leaving the house, and turn these devices back on when entering the house. Also, to make sure that the action on the wall controller is properly taken into account, I added a visual confirmation, using the Fibaro RGBW module controlling a color LED strip.</p>
+
+<p>The two buttons of the wall controller are first declared in the items config, with their associated z-wave class and scene number:</p>
+<pre><code>Switch	WallSwitch_Scene1	"Wallswitch scene 1" 	(scenes)	{ zwave="25:1:command=SCENE_ACTIVATION,scene=1,state=1"}
+Switch	WallSwitch_Scene2	"Wallswitch scene 2" 	(scenes)	{ zwave="25:1:command=SCENE_ACTIVATION,scene=2,state=1"}</code></pre>
+<p>Note that these two &#8220;Switch&#8221; items are only used to capture the scene activation command from the wall controller. They are not intended to be presented in the UI. Then, two specific rules allow to react upon receiving &#8220;scene 1 activated&#8221; or &#8220;scene 2 activated&#8221; events:</p>
+<pre><code>rule "Activation Mode Eco via Wallswitch"
+when
+	Item WallSwitch_Scene2 received update ON
+then
+	sendCommand(entree_mode_eco, OFF)
+
+	sendCommand(RGBWControllerR, 0)
+	sendCommand(RGBWControllerG, 0)
+	sendCommand(RGBWControllerB, 100)
+
+	createTimer(now.plusSeconds(2)) [| 
+		sendCommand(RGBWControllerAll, OFF)
+	]
+end
+
+rule "Desactivation Mode Eco via Wallswitch"
+when
+	Item WallSwitch_Scene1 received update ON
+then
+	sendCommand(sortie_mode_eco, ON)
+
+	sendCommand(RGBWControllerR, 0)
+	sendCommand(RGBWControllerG, 100)
+	sendCommand(RGBWControllerB, 0)
+
+	createTimer(now.plusSeconds(2)) [| 
+		sendCommand(RGBWControllerAll, OFF)
+	]
+end</code></pre>
+<p>The first rule (&#8220;leaving the house&#8221; usecase) defines that upon reception of scene1 event, an OFF command is sent to a specific group of items, i.e. the items that shall be switched OFF. Once this is done, a command is sent to the RGB LED controller to shine a blue light during 2 seconds as a confirmation, then turn the LED back off. The second rule (&#8220;entering the house&#8221; usecase) similarly defines what happens upon reception of the scene2 event, i.e. send a command to a different group of items, the ones that shall be turned ON.</p>
+
+<p>Note that the two groups are different: indeed, I wanted to turn off all the home lights (plus some additional devices) while leaving, but upon entering I only wanted to turn on the additional devices, not all the lights.</p>
+
+<p>As a reference the items/sitemaps/rules config files corresponding to my full setup are available <a href='https://github.com/jheyman/HomeAutomation/tree/master/openHAB'>here</a></p>
+
+<h5 id='fibaro_dimmer_workaround_for_openhab'>Fibaro Dimmer workaround for openHAB</h5>
+
+<p>Initially, when just declaring a Dimmer (or Switch) item in openHAB corresponding to one of the Fibaro dimmer modules, the state change notifications from the dimmer were not getting processed properly. It might be a wrong default behavior in openHAB Z-Wave binging, but in any case there is a simple workaround: just adding the main controller (Node 1) in the association group of each dimmer. Once this is done, manual operations on the dimmers is picked up correctly by openHAB and reflected in the UI. For Fibaro wall-plugs, this workaround was not required.</p>
+
+<h3 id='zway_server_automation_engine'>Z-Way Server automation engine</h3>
+
+<p>The Z-way software includes a Javascript-based automation engine, allowing to implement custom rules based on a very flexible (and relatively straightforward) mechanism: it provides a software event bus, on which the javascript automation modules can emit and receive events. Each module has access the the Z-way API allowing to control Z-wave HW devices, and can register to be notified when any data of the Z-way data model is modified (e.g. when a new value/state of a device is received by the RaZberry).</p>
+
+<p>So provided Z-way server is already installed, the only required actions to implement an automation module is to create a subdirectory under the <code>/opt/z-way-server/automation/modules</code> directory, and inside this subdirectory create two files: <br /><br /> - <strong>module.json</strong>: this is just the configuration file for the module, which is useful to be able to modify some parameters of the automation module from the web control interface (<code>http://&lt;ÌP address of the Raspi&gt;:8083/z-way-ha</code>) <br /><br /> - <strong>index.js</strong> : this is the javascript code for the module, implementing the custom rules.</p>
+
+<p>The module I implemented so far is very basic, but is enough to fit my primary usecase: turning off a set of selected devices upon pushing the wall controller DOWN button, and turning another set of devices back on upon pushing the wall controller UP button. In addition, to provide a visual feedback that button pushes have actually been taken into account, I temporarily turn on a nearby RGB LED strip, with a different color for UP and DOWN actions. The javascript code looks like this:</p>
+<pre><code>
+EcoMode.prototype.init = function (config) {
+    EcoMode.super_.prototype.init.call(this, config);
+
+    var self = this;
+
+	// Register a callback function on modifications of the "currentScene" value of command class 43 (SCENE_ACTIVATION) of the wall controller switch
+	zway.devices[1].instances[0].commandClasses[43].data.currentScene.bind(function() {
+		var value = zway.devices[1].instances[0].commandClasses[43].data.currentScene.value;
+		console.log("EcoMode: SCENE detected = ", value);
+
+		if (self.timer) {
+		    // Timer is set, so we destroy it
+		    clearTimeout(self.timer);
+		}
+		
+		// Scene = 2 correponds to button DOWN pushed
+		if (value === 2) {
+			
+			// Turn on the RGB LED (to full blue color) to show ongoing
+			// transition to ECO mode
+			//blue
+			zway.devices[24].instances[2].SwitchMultilevel.Set(99);			
+			//red
+			zway.devices[24].instances[3].SwitchMultilevel.Set(0);
+			// green	
+			zway.devices[24].instances[4].SwitchMultilevel.Set(0);
+			
+
+			// Turn off FIBARO plug #1
+			zway.devices[5].instances[0].SwitchBinary.Set(0);
+
+			//
+			// etc... for all other devices to be turned off
+			//
+
+			console.log("EcoMode is now ON ");
+
+			// Turn LED back off to show completion (after 2 second delay)
+			    self.timer = setTimeout(function () {
+				// RGB notification
+				zway.devices[24].instances[2].SwitchMultilevel.Set(0);
+				self.timer = null;
+			    }, 2*1000);
+
+
+			// Scene = 1 correponds to button UP pushed
+	        } else if (value === 1) {
+			
+			// Turn on the RGB LED (full green) to show ongoing 
+			//transition out of ECO mode
+			// green
+			zway.devices[24].instances[4].SwitchMultilevel.Set(99);			
+			// red			
+			zway.devices[24].instances[3].SwitchMultilevel.Set(0);
+			// blue
+			zway.devices[24].instances[2].SwitchMultilevel.Set(0);
+
+			// Turn FIBARO plug #1 back on
+			//zway.devices[5].instances[0].SwitchBinary.Set(255);
+
+			//
+			// etc... for all other devices to be turned off
+			//
+
+			console.log("EcoMode is now OFF");
+
+			// Turn LED back off to show completion (after 2 second delay)
+			    self.timer = setTimeout(function () {
+				zway.devices[24].instances[4].SwitchMultilevel.Set(0);
+				self.timer = null;
+			    }, 2*1000);
+
+	        } else {
+			console.log("EcoMode: unknown scene (", value, "): IGNORING");		
+		}
+	 });
+};
+</code></pre>
+<p>The module is so simple it does not have any other function that the &#8220;init&#8221; function called automatically at startup. The actual code is available <a href='https://github.com/jheyman/HomeAutomation/tree/master/ZWayServer/automation/modules/EcoMode'>here</a></p>
+
+<h3 id='lessons_learned'>Lessons learned</h3>
+
+<ul>
+<li>Z-Wave is (still) expensive, but quite flexible</li>
+
+<li>Raspberry pi + Razberry module are quite fine as a replacement for a commercial home automation controller</li>
+
+<li>Battery-powered Z-wave devices are not convenient to configure, since they go to sleep immediately after being activated.</li>
+
+<li>openHAB is a great framework for home automation, and supports Z-wave quite well. Too bad it is plagged with a vicious bug specific to raZberry module&#8230;</li>
+
+<li>Always triple check wiring before turning mains back on after installing a switch module. I was lazy once after installing several modules in a row with no problem, I got confused by unusual wire colors, and the dimmer module went &#8220;boom&#8221; (literally) due to incorrect cabling. That&#8217;s a 50 euros mistake you will only do once. Anyway, this was the opportunity to take a look inside the dead module:</li>
+</ul>
+
+<p><img alt='fried dimmer front' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/fried_dimmer_front.png' /></p>
+
+<p><img alt='fried dimmer back' src='http://jheyman.github.io/blog/assets/images/ZwaveHomeAutomation/fried_dimmer_back.png' /></p>
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Julien Heyman</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ZwaveHomeAutomation/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+ 
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

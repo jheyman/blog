@@ -10,7 +10,7 @@
 	<title>Arduino under the hood</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Arduino under the hood" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -41,27 +41,24 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>This page collects bits of information that I found useful for my own needs, regarding the way an Arduino program is actually compiled, loaded on the board, and how it behaves at runtime</p>
+					
+<p>This page collects bits of information that I found useful for my own needs, regarding the way an Arduino program is actually compiled, loaded on the board, and how it behaves at runtime</p>
 
-<h3 id='compilation__load_process'>Compilation &amp; load process</h3>
+<h3 id="compilation--load-process">Compilation &amp; load process</h3>
 
 <p>A simplified view of the build and load process is as follows:</p>
 
-<p><img alt='Arduino build process' src='http://jheyman.github.io/blog/assets/images/ArduinoUnderTheHood/Arduino_build_and_load_process.png' /></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/ArduinoUnderTheHood/Arduino_build_and_load_process.png" alt="Arduino build process" /></p>
 
-<h3 id='memory_model'>Memory model</h3>
+<h3 id="memory-model">Memory model</h3>
 
-<p>Most arduino boards have three kinds of memory on board:</p>
+<p>Most arduino boards have three kinds of memory on board:
+- <strong>EEPROM</strong> (non-volatile) to store e.g. configuration info; 1KB on the Arduino Uno
+- <strong>Flash</strong> (non-volatile) to store program binary; 32 KB on the Arduino Uno
+- <strong>SRAM</strong> (volatile) to store variables during program execution; 2KB on the Arduino Uno</p>
 
-<ul>
-<li><strong>EEPROM</strong> (non-volatile) to store e.g. configuration info; 1KB on the Arduino Uno</li>
-
-<li><strong>Flash</strong> (non-volatile) to store program binary; 32 KB on the Arduino Uno</li>
-
-<li><strong>SRAM</strong> (volatile) to store variables during program execution; 2KB on the Arduino Uno</li>
-</ul>
-
-<p>These are relatively small, but a good fit for the typical usage scenarios of an Arduino. I did face a few cases where I ran out of SRAM, and it bites real hard since the behavior of the chip then becomes quite weird. You would expect it to just crash/freeze, but sometimes it doesn&#8217;t and just produces unexpected behaviors. Since then, I have made an habit of specifically checking how much SRAM I am currently using, to figure out what kind of margin I have left at any time during development.</p>
+<p>These are relatively small, but a good fit for the typical usage scenarios of an Arduino. I did face a few cases where I ran out of SRAM, and it bites real hard since the behavior of the chip then becomes quite weird. You would expect it to just crash/freeze, but sometimes it doesn&#8217;t and just produces unexpected behaviors.
+Since then, I have made an habit of specifically checking how much SRAM I am currently using, to figure out what kind of margin I have left at any time during development.</p>
 
 <p>Here is the code snippet I borrowed to do this:</p>
 
@@ -69,13 +66,17 @@
   extern int __heap_start, *__brkval; 
   int v; 
   return (int) &amp;v - (__brkval == 0 ? (int) &amp;__heap_start : (int) __brkval); 
-}</code></pre>
+}
+</code></pre>
 
-<p>A good tip to <strong>spare some SRAM</strong> is to store all the large read-only buffers in Flash instead. This is possible via the <code>PROGMEM</code> keyword. For example, I used it in the arduino code for my <a href='http://jheyman.github.io/blog/pages/LEDMatrixStrip'>LEDMatrixStrip</a>:</p>
+<p>A good tip to <strong>spare some SRAM</strong> is to store all the large read-only buffers in Flash instead. This is possible via the <code>PROGMEM</code> keyword. For example, I used it in the arduino code for my <a href="http://jheyman.github.io/blog/pages/LEDMatrixStrip">LEDMatrixStrip</a>:</p>
 
 <pre><code>prog_char alphabet[][8] PROGMEM = {
 &lt;large data set here....&gt;
-}</code></pre>
+}
+</code></pre>
+
+
 				</div><!-- entry-content -->
 
 				<br>
@@ -153,7 +154,7 @@
 (function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
 </script>
 
- 
+  
 
 
   <script type="text/javascript">

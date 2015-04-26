@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Homemade PCBs</title>
+	<meta name="author" content="Julien Heyman">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Homemade PCBs</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>Etching your own printed circuit boards is probably not a very sensible idea these days: many online services will do it for you for a reasonable cost, at pro quality. Still, when the need arises for a simple, 1-layer through-hole PCB to replace a messy protoboard with tons of wires, it is simple to do it yourself, and it&#8217;s quite fun. It does require a bit of equiment that is not cheap. Anyway, below are the steps I follow, there are <em>many</em> different ways to do this, this one works for me. It does involve some nasty chemicals, so gloves/protection goggles/throw-away clothes are recommanded, and you do this at your own (very limited) risk.</p>
+
+<p>1) design the PCB using a layout software. EAGLE from CadSoft is clearly the gold standard, but I happen to use a much simpler (and much more limited) software: &#8220;Sprint Layout 6.0&#8221; from Abacom. It&#8217;s simple enough that I can focus on just getting the job done very rapidly, and rich enough that I have not yet outgrown it. Here is the layout I will be using for this example:</p>
+
+<p><img alt='example PCB layout' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/PCB_bluetooth.png' /></p>
+
+<p>2) Get some copper clad boards. Cut a piece a bit larger than the size of the PCB you are designing</p>
+
+<p><img alt='copper clad' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/copperclad.png' /></p>
+
+<p>3) Print the layout, at scale 1:1, on glossy paper, using a laser printer (I got mine for 50 euros). I usually just use a page of the advertisement/magazines that come in the mail everyday, and it works fine. Cut the printed layout out of the page, leaving a margin on the borders.</p>
+
+<p><img alt='decal' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/decal.png' /></p>
+
+<p>4) Prepare the copper clad : use fine grain sanding paper or a scotch brite sponge to roughen the surface, then clean it with acetone, and avoid touching the surface afterwards</p>
+
+<p><img alt='copper clad prepared' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/copperclad_prepared.png' /></p>
+
+<p>5) Place the printed layout against the copper clad, printed side against the copper, then place both on a surface that will withstand significant heat and can be damaged at will. I just use on old Ikea desk in my garage. Also, I use masking tape to hold the board in place.</p>
+
+<p><img alt='ready to iron' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/ready_to_iron.png' /></p>
+
+<p>6) And now for the main trick: a regular iron will be used to transfer the toner from the glossy paper onto the copper. Do get an old iron specifically for this, the iron sole will get stained over time.</p>
+
+<p><img alt='iron' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/iron.png' /></p>
+
+<p>Plug the iron, set it to the maximum temperature, turn off vapor, and let it heat. Once it&#8217;s hot, carefully press the iron against the copper clad/paper assembly, and press very firmly, without moving. After a minute or so, start gently rotating the iron left and right, still applying as much pressure as you can, and continue like this for at least 5 minutes.</p>
+
+<p>7) Pick-up the copper clad (with tweezers or something, it is still burning hot), put it in cold water and let it cool for a few minutes.</p>
+
+<p>8) Gently peel-off the paper from the copper clad. I keep the copper clad underwater the whole time I am doing this, and rub the pulp of my finger on the paper until it starts to tear apart. It may take a while, but don&#8217;t rush it. After a while, the paper normally comes off easily:</p>
+
+<p><img alt='soak in water' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/soak_in_water.png' /></p>
+
+<p>9) once the paper is all gone, you should see black toner tracks on the copper clad, corresponding to your PCB layout. If anything looks unexpected (missing toner on a track somewhere, partially erased track), at this point you are better off restarting at step 4). A little acetone will easily clean the toner from the copper clad to restart from a fresh board.</p>
+
+<p><img alt='ready to etch' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/ready_to_etch.png' /></p>
+
+<p>10) If the tracks are clean, it is time to etch. I use the oldschool way: Ferrite chloride, bought at an eletronics shop. Other more efficient etching chemicals exist, but they tend to be more dangerous to store &amp; manipulate, whereas with ferrite chloride the worst than can happen is a pretty unremovable orange stain on your clothes. I bought a specific tank with a heater and an air pump to inject bubbles into the tank during etching. This speeds up the etching quite a bit, but just letting the copper clad soak in ferrite chloride works too, it only takes (much) longer.</p>
+
+<p><img alt='etch tank' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/etch_tank.png' /></p>
+
+<p>I attach a couple of clamps to the board, to hold it while it will be inside the tank:</p>
+
+<p><img alt='attaching clamps' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/attaching_clamps.png' /></p>
+
+<p>11) After about 5-6 minutes, I check the etching result. If it looks good, I rinse the copper clad with water. Notice the remains of copper where the clamps were masking the board during etching, just like the toner did.</p>
+
+<p><img alt='before acetone' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/before_acetone.png' /></p>
+
+<p>Then I clean the tracks with acetone to remove the toner. And Voilà !</p>
+
+<p><img alt='after acetone' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/after_acetone.png' /></p>
+
+<p>12) An optional but useful step is tinning the resulting board, to prevent oxydation of the copper tracks and ease soldering. There are various ways to do this:</p>
+
+<ul>
+<li>a basic option is to just apply solder on the tracks, with a soldering iron. For anything except a very small/simple PCB, it takes forever and does not look too good in the end.</li>
+
+<li>the PCB can be soaked in a special liquid, creating a thin layer of tin on the tracks. I never had any repeatable success with this method, I must be missing something&#8230;</li>
+
+<li>I choose to use solder paste (tin+silver), easily found in any DIY store. A bit pricy, but a small bottle will last forever. <img alt='solder paste' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/solder_paste.png' /> I apply a thin layer of paste across all the PCB surface, with a small brush, and finally use a heat gun to melt the solder. The solder won&#8217;t stick on the epoxy, so it&#8217;s quite easy to remove it, leaving only the copper tracks covered with tin. And voila, not professional quality but decent and repeatable: <img alt='tinned pcb' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/tinned_pcb.png' /></li>
+</ul>
+
+<p>13) Time to drill the holes. This requires specific drill bits, since epoxy is quite a hard material and the drill diameters are very small. These can be bought in electronics shops, but be warned that they do tend to be expensive and fragile, you <em>will</em> break them from time to time. A drill press (or drill mounted on a vertical support) will make this quite straightforward.</p>
+
+<p><img alt='drilling' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/drilling.png' /></p>
+
+<p>14) For a complex PCB with many components, it is useful to print the top-side/silkscreen layout and imprint it on the non-copper-clad side of the board, using the iron. Place the components, solder them, cut the leads, and you are done.</p>
+
+<p><img alt='ready to solder' src='http://jheyman.github.io/blog/assets/images/HomemadePCBs/ready_to_solder.png' /></p>
+
+<p>Of course the example PCB shown here is extremely simple (probably not worth a custom PCB in the first place&#8230;) but with the same technique, arbitrarily complex layouts with reasonably large tracks can be achieved. 2-layer PCBs can be done like this too, with the added difficulty of perfectly aligning both printed papers for toner transfer.</p>
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Julien Heyman</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/EtchingCustomPCB/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+ 
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

@@ -10,7 +10,7 @@
 	<title>Audio notifications from Google calendars</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Audio notifications from Google calendars" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -41,27 +41,28 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>The purpose of this project was to leverage the audio system I installed at home (see <a href='http://jheyman.github.io/blog/pages/MultiRoomHomeAudio'>here</a>) to broadcast audio notifications upon specific triggers. The main usecase for me was to get audio reminders of important &#8220;todo&#8221; tasks. I was already using Google calendar regularly and its built-in notifications are just fine, but a pop-up and sound on my phone are not so efficient when the phone happens to be in another room&#8230;<br /><br /></p>
+					
+<p>The purpose of this project was to leverage the audio system I installed at home (see <a href="http://jheyman.github.io/blog/pages/MultiRoomHomeAudio">here</a>) to broadcast audio notifications upon specific triggers. The main usecase for me was to get audio reminders of important &#8220;todo&#8221; tasks. I was already using Google calendar regularly and its built-in notifications are just fine, but a pop-up and sound on my phone are not so efficient when the phone happens to be in another room&#8230;<br /><br /></p>
 
 <p>So, the idea is to create a program that will continuously poll my google calendar, and play an audio notification when a given calendar event&#8217;s start time is reached. Several steps are involved:<br /><br /></p>
 
 <ul>
-<li><strong>Retrieving calendar events</strong>: this requires authenticating and interfacing with Google Calendar API, which turned out to be easy enough once on the right track. <br /><br /></li>
-
-<li><strong>Generating an audio notification</strong> corresponding to the event: I chose to use text-to-speech voice synthesis, mostly as an experiment to figure out if this would turn out to be annoying or convenient on the long run.<br /><br /></li>
-
-<li><strong>Executing the polling loop as a background task/daemon</strong>: my home&#8217;s main raspberry pi server once again turned out to be the perfect place to host this.<br /><br /></li>
+  <li><strong>Retrieving calendar events</strong>: this requires authenticating and interfacing with Google Calendar API, which turned out to be easy enough once on the right track. <br /><br /></li>
+  <li><strong>Generating an audio notification</strong> corresponding to the event: I chose to use text-to-speech voice synthesis, mostly as an experiment to figure out if this would turn out to be annoying or convenient on the long run.<br /><br /></li>
+  <li><strong>Executing the polling loop as a background task/daemon</strong>:  my home&#8217;s main raspberry pi server once again turned out to be the perfect place to host this.<br /><br /></li>
 </ul>
 
-<p>Here&#8217;s a high level overview of the system: <img alt='overview' src='http://jheyman.github.io/blog/assets/images/GoogleCalendarAudioNotifier/gcalnotifier_overview.png' /></p>
+<p>Here&#8217;s a high level overview of the system:
+<img src="http://jheyman.github.io/blog/assets/images/GoogleCalendarAudioNotifier/gcalnotifier_overview.png" alt="overview" /></p>
 
-<h3 id='raspberry_pi_setup'>Raspberry pi setup</h3>
+<h3 id="raspberry-pi-setup">Raspberry pi setup</h3>
 
 <p>As usual, everything begins with installing a default Raspbian distribution from raspberrypi.org</p>
 
 <p>1) transfer raspbian image to SD card:</p>
 
-<pre><code>sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx</code></pre>
+<pre><code>sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx
+</code></pre>
 
 <p>2) plug-in a mouse/keyboard/HDMI display and boot-up</p>
 
@@ -69,50 +70,32 @@
 
 <p>4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.<br /><br /></p>
 
-<p>The required configuration steps for the audio part are described in <a href='http://jheyman.github.io/blog/pages/MultiRoomHomeAudio'>this project</a>, especially the ALSA configuration required to be able to use a single audio output for both these calendar notifications, other audio services.</p>
+<p>The required configuration steps for the audio part are described in <a href="http://jheyman.github.io/blog/pages/MultiRoomHomeAudio">this project</a>, especially the ALSA configuration required to be able to use a single audio output for both these calendar notifications, other audio services.</p>
 
-<h3 id='setting_up_the_google_calendar_api'>Setting up the Google (calendar) API</h3>
+<h3 id="setting-up-the-google-calendar-api">Setting up the Google (calendar) API</h3>
 
 <p>Google provides an API to very easily access your calendar data, and a Python client is available for this API. It does require however a slightly complex authentication process, which is the part that required the most effort to get right, especially since instructions out there on the internet usually do not specific which API version they are based on. Since Google calendar v2 API was deprecated in Novembre 2014, the instructions below apply to v3 API<br /><br /></p>
 
 <p>The authentication process will require you to have two things available:</p>
 
 <ul>
-<li>A <strong>client Id</strong>for the OAuth2 authentication protocol, and the associated secret code</li>
-
-<li>An <strong>API key</strong> (a.k.a. <strong>developerKey</strong>)<br /><br /></li>
+  <li>A <strong>client Id</strong>for the OAuth2 authentication protocol, and the associated secret code</li>
+  <li>An <strong>API key</strong> (a.k.a. <strong>developerKey</strong>)<br /><br /></li>
 </ul>
 
 <ol>
-<li>
-<p>Go to <a href='http:\\console.developers.google.com'>http:\console.developers.google.com</a></p>
-</li>
-
-<li>
-<p>Create a new project</p>
-</li>
-
-<li>
-<p>In the <code>API &amp; auth \ APIs</code> section, make sure calendar API is enabled</p>
-</li>
-
-<li>
-<p>In the <code>API &amp; auth \ Credentials</code> section, create an <strong>OAuth client ID</strong> (type: &#8220;Web application&#8221;)</p>
-
-<ul>
-<li>configure consent screen (no useful if like me you intend to only use this client ID for personal purposes, but still required)</li>
-
-<li>the generated client id will look something like this: <code>xxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com</code></li>
-
-<li>a &#8220;client secret&#8221; is also generated: click on <code>Download JSON</code> to get the client secret conveniently stored inside a file (e.g. <code>client_secret.json</code>)</li>
-
-<li>I also had to add <code>https://localhost:8080/</code> in the <code>Authorized javascript origins</code> and <code>Authorized Redirect URIs</code> sections, to complete the first-time authentication.</li>
-</ul>
-</li>
-
-<li>
-<p>Create an <strong>API key</strong> (type: &#8220;Server key&#8221;)<br /><br /></p>
-</li>
+  <li>Go to <a href="http:\\console.developers.google.com">http:\console.developers.google.com</a></li>
+  <li>Create a new project</li>
+  <li>In the <code>API &amp; auth \ APIs</code> section, make sure calendar API is enabled</li>
+  <li>In the <code>API &amp; auth \ Credentials</code> section, create an <strong>OAuth client ID</strong> (type: &#8220;Web application&#8221;)
+    <ul>
+      <li>configure consent screen (no useful if like me you intend to only use this client ID for personal purposes, but still required)</li>
+      <li>the generated client id will look something like this: <code>xxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com</code></li>
+      <li>a &#8220;client secret&#8221; is also generated: click on <code>Download JSON</code> to get the client secret conveniently stored inside a file (e.g. <code>client_secret.json</code>)</li>
+      <li>I also had to add <code>https://localhost:8080/</code> in the <code>Authorized javascript origins</code> and <code>Authorized Redirect URIs</code> sections, to complete the first-time authentication.</li>
+    </ul>
+  </li>
+  <li>Create an <strong>API key</strong> (type: &#8220;Server key&#8221;)<br /><br /></li>
 </ol>
 
 <p>Once you have these clientID, client secret, and developer/API key, a one-time authentication process is required: this involves connecting to the API through a client of your choosing, and completing the authentication process in a browser window. Since I am using a headless Raspberry pi setup, it was not quite convenient to perfom this initialization directly on the pi. Not to worry, this step can just as well be performed on the host machine, and the generated file will be usable on the pi as is.<br /><br /></p>
@@ -122,30 +105,31 @@
 <pre><code>sudo apt-get install python-setuptools 
 sudo easy_install --upgrade google-api-python-client
 sudo easy_install --upgrade pytz
-sudo apt-get install python-gflags </code></pre>
+sudo apt-get install python-gflags 
+</code></pre>
 
-<p>Then, a template python script to generate the credential file is available on google developer site (<a href='https://developers.google.com/google-apps/calendar/instantiate'>here</a>). Alternatively, I archived it <a href='https://github.com/jheyman/gcalnotifier/blob/master/credentials_gen.py'>here</a>. It is the same file, except I renamed <code>calendar.dat</code> into <code>credentials.dat</code> which sounded clearer to me.<br /><br /></p>
+<p>Then, a template python script to generate the credential file is available on google developer site (<a href="https://developers.google.com/google-apps/calendar/instantiate">here</a>). Alternatively, I archived it <a href="https://github.com/jheyman/gcalnotifier/blob/master/credentials_gen.py">here</a>. It is the same file, except I renamed <code>calendar.dat</code> into <code>credentials.dat</code> which sounded clearer to me.<br /><br /></p>
 
 <p>Execute the script, it should open a browser window where you can complete the process. Once this is done, a <code>calendar.dat</code> (<code>credentials.dat</code> in my version of the template) file will have been generated, containing the appropriate information for permanent access to the Google API</p>
 
-<h3 id='retrieving_calendar_events'>Retrieving calendar events</h3>
+<h3 id="retrieving-calendar-events">Retrieving calendar events</h3>
 
 <p>Once the authentication part is ok, retrieving all the calendar events is as simple as creating a <code>service</code> object and executing a command like so:</p>
 
-<pre><code>events = service.events().list(singleEvents=True, calendarId=&#39;&lt;your calendar Id&#39;).execute()	</code></pre>
+<pre><code>events = service.events().list(singleEvents=True, calendarId='&lt;your calendar Id').execute()	
+</code></pre>
 
-<p>To verify what your calendar Id is, log to your calendar the usual way, go to the settings page, the calendar Id is mentionned in the &#8220;Calendar Address&#8221; section. Mine just equals my email address. The format of the returned events is available in the Google Calendar API reference (<a href='https://developers.google.com/google-apps/calendar/v3/reference/events'>here</a>)</p>
+<p>To verify what your calendar Id is, log to your calendar the usual way, go to the settings page, the calendar Id is mentionned in the &#8220;Calendar Address&#8221; section. Mine just equals my email address.
+The format of the returned events is available in the Google Calendar API reference (<a href="https://developers.google.com/google-apps/calendar/v3/reference/events">here</a>)</p>
 
-<h3 id='generating_audio_notifications'>Generating audio notifications</h3>
+<h3 id="generating-audio-notifications">Generating audio notifications</h3>
 
 <p>I hesitated on which voice synthesis solution to use for this project. The noteworthy options I found where:</p>
 
 <ul>
-<li>Espeak with MBROLA add-on voices: open source, usable offline</li>
-
-<li>Pico text-to-speech: open source, usable offline</li>
-
-<li>Google translate: online<br /><br /></li>
+  <li>Espeak with MBROLA add-on voices: open source, usable offline</li>
+  <li>Pico text-to-speech: open source, usable offline</li>
+  <li>Google translate: online<br /><br /></li>
 </ul>
 
 <p>The quality of Google translate voice synthesis is the best by far, and for this project an internet connection is required anyway, so I selected this option. It may turn out to be inconvenient to maintain on the long run (e.g. there is no guarantee that google translate API will still be there a few years from now) but for now it will do.<br /><br /></p>
@@ -153,22 +137,25 @@ sudo apt-get install python-gflags </code></pre>
 <p>The conversion of a text string to a voice output boils down to a one-liner command, stored in the <code>tts.sh</code> script:</p>
 
 <pre><code>#!/bin/bash
-say() { local IFS=+;/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols &quot;http://translate.google.com/translate_tts?tl=fr&amp;q=$*&quot;; }
-say $*</code></pre>
+say() { local IFS=+;/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols "http://translate.google.com/translate_tts?tl=fr&amp;q=$*"; }
+say $*
+</code></pre>
 
 <p><strong>Note</strong>: you might need to install mplayer if not already present</p>
 
-<pre><code>sudo apt-get install mplayer</code></pre>
+<pre><code>sudo apt-get install mplayer
+</code></pre>
 
 <p><strong>Note</strong>: I adjusted the <code>tl</code> parameter in the URI to select French voice synthesis. Use <code>tl=en</code> for English voice synthesis.</p>
 
-<h3 id='polling__notification_script'>Polling &amp; notification script</h3>
+<h3 id="polling--notification-script">Polling &amp; notification script</h3>
 
-<p>I cooked up a Python script (get it <a href='https://github.com/jheyman/gcalnotifier'>here</a>) that performs the following operations:<br /><br /></p>
+<p>I cooked up a Python script (get it <a href="https://github.com/jheyman/gcalnotifier">here</a>) that performs the following operations:<br /><br /></p>
 
 <ul>
-<li>Read a config file (using <code>ConfigParser</code> python lib) to retrieve my developer key, specify the list of calendar Ids I want to manage audio notifications for, the path to the voice synthesis script, the name of the file the script will log traces into, and a default value for the reminder time to use if calendar events do not have a reminder time set:</li>
+  <li>Read a config file (using <code>ConfigParser</code> python lib) to retrieve my developer key, specify the list of calendar Ids I want to manage audio notifications for, the path to the voice synthesis script, the name of the file the script will log traces into, and a default value for the reminder time to use if calendar events do not have a reminder time set:</li>
 </ul>
+
 <pre><code>[config]
 developerKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 calendars = xxxxcalendarID1,xxxxcalendarID2
@@ -176,43 +163,46 @@ tts_cmd = ./tts.sh
 log_filename = /tmp/gcalendarpolling.log
 reminder_minutes_default = 5
 </code></pre>
+
 <ul>
-<li>
-<p>Setup the logging file: I borrowed the excellent piece of code from <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>here</a> <br /><br /></p>
-</li>
-
-<li>
-<p>Authenticate to Google API, using the <code>credentials.dat</code> and <code>client_secret.json</code> files, and the developer key from the config file <br /><br /></p>
-</li>
-
-<li>
-<p>Enter the polling &amp; notification loop<br /><br /> - Get the events from all specified calendars, filtering the request for start times between &#8220;now&#8221; and &#8220;now + 30 days&#8221;.<br /><br /> - For each event, retrieve its reminder time value, if any.<br /><br /> - If the time is equal to the start time of the event minus the reminder time, call the voice synthesis script to announce the event, using the calendar event summary as the input text.<br /><br /> - Sleep for 30 seconds before looping to check events again.<br /><br /></p>
-</li>
+  <li>Setup the logging file: I borrowed the excellent piece of code from <a href="http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/">here</a>
+<br /><br /></li>
+  <li>
+    <p>Authenticate to Google API, using the <code>credentials.dat</code> and <code>client_secret.json</code> files, and the developer key from the config file
+<br /><br /></p>
+  </li>
+  <li>Enter the polling &amp; notification loop<br /><br />
+    <ul>
+      <li>Get the events from all specified calendars, filtering the request for start times between &#8220;now&#8221; and &#8220;now + 30 days&#8221;.<br /><br /></li>
+      <li>For each event, retrieve its reminder time value, if any.<br /><br /></li>
+      <li>If the time is equal to the start time of the event minus the reminder time, call the voice synthesis script to announce the event, using the calendar event summary as the input text.<br /><br /></li>
+      <li>Sleep for 30 seconds before looping to check events again.<br /><br /></li>
+    </ul>
+  </li>
 </ul>
 
 <p><strong>Note</strong>: I retrieve events planned for the next 30 days, just to cover the unlikely case where I would have set a very very long reminder of several days. 30 days-worth of calendar events is not a huge amount of data to deal with anyway.</p>
 
-<h3 id='making_the_script_a_background_servicedaemon'>Making the script a background service/daemon</h3>
+<h3 id="making-the-script-a-background-servicedaemon">Making the script a background service/daemon</h3>
 
-<p>Once the script was finalized, I turned it into a background service/daemon on the raspberry, using <a href='http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/'>these</a> great instructions. My version is available <a href='https://github.com/jheyman/gcalnotifier/blob/master/gcalnotifier.sh'>here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service using:</p>
+<p>Once the script was finalized, I turned it into a background service/daemon on the raspberry, using <a href="http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/">these</a> great instructions. My version is available <a href="https://github.com/jheyman/gcalnotifier/blob/master/gcalnotifier.sh">here</a>, I just added the <code>--chdir</code> option in the <code>start-stop-daemon</code> command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to <code>/etc/init.d</code>, make sure it has execution rights, then add activate this service using:</p>
 
-<pre><code>sudo update-rc.d gcalnotifier.sh defaults</code></pre>
+<pre><code>sudo update-rc.d gcalnotifier.sh defaults
+</code></pre>
 
-<h3 id='integration_with_multiroomhomeaudio'>Integration with MultiRoomHomeAudio</h3>
+<h3 id="integration-with-multiroomhomeaudio">Integration with MultiRoomHomeAudio</h3>
 
-<p>Since I happened to host this polling &amp; notification script on the same raspberry pi as one already hosting a music streaming client (see <a href='http://jheyman.github.io/blog/pages/MultiRoomHomeAudio'>this project</a>), I modified the script to interact with the audio controller:</p>
+<p>Since I happened to host this polling &amp; notification script on the same raspberry pi as one already hosting a music streaming client (see <a href="http://jheyman.github.io/blog/pages/MultiRoomHomeAudio">this project</a>), I modified the script to interact with the audio controller:</p>
 
 <ul>
-<li>when the script is about to announce an event, it first notifies the audio controller, that will mute the ongoing music playback (if any) and activate the audio amplifier (if required).</li>
-
-<li>a start jingle is played</li>
-
-<li>the event name is played, and repeated once</li>
-
-<li>and end jingle is played</li>
-
-<li>the script then notifies the audio controller again, to resume music playback (if applicable) and disable the audio amplifier again (if applicable). Note also that this integration requires the ability to share the sound card output, as explained in the setup part.</li>
+  <li>when the script is about to announce an event, it first notifies the audio controller, that will mute the ongoing music playback (if any) and activate the audio amplifier (if required).</li>
+  <li>a start jingle is played</li>
+  <li>the event name is played, and repeated once</li>
+  <li>and end jingle is played</li>
+  <li>the script then notifies the audio controller again, to resume music playback (if applicable) and disable the audio amplifier again (if applicable). Note also that this integration requires the ability to share the sound card output, as explained in the setup part.</li>
 </ul>
+
+
 				</div><!-- entry-content -->
 
 				<br>
@@ -290,7 +280,7 @@ reminder_minutes_default = 5
 (function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
 </script>
 
- 
+  
 
 
   <script type="text/javascript">

@@ -10,7 +10,7 @@
 	<title>Homemade Video Surveillance</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Homemade Video Surveillance" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -41,51 +41,47 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>The aim of this project was to implement a low-power homemade video surveillance system using a cheap IP camera and a raspberry pi. There are several available frameworks/examples to achieve this, but&#8230;it is so much more interesting to build one from scratch, right ?. This has already been done numerous times, there is plenty of information over the internet and no real difficulty is involved. That is, if one chooses a decent IP camera, that can be accessed over HTTP as is the case for 99% of them. Unfortunately, I picked a cheap camera that uses a <em>proprietary</em> protocol, for which only a Windows client is available. Sigh&#8230;so I ended up spending most of the project time reverse engineering the camera protocol.<br /><br /></p>
+					
+<p>The aim of this project was to implement a low-power homemade video surveillance system using a cheap IP camera and a raspberry pi. There are several available frameworks/examples to achieve this, but&#8230;it is so much more interesting to build one from scratch, right ?. This has already been done numerous times, there is plenty of information over the internet and no real difficulty is involved. That is, if one chooses a decent IP camera, that can be accessed over HTTP as is the case for 99% of them. Unfortunately, I picked a cheap camera that uses a <em>proprietary</em> protocol, for which only a Windows client is available. Sigh&#8230;so I ended up spending most of the project time reverse engineering the camera protocol.<br /><br /></p>
 
-<h3 id='hardware_parts'>Hardware parts</h3>
-
+<h3 id="hardware-parts">Hardware parts</h3>
 <p>Anyway, here are the involved components:</p>
 
 <ul>
-<li>an IP camera (in this case, a cheap model &#8220;InDoorCAM P2P&#8221; from Bluestork) <img alt='Bluestork cam' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/bluestork_cam.png' /></li>
-
-<li>a Raspberry pi (Model B+, but any model will do)</li>
-
-<li>a USB stick</li>
-
-<li>a wifi USB dongle (about 5$ at <a href='http://dx.com/p/dx-original-ultra-mini-usb-2-0-802-11n-b-g-150mbps-wi-fi-wlan-wireless-network-adapter-black-252716#.Uyx3FXX5PZg'>DealExtreme</a>)</li>
-
-<li>a USB sound card for the raspberry pi (less than 3$ at <a href='http://dx.com/p/5-1-channel-usb-sound-card-adapter-blue-59037#.Uyx0enX5PZg'>DealExtreme</a>)</li>
-
-<li>an audio amplifier module (around 5$ at <a href='http://www.dx.com/p/pam8403-dual-channel-amplifier-module-blue-216853#.U-Z2JeN_vFA'>DealExtreme</a>) <img alt='amplifier' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/amplifier.png' /></li>
-
-<li>a speaker <img alt='speaker' src='http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/speaker.png' /></li>
+  <li>an IP camera (in this case, a cheap model &#8220;InDoorCAM P2P&#8221; from Bluestork)
+<img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/bluestork_cam.png" alt="Bluestork cam" /></li>
+  <li>a Raspberry pi (Model B+, but any model will do)</li>
+  <li>a USB stick</li>
+  <li>a wifi USB dongle (about 5$ at <a href="http://dx.com/p/dx-original-ultra-mini-usb-2-0-802-11n-b-g-150mbps-wi-fi-wlan-wireless-network-adapter-black-252716#.Uyx3FXX5PZg">DealExtreme</a>)</li>
+  <li>a USB sound card for the raspberry pi (less than 3$ at <a href="http://dx.com/p/5-1-channel-usb-sound-card-adapter-blue-59037#.Uyx0enX5PZg">DealExtreme</a>)</li>
+  <li>an audio amplifier module (around 5$ at <a href="http://www.dx.com/p/pam8403-dual-channel-amplifier-module-blue-216853#.U-Z2JeN_vFA">DealExtreme</a>)
+<img src="http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/amplifier.png" alt="amplifier" /></li>
+  <li>a speaker
+<img src="http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/speaker.png" alt="speaker" /></li>
 </ul>
 
-<h3 id='overview'>Overview</h3>
+<h3 id="overview">Overview</h3>
 
 <p>In this project, the raspberry pi is entirely dedicated to capturing images from the camera and analyzing them. The camera is able to communicate over wifi, but to get maximum reliability, it will be connected to the raspi through an ethernet cable. Independently, a wifi dongle is used to communicate with the home router (e.g. to download images, administrate the system, etc&#8230;)</p>
 
-<p>The system is connected as follows: <img alt='system overview' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/global_schema.png' /></p>
+<p>The system is connected as follows:
+<img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/global_schema.png" alt="system overview" /></p>
 
 <p>Notes:</p>
 
 <ul>
-<li>a powered USB hub is used, even though the Raspi model B+ has enough USB ports. This is because I ran into issues when powering a lot of stuff over the raspi&#8217;s USB in previous projects, so I don&#8217;t even take a chance anymore, an externally powered hub gives a more stable system.</li>
-
-<li>the use of a USB sound card is overkill here, the audio output of the pi would have been good enough, but I initially wanted to have the capability to record sound too.</li>
-
-<li>the USB stick will be used (exclusively) to store live images when image detection is triggered.</li>
+  <li>a powered USB hub is used, even though the Raspi model B+ has enough USB ports. This is because I ran into issues when powering a lot of stuff over the raspi&#8217;s USB in previous projects, so I don&#8217;t even take a chance anymore, an externally powered hub gives a more stable system.</li>
+  <li>the use of a USB sound card is overkill here, the audio output of the pi would have been good enough, but I initially wanted to have the capability to record sound too.</li>
+  <li>the USB stick will be used (exclusively) to store live images when image detection is triggered.</li>
 </ul>
 
-<h3 id='raspberry_pi_setup'>Raspberry pi setup</h3>
-
+<h3 id="raspberry-pi-setup">Raspberry pi setup</h3>
 <p>I installed a default Raspbian distribution from raspberrypi.org</p>
 
 <p>1) transfer raspbian image to SD card:</p>
 
-<pre><code>sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx</code></pre>
+<pre><code>sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx
+</code></pre>
 
 <p>2) plug-in a mouse/keyboard/HDMI display and boot-up</p>
 
@@ -95,15 +91,18 @@
 
 <p>5) Plug &amp; configure USB sound card (which is required to get sound input, as it is not available on the raspberry board itself). In my case it boiled down to:</p>
 
-<pre><code>sudo nano /etc/modprobe.d/alsa-base.conf</code></pre>
+<pre><code>sudo nano /etc/modprobe.d/alsa-base.conf
+</code></pre>
 
 <p>change:</p>
 
-<pre><code>options snd-usb-audio index=-2</code></pre>
+<pre><code>options snd-usb-audio index=-2
+</code></pre>
 
 <p>into:</p>
 
-<pre><code>options snd-usb-audio index=0</code></pre>
+<pre><code>options snd-usb-audio index=0
+</code></pre>
 
 <p>6) Surprisingly, I had a hard time setting up the network config to have both wifi and ethernet <em>simultaneously</em> working. By default, whenever I plugged an ethernet cable, the wifi interface would be shut down. The following changes were required to achieve the desired setup:</p>
 
@@ -121,55 +120,63 @@ auto wlan0
 allow-hotplug wlan0
 iface wlan0 inet manual
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
-iface default inet dhcp</code></pre>
+iface default inet dhcp
+</code></pre>
 
 <p>Check the content of <code>/etc/default/ifplugd</code></p>
 
-<pre><code>INTERFACES=&quot;auto&quot;
-HOTPLUG_INTERFACES=&quot;all&quot;
-ARGS=&quot;-q -f -u0 -d10 -w -I&quot;
-SUSPEND_ACTION=&quot;stop&quot;</code></pre>
+<pre><code>INTERFACES="auto"
+HOTPLUG_INTERFACES="all"
+ARGS="-q -f -u0 -d10 -w -I"
+SUSPEND_ACTION="stop"
+</code></pre>
 
 <p>Edit <code>/etc/rc.local</code> to add:</p>
 
 <pre><code># Disable the ifplugd eth0
 sudo ifplugd eth0 --kill
-sudo ifup wlan0</code></pre>
+sudo ifup wlan0
+</code></pre>
 
 <p>7) Prepare mount point for USB disk</p>
 
 <pre><code>sudo mkdir /mnt/imagestore
-sudo chmod a+w imagestore</code></pre>
+sudo chmod a+w imagestore
+</code></pre>
 
 <p>8) Setup auto-mount of USB disk at boot time, adding in /etc/fstab:</p>
 
-<pre><code>/dev/sda1 /mnt/imagestore ext4 defaults 0 0</code></pre>
+<pre><code>/dev/sda1 /mnt/imagestore ext4 defaults 0 0
+</code></pre>
 
 <p>Finally reboot the pi:</p>
 
-<pre><code>sudo reboot</code></pre>
+<pre><code>sudo reboot
+</code></pre>
 
-<h3 id='testing_the_audio_playback'>Testing the audio playback</h3>
+<h3 id="testing-the-audio-playback">Testing the audio playback</h3>
 
 <p>Checking sound output :</p>
 
-<pre><code>aplay &lt;any wav file&gt;</code></pre>
+<pre><code>aplay &lt;any wav file&gt;
+</code></pre>
 
-<h3 id='ip_camera_setup'>IP camera setup</h3>
+<h3 id="ip-camera-setup">IP camera setup</h3>
 
 <p>I proceeded as follows to configure the IP of the Bluestork camera:</p>
 
 <ul>
-<li>connect to the camera over wifi, using the provided Windows client</li>
-
-<li>In the &#8220;LAN&#8221; tab, right-click the camera to adjust IP address (192.168.1.2 in my case)</li>
+  <li>connect to the camera over wifi, using the provided Windows client</li>
+  <li>In the &#8220;LAN&#8221; tab, right-click the camera to adjust IP address (192.168.1.2 in my case)</li>
 </ul>
 
 <p>Note : since my local wifi network is 192.168.0.xxxx, after this setup, the camera cannot be accessed directly over wifi anymore.</p>
 
 <p>This camera delivers 640x480 images, at up to (theoretically) 30 images per second, but I configured it to send 3 images/sec, which is enough for my need (and ensures that my image analysis code keeps up easily)</p>
 
-<p>An interesting tip: by default the camera comes with a Telnet server installed, and the login/passwd is &#8220;admin/admin&#8221; (sigh&#8230;) This revealed a few interesting things, like the UDP ports the camera is using:</p>
+<p>An interesting tip: by default the camera comes with a Telnet server installed, and the login/passwd is &#8220;admin/admin&#8221; (sigh&#8230;) 
+This revealed a few interesting things, like the UDP ports the camera is using:</p>
+
 <pre><code>
 	~ # netstat -l
 	Active Internet connections (only servers)
@@ -197,6 +204,7 @@ sudo chmod a+w imagestore</code></pre>
 	VCED exceptions         : not available
 	VCEI exceptions         : not available
 </code></pre>
+
 <p>User config files happen to be stored in <code>/mnt/spinand/sif</code>, and specifically:</p>
 
 <pre><code>/mnt/spinand/sif # cat hkclient.conf
@@ -216,11 +224,13 @@ CLIENT=hkipcame
 /mnt/spinand/sif # http://www.uipcam.com/app/experience/download.jsp?fileName=bsd_6360.txtCommitRemoteHostInfo   1
 CommitRemoteHostInfo   2
 CommitRemoteHostInfo   1
-CommitRemoteHostInfo   2</code></pre>
+CommitRemoteHostInfo   2
+</code></pre>
 
-<h3 id='ip_camera_protocol'>IP camera protocol</h3>
+<h3 id="ip-camera-protocol">IP camera protocol</h3>
 
 <p>The IP camera model I chose unfortunately does not support standard (e.g. HTTP) communication to retrieve images, but uses a proprietary protocol based on UDP, implemented by a Windows client. So I ended up reverse engineering just enough of the protocol to be able to start the image acquisition and get the image data. Using the Windows client with Wireshark running in the background, and after countless hours of head scratching and trial&amp;error tests, I isolated a packet sequence fulfilling my need (though most of the details of the protocol remain obscure, at least I got the d***** thing to work). The sequence goes as follows:<br /><br /></p>
+
 <pre><code>* Initialization sequence:
   * initialize an UDP socket, bind it to any available port on the local pc
   * All UDP packets mentioned below will be sent to the camera's IP address on port 5000 
@@ -244,142 +254,158 @@ CommitRemoteHostInfo   2</code></pre>
 * NOTE: after a	few images, the end of image pattern does not necessarily come as the last two bytes of a fragment, but can be in the middle of a packet, immediately followed by the beginning of the data for the next frame.
 * to sustain the image flow, every few packets received, a control packet needs to be sent, with most of the data taken from wireshark capture, and the last bytes updated dynamically, based on a predefined sequence (0xd9,0xd8,0xdb,0xda,0xdd,0xdc,0xdf,0xde,0xd1,0xd0) and subtle variations over time. Check the code for details, this part was tricky)
 </code></pre>
-<p><strong><em>Side note</em></strong>:<br /><br /> Rik Bobbaers pointed out an interesting lead to go further in this reverse engineering exercise: the <a href='http://www.mrsafe.be/?portfolio=wireless-hd-ip-camera'>MrSafe HD Indoor camera</a> is apparently similar to the Bluestork model I own, and comes with an Android app (get it <a href='http://www.mrsafe.be/wp-content/uploads/2015/01/mrsafe-0522.apk'>here</a>) that could maybe be reverse-engineered, more easily than the Bluestork windows app:<br /><br /></p>
+
+<p><strong><em>Side note</em></strong>:<br /><br />
+Rik Bobbaers pointed out an interesting lead to go further in this reverse engineering exercise: the <a href="http://www.mrsafe.be/?portfolio=wireless-hd-ip-camera">MrSafe HD Indoor camera</a> is apparently similar to the Bluestork model I own, and comes with an Android app (get it <a href="http://www.mrsafe.be/wp-content/uploads/2015/01/mrsafe-0522.apk">here</a>) that could maybe be reverse-engineered, more easily than the Bluestork windows app:<br /><br /></p>
 
 <ul>
-<li>unzip the apk and get the <code>classes.dex</code> file, which can be unpacked with <a href='https://code.google.com/p/dex2jar/'>dex2jar</a>:</li>
+  <li>unzip the apk and get the <code>classes.dex</code> file, which can be unpacked with <a href="https://code.google.com/p/dex2jar/">dex2jar</a>:</li>
 </ul>
+
 <pre><code>./d2j-dex2jar classes.dex</code></pre>
-<ul>
-<li>
-<p>a Java decompiler like <a href='http://jd.benow.ca/'>this one</a> could then be used to help figuring out the protocol: launch <code>JD-GUI</code>, open the <code>classes.dex</code> file, and there you go, the java classes source code.<br /><br /></p>
-</li>
 
-<li>
-<p>In addition, <a href='http://code.google.com/p/android-apktool/'>apktool</a> can be used to extract info from the original apk file, especially to get the unencrypted content of all XML files</p>
-</li>
+<ul>
+  <li>
+    <p>a Java decompiler like <a href="http://jd.benow.ca/">this one</a> could then be used to help figuring out the protocol: launch <code>JD-GUI</code>, open the <code>classes.dex</code> file, and there you go, the java classes source code.<br /><br /></p>
+  </li>
+  <li>
+    <p>In addition, <a href="http://code.google.com/p/android-apktool/">apktool</a> can be used to extract info from the original apk file, especially to get the unencrypted content of all XML files</p>
+  </li>
 </ul>
+
 <pre><code>apktool d mrsafe-0522.apk</code></pre>
+
 <p>In directory <code>/x1/Studio/Ali</code>, <code>Start.java</code> and <code>Video.java</code> look interesting. Mentions of devices supporting P2P protocol in the code is also a hint (though I already tried some generic P2P client to connect to my camera, and failed). This reverse engineering effort is to be continued for now&#8230;just for fun, since the current code is good enough anyway to get everything working as far as I am concerned.</p>
 
-<h3 id='installing_opencv'>Installing openCV</h3>
+<h3 id="installing-opencv">Installing openCV</h3>
 
 <p>I will be using openCV for implementing the image analysis. To install it on the raspberry pi, first check the raspi repo database is up to date :</p>
 
-<pre><code>sudo apt-get update</code></pre>
+<pre><code>sudo apt-get update
+</code></pre>
 
 <p>Then just install openCV:</p>
 
-<pre><code>sudo apt-get install libopencv-dev python-opencv</code></pre>
+<pre><code>sudo apt-get install libopencv-dev python-opencv
+</code></pre>
 
 <p><code>ffmpeg</code> is required to save images as compressed video:</p>
 
-<pre><code>sudo apt-get install ffmpeg</code></pre>
+<pre><code>sudo apt-get install ffmpeg
+</code></pre>
 
-<h3 id='motion_detection_algorithm'>Motion detection algorithm</h3>
+<h3 id="motion-detection-algorithm">Motion detection algorithm</h3>
 
 <p>A very simple differential images algorithm is used, to keep performance requirements to a minimum.</p>
 
 <ul>
-<li>at all times, keep the latest two captured images (N-2 and N-1) in memory</li>
-
-<li>capture a new image (N)</li>
-
-<li>convert it to grayscale</li>
-
-<li>compute the absolute difference (in grayscale) between N and N-2, and between N and N-1.</li>
-
-<li>compute the bitwise AND of these two delta images</li>
-
-<li>apply a threshold on the resulting image to get a binary result (pixel below threshold at 0, pixels above threshold at 255)</li>
-
-<li>count the number of pixels at 255.</li>
-
-<li>a detection is notified if this number exceeds a predefined threshold.</li>
+  <li>at all times, keep the latest two captured images (N-2 and N-1) in memory</li>
+  <li>capture a new image (N)</li>
+  <li>convert it to grayscale</li>
+  <li>compute the absolute difference (in grayscale) between N and N-2, and between N and N-1.</li>
+  <li>compute the bitwise AND of these two delta images</li>
+  <li>apply a threshold on the resulting image to get a binary result (pixel below threshold at 0, pixels above threshold at 255)</li>
+  <li>count the number of pixels at 255.</li>
+  <li>a detection is notified if this number exceeds a predefined threshold.</li>
 </ul>
 
 <p>Then it is all a matter of carefully choosing the various settings/threshold to minimize false positive while keep a decent sensitivity. Experimentation is key, since it depends a lot on the type of scene being captured.</p>
 
-<h3 id='the_surveillance_code'>The surveillance code</h3>
+<h3 id="the-surveillance-code">The surveillance code</h3>
 
 <p>An easy way to start experimenting with image capture early during the project was to use a python script to send/receive packets. I initially planned to move to a C implementation later now for performance concerns, but it turns out that for my limited need (capturing/analysing/saving a few low-res images per second), Python running on the raspi is just fine performance-wise.</p>
 
 <p>The script therefore ended up doing this:</p>
-<pre><code>* send the magic packets previously identified to start image flow
-* loop (until a socket error occurs) doing this:
-  * read incoming packets
-* accumulate enough packets to have (probably) enough data for a whole image
-* if enough data is available, search the data for the jpeg "start of image" and "end of image" markers
-  * if the markers are found, isolate the JPEG data bytes, and start image analysis:
-    * read the data as an openCV image
-    * apply the image analysis described above. If motion is detected:
-      * in this case, save the N-2, N-1, and N images, and trig the capture of the next few images too.
-      * also play a beep sound on the audio output upon detection.
-    * in any case, shift the N-2/N-1/N images for next iteration.
-  * every few fragments received, compute and send the "continue" packet, as per the reverse-engineering protocol.
-* if a socket error occurs (cheap camera...), restart at the beginning.
-</code></pre>
-<p>As an example, it captured a random cat passing by: <img alt='cat capture' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/capture_cat.png' /></p>
 
-<p>And the associated binary image that triggered this particular capture: <img alt='cat capture binary' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/capture_cat_binary.png' /></p>
+<ul>
+  <li>send the magic packets previously identified to start image flow</li>
+  <li>loop (until a socket error occurs) doing this:
+    <ul>
+      <li>read incoming packets</li>
+    </ul>
+  </li>
+  <li>accumulate enough packets to have (probably) enough data for a whole image</li>
+  <li>if enough data is available, search the data for the jpeg &#8220;start of image&#8221; and &#8220;end of image&#8221; markers
+    <ul>
+      <li>if the markers are found, isolate the JPEG data bytes, and start image analysis:
+        <ul>
+          <li>read the data as an openCV image</li>
+          <li>apply the image analysis described above. If motion is detected:
+            <ul>
+              <li>in this case, save the N-2, N-1, and N images, and trig the capture of the next few images too.</li>
+              <li>also play a beep sound on the audio output upon detection.</li>
+            </ul>
+          </li>
+          <li>in any case, shift the N-2/N-1/N images for next iteration.</li>
+        </ul>
+      </li>
+      <li>every few fragments received, compute and send the &#8220;continue&#8221; packet, as per the reverse-engineering protocol.</li>
+    </ul>
+  </li>
+  <li>if a socket error occurs (cheap camera&#8230;), restart at the beginning.</li>
+</ul>
 
-<h4 id='video_files_management'>Video files management</h4>
+<p>As an example, it captured a random cat passing by:
+<img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/capture_cat.png" alt="cat capture" /></p>
 
+<p>And the associated binary image that triggered this particular capture:
+<img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/capture_cat_binary.png" alt="cat capture binary" /></p>
+
+<h4 id="video-files-management">Video files management</h4>
 <p>The script also:</p>
 
 <ul>
-<li>opens a new capture file everyday, in which all motion detections for that day will be concatenated. This allows to quickly review the surveillance images for a given day by opening a single file</li>
-
-<li>dumps the binary image corresponding to each detection, for debug purposes.</li>
-
-<li>unconditionnally dumps a single image every 15 minutes, as a background monitoring</li>
+  <li>opens a new capture file everyday, in which all motion detections for that day will be concatenated. This allows to quickly review the surveillance images for a given day by opening a single file</li>
+  <li>dumps the binary image corresponding to each detection, for debug purposes.</li>
+  <li>unconditionnally dumps a single image every 15 minutes, as a background monitoring</li>
 </ul>
 
 <p>A cron rule is in charge of cleaning up old capture files, deleting the oldest ones (older than 4 days in this example):</p>
 
-<pre><code>0 0 * * * date \&amp;\&amp; find /mnt/imagestore -mtime +4 -exec rm -rf {} \; &gt;&gt; /mnt/imagestore/purge.log 2&gt;\&amp;1</code></pre>
+<pre><code>0 0 * * * date \&amp;\&amp; find /mnt/imagestore -mtime +4 -exec rm -rf {} \; &gt;&gt; /mnt/imagestore/purge.log 2&gt;\&amp;1
+</code></pre>
 
-<h4 id='source_code'>Source code</h4>
+<h4 id="source-code">Source code</h4>
+<p>The full python script is available <a href="https://github.com/jheyman/videosurveillance">here</a>. Note that the hardcoded byte sequences apply to my camera, you would have to capture your own data with Wireshark. This is horrible python code, it started as a simple hack to play with camera settings, and ended up being the base for the final version since I got fed up after finally completing the reverse engineering part, and did not have the courage to clean it up.</p>
 
-<p>The full python script is available <a href='https://github.com/jheyman/videosurveillance'>here</a>. Note that the hardcoded byte sequences apply to my camera, you would have to capture your own data with Wireshark. This is horrible python code, it started as a simple hack to play with camera settings, and ended up being the base for the final version since I got fed up after finally completing the reverse engineering part, and did not have the courage to clean it up.</p>
-
-<h3 id='installing_the_system'>Installing the system</h3>
+<h3 id="installing-the-system">Installing the system</h3>
 
 <p>The final installation in its weather-proof box is show below. The top cover of the box contains the USB hub, the USB storage, the audio, and the wi-fi dongle:</p>
 
-<p><img alt='system internal view cover' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/assembly_cover.png' /></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/assembly_cover.png" alt="system internal view cover" /></p>
 
-<p>Note : the small PCB with screw connectors contains a chip that is unused in this project, I just happened to reuse this PCB from another project for convenience purposes (see <a href='http://jheyman.github.io/blog/pages/VoiceControlledRadio'>here</a>)<br /><br /> The other side of the box contains the Raspberry pi and the main power supply:</p>
+<p>Note : the small PCB with screw connectors contains a chip that is unused in this project, I just happened to reuse this PCB from another project for convenience purposes (see <a href="http://jheyman.github.io/blog/pages/VoiceControlledRadio">here</a>)<br /><br />
+The other side of the box contains the Raspberry pi and the main power supply:</p>
 
-<p><img alt='system internal view box' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/assembly_box.png' /></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/assembly_box.png" alt="system internal view box" /></p>
 
-<h3 id='misc_notes'>Misc notes</h3>
+<h3 id="misc-notes">Misc notes</h3>
 
-<h4 id='logging'>Logging</h4>
+<h4 id="logging">Logging</h4>
 
 <p>When executing the python script as a background job and redirecting its execution output to a logfile, I noticed that none of the print statements seemed to end up in the log file. It turns out that by default, python buffers the outputs and they might not end up in the log before a while. To ensure that all outputs appear in the log file as soon as they come, I used the <code>-u</code> (unbuffered) python option. The complete line to start the script in the background while also capturing its output is:</p>
 
-<pre><code>python -u surveillance.py &gt; surveillance.log 2&gt;&amp;1 &amp;</code></pre>
+<pre><code>python -u surveillance.py &gt; surveillance.log 2&gt;&amp;1 &amp;
+</code></pre>
 
-<h4 id='camera_viewing_angle'>Camera viewing angle</h4>
-
+<h4 id="camera-viewing-angle">Camera viewing angle</h4>
 <p>The IP camera I bought has a limited viewing angle. Since it is mounted quite near the front door, I was not able to view everything I needed. I just bought a super cheap chinese wide-angle lens for smartphones (a few dollars), and considering that I don&#8217;t care about image quality, this did the job.</p>
 
-<p><img alt='fish eye' src='http://jheyman.github.io/blog/assets/images/VideoSurveillance/fish_eye.png' /></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/fish_eye.png" alt="fish eye" /></p>
 
-<h3 id='security_disclaimer'>Security disclaimer</h3>
+<h3 id="security-disclaimer">Security disclaimer</h3>
 
 <p>There is no security management whatsoever. The reason is simple: the camera only captures images of my front door, which is visible from the street anyway. I just don&#8217;t care about the camera being hacked. I would NEVER deploy such an unprotected system for an indoor camera, where very strong privacy/security concerns apply.</p>
 
-<h3 id='lessons_learned'>Lessons learned</h3>
+<h3 id="lessons-learned">Lessons learned</h3>
 
 <ul>
-<li>OpenCV is AWESOME and even simpler to use than I anticipated, especially in Python.</li>
-
-<li>Python is good enough for (slow) real-time image analysis, even on a raspi.</li>
-
-<li>Properly filtering out false positives in image motion detection algorithm is tricky</li>
+  <li>OpenCV is AWESOME and even simpler to use than I anticipated, especially in Python.</li>
+  <li>Python is good enough for (slow) real-time image analysis, even on a raspi.</li>
+  <li>Properly filtering out false positives in image motion detection algorithm is tricky</li>
 </ul>
+
+
 				</div><!-- entry-content -->
 
 				<br>
@@ -457,7 +483,7 @@ CommitRemoteHostInfo   2</code></pre>
 (function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
 </script>
 
- 
+  
 
 
   <script type="text/javascript">

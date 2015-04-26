@@ -7,18 +7,12 @@
                 <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
                 
                         
-                        <item>
-                                <title>Hot glue and homemade bits</title>
-                                <description>A collection of my notes from various DIY projects/experimentations</description>
-                                <link>http://jheyman.github.io/blog/index.html</link>
-                        </item>
-                        
                 
                         
                         <item>
-                                <title>wireless water meter</title>
-                                <description>Implementing a water metering system with wireless reporting/monitoring</description>
-                                <link>http://jheyman.github.io/blog/pages/WirelessWaterMeter/index.html</link>
+                                <title>Tools of the trade</title>
+                                <description>A list of useful tools for DIY projects</description>
+                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
                         </item>
                         
                 
@@ -43,6 +37,14 @@
                                 <title>ShoppingList android widget</title>
                                 <description>A custom shopping list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/ShoppingListWidget/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Home Backup with BTSync</title>
+                                <description>background backup over LAN of my /home folder</description>
+                                <link>http://jheyman.github.io/blog/pages/HomeBackupWithBTSync/index.html</link>
                         </item>
                         
                 
@@ -96,17 +98,17 @@
                 
                         
                         <item>
-                                <title>Tools of the trade</title>
-                                <description>A list of useful tools for DIY projects</description>
-                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
+                                <title>wireless water meter</title>
+                                <description>Implementing a water metering system with wireless reporting/monitoring</description>
+                                <link>http://jheyman.github.io/blog/pages/WirelessWaterMeter/index.html</link>
                         </item>
                         
                 
                         
                         <item>
-                                <title>Museum of Horrors</title>
-                                <description>A collection of ugly prototypes</description>
-                                <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
+                                <title>Hot glue and homemade bits</title>
+                                <description>A collection of my notes from various DIY projects/experimentations</description>
+                                <link>http://jheyman.github.io/blog/index.html</link>
                         </item>
                         
                 
@@ -123,6 +125,14 @@
                                 <title>PostitList android widget</title>
                                 <description>A custom post-it list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/PostitListWidget/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>DIY Emergency Ethernet Plug</title>
+                                <description>manually crimping an Ethernet plug with no appropriate tool</description>
+                                <link>http://jheyman.github.io/blog/pages/DIYEthernetPlug/index.html</link>
                         </item>
                         
                 
@@ -182,6 +192,12 @@
                         </item>
                         
                 
+                        
+                        <item>
+                                <title>Museum of Horrors</title>
+                                <description>A collection of ugly prototypes</description>
+                                <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
+                        </item>
                         
                 
                         

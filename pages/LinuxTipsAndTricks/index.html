@@ -10,7 +10,7 @@
 	<title>Linux tips and tricks</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Linux tips and tricks" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -41,73 +41,57 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>Below is a set of notes to myself regarding various Linux tips and tricks, mainly applicable to Debian/Raspbian distributions</p>
+					
+<p>Below is a set of notes to myself regarding various Linux tips and tricks, mainly applicable to Debian/Raspbian distributions</p>
 
-<h3 id='installuninstall_packages'>Install/uninstall packages</h3>
-
+<h3 id="installuninstall-packages">Install/uninstall packages</h3>
 <ul>
-<li>To install a package: <code>sudo apt-get install &lt;package/app name&gt;</code></li>
-
-<li>To list installed packages: <code>dpkg --get-selections | grep -v deinstall</code></li>
-
-<li>To remove an application/package: <code>sudo apt-get –purge remove &lt;package/app name&gt;</code></li>
+  <li>To install a package: <code>sudo apt-get install &lt;package/app name&gt;</code></li>
+  <li>To list installed packages: <code>dpkg --get-selections | grep -v deinstall</code></li>
+  <li>To remove an application/package: <code>sudo apt-get –purge remove &lt;package/app name&gt;</code></li>
 </ul>
 
-<h3 id='services__daemons'>Services / Daemons</h3>
+<h3 id="services--daemons">Services / Daemons</h3>
 
 <ul>
-<li>To create a daemon executed automatically at boot, create an executable script in /etc/init.d, following the recommanded format/template</li>
-
-<li>To add this service: <code>sudo update-rc.d &lt;name of the script&gt; defaults</code></li>
-
-<li>To remove the service: <code>sudo update-rc.d &lt;name of the script&gt; remove</code></li>
-
-<li>To manually start/stop/get status from a service: <code>sudo service &lt;name&gt; start|stop|status</code> or <code>sudo /etc/init.d/&lt;name&gt; start|stop|status</code></li>
-
-<li>To check that a particular daemon is running: <code>ps -A | grep &lt;daemon name&gt;</code></li>
+  <li>To create a daemon executed automatically at boot, create an executable script in /etc/init.d, following the recommanded format/template</li>
+  <li>To add this service: <code>sudo update-rc.d &lt;name of the script&gt; defaults</code></li>
+  <li>To remove the service: <code>sudo update-rc.d &lt;name of the script&gt; remove</code></li>
+  <li>To manually start/stop/get status from a service: <code>sudo service &lt;name&gt; start|stop|status</code> or <code>sudo /etc/init.d/&lt;name&gt; start|stop|status</code></li>
+  <li>To check that a particular daemon is running: <code>ps -A | grep &lt;daemon name&gt;</code></li>
 </ul>
 
-<h3 id='files'>Files</h3>
+<h3 id="files">Files</h3>
 
 <ul>
-<li>To display a file tree directly in the console : <code>tree -C &lt;dir&gt;</code></li>
-
-<li>To find files modified in the last X days :<code>find . -mtime -X -print</code></li>
-
-<li>To list all sub-directories and their size: <code>ls -p | grep “/” | xargs du -sh</code></li>
-
-<li>To display the total size of a directory: <code>du -sh &lt;dir&gt;</code></li>
-
-<li>To search &amp; replace over multiple files : <code>find . -name “*.c” -print | xargs sed -i ‘s/\bxxxx\b/yyyy/g’ </code></li>
-
-<li>To find a file but excluding some sub-directory from the search: <code>find . &lt;....&gt; -not -path */dirToExclude/* </code></li>
-
-<li>To search for a file in compresssed archives: <code>for file in $(find &lt;...&gt;);	do tar -tvf $file | grep “fichier”;</code></li>
-
-<li>To sync the content of two directories: <code>rsync -a src/ dst/</code></li>
+  <li>To display a file tree directly in the console : <code>tree -C &lt;dir&gt;</code></li>
+  <li>To find files modified in the last X days :<code>find . -mtime -X -print</code></li>
+  <li>To list all sub-directories and their size: <code>ls -p | grep “/” | xargs du -sh</code></li>
+  <li>To display the total size of a directory:  	<code>du -sh &lt;dir&gt;</code></li>
+  <li>To search &amp; replace over multiple files : <code>find . -name “*.c” -print | xargs sed -i ‘s/\bxxxx\b/yyyy/g’ </code></li>
+  <li>To find a file but excluding some sub-directory from the search: <code>find . &lt;....&gt; -not -path */dirToExclude/* </code></li>
+  <li>To search for a file in compresssed archives: <code>for file in $(find &lt;...&gt;);	do tar -tvf $file | grep “fichier”;</code></li>
+  <li>To sync the content of two directories: <code>rsync -a src/ dst/</code></li>
 </ul>
 
-<h3 id='console'>Console</h3>
-
+<h3 id="console">Console</h3>
 <ul>
-<li>To come back to previous directory after a cd : <code>cd -</code></li>
-
-<li>To get output traces both on stdout and in a file: <code>&lt;command&gt; | tee trace.log</code></li>
-
-<li>To search in command history : <code>Ctrl+R</code></li>
+  <li>To come back to previous directory after a cd : <code>cd -</code></li>
+  <li>To get output traces both on stdout and in a file: <code>&lt;command&gt; | tee trace.log</code></li>
+  <li>To search in command history : 	<code>Ctrl+R</code></li>
 </ul>
 
-<h3 id='text_search'>Text search</h3>
-
+<h3 id="text-search">Text search</h3>
 <ul>
-<li>to search text in files, printing found occurrence line number, recursively, ignoring case, ignoring binary files: <code>grep -nriI &lt;text&gt; &lt;search pattern&gt;</code></li>
+  <li>to search text in files, printing found occurrence line number, recursively, ignoring case, ignoring binary files: <code>grep -nriI &lt;text&gt; &lt;search pattern&gt;</code></li>
 </ul>
 
-<h3 id='disk_space_cleanup'>Disk space clean-up</h3>
-
+<h3 id="disk-space-clean-up">Disk space clean-up</h3>
 <ul>
-<li><code>ncdu</code> (NCurses based Disk Usage) is just the simplest most efficient console-based way to spot largest directories, without having to remember any command line.</li>
+  <li><code>ncdu</code> (NCurses based Disk Usage) is just the simplest most efficient console-based way to spot largest directories, without having to remember any command line.</li>
 </ul>
+
+
 				</div><!-- entry-content -->
 
 				<br>
@@ -185,7 +169,7 @@
 (function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
 </script>
 
- 
+  
 
 
   <script type="text/javascript">

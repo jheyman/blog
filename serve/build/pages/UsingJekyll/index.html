@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Using Jekyll to build this site</title>
+	<meta name="author" content="Julien Heyman">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Using Jekyll to build this site</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>While looking for a VERY simple way to create and store web pages keeping notes on my projects, I checked the Github Pages option and its associate static site generation framework: <a href='http://jekyllrb.com'>Jekyll</a>. It looked like the perfect fit, for a person like me with web skills close to zero.</p>
+
+<p>Below are a few notes (to myself) to setup the site building process:</p>
+
+<h3 id='installing_jekyll'>Installing jekyll</h3>
+
+<pre><code>sudo apt-get install ruby1.9.1 ruby1.9.1-dev make
+sudo gem install jekyll
+jekyll new [site name]
+cd [site name] 
+jekyll serve</code></pre>
+
+<p>The generated site is then accessible locally via http://localhost:4000 In practice, I used <a href='http://jekyllbootstrap.com/'>Jekyll Bootstrap</a> boilerplate to get started.</p>
+
+<h3 id='settingup_the_hosting_on_github'>Setting-up the hosting on github</h3>
+
+<p>Create a repo on github (e.g. blog.git)</p>
+
+<pre><code>mkdir blog
+cd blog
+git init
+git add . --all
+git commit -m &quot;initial commit&quot;
+git remote add origin https://github.com/[your githubname]/[repo name].git
+git push -u origin master 
+git branch gh-pages
+git checkout gh-pages</code></pre>
+
+<h3 id='customizing__configyml'>Customizing _config.yml</h3>
+
+<p>Update <code>base_url</code> to http://[your github name].github.io/[repo name] This is only required because I will no use Github Page&#8217;s built-in jekyll generator, and I require full URLs when generating the site locally.</p>
+
+<h3 id='previewing_the_site_locally'>Previewing the site locally</h3>
+
+<p>To generate the static pages and preview them locally</p>
+
+<pre><code>jekyll serve --watch --baseurl=</code></pre>
+
+<p>The site can then be accessed at <code>localhost://4000</code></p>
+
+<h3 id='updating_the_site_content'>Updating the site content</h3>
+
+<p>Github pages hosting offers dynamic jekyll files rendering automatically. However, it does not allow custom plugins. Since I do use some plugins (see below), I chose instead to only push to github the <i>result</i> of the pages generation, not the source markdown/liquid files. To update the site, I just create/edit pages as appropriate, then:</p>
+
+<pre><code>jekyll build
+cd publish/blog/
+rsync -arv ../../_site/ .
+git add . --all
+git commit -m &quot;update for XYZ&quot;
+git push -u origin gh-pages</code></pre>
+
+<p>The resulting site is then accessble from http://[your github name].github.io/[repo name]/</p>
+
+<h3 id='generating_a_tagkeyword_index_page'>Generating a tag/keyword index page</h3>
+
+<p>Jekyll supports &#8220;tags&#8221; in post articles by default, and is able to generate an index of pages from this tag list very easily. One just needs to add a <code>tags: </code> line in the YAML front matter of the markdown files. Unfortunately, when these tags are inserted in <i>pages</i> (i.e. not blog posts), things are not so simple anymore. I finally found an option relying on a custom jekyll plugin, largely based on this great blog entry:</p>
+
+<p><a href='http://brizzled.clapper.org/blog/2010/12/20/some-jekyll-hacks/'>http://brizzled.clapper.org/blog/2010/12/20/some-jekyll-hacks/</a></p>
+
+<p>I just modified a few of the plugin files to achieve my purpose:</p>
+
+<h4 id='siterb'>site.rb</h4>
+
+<p>In this file, posts tags AND pages tags are concatenated into a single list</p>
+
+<pre><code>module Jekyll
+  class Site
+
+    def pages_by_tag
+      tag_ref = {}
+      temp = self.posts.dup
+      temp.concat(self.pages)
+      temp.each do |page|  
+        page.tags.each do |tag|
+          pages = tag_ref.fetch(tag, Array.new)
+          pages &lt;&lt; page
+          tag_ref[tag] = pages
+        end
+      end
+      tag_ref
+    end
+  end
+end</code></pre>
+
+<h4 id='pagerb'>page.rb</h4>
+
+<p>This hack just lets jekyll understand that for BOTH pages and posts, tags are to be read from a comma-separated list and converted to our custom <code>Jekyll::Tag</code> objects</p>
+
+<pre><code>module Jekyll
+	class Page
+	    def tags
+	        (self.data[&#39;tags&#39;] || &#39;&#39;).split(&#39;,&#39;).map {|t| Tag.new(t)}
+	    end
+	end
+	
+	class Post
+	    def tags
+	        (self.data[&#39;tags&#39;] || &#39;&#39;).split(&#39;,&#39;).map {|t| Tag.new(t)}
+	    end
+	end
+end</code></pre>
+
+<h4 id='tagsrb'>tags.rb</h4>
+
+<p>The actual work of generating the tag index HTML page is done here.</p>
+
+<pre><code>module Jekyll
+  class MyTagIndex &lt; Page
+    def initialize(site, base, dir, tags)    
+      @site = site
+      @base = base
+      @dir = dir
+      @name = &#39;tags.html&#39;
+      self.process(@name)
+      tag_index = (site.config[&#39;tag_index_layout&#39;] || &#39;tag_index&#39;) + &#39;.html&#39;
+      self.read_yaml(File.join(base, &#39;_layouts&#39;), tag_index)
+      self.data[&#39;pages_by_tags&#39;] = tags
+      self.data[&#39;title&#39;] = &quot;Tag index&quot;
+    end
+  end  	  
+  class TagGenerator &lt; Generator
+    safe true
+    def generate(site)
+      if site.layouts.key? &#39;tag_index&#39;
+        dir = &quot;.&quot;
+        tags = Hash[site.pages_by_tag.sort]
+        generate_tag_index(site, dir, tags)           
+      end
+    end
+    def generate_tag_index(site, dir, tags)
+      index = MyTagIndex.new(site, site.source, dir, tags)
+      index.render(site.layouts, site.site_payload)
+      index.write(site.dest)
+      site.pages &lt;&lt; index
+    end
+  end
+end</code></pre>
+
+<h3 id='getting_google_analytics_to_work'>Getting google analytics to work</h3>
+
+<p>Jekyll bootstrap includes support for Google Analytics by default, by just adjusting config parameters in the <code>_config.yml</code> file (in the <code>analytics</code> section, set the <code>provider</code> param to &#8220;google&#8221; and the <code>tracking_id</code> to your custom id).</p>
+
+<p>In my specific context, there is one catch however: since Jekyll Bootstrap is aimed at github-based jekyll rendering, it only activates some of its features if the site generation is done in &#8220;safe&#8221; mode (i.e. no plugins allowed). This is the case for the github-based rendering, but is not what I want since I render the site locally to be able to use plugins. So, to still benefit from jekyll boostrap support for google analytics, I hacked the <code>_include/JB/analytics</code> file and removed the <code>if site.safe</code> condition on the first line.</p>
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Julien Heyman</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/UsingJekyll/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+ 
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

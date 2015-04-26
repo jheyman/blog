@@ -10,7 +10,7 @@
 	<title>Raspberry Pi tips and tricks</title>
 	<meta name="author" content="Julien Heyman">
 	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link rel="alternate" type="application/rss+xml" title="" href="http://jheyman.github.io/blog/feed.xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Raspberry Pi tips and tricks" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -41,32 +41,35 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi</p>
+					
+<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi</p>
 
-<h3 id='wifi_robustness'>Wifi robustness</h3>
+<h3 id="wifi-robustness">Wifi robustness</h3>
+<p>Wifi dongles can pull quite a lot of power from the USB ports, sometimes resulting in all kinds of nasty intermittent issues. Below are a few things to maximize wifi connection availability:
+- Using a powered USB hub. When space is not a problem, a good externally powered USB hub will go a long way improving the overall stability. 
+- Check that power management is turned off on the Wifi device, using:</p>
 
-<p>Wifi dongles can pull quite a lot of power from the USB ports, sometimes resulting in all kinds of nasty intermittent issues. Below are a few things to maximize wifi connection availability:</p>
-
-<ul>
-<li>Using a powered USB hub. When space is not a problem, a good externally powered USB hub will go a long way improving the overall stability.</li>
-
-<li>Check that power management is turned off on the Wifi device, using:</li>
-</ul>
 <pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt</code></pre>
-<p>If this returns <code>1</code>, power management is enabled. If it is, the wifi dongle may go to sleep after a while, and there goes your remote connection. To disable power management on Wifi dongles using the 8192cu / 8188cus chipset, create and edit a new file <code>/etc/modprobe.d/8192cu.conf</code></p>
 
-<pre><code>sudo nano /etc/modprobe.d/8192cu.conf</code></pre>
+<p>If this returns <code>1</code>, power management is enabled. If it is, the wifi dongle may go to sleep after a while, and there goes your remote connection. To disable power management on Wifi dongles using the 8192cu / 8188cus chipset,  create and edit a new file  <code>/etc/modprobe.d/8192cu.conf</code></p>
+
+<pre><code>sudo nano /etc/modprobe.d/8192cu.conf
+</code></pre>
 
 <p>and paste the following:</p>
 
 <pre><code># Disable power saving
-options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1</code></pre>
+options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1
+</code></pre>
 
 <p>Then reboot and check power management is now OFF:</p>
 
-<pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt</code></pre>
+<pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt
+</code></pre>
 
 <p>should now return 0.</p>
+
+
 				</div><!-- entry-content -->
 
 				<br>
@@ -144,7 +147,7 @@ options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1</code></pre>
 (function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
 </script>
 
- 
+  
 
 
   <script type="text/javascript">
