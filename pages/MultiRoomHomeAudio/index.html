@@ -744,6 +744,44 @@ irsend simulate "0000000000022136 0 KEY_END_ANNOUNCE piremote"
 
 <p>(the nRF24 radio module is present because I am running my <a href="http://jheyman.github.io/blog/pages/WirelessWaterMeter">wireless water meter</a> on the same raspberry pi)</p>
 
+<h3 id="ir-receiver-sensibility-to-z-wave-light-dimmer-control">IR receiver sensibility to Z-Wave light dimmer control</h3>
+
+<p>I stumbled upon an intermittent robustness issue, where at random times the IR remote controlling the playback would work very erratically. Connecting to the client raspberry pi and launching <code>mode2 -d /dev/lirc0</code>, I noticed that IR pulses where being detected continuously, even when not using the remote. Here is a short snippet of the observed signal:</p>
+
+<pre><code>space 19991
+space 19998
+space 19993
+space 19992
+space 19994
+space 19993
+space 20005
+pulse 0
+space 19987
+space 20015
+pulse 0
+space 19981
+space 40022
+pulse 0
+space 19949
+space 19996
+space 19991
+space 19995
+space 19989
+space 20001
+pulse 0
+space 19988
+space 19996
+space 19995
+space 19993
+space 19995
+space 19992
+space 19995
+</code></pre>
+
+<p>So, something was causing background noise on the IR signal. I quickly found out that turning off the room lights made the problem disappear, and thought of ambient light interference on the IR sensor. However, this was quite unlikely since the IR receiver is designed with built-in ambient light filtering, and the IR signal modulation at 38 kHZ is also supposed to prevent such issues.</p>
+
+<p><br />In fact, it so happens that in the room where this setup is installed, the (LED) lights are controlled by a z-wave dimmer (see my <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">home automation project</a> for details), and that the dimmer module works by modulating the output power at a varying rate. With dimming level anywhere between 50% and 100%, the IR receiver picked up IR noise from this modulation, while setting the dimmer level below 50% made the interference disappear. Long story short, I finally just modified the configuration of the z-wave dimmer to set the max dimming level to below 50%, to avoid this weird interference phenomenon (note: this is done by adjusting parameter #12 <em>Maximum dimmer level control</em> in the configuration menu of the z-wave device). This also meant a lower max luminosity in the room, but in this specific case it was not a problem.</p>
+
 <h3 id="misc">Misc</h3>
 <ul>
   <li>I was a bit concerned regarding the amount of CPU power required to run the audio server and clients. As it turns out, streaming audio LMS takes less than 3% CPU time on the server, while on the client side squeezelite takes about 10% CPU time. So no big deal in either case, both the server and the client pi&#8217;s can handle a lot of additional functions.</li>
@@ -801,12 +839,12 @@ irsend simulate "0000000000022136 0 KEY_END_ANNOUNCE piremote"
 <h3 id="lessons-learned">Lessons learned</h3>
 
 <ul>
-  <li>for once, everything went smoothly: IR remote control with LIRC is a breeze to setup and use, the pi is easy as ever to setup, and controlling the audio amplifier through I2C and GPIOs worked the first time.</li>
+  <li>for once, everything initially went very smoothly: IR remote control with LIRC is a breeze to setup and use, the pi is easy as ever to setup, and controlling the audio amplifier through I2C and GPIOs worked the first time.</li>
   <li>
     <p>there were however a few hiccups after a while:</p>
 
     <ol>
-      <li>The squeezelite robustness issue mentionned above</li>
+      <li>The squeezelite robustness issue &amp; Z-wave module interference mentionned above.</li>
       <li>I did struggle to get a (very) stable wifi configuration. Refer to <a href="http://jheyman.github.io/blog/pages/RaspberryPiTipsAndTricks">this page</a> for various wifi-related tips on the raspi.</li>
       <li>On one of the raspi, I got random short blank gaps during music playback, with no obvious error in squeezelite logs. I finally fixed those by using the <code>plughw</code> format in the selection of the audio output in suqeezelite startup script.</li>
     </ol>
