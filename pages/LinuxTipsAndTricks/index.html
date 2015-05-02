@@ -44,7 +44,7 @@
 					
 <p>Below is a set of notes to myself regarding various Linux tips and tricks, mainly applicable to Debian/Raspbian distributions</p>
 
-<h3 id="installuninstall-packages">Install/uninstall packages</h3>
+<h3 id="installing--uninstalling-packages">Installing / Uninstalling packages</h3>
 <ul>
   <li>To install a package: <code>sudo apt-get install &lt;package/app name&gt;</code></li>
   <li>To list installed packages: <code>dpkg --get-selections | grep -v deinstall</code></li>
@@ -61,7 +61,7 @@
   <li>To check that a particular daemon is running: <code>ps -A | grep &lt;daemon name&gt;</code></li>
 </ul>
 
-<h3 id="files">Files</h3>
+<h3 id="files--directories">Files &amp; Directories</h3>
 
 <ul>
   <li>To display a file tree directly in the console : <code>tree -C &lt;dir&gt;</code></li>
@@ -72,6 +72,7 @@
   <li>To find a file but excluding some sub-directory from the search: <code>find . &lt;....&gt; -not -path */dirToExclude/* </code></li>
   <li>To search for a file in compresssed archives: <code>for file in $(find &lt;...&gt;);	do tar -tvf $file | grep “fichier”;</code></li>
   <li>To sync the content of two directories: <code>rsync -a src/ dst/</code></li>
+  <li>to print content of a file with line numbers at the beginning of each line: <code>less -N &lt;file&gt;</code></li>
 </ul>
 
 <h3 id="console">Console</h3>
