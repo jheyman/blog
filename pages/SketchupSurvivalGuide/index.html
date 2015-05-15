@@ -1,0 +1,309 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Sketchup survival guide</title>
+	<meta name="author" content="Julien Heyman">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Sketchup survival guide" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Sketchup survival guide</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>Below are a few notes about basic usage of the Sketchup 3D modeler, mostly as a quick refresher for myself whenever my 3D modeling itch needs scratching, every 6 months or so. Where Sketchup really shines is its ability to be used by a very wide range of users, from enthusiastic newbies like myself that only need to model a few things once in a while and don&#8217;t want to invest hundreds of hours into learning an &#8220;old-school&#8221; 3D modeler, to professional architects and designers using it in their daily workflow. Obviously there are loads of excellent Sketchup tutorials out there (hint: watch all of the official ones one the sketchup site, and you&#8217;re all set), but this just captures the core knowledge that suits my personal (very limited) use of the tool. I am using the free (as in beer) version currently called <strong>Sketchup Make</strong>, which is more than enough as far as I am concerned.<br /><br /></p>
+
+<p><strong>Warning</strong>: Sketchup can turn out to be quite addictive. I initially wanted to test it as a simple visual support to remodel one room, and 100 hours later I ended up having modelled the whole house, with every room and associated furniture, plus outdoor areas.</p>
+
+<h3 id="setup">Setup</h3>
+<p>All right, here is the one (and only) grudge I have against Sketchup: it does not have a native linux client. You might be able to use it under linux with Wine, but last time I checked this required a workaround which in the end prevented the use of any additional Sketchup plugin, which is a big drawback for me. Also, performance when working on large models can become a severe limitation in these conditions. In the end I took the easy way out, I dual-boot to Windows and use Sketchup there.</p>
+
+<h3 id="rule-1-memorizing-basic-shortcuts">Rule #1: memorizing basic shortcuts</h3>
+
+<p>Life is too short to click on the tools icons, the following shortcuts are must-know to get any decent productivity in sketchup.</p>
+
+<h4 id="space--selection-mode">Space = selection mode</h4>
+
+<p>when using another tool, just pressing <code>Space</code> allows to go back to selection mode</p>
+
+<h4 id="p--push-pull"><code>P</code> = push-pull</h4>
+
+<p>Grow a volume from any surface</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/pushpull.png" alt="pushpull" /></p>
+
+<h4 id="t--tape-measure--guide-lines">T = tape measure / guide lines</h4>
+
+<p>Useful for measuring distance between two points on the model, but even more useful to create visual guide lines from existing points or edges</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/tapemeasure.png" alt="tapemeasure" /></p>
+
+<h4 id="m--move">M = move</h4>
+<ul>
+  <li>Always select a reference/end point when moving an object, instead of clicking somewhere on one of the surfaces of the object, to allow precise positioning at target destination, and prevent objects from sinking into surrounding surfaces when being moved.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/move.png" alt="move" /></li>
+  <li>Select <code>Ctrl</code> to make a <strong>copy</strong> of the original object and move it.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/copy.png" alt="copy" /></li>
+</ul>
+
+<h4 id="l--line">L = line</h4>
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/line.png" alt="line" /></p>
+
+<h4 id="r--rectangle">R = rectangle</h4>
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/rectangle.png" alt="rectangle" /></p>
+
+<h4 id="c--circle">C = circle</h4>
+<p>Note: the entered value is radius, not diameter.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/circle.png" alt="circle" /></p>
+
+<h4 id="mouse-middle-button--orbit-view">Mouse middle-button = orbit view</h4>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/orbit.png" alt="orbit" /></p>
+
+<h4 id="shift--mouse-middle-button--pan-view">Shift + mouse middle-button = pan view</h4>
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/pan.png" alt="pan" /></p>
+
+<h4 id="mouse-wheel--zoom">Mouse wheel = zoom</h4>
+
+<h4 id="singledoubletriple-click">Single/Double/Triple-click</h4>
+<p>While single clicking selects an edge/surface, double-clicking also selects nearest connected edges, and triple-clicking selects all connected edges.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/singleclick.png" alt="single click" />
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/doubleclick.png" alt="double click" />
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/tripleclick.png" alt="triple click" /></p>
+
+<h3 id="rule-2-precise-actions-or-nothing">Rule #2: precise actions or nothing</h3>
+<p>A requirement for not ending up with a big mess of a model where nothing quite aligns is to never (ever) adjust the dimensions of a shape manually/visually, but instead type in the desired dimensions once the geometry operation is started (e.g. click to start a new line, adjust direction only, then type the numerical value). No clicking in the dimension value box, just type the desired value on the fly. I only use millimeters, and use the associated template that is in millimeters by default, so there is no need to precise the unit.</p>
+
+<p><strong>Note</strong>: on european setups, when several values must be entered (e.g. the two dimensions of a rectangle), the separator must be <code>;</code>, and not <code>,</code> like the english setup and therefore as mentioned in virtually every tutorial on the internet.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/dimensions.png" alt="dimensions" /></p>
+
+<p>Another requirement for precise operations is to use and abuse sketchup&#8217;s inferencing and locking system:</p>
+
+<ul>
+  <li><strong>Inferencing</strong>: while performing a geometry operation, once the starting point has been set, sketchup has a live mechanism to help properly positioning the end point to achieve the desired geometry:
+    <ul>
+      <li><strong><em>Point inferencing</em></strong>: after starting an action, hovering the cursor for a while over a particular point will draw dashed guidelines from that point.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/pointinferencing.png" alt="point inferencing" /></li>
+      <li><strong><em>Axis inferencing</em></strong>: a drawing line becomes blue when perfectly aligned with the vertical axis, green when aligned with depth axis, red when aligned with the horizontal axis
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/axisinferencing.png" alt="axisinferencing" /></li>
+      <li><strong><em>Edge inferencing</em></strong>: after starting a line, hovering the cursor for a while over an existing edge will allow to draw the new line <strong>parallely</strong> to the referenced edge: the drawing line becomes purple to indicate this inferencing.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/edgeinferencing.png" alt="edgeinferencing" /></li>
+      <li><strong><em>surface inferencing</em></strong>: typically used during a push-pull action, moving the cursor over another existing surface will align the new surface exactly to it.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/surfaceinferencing.png" alt="surfaceinferencing" /></li>
+      <li>and more types of inferences exist&#8230;</li>
+    </ul>
+  </li>
+  <li><strong>Locking</strong> an inference: once an inference is acquired, pressing <code>Shift</code> allows to lock the movement along this inference, wherever the mouse cursor is. The drawing line then becomes bold to show locking.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/locking.png" alt="locking" />
+    <ul>
+      <li>For axis inferencing, an alternate way to lock is to use the arrow keys before beginning the movement: <code>left/up/right key</code> will lock the movement along the green/blue/red axis respectively</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="rule-3-using-groups-and-components-everywhere">Rule #3: Using groups and components everywhere</h3>
+<p><strong><em>Groups</em></strong> allow manipulating a set of surfaces/edges as a single block. But more importantly, groups allow different parts of a model to not &#8220;stick&#8221; to each other: not using groups is a sure way to end up with one big messy model where moving any surface/edge results in breaking all surrounding shapes. You have been warned.</p>
+
+<ul>
+  <li>Select a set of surfaces, right-click, create group.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/group.png" alt="group" /></li>
+  <li>To edit a group, double-click it: the rest of the model is grayed out and modification of the surfaces inside the group is then possible. Single click anywhere outside the group to go back to editing the global model.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/groupedit.png" alt="groupedit" /></li>
+  <li>Groups can of course be nested.</li>
+</ul>
+
+<p><br />
+<strong>Components</strong> are groups that have one important additional feature: whene modifying a component, all other instances/copies of this component are immediately modified accordingly. This is a great way to ensure consistency across copies, and a huge time saver when a modification is required after having placed many copies of an object.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/componentedit.png" alt="component edit" /></p>
+
+<p>Also, using groups and components allows to significantly reduce the size of the sketchup models.</p>
+
+<h3 id="rule-4-use-scene-views">Rule #4: Use Scene views</h3>
+<p>Scene views are like <strong>bookmarks</strong> of given camera positions (plus many additional other parameters also being saved in the scene view). Creating a scene view for each useful camera position allows to very quickly move between views, just double-clicking on the desired view tab.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/scenes.png" alt="scenes" /></p>
+
+<h3 id="rule-5-clean-upheal-the-surfaces-as-you-go">Rule #5: Clean-up/heal the surfaces as you go</h3>
+
+<p>Many actions result in unnecessary coplanar edges: it is good practice to clean them up as you go, using the eraser (E) tool or just selecting the edge and pressing <code>delete</code>.</p>
+
+<h3 id="rule-6-know-the-other-useful-stuff">Rule #6: Know the other useful stuff</h3>
+
+<h4 id="follow-me-tool">Follow-me tool</h4>
+<p>This is like using push-pull on an existing surface, and then telling sketchup to constrain the push-pull operation along the direction of an existing edge, then along another connected edge, and so on.
+Two modes:</p>
+
+<ul>
+  <li>select the follow-me tool, click on a surface, then move the cursor manually along the desired edge path</li>
+  <li>OR, select a target surface, select the follow-me tool, then click on the surface to be pulled: this automatically performs the follow-me operation along the edges of the selected surface. Super easy way to create a bevel.</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/followmebefore.png" alt="followmebefore" />
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/followmeafter.png" alt="followmeafter" /></p>
+
+<h4 id="array-of-objects">Array of objects</h4>
+<p>Two <strong>very</strong> useful tips when creating objects where one group/pattern is repeated several times:</p>
+
+<ul>
+  <li>Copy an object (<code>Ctrl</code>+Move), 
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/5xbefore.png" alt="5xbefore" /></li>
+  <li>
+    <p>then type a number (N) followed by <code>x</code>: this will automatically repeat the initial copy/paste operation N times, shifting each copy by the same displacement as during the first manual copy.
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/5xafter.png" alt="5xafter" /></p>
+  </li>
+  <li>Similarly, copy an object, type a number (N) followed by <code>/</code>: the repeated copies will be placed in-between the orignal object and the copy, and spaced evenly.</li>
+</ul>
+
+<h4 id="autofold">Autofold</h4>
+<p>Moving a nested surface away from its parent surface while pressing the <code>Alt</code> key results in connection edges automatically being created between this surface and the (larger) parent surface. Another quick way to create a bevel. 
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/autofoldbefore.png" alt="autofold before" />
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/autofoldafter.png" alt="autofold after" /></p>
+
+<h4 id="layers">Layers</h4>
+<p>I do not feel the need to use them too often, but they are still a great way to toggle visualization of groups of objects on and off. Warning: layers only affect objects visibility on the screen, an object geometry can still impacted for example if modifying a visible edge/surface that would be connected/shared with the invisible object. Hence the absolute need to use groups everywhere when using layers, to prevent unwanted geometry modification that would only be revealed much later when the layer is reactivated.</p>
+
+<h4 id="section-cuts">Section cuts</h4>
+<p>Useful to see inside a complex 3D objects without having to move or delete anything.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/sectioncutbefore.png" alt="sectioncutbefore" />
+<img src="http://jheyman.github.io/blog/assets/images/SketchupSurvivalGuide/sectioncutafter.png" alt="sectioncuteafter" /></p>
+
+<h3 id="sketchup-companion-for-house-remodeling">Sketchup companion for house (re)modeling</h3>
+
+<p>A simple laser distance measurer has proved to be an invaluable help to capture distances in the real world, while modelling the rooms in my house in Sketchup:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Tools/laser_distance_measurer.png" alt="laser distance measurer" /></p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Julien Heyman</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/SketchupSurvivalGuide/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
