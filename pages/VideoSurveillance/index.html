@@ -351,6 +351,8 @@ Rik Bobbaers pointed out an interesting lead to go further in this reverse engin
 <p>And the associated binary image that triggered this particular capture:
 <img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/capture_cat_binary.png" alt="cat capture binary" /></p>
 
+<p><strong>Note</strong>: After a while, I noticed that some of the detections were triggered by the plant in the lower left corner, whenever it was slightly moving with the wind. To avoid this, I added a mask in the motion detection algorithm, with this part of the image masked out. Check out the code for details.</p>
+
 <h4 id="video-files-management">Video files management</h4>
 <p>The script also:</p>
 
@@ -402,7 +404,7 @@ The other side of the box contains the Raspberry pi and the main power supply:</
 <ul>
   <li>OpenCV is AWESOME and even simpler to use than I anticipated, especially in Python.</li>
   <li>Python is good enough for (slow) real-time image analysis, even on a raspi.</li>
-  <li>Properly filtering out false positives in image motion detection algorithm is tricky</li>
+  <li>Properly filtering out false positives in image motion detection algorithm is tricky.</li>
 </ul>
 
 

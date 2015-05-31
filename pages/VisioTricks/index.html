@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Microsoft Visio tricks</title>
+	<meta name="author" content="Julien Heyman">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Microsoft Visio tricks" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Microsoft Visio tricks</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>I&#8217;m using Microsoft Visio quite often at work, and came to realize that it can do so much more than drawing nice diagrams. I was not aware of the very large developer community around Visio either. Anyway, I had a need for:</p>
+
+<ul>
+  <li>associating data to shapes in my diagrams</li>
+  <li>performing data computation within Visio, without having to export/import to/from an external tool</li>
+  <li>displaying the resulting data onto the diagram</li>
+</ul>
+
+<p>The Professional version of Visio has specific features to achieve this (&#8220;data graphics&#8221;), but I only have access to the Standard version, so I had to find a workaround to the missing feature.</p>
+
+<h3 id="associating-data-to-shapes">Associating data to shapes</h3>
+
+<p>Fortunately, all versions of Visio provide a basic feature for associating user data to shapes.</p>
+
+<p>Right-click on a shape =&gt; <code>Data</code> =&gt; <code>Shape Data</code></p>
+
+<p>Data of various types can be created there, for this specific shape. Better yet, to apply a consistent set of data to multiple shapes, it is possible to create a shape data set:</p>
+
+<p>Right-click on Shape Data window =&gt; <code>Shape Data Sets</code></p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTricks/shapedata.png" alt="shape data" /></p>
+
+<p>Create a data set then select all target shapes on the diagram, select the created shape data set in the shape data set window, and Apply. In this case, I created a data set with mass (as a float value), volume (as a float value) and cost (and an integer value), and applied it to the 4 basic shapes I need to manipulate.<br /><br /></p>
+
+<p>In fact, these user-created data are only a small subset of the data associated to a shape: each shape also has by default a lot of built-in data that Visio uses to store information about the shape (geometry, content, format, &#8230;). This whole set of  data is available from the <code>Developer</code> tab of the UI (you may need to customize the Ribbon to make this Developer tab visible). Specifically, the <code>ShapeSheet</code> icon displays a window with all control &amp; user data of the currently selected shape:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTricks/shapesheet.png" alt="shape sheet" /></p>
+
+<h3 id="computing-from-shape-data">Computing from shape data</h3>
+<p>My specific need was creating summary data for a set of shapes, based on the combination of individual shape data (in this case, just a sum of the individual cost/mass/volume values). The most convenient way I found was to use visio <code>containers</code> to group shapes. Containers are shapes too, so they can have associated data. The only remaining part was then to find a way to compute container data, from the individual data of the shapes it contains.</p>
+
+<p>There are several ways to manipulate data programmatically in Visio:</p>
+
+<ul>
+  <li>writing formulas directly within the <code>ShapeSheet</code></li>
+  <li>VBA macros/procedures (Visual Basic for Applications)</li>
+  <li>C# code</li>
+  <li>and more&#8230;</li>
+</ul>
+
+<p><code>ShapeSheet</code> formulas can be just fine for simple computations, but I chose VBA to have a bit more flexibility / readability.</p>
+
+<h4 id="vba-reading--writing-shape-data">VBA: reading &amp; writing shape data</h4>
+
+<p>Shape data are stored in specific <code>Cells</code>, and are easily accessed by their property name:</p>
+
+<pre><code>myShape.Cells("Prop.myPropName").Formula
+</code></pre>
+
+<p>Similarly, for writing data back in the shape cells:</p>
+
+<pre><code>myShape.Cells("Prop.myPropName") = yyy
+</code></pre>
+
+<h4 id="vba-event-notification">VBA: event notification</h4>
+
+<p>The internal Visio engine emits many different <code>Events</code> when manipulating a diagram. I wanted to trig a recompute of a container&#8217;s data whenever a shape was added or removed from this container. Pro versions of Visio include a very useful Event Monitor window, tracing all events occurring in realtime, so you can figure out which event to capture for a specific action. Since this tool is not available in the Standard version, I downloaded an evaluation version of Visio Professional, ran my test, identified the required events, then went back to developing in my Standard version. For my purpose, the <code>ContainerRelationshipAdded</code> and <code>ContainerRelationshipDeleted</code> events are what I need, they get published whenever the container/containee relations evolve, e.g. when a shape is added to or removed from a container through drag-and-drop.<br /><br /></p>
+
+<p>One problem remained: when <strong>deleting</strong> a shape from a container, for some reason the <code>ContainerRelationshipXXX</code> is not emitted (whereas the Relationships cell value did change&#8230;). So, ugly workaround: capture <code>BeforeSelectionDelete</code> event at Document level, and trig a recompute of all containers on the page (since there is no easy way to find out which container a shape is in, either&#8230;). And to make things worse, this event is notified <strong>before</strong> the object is actually deleted, as its name implies: so at that time, it is still present in the container, and recomputing container data is pointless. I did not find a suitable event getting called <strong>after</strong> the object is deleted, so I added another ugly workaround: when <code>BeforeSelectionDelete</code> gets called, I set the shape data values to 0, and trig the container recompute.</p>
+
+<h3 id="displaying-results">Displaying results</h3>
+
+<p>Since the Standard version of visio does not have the <code>Data Graphics</code> feature, I chose a simple workaround: adding specific shapes (boxes) in the container, which text will be updated to reflect the value of the container&#8217;s data.
+The trick is to associate one shape data to these boxes, and then to insert a <strong>custom</strong> text field as the text for the box: From the <code>Insert</code> tab, select Insert / Field / custom field and type <code>=Prop.xxxx</code></p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTricks/customfield.png" alt="custom field" /></p>
+
+<p>As a result, the box&#8217;s text will now reflect its shape data whenever if changes. Here it is with three criteria boxes, each with their own <code>criteriavalue</code> data. The VBA script updates them, based on the their shape name, to reflect the total cost, mass, and volume of shapes inside the container, whenever the aforementioned events get notified.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTricks/criteria_box.png" alt="custom field text" /></p>
+
+<p><strong>Note</strong>: I positioned these text boxes on the <strong>edge</strong> of the container, not inside: this way, the boxes are still part of the container, but it also ensures that they stay attached to the container&#8217;s edge whenever it gets resized, which I think makes more sense for something showing data linked to the container&#8217;s content.<br /><br /></p>
+
+<p>Another possible alternative is to use <code>custom callouts</code>, also available in visio standard, and allowing to display shape data values.<br /><br /></p>
+
+<p>Once the container is in place with its associated criteria value boxes, shapes can be drag-and-dropped in the container, and the criteria values get updated accordingly:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTricks/drop1.png" alt="drop1" /></p>
+
+<p>Adding more shapes in the container:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTricks/drop2.png" alt="drop2" /></p>
+
+<p>etc&#8230;</p>
+
+<h3 id="complete-vba-script">complete VBA script</h3>
+
+<p>The resulting VBA code and test Visio file containing it are available <a href="https://github.com/jheyman/visioautocriteria">here</a> for reference.</p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Julien Heyman</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/VisioTricks/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

@@ -10,9 +10,9 @@
                 
                         
                         <item>
-                                <title>Music server on Raspberry pi</title>
-                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
-                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
+                                <title>Tools of the trade</title>
+                                <description>A list of useful tools for DIY projects</description>
+                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
                         </item>
                         
                 
@@ -98,6 +98,14 @@
                 
                         
                         <item>
+                                <title>Music server on Raspberry pi</title>
+                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>wireless water meter</title>
                                 <description>Implementing a water metering system with wireless reporting/monitoring</description>
                                 <link>http://jheyman.github.io/blog/pages/WirelessWaterMeter/index.html</link>
@@ -109,14 +117,6 @@
                                 <title>Hot glue and homemade bits</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/index.html</link>
-                        </item>
-                        
-                
-                        
-                        <item>
-                                <title>Museum of Horrors</title>
-                                <description>A collection of ugly prototypes</description>
-                                <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
                         </item>
                         
                 
@@ -170,6 +170,14 @@
                 
                         
                         <item>
+                                <title>Microsoft Visio tricks</title>
+                                <description>a few personal notes related to my limited use of Visio</description>
+                                <link>http://jheyman.github.io/blog/pages/VisioTricks/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Setup Nginx and PHP on Raspberry Pi</title>
                                 <description>Setting up Nginx and PHP on Raspberry Pi</description>
                                 <link>http://jheyman.github.io/blog/pages/PiWebServerAndPHP/index.html</link>
@@ -202,9 +210,9 @@
                 
                         
                         <item>
-                                <title>Tools of the trade</title>
-                                <description>A list of useful tools for DIY projects</description>
-                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
+                                <title>Museum of Horrors</title>
+                                <description>A collection of ugly prototypes</description>
+                                <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
                         </item>
                         
                 
