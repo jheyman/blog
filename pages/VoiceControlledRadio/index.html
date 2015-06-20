@@ -151,27 +151,7 @@ Note: these things are SMALL. Resistor included in the image for scale&#8230;</l
 
 <h3 id="setting-up-i2c-on-the-raspberry">Setting up I2C on the Raspberry</h3>
 
-<p>We must first enable the I2C interface on the Raspberry:</p>
-
-<pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf
-</code></pre>
-
-<p>comment out the line (with a <code>#</code>)</p>
-
-<pre><code>blacklist i2c-bcm2708
-</code></pre>
-
-<p>then edit /etc/modules:</p>
-
-<pre><code>sudo nano /etc/modules
-</code></pre>
-
-<p>and add the line:</p>
-
-<pre><code>i2c-dev
-</code></pre>
-
-<p>then reboot the Raspi.</p>
+<p>Instructions for enabling I2C on the raspi are available on <a href="http://jheyman.github.io/blog/pages/RaspberryPiTipsAndTricks">this page</a>.<br /><br /></p>
 
 <p>The command <code>ls /dev/i2c*</code> should then show two I2C devices (one is high speed, the other is low speed)</p>
 

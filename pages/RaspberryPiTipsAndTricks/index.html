@@ -42,7 +42,71 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi</p>
+<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi.</p>
+
+<h3 id="enabling-i2c-bus">Enabling I2C bus</h3>
+
+<p>The Raspberry Pi&#8217;s I2C bus capability is not enabled by default. Below are instructions to configure it.<br /><br /></p>
+
+<p><strong>For older Raspbian versions (pre-2014)</strong>:</p>
+
+<pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf
+</code></pre>
+
+<p>then comment out the following line (with a <code>#</code>)</p>
+
+<pre><code>blacklist i2c-bcm2708
+</code></pre>
+
+<p><strong>For newer Raspbian versions (post-2014)</strong>:</p>
+
+<pre><code>sudo raspi-config
+</code></pre>
+
+<p>and select <code>Advanced Options</code> and <code>I2C</code> menu.<br /><br /></p>
+
+<p><strong>Then for all raspbian versions</strong>:<br /><br /></p>
+
+<p>Edit <code>/etc/modules</code>:</p>
+
+<pre><code>sudo nano /etc/modules
+</code></pre>
+
+<p>and add the lines:</p>
+
+<pre><code>i2c-bcm2708
+i2c-dev
+</code></pre>
+
+<p>To enable access to /dev/i2C without root permissions, create a custom rule file:</p>
+
+<pre><code>sudo nano /etc/udev/rules.d/99-i2c.rules
+</code></pre>
+
+<p>and fill it with this content:</p>
+
+<pre><code>SUBSYSTEM==\"i2c-dev\", MODE=\"0666\"   
+</code></pre>
+
+<p>Installing the i2C tools will turn out to be useful, as well as the python binding to access i2C:</p>
+
+<pre><code>sudo aptitude install i2c-tools python-smbus
+</code></pre>
+
+<p>Finally, reboot the pi:</p>
+
+<pre><code>sudo reboot
+</code></pre>
+
+<p>Test the I2C bus using:</p>
+
+<pre><code>sudo i2cdetect -y 1
+</code></pre>
+
+<p>or</p>
+
+<pre><code>sudo i2cdetect -y 0
+</code></pre>
 
 <h3 id="wifi-robustness">Wifi robustness</h3>
 <p>Wifi dongles can pull quite a lot of power from the USB ports, sometimes resulting in all kinds of nasty intermittent issues. Below are a few things to maximize wifi connection availability:
