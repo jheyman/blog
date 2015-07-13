@@ -297,7 +297,7 @@ ctl.mixer0 {
 <pre><code>sudo apt-get install lirc liblircclient-dev
 </code></pre>
 
-<p>Then:</p>
+<p>For older raspbian distro, edit:</p>
 
 <pre><code>sudo nano /etc/modules
 </code></pre>
@@ -306,6 +306,11 @@ ctl.mixer0 {
 
 <pre><code>lirc_dev
 lirc_rpi gpio_in_pin=18
+</code></pre>
+
+<p>For newer raspbian distros using the Device Tree mechanism, edit <code>/boot/config.txt</code> instead and add the line:</p>
+
+<pre><code>dtoverlay=lirc-rpi,gpio_in_pin=18
 </code></pre>
 
 <p>Ajust the LIRC hardware config file:</p>
