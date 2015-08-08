@@ -137,7 +137,7 @@ The format of the returned events is available in the Google Calendar API refere
 <p>The conversion of a text string to a voice output boils down to a one-liner command, stored in the <code>tts.sh</code> script:</p>
 
 <pre><code>#!/bin/bash
-say() { local IFS=+;/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols "http://translate.google.com/translate_tts?tl=fr&amp;q=$*"; }
+say() { local IFS=+;/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols -http-header-fields 'User-Agent: dummy' "http://translate.google.com/translate_tts?tl=fr&amp;q=$*&amp;client=t"; }
 say $*
 </code></pre>
 
@@ -145,6 +145,8 @@ say $*
 
 <pre><code>sudo apt-get install mplayer
 </code></pre>
+
+<p><strong>Note</strong>: I added the <code>User-Agent: dummy</code>and <code>&amp;client=t</code> parts during August 2015, after Google decided to protect its translate/tts API with a captcha mechanism, making the previous basic HTTP request fail. See <a href="http://stackoverflow.com/a/31791632/1473219">this link</a> for details.<br /><br /></p>
 
 <p><strong>Note</strong>: I adjusted the <code>tl</code> parameter in the URI to select French voice synthesis. Use <code>tl=en</code> for English voice synthesis.</p>
 
