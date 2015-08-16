@@ -42,7 +42,20 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>Below is a set of notes to myself regarding various Linux tips and tricks, mainly applicable to Debian/Raspbian distributions</p>
+<p>Below is a set of notes to myself regarding various Linux tips and tricks, mainly applicable to Debian/Raspbian distributions:</p>
+
+<ul id="markdown-toc">
+  <li><a href="#installing--uninstalling-packages" id="markdown-toc-installing--uninstalling-packages">Installing / Uninstalling packages</a></li>
+  <li><a href="#customizing-hostname" id="markdown-toc-customizing-hostname">Customizing hostname</a></li>
+  <li><a href="#services--daemons" id="markdown-toc-services--daemons">Services / Daemons</a></li>
+  <li><a href="#files--directories" id="markdown-toc-files--directories">Files &amp; Directories</a></li>
+  <li><a href="#console" id="markdown-toc-console">Console</a></li>
+  <li><a href="#text-search" id="markdown-toc-text-search">Text search</a></li>
+  <li><a href="#disk-space-clean-up" id="markdown-toc-disk-space-clean-up">Disk space clean-up</a></li>
+  <li><a href="#share-a-folder-with-samba" id="markdown-toc-share-a-folder-with-samba">Share a folder with SAMBA</a></li>
+</ul>
+
+<hr />
 
 <h3 id="installing--uninstalling-packages">Installing / Uninstalling packages</h3>
 <ul>
@@ -50,6 +63,17 @@
   <li>To list installed packages: <code>dpkg --get-selections | grep -v deinstall</code></li>
   <li>To remove an application/package: <code>sudo apt-get –purge remove &lt;package/app name&gt;</code></li>
 </ul>
+
+<hr />
+
+<h3 id="customizing-hostname">Customizing hostname</h3>
+<ul>
+  <li>Edit <code>/etc/hostname</code> and replace the currently assigned name with a new customzed name</li>
+  <li>Also edit <code>etc/hosts</code> and replace the current name on the last line starting with <code>127.0.0.1</code> with the new customized name.</li>
+  <li>Reboot</li>
+</ul>
+
+<hr />
 
 <h3 id="services--daemons">Services / Daemons</h3>
 
@@ -60,6 +84,8 @@
   <li>To manually start/stop/get status from a service: <code>sudo service &lt;name&gt; start|stop|status</code> or <code>sudo /etc/init.d/&lt;name&gt; start|stop|status</code></li>
   <li>To check that a particular daemon is running: <code>ps -A | grep &lt;daemon name&gt;</code></li>
 </ul>
+
+<hr />
 
 <h3 id="files--directories">Files &amp; Directories</h3>
 
@@ -75,22 +101,51 @@
   <li>to print content of a file with line numbers at the beginning of each line: <code>less -N &lt;file&gt;</code></li>
 </ul>
 
+<hr />
+
 <h3 id="console">Console</h3>
 <ul>
   <li>To come back to previous directory after a cd : <code>cd -</code></li>
   <li>To get output traces both on stdout and in a file: <code>&lt;command&gt; | tee trace.log</code></li>
-  <li>To search in command history : 	<code>Ctrl+R</code></li>
+  <li>To search in command history: <code>Ctrl+R</code></li>
 </ul>
+
+<hr />
 
 <h3 id="text-search">Text search</h3>
 <ul>
   <li>to search text in files, printing found occurrence line number, recursively, ignoring case, ignoring binary files: <code>grep -nriI &lt;text&gt; &lt;search pattern&gt;</code></li>
 </ul>
 
+<hr />
+
 <h3 id="disk-space-clean-up">Disk space clean-up</h3>
 <ul>
   <li><code>ncdu</code> (NCurses based Disk Usage) is just the simplest most efficient console-based way to spot largest directories, without having to remember any command line.</li>
 </ul>
+
+<hr />
+
+<h3 id="share-a-folder-with-samba">Share a folder with SAMBA</h3>
+<ul>
+  <li>Install SAMBA</li>
+</ul>
+<pre><code>sudo apt-get install samba samba-common-bin
+</code></pre>
+<ul>
+  <li>edit <code>/etc/samba/smb.conf</code>, customize the “workgroup” parameter (e.g. workgroup=WORKGROUP), then add an entry for the shared folder at the end of the config file, for example:</li>
+</ul>
+
+<pre><code>[DisplayNameOfTheShare]
+	comment= description of this shared dir
+	path=/path/to/folder
+	browseable=Yes
+	writeable=Yes
+	only guest=no
+	create mask=0777
+	directory mask=0777
+	public=no
+</code></pre>
 
 
 				</div><!-- entry-content -->

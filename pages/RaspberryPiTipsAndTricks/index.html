@@ -45,6 +45,7 @@
 <p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br /><br /></p>
 
 <ul id="markdown-toc">
+  <li><a href="#customizing-hostname" id="markdown-toc-customizing-hostname">Customizing hostname</a></li>
   <li><a href="#enabling-i2c-bus" id="markdown-toc-enabling-i2c-bus">Enabling I2C bus</a></li>
   <li><a href="#using-an-external-rtc" id="markdown-toc-using-an-external-rtc">Using an external RTC</a>    <ul>
       <li><a href="#testing-the-module" id="markdown-toc-testing-the-module">Testing the module</a></li>
@@ -53,6 +54,11 @@
   </li>
   <li><a href="#wifi-robustness" id="markdown-toc-wifi-robustness">Wifi robustness</a></li>
 </ul>
+
+<hr />
+
+<h3 id="customizing-hostname">Customizing hostname</h3>
+<p>By default, any raspberry pi has the hostname <code>raspberrypi</code> assigned to it, which may turn out to be a problem when deploying multiple raspberry pis in a single local network (for example, if two or more pis share folders over the network using samba, only one of them will be seen due to the hostname conflict). To customize the hostname of each indivudal raspi, refer to <a href="http://jheyman.github.io/blog/pages/LinuxTipsAndTricks">this page</a>.</p>
 
 <hr />
 
