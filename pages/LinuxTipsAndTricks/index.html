@@ -53,6 +53,7 @@
   <li><a href="#text-search" id="markdown-toc-text-search">Text search</a></li>
   <li><a href="#disk-space-clean-up" id="markdown-toc-disk-space-clean-up">Disk space clean-up</a></li>
   <li><a href="#share-a-folder-with-samba" id="markdown-toc-share-a-folder-with-samba">Share a folder with SAMBA</a></li>
+  <li><a href="#authorize-ssh-access-from-a-known-machine-without-password" id="markdown-toc-authorize-ssh-access-from-a-known-machine-without-password">Authorize ssh access from a known machine without password</a></li>
 </ul>
 
 <hr />
@@ -153,6 +154,23 @@
 
 <pre><code>smbpasswd -a pi
 </code></pre>
+
+<hr />
+
+<h3 id="authorize-ssh-access-from-a-known-machine-without-password">Authorize ssh access from a known machine without password</h3>
+<ul>
+  <li>on the local machine that you wish to declare as authorized to access the remote machine, generate (if not already available) the ssh public key (just type Enter when prompted for passphrase):</li>
+</ul>
+<pre><code>ssh-keygen
+</code></pre>
+
+<ul>
+  <li>then send this public key to the remote machine you want to access without a password, e.g.:</li>
+</ul>
+<pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub pi@192.168.0.13
+</code></pre>
+
+<p>This will in practice copy the local machine’s public key (stored locally in <code>~/.ssh/id_rsa.pub</code> after executing <code>ssh-keygen</code>) into the <code>~/.ssh/authorized_keys</code> file on the remote machine.</p>
 
 
 				</div><!-- entry-content -->
