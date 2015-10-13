@@ -170,8 +170,8 @@
                 
                         
                         <item>
-                                <title>Microsoft Visio tricks</title>
-                                <description>a few personal notes related to my limited use of Visio</description>
+                                <title>Auto-computed values in Visio diagrams with VBA</title>
+                                <description>Experiments with Microsoft Visio VBA API</description>
                                 <link>http://jheyman.github.io/blog/pages/VisioTricks/index.html</link>
                         </item>
                         
