@@ -42,13 +42,13 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>The aim of this project was to implement a low-power homemade video surveillance system using a cheap IP camera and a raspberry pi. There are several available frameworks/examples to achieve this, but&#8230;it is so much more interesting to build one from scratch, right ?. This has already been done numerous times, there is plenty of information over the internet and no real difficulty is involved. That is, if one chooses a decent IP camera, that can be accessed over HTTP as is the case for 99% of them. Unfortunately, I picked a cheap camera that uses a <em>proprietary</em> protocol, for which only a Windows client is available. Sigh&#8230;so I ended up spending most of the project time reverse engineering the camera protocol.<br /><br /></p>
+<p>The aim of this project was to implement a low-power homemade video surveillance system using a cheap IP camera and a raspberry pi. There are several available frameworks/examples to achieve this, but…it is so much more interesting to build one from scratch, right ?. This has already been done numerous times, there is plenty of information over the internet and no real difficulty is involved. That is, if one chooses a decent IP camera, that can be accessed over HTTP as is the case for 99% of them. Unfortunately, I picked a cheap camera that uses a <em>proprietary</em> protocol, for which only a Windows client is available. Sigh…so I ended up spending most of the project time reverse engineering the camera protocol.<br /><br /></p>
 
 <h3 id="hardware-parts">Hardware parts</h3>
 <p>Anyway, here are the involved components:</p>
 
 <ul>
-  <li>an IP camera (in this case, a cheap model &#8220;InDoorCAM P2P&#8221; from Bluestork)
+  <li>an IP camera (in this case, a cheap model “InDoorCAM P2P” from Bluestork)
 <img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/bluestork_cam.png" alt="Bluestork cam" /></li>
   <li>a Raspberry pi (Model B+, but any model will do)</li>
   <li>a USB stick</li>
@@ -62,7 +62,7 @@
 
 <h3 id="overview">Overview</h3>
 
-<p>In this project, the raspberry pi is entirely dedicated to capturing images from the camera and analyzing them. The camera is able to communicate over wifi, but to get maximum reliability, it will be connected to the raspi through an ethernet cable. Independently, a wifi dongle is used to communicate with the home router (e.g. to download images, administrate the system, etc&#8230;)</p>
+<p>In this project, the raspberry pi is entirely dedicated to capturing images from the camera and analyzing them. The camera is able to communicate over wifi, but to get maximum reliability, it will be connected to the raspi through an ethernet cable. Independently, a wifi dongle is used to communicate with the home router (e.g. to download images, administrate the system, etc…)</p>
 
 <p>The system is connected as follows:
 <img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/global_schema.png" alt="system overview" /></p>
@@ -70,7 +70,7 @@
 <p>Notes:</p>
 
 <ul>
-  <li>a powered USB hub is used, even though the Raspi model B+ has enough USB ports. This is because I ran into issues when powering a lot of stuff over the raspi&#8217;s USB in previous projects, so I don&#8217;t even take a chance anymore, an externally powered hub gives a more stable system.</li>
+  <li>a powered USB hub is used, even though the Raspi model B+ has enough USB ports. This is because I ran into issues when powering a lot of stuff over the raspi’s USB in previous projects, so I don’t even take a chance anymore, an externally powered hub gives a more stable system.</li>
   <li>the use of a USB sound card is overkill here, the audio output of the pi would have been good enough, but I initially wanted to have the capability to record sound too.</li>
   <li>the USB stick will be used (exclusively) to store live images when image detection is triggered.</li>
 </ul>
@@ -167,14 +167,14 @@ sudo chmod a+w imagestore
 
 <ul>
   <li>connect to the camera over wifi, using the provided Windows client</li>
-  <li>In the &#8220;LAN&#8221; tab, right-click the camera to adjust IP address (192.168.1.2 in my case)</li>
+  <li>In the “LAN” tab, right-click the camera to adjust IP address (192.168.1.2 in my case)</li>
 </ul>
 
 <p>Note : since my local wifi network is 192.168.0.xxxx, after this setup, the camera cannot be accessed directly over wifi anymore.</p>
 
 <p>This camera delivers 640x480 images, at up to (theoretically) 30 images per second, but I configured it to send 3 images/sec, which is enough for my need (and ensures that my image analysis code keeps up easily)</p>
 
-<p>An interesting tip: by default the camera comes with a Telnet server installed, and the login/passwd is &#8220;admin/admin&#8221; (sigh&#8230;) 
+<p>An interesting tip: by default the camera comes with a Telnet server installed, and the login/passwd is “admin/admin” (sigh…) 
 This revealed a few interesting things, like the UDP ports the camera is using:</p>
 
 <pre><code>
@@ -275,7 +275,7 @@ Rik Bobbaers pointed out an interesting lead to go further in this reverse engin
 
 <pre><code>apktool d mrsafe-0522.apk</code></pre>
 
-<p>In directory <code>/x1/Studio/Ali</code>, <code>Start.java</code> and <code>Video.java</code> look interesting. Mentions of devices supporting P2P protocol in the code is also a hint (though I already tried some generic P2P client to connect to my camera, and failed). This reverse engineering effort is to be continued for now&#8230;just for fun, since the current code is good enough anyway to get everything working as far as I am concerned.</p>
+<p>In directory <code>/x1/Studio/Ali</code>, <code>Start.java</code> and <code>Video.java</code> look interesting. Mentions of devices supporting P2P protocol in the code is also a hint (though I already tried some generic P2P client to connect to my camera, and failed). This reverse engineering effort is to be continued for now…just for fun, since the current code is good enough anyway to get everything working as far as I am concerned.</p>
 
 <h3 id="installing-opencv">Installing openCV</h3>
 
@@ -325,7 +325,7 @@ Rik Bobbaers pointed out an interesting lead to go further in this reverse engin
     </ul>
   </li>
   <li>accumulate enough packets to have (probably) enough data for a whole image</li>
-  <li>if enough data is available, search the data for the jpeg &#8220;start of image&#8221; and &#8220;end of image&#8221; markers
+  <li>if enough data is available, search the data for the jpeg “start of image” and “end of image” markers
     <ul>
       <li>if the markers are found, isolate the JPEG data bytes, and start image analysis:
         <ul>
@@ -339,10 +339,10 @@ Rik Bobbaers pointed out an interesting lead to go further in this reverse engin
           <li>in any case, shift the N-2/N-1/N images for next iteration.</li>
         </ul>
       </li>
-      <li>every few fragments received, compute and send the &#8220;continue&#8221; packet, as per the reverse-engineering protocol.</li>
+      <li>every few fragments received, compute and send the “continue” packet, as per the reverse-engineering protocol.</li>
     </ul>
   </li>
-  <li>if a socket error occurs (cheap camera&#8230;), restart at the beginning.</li>
+  <li>if a socket error occurs (cheap camera…), restart at the beginning.</li>
 </ul>
 
 <p>As an example, it captured a random cat passing by:
@@ -391,13 +391,27 @@ The other side of the box contains the Raspberry pi and the main power supply:</
 </code></pre>
 
 <h4 id="camera-viewing-angle">Camera viewing angle</h4>
-<p>The IP camera I bought has a limited viewing angle. Since it is mounted quite near the front door, I was not able to view everything I needed. I just bought a super cheap chinese wide-angle lens for smartphones (a few dollars), and considering that I don&#8217;t care about image quality, this did the job.</p>
+<p>The IP camera I bought has a limited viewing angle. Since it is mounted quite near the front door, I was not able to view everything I needed. I just bought a super cheap chinese wide-angle lens for smartphones (a few dollars), and considering that I don’t care about image quality, this did the job.</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VideoSurveillance/fish_eye.png" alt="fish eye" /></p>
 
-<h3 id="security-disclaimer">Security disclaimer</h3>
+<h4 id="security-disclaimer">Security disclaimer</h4>
 
-<p>There is no security management whatsoever. The reason is simple: the camera only captures images of my front door, which is visible from the street anyway. I just don&#8217;t care about the camera being hacked. I would NEVER deploy such an unprotected system for an indoor camera, where very strong privacy/security concerns apply.</p>
+<p>There is no security management whatsoever. The reason is simple: the camera only captures images of my front door, which is visible from the street anyway. I just don’t care about the camera being hacked. I would NEVER deploy such an unprotected system for an indoor camera, where very strong privacy/security concerns apply.</p>
+
+<h4 id="remote-image-storage"> Remote image storage</h4>
+
+<p>After a while, I decided to store images remotely (on a NAS) instead of locally on the USB stick, for two reasons:</p>
+
+<ul>
+  <li>I had two problems 6 months apart where somehow the file system on the USB stick got corrupted. In retrospect, using a USB stick as a permanent image storage media is not a very wise decision.</li>
+  <li>it’s safer this way, the images now being stored directly inside the house, I will still have access to them if something bad (…) happens to the outdoor camera box.</li>
+</ul>
+
+<p>Anyway, I changed one line in <code>etc/fstab</code> to mount a NAS shared folder over NFS, instead of the USB stick:</p>
+
+<pre><code>192.168.0.12:/volume1/backup/videosurveillance /mnt/imagestore nfs defaults,user,auto,noatime 0 0	
+</code></pre>
 
 <h3 id="lessons-learned">Lessons learned</h3>
 
