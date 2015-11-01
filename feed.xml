@@ -26,6 +26,14 @@
                 
                         
                         <item>
+                                <title>PHP SQLite notes</title>
+                                <description>Various notes about using PHP and SQLite</description>
+                                <link>http://jheyman.github.io/blog/pages/PHPSQLiteNotes/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Standalone Arduino-compatible circuits</title>
                                 <description>How to make standalone arduino circuits</description>
                                 <link>http://jheyman.github.io/blog/pages/StandaloneCustomArduino/index.html</link>
@@ -37,14 +45,6 @@
                                 <title>ShoppingList android widget</title>
                                 <description>A custom shopping list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/ShoppingListWidget/index.html</link>
-                        </item>
-                        
-                
-                        
-                        <item>
-                                <title>Home Backup with BTSync</title>
-                                <description>background backup over LAN of my /home folder</description>
-                                <link>http://jheyman.github.io/blog/pages/HomeBackupWithBTSync/index.html</link>
                         </item>
                         
                 

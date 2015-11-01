@@ -2,9 +2,9 @@
 http://jheyman.github.io/blog/feed.xml
 http://jheyman.github.io/blog/pages/Tools/index.html
 http://jheyman.github.io/blog/pages/ArduinoFTDICable/index.html
+http://jheyman.github.io/blog/pages/PHPSQLiteNotes/index.html
 http://jheyman.github.io/blog/pages/StandaloneCustomArduino/index.html
 http://jheyman.github.io/blog/pages/ShoppingListWidget/index.html
-http://jheyman.github.io/blog/pages/HomeBackupWithBTSync/index.html
 http://jheyman.github.io/blog/pages/VoiceControlledRadio/index.html
 http://jheyman.github.io/blog/pages/SketchupSurvivalGuide/index.html
 http://jheyman.github.io/blog/pages/MultiRoomHomeAudio/index.html
