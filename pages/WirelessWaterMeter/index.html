@@ -320,7 +320,9 @@ After experimenting a bit I settled on the following:<br /><br /></p>
 sudo chmod a+x /etc/init.d/watermeter_logger.sh
 sudo update-rc.d watermeter_logger.sh defaults</code></pre>
 
-<p>All files are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a></p>
+<p>In addition to logging the value locally in a file, the script also logs the value remotely to a server through an HTTP request, into a centralized database (used in another project to provide visualization of the logged data).<br /><br /></p>
+
+<p>All files are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a>.</p>
 
 <h3 id="todo">Todo</h3>
 
