@@ -1,6 +1,6 @@
 
 http://jheyman.github.io/blog/feed.xml
-http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html
+http://jheyman.github.io/blog/pages/Tools/index.html
 http://jheyman.github.io/blog/pages/WirelessWaterMeter/index.html
 http://jheyman.github.io/blog/pages/ArduinoFTDICable/index.html
 http://jheyman.github.io/blog/pages/PHPSQLiteNotes/index.html
@@ -12,12 +12,13 @@ http://jheyman.github.io/blog/pages/MultiRoomHomeAudio/index.html
 http://jheyman.github.io/blog/pages/RaspberryPiTipsAndTricks/index.html
 http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier/index.html
 http://jheyman.github.io/blog/pages/VideoSurveillance/index.html
+http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html
 http://jheyman.github.io/blog/pages/GraphViewerWidget/index.html
 http://jheyman.github.io/blog/index.html
-http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html
 http://jheyman.github.io/blog/pages/UsingJekyll/index.html
 http://jheyman.github.io/blog/pages/PostitListWidget/index.html
 http://jheyman.github.io/blog/pages/DIYEthernetPlug/index.html
+http://jheyman.github.io/blog/pages/InfluxDB/index.html
 http://jheyman.github.io/blog/pages/LinuxTipsAndTricks/index.html
 http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/index.html
 http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html
@@ -26,6 +27,6 @@ http://jheyman.github.io/blog/pages/PiWebServerAndPHP/index.html
 http://jheyman.github.io/blog/pages/HomeHubTablet/index.html
 http://jheyman.github.io/blog/pages/ZwaveHomeAutomation/index.html
 http://jheyman.github.io/blog/pages/LEDMatrixStrip/index.html
-http://jheyman.github.io/blog/pages/Tools/index.html
+http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html
 http://jheyman.github.io/blog/sitemap.txt
 http://jheyman.github.io/blog/tags.html
