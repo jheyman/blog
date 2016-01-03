@@ -54,6 +54,7 @@
   <li><a href="#text-search" id="markdown-toc-text-search">Text search</a></li>
   <li><a href="#disk-space-clean-up" id="markdown-toc-disk-space-clean-up">Disk space clean-up</a></li>
   <li><a href="#share-a-folder-with-samba" id="markdown-toc-share-a-folder-with-samba">Share a folder with SAMBA</a></li>
+  <li><a href="#automounting-a-fat-formatted-usb-drive" id="markdown-toc-automounting-a-fat-formatted-usb-drive">Automounting a FAT-formatted USB drive</a></li>
   <li><a href="#authorize-ssh-access-from-a-known-machine-without-password" id="markdown-toc-authorize-ssh-access-from-a-known-machine-without-password">Authorize ssh access from a known machine without password</a></li>
 </ul>
 
@@ -166,6 +167,16 @@
 <pre><code>smbpasswd -a pi
 </code></pre>
 
+<hr />
+
+<h3 id="automounting-a-fat-formatted-usb-drive">Automounting a FAT-formatted USB drive</h3>
+
+<ul>
+  <li>A memo to myself to auto-mount a FAT drive at boot WITH permissions for anyone to write (cf umask=0000 option), with this line in <code>/etc/fstab</code>:</li>
+</ul>
+
+<pre><code>/dev/sda1 /media/usb vfat auto,users,rw,uid=pi,gid=pi,umask=0000 0 0
+</code></pre>
 <hr />
 
 <h3 id="authorize-ssh-access-from-a-known-machine-without-password">Authorize ssh access from a known machine without password</h3>
