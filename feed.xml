@@ -10,9 +10,9 @@
                 
                         
                         <item>
-                                <title>Tools of the trade</title>
-                                <description>A list of useful tools for DIY projects</description>
-                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
+                                <title>Music server on Raspberry pi</title>
+                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
                         </item>
                         
                 
@@ -66,6 +66,14 @@
                 
                         
                         <item>
+                                <title>Home data logging server</title>
+                                <description>Storing homedata with InfluxDB on Raspberry pi</description>
+                                <link>http://jheyman.github.io/blog/pages/HomeDataLoggingServer/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Sketchup survival guide</title>
                                 <description>Personal notes about minimal knowledge required to use Sketchup</description>
                                 <link>http://jheyman.github.io/blog/pages/SketchupSurvivalGuide/index.html</link>
@@ -106,14 +114,6 @@
                 
                         
                         <item>
-                                <title>Music server on Raspberry pi</title>
-                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
-                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
-                        </item>
-                        
-                
-                        
-                        <item>
                                 <title>Graph viewer widget for Android</title>
                                 <description>an Android homescreen widget to show data graphs</description>
                                 <link>http://jheyman.github.io/blog/pages/GraphViewerWidget/index.html</link>
@@ -125,6 +125,14 @@
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Museum of Horrors</title>
+                                <description>A collection of ugly prototypes</description>
+                                <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
                         </item>
                         
                 
@@ -149,14 +157,6 @@
                                 <title>DIY Emergency Ethernet Plug</title>
                                 <description>manually crimping an Ethernet plug with no appropriate tool</description>
                                 <link>http://jheyman.github.io/blog/pages/DIYEthernetPlug/index.html</link>
-                        </item>
-                        
-                
-                        
-                        <item>
-                                <title>InfluxDB on Raspberry pi</title>
-                                <description>setting up influxdb on Raspberry pi</description>
-                                <link>http://jheyman.github.io/blog/pages/InfluxDB/index.html</link>
                         </item>
                         
                 
@@ -226,9 +226,9 @@
                 
                         
                         <item>
-                                <title>Museum of Horrors</title>
-                                <description>A collection of ugly prototypes</description>
-                                <link>http://jheyman.github.io/blog/pages/MuseumOfHorrors/index.html</link>
+                                <title>Tools of the trade</title>
+                                <description>A list of useful tools for DIY projects</description>
+                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
                         </item>
                         
                 

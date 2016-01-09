@@ -54,6 +54,7 @@
       <li><a href="#graphviewerwidgetprovider" id="markdown-toc-graphviewerwidgetprovider">GraphViewerWidgetProvider</a></li>
       <li><a href="#graphviewerwidgetservice" id="markdown-toc-graphviewerwidgetservice">GraphViewerWidgetService</a></li>
       <li><a href="#stackremoteviewsfactory" id="markdown-toc-stackremoteviewsfactory">StackRemoteViewsFactory</a></li>
+      <li><a href="#graphviewerdataprovider" id="markdown-toc-graphviewerdataprovider">GraphViewerDataProvider</a></li>
       <li><a href="#settingsactivity" id="markdown-toc-settingsactivity">SettingsActivity</a></li>
     </ul>
   </li>
@@ -87,24 +88,7 @@
 
 <h3 id="data-server">Data server</h3>
 
-<p>Nothing fancy here, just a raspberry pi with a web server, PHP and SQLite installed (see <a href="http://jheyman.github.io/blog/pages/PiWebServerAndPHP">this page</a> for installation notes).
-The SQLite database is basic, each row contains three values: a <code>dataId</code> string, a <code>timestamp</code> DATETIME field, and a float <code>value</code>:</p>
-
-<ul>
-  <li><code>value</code> is the raw value received from the remote logging.</li>
-  <li><code>dataId</code> is an arbitrary key to tag the received value : it will be used to sort data to be displayed on one specific graph.</li>
-  <li><code>timestamp</code> is an SQL DATETIME variable, tagging the exact day and time the value was received.<br /><br /></li>
-</ul>
-
-<p>The PHP code to interact with this database is just as trivial:</p>
-
-<ul>
-  <li><code>graphlist_init.php</code> is just a helper to initially create the database, it is not used anymore afterwards.</li>
-  <li><code>graphlist_insert.php</code> takes the <code>dataId</code> and <code>value</code> input params passed in the HTTP request, adds the current date &amp; time, and inserts a new row in the table.</li>
-  <li><code>graphlist.php</code> takes a <code>delay</code> input parameter (corresponding to a number of hours) passed in the HTTP request, performs a query on the database to retrieve all items created in the last <code>delay</code>hours.<br /><br /></li>
-</ul>
-
-<p>The set of three PHP files is available <a href="https://github.com/jheyman/GraphViewer_ServerSide">here</a>. Since I have zero interest in PHP, this server-side code is horrible by all standards, but gets the (trivial) job done.</p>
+<p>The widget queries data from a remote data server, which setup is documented <a href="http://jheyman.github.io/blog/pages/HomeDataLoggingServer">here</a>.</p>
 
 <h3 id="data-logger">Data logger</h3>
 
@@ -112,15 +96,24 @@ The SQLite database is basic, each row contains three values: a <code>dataId</co
 
 <pre><code>import urllib
 import urllib2
-remote_log_url = 'http://192.168.0.xx:xxxx/graphlist_insert.php'
-def remoteLog(valueToLog):	
-	values = {'dataId' : 'waterMeter' }
-	values['value'] = str(valueToLog)
-	data = urllib.urlencode(values)
-	req = urllib2.Request(remote_log_url, data)
-	response = urllib2.urlopen(req)
-	result = response.read()
-	return result
+
+def remoteLog(valueToLog):
+	logger.info('Logging remotely...')
+	data = 'homelogdata,graph=waterMeter value='+str(valueToLog)
+
+	req = urllib2.Request(REMOTELOG_URL, data)
+	req.add_header('Content-Length', '%d' % len(data))
+	req.add_header('Content-Type', 'application/octet-stream')	
+	
+	try:
+		response = urllib2.urlopen(req, timeout=5)
+	except urllib2.HTTPError, e:
+		logger.info('HTTPError: '+ str(e))
+	except urllib2.URLError as e:
+		logger.info('URLError: '+ str(e))
+	else:
+		result = response.read()
+		logger.info('successfully logged data (' + data + ') remotely')
 </code></pre>
 
 <p>Another source of data is a python script performing a basic monitoring of my LAN devices ping status (nothing noteworthy, it just pings a predefined list of devices and logs the result in the data server, logging 1.0 for a successful ping and 0.0 for a failed ping (the source code is <a href="https://github.com/jheyman/HealthMonitor">here</a>)</p>
@@ -211,7 +204,12 @@ def remoteLog(valueToLog):
 <ul>
   <li>whenever Android needs to render the widget, and specifically its body (our ListView), it calls <code>getCount</code> on this class to know how many items are in the list, then calls <code>getViewAt(position)</code> for all visible items in the list, to get the remote view to be rendered for each item. Specifically here, <code>getCount</code> returns the number of graphs to be displayed, and <code>getViewAt(position)</code>returns a bitmap (wrapped in a remote view) corresponding to the graph for this position in the list view. I currently implemented two types of graphs:
     <ul>
-      <li><strong>bargraph</strong>, with automatic vertical scaling based on the maximum value in the dataset over the displayed period of time</li>
+      <li><strong>bargraph</strong>, with automatic vertical scaling based on the maximum value in the dataset over the displayed period of time
+        <ul>
+          <li>with automatic display of cumulated value for each of the 16 sub-periods</li>
+          <li>and an additional ability to specify a given time range of interest, where the cumulated value is computed and displayed (say, to monitor daily water consumption between 6am and 8am)</li>
+        </ul>
+      </li>
       <li><strong>binary graph</strong>, drawing a unique horizontal strip that is either green when value is 1.0, or red when value is 0.0<br /><br /></li>
     </ul>
   </li>
@@ -232,6 +230,15 @@ def remoteLog(valueToLog):
     </ul>
   </li>
 </ul>
+
+<h4 id="graphviewerdataprovider">GraphViewerDataProvider</h4>
+
+<p>This class encapsulates the remote/network access to get the actual data for the graphs from the data server. It performs an HTTP POST request, and receives a JSON formatted structure, which it then parses to fill a <code>Cursor</code> object, with one row per data item. The Cursor object is what gets returned to the <code>GraphViewerWidgetService</code>. The query specified inside the POST request contains the value of the time delay to cover, in hours:</p>
+
+<pre><code>SELECT * FROM homelogdata WHERE time &gt; now - [delay]h
+</code></pre>
+
+<p>effectively returning all entries between [delay] hours ago and the current time.</p>
 
 <h4 id="settingsactivity">SettingsActivity</h4>
 
@@ -301,8 +308,8 @@ Finally, the retrieved settings values are managed in a <code>GraphSettings</cod
   <li>Android widget mechanics are slightly convoluted, and widgets are much more restricted (by design) than regular android apps. I gave up on finding a robust way to get the current size of the widget programmatically, and with this Android API version.</li>
   <li>I still like them better for this kind of use though (and deriving a 2nd widget is easy once the initial effort has been done)</li>
   <li>Manually rendering a custom bitmap via the Android Canvas API is easy enough for very simple graphics like this.</li>
+  <li>For storing and retrieving timestamped data efficiently, do yourself a favor and use a time-series database instead of a general purpose database</li>
 </ul>
-
 
 				</div><!-- entry-content -->
 

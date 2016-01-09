@@ -313,22 +313,25 @@ After experimenting a bit I settled on the following:<br /><br /></p>
 
 <ul>
   <li>on the <strong><em>Arduino</em></strong> side, the <code>watermeter.ino</code> sketch boils down to a loop continuously monitoring the light level from the sensor, implementing the hysteresis thresholding described in the data analysis section above, and writing a string over the wireless link when a threshold crossing has been detected.<br /><br /></li>
-  <li>on the <strong><em>Raspberry</em></strong> side, the <code>watermeter_logger.py</code> script continuously listens for incoming messages over the wireless link, and increments a local counter when a message is received. A background task triggered at a specific frequency, logs the accumulated value for the corresponding time period. This script is associated to the <code>watermeter_logger.ini</code> config file, storing the log file path and logging period. Finally, the <code>watermeter_logger_sh</code> is the startup script allowing to make the waterlogger a background daemon:</li>
+  <li>on the <strong><em>Raspberry</em></strong> side, the <code>watermeter_logger.py</code> script continuously listens for incoming messages over the wireless link, and increments a local counter when a message is received. A background task triggered at a specific frequency, logs the accumulated value over the corresponding time period. This script is associated to the <code>watermeter_logger.ini</code> config file, storing the log file path and logging period. Finally, the <code>watermeter_logger_sh</code> is the startup script allowing to make the waterlogger a background daemon:</li>
 </ul>
 
 <pre><code>sudo cp watermeter_logger.sh /etc/init.d/watermeter_logger.sh
 sudo chmod a+x /etc/init.d/watermeter_logger.sh
 sudo update-rc.d watermeter_logger.sh defaults</code></pre>
 
-<p>In addition to logging the value locally in a file, the script also logs the value remotely to a server through an HTTP request, into a centralized database (used in another project to provide visualization of the logged data).<br /><br /></p>
+<p>In addition to logging the value locally in a file, the script also logs the value remotely on a <a href="http://jheyman.github.io/blog/pages/HomeDataLoggingServer">data logging server</a> using an HTTP POST request, which payload is of the followinf format<br /><br /></p>
+
+<pre><code>homelogdata,graph=waterMeter value=1.23456
+</code></pre>
+
+<p><code>homelogdata</code> is the name of the measurement/data series into which the value is to be inserted, while <code>graph</code> tag is set to <code>waterMeter</code> to allow to later filter on these specific water-meter related values if necessary.<br /><br /></p>
 
 <p>All files are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a>.</p>
 
-<h3 id="todo">Todo</h3>
+<h3 id="viewing-data">Viewing data</h3>
 
-<ul>
-  <li>implement a small tool to plot the water data</li>
-</ul>
+<p>I wanted to integrate the ability to display logged data over of specified period of time in my <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHubTablet</a> display, so I developed an Android <a href="http://jheyman.github.io/blog/pages/GraphViewerWidget">graph viewer widget</a> to achieve this.</p>
 
 <h3 id="lessons-learned">Lessons learned</h3>
 
