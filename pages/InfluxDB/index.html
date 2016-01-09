@@ -55,7 +55,7 @@
   <li><a href="#performance-tests" id="markdown-toc-performance-tests">Performance tests</a></li>
   <li><a href="#configuration" id="markdown-toc-configuration">Configuration</a></li>
   <li><a href="#database-backup-and-restore" id="markdown-toc-database-backup-and-restore">Database backup and restore</a></li>
-  <li><a href="#miscellaneous" id="markdown-toc-miscellaneous">Miscellaneous</a></li>
+  <li><a href="#database-storage-over-nfs" id="markdown-toc-database-storage-over-nfs">Database storage over NFS</a></li>
 </ul>
 
 <hr />
@@ -97,7 +97,7 @@ reboot
 <h4 id="web-interface">Web interface</h4>
 
 <p>Once up &amp; running, InfluxDB can be accessed/administered through a web interface available at <code>http://(IP of the raspberry):8083</code>
-(unless port 8083 was customized in config file)</p>
+(unless port number was customized in config file)</p>
 
 <h4 id="http-api">HTTP API</h4>
 
@@ -186,15 +186,16 @@ The test files for creating this test database and for measuring query time are 
 <pre><code>influxd restore -config /path/to/influxdb.conf /path/to/backup
 </code></pre>
 
-<h3 id="miscellaneous">Miscellaneous</h3>
+<h3 id="database-storage-over-nfs">Database storage over NFS</h3>
 
-<p>I initially considered using a remote directory on my NAS (mounted with NFS) as the location for storage data. However this somehow resulted in a severe robustness issue where InfluxDB crashed after a few minutes due to a starvation of system memory for creating threads:</p>
+<p>I tested using an NFS share as the directory for data/WAL storage, and got a robustness issue occurring on the Pi a few minutes after launch:</p>
 
 <pre><code>runtime/cgo: pthread_create failed: Resource temporarily unavailable
 SIGABRT: abort 
 </code></pre>
 
-<p>This seemed to be linked to the WAL logging activity over this NFS share, but after a few hours of investigating various workarounds (increasing ulimit, &#8230;) I gave up, falling back to using a local storage (on the external USB disk), where this issue never happened and which made more sense anyway in terms of availability (e.g. when for whatever reason the NAS is not available).</p>
+<p>It turns out that this occurred when used an NFS share mounted without the <code>nolock</code> option. Just adding this option fixed the issue.</p>
+
 
 				</div><!-- entry-content -->
 
