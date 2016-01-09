@@ -42,18 +42,34 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>The purpose of this project was to leverage the audio system I installed at home (see <a href="http://jheyman.github.io/blog/pages/MultiRoomHomeAudio">here</a>) to broadcast audio notifications upon specific triggers. The main usecase for me was to get audio reminders of important &#8220;todo&#8221; tasks. I was already using Google calendar regularly and its built-in notifications are just fine, but a pop-up and sound on my phone are not so efficient when the phone happens to be in another room&#8230;<br /><br /></p>
+<p>The purpose of this project was to leverage the audio system I installed at home (see <a href="http://jheyman.github.io/blog/pages/MultiRoomHomeAudio">here</a>) to broadcast audio notifications upon specific triggers. The main usecase for me was to get audio reminders of important “todo” tasks. I was already using Google calendar regularly and its built-in notifications are just fine, but a pop-up and sound on my phone are not so efficient when the phone happens to be in another room…<br /><br /></p>
 
-<p>So, the idea is to create a program that will continuously poll my google calendar, and play an audio notification when a given calendar event&#8217;s start time is reached. Several steps are involved:<br /><br /></p>
+<p>So, the idea is to create a program that will continuously poll my google calendar, and play an audio notification when a given calendar event’s start time is reached. Several steps are involved:<br /><br /></p>
 
 <ul>
   <li><strong>Retrieving calendar events</strong>: this requires authenticating and interfacing with Google Calendar API, which turned out to be easy enough once on the right track. <br /><br /></li>
   <li><strong>Generating an audio notification</strong> corresponding to the event: I chose to use text-to-speech voice synthesis, mostly as an experiment to figure out if this would turn out to be annoying or convenient on the long run.<br /><br /></li>
-  <li><strong>Executing the polling loop as a background task/daemon</strong>:  my home&#8217;s main raspberry pi server once again turned out to be the perfect place to host this.<br /><br /></li>
+  <li><strong>Executing the polling loop as a background task/daemon</strong>:  my home’s main raspberry pi server once again turned out to be the perfect place to host this.<br /><br /></li>
 </ul>
 
-<p>Here&#8217;s a high level overview of the system:
+<p>Here’s a high level overview of the system:
 <img src="http://jheyman.github.io/blog/assets/images/GoogleCalendarAudioNotifier/gcalnotifier_overview.png" alt="overview" /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#raspberry-pi-setup" id="markdown-toc-raspberry-pi-setup">Raspberry pi setup</a></li>
+  <li><a href="#setting-up-the-google-calendar-api" id="markdown-toc-setting-up-the-google-calendar-api">Setting up the Google (calendar) API</a></li>
+  <li><a href="#retrieving-calendar-events" id="markdown-toc-retrieving-calendar-events">Retrieving calendar events</a></li>
+  <li><a href="#generating-audio-notifications" id="markdown-toc-generating-audio-notifications">Generating audio notifications</a>    <ul>
+      <li><a href="#setting-up-and-using-microsoft-translate-api" id="markdown-toc-setting-up-and-using-microsoft-translate-api">Setting up and using Microsoft Translate API</a></li>
+      <li><a href="#setting-up-and-using-google-translate-for-reference-now-obsolete" id="markdown-toc-setting-up-and-using-google-translate-for-reference-now-obsolete"> Setting up and using Google translate (for reference, now obsolete)</a></li>
+    </ul>
+  </li>
+  <li><a href="#polling--notification-script" id="markdown-toc-polling--notification-script">Polling &amp; notification script</a></li>
+  <li><a href="#making-the-script-a-background-servicedaemon" id="markdown-toc-making-the-script-a-background-servicedaemon">Making the script a background service/daemon</a></li>
+  <li><a href="#integration-with-multiroomhomeaudio" id="markdown-toc-integration-with-multiroomhomeaudio">Integration with MultiRoomHomeAudio</a></li>
+</ul>
+
+<hr />
 
 <h3 id="raspberry-pi-setup">Raspberry pi setup</h3>
 
@@ -66,7 +82,7 @@
 
 <p>2) plug-in a mouse/keyboard/HDMI display and boot-up</p>
 
-<p>3) Use <code>raspi-config</code> to configure the raspberry as required (e.g. keyboard layout). Specifically for this project, don&#8217;t forget to set the correct time zone (In <code>Internationalization options</code> =&gt; select appropriate area and city)</p>
+<p>3) Use <code>raspi-config</code> to configure the raspberry as required (e.g. keyboard layout). Specifically for this project, don’t forget to set the correct time zone (In <code>Internationalization options</code> =&gt; select appropriate area and city)</p>
 
 <p>4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.<br /><br /></p>
 
@@ -74,7 +90,7 @@
 
 <h3 id="setting-up-the-google-calendar-api">Setting up the Google (calendar) API</h3>
 
-<p>Google provides an API to very easily access your calendar data, and a Python client is available for this API. It does require however a slightly complex authentication process, which is the part that required the most effort to get right, especially since instructions out there on the internet usually do not specific which API version they are based on. Since Google calendar v2 API was deprecated in Novembre 2014, the instructions below apply to v3 API<br /><br /></p>
+<p>Google provides an API to very easily access your calendar data, and a Python client is available for this API. It does require however a slightly complex authentication process, which is the part that required the most effort to get right, especially since instructions out there on the internet usually do not specific which API version they are based on. Since Google calendar v2 API was deprecated in November 2014, the instructions below apply to v3 API<br /><br /></p>
 
 <p>The authentication process will require you to have two things available:</p>
 
@@ -87,15 +103,15 @@
   <li>Go to <a href="http:\\console.developers.google.com">http:\console.developers.google.com</a></li>
   <li>Create a new project</li>
   <li>In the <code>API &amp; auth \ APIs</code> section, make sure calendar API is enabled</li>
-  <li>In the <code>API &amp; auth \ Credentials</code> section, create an <strong>OAuth client ID</strong> (type: &#8220;Web application&#8221;)
+  <li>In the <code>API &amp; auth \ Credentials</code> section, create an <strong>OAuth client ID</strong> (type: “Web application”)
     <ul>
       <li>configure consent screen (no useful if like me you intend to only use this client ID for personal purposes, but still required)</li>
       <li>the generated client id will look something like this: <code>xxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com</code></li>
-      <li>a &#8220;client secret&#8221; is also generated: click on <code>Download JSON</code> to get the client secret conveniently stored inside a file (e.g. <code>client_secret.json</code>)</li>
+      <li>a “client secret” is also generated: click on <code>Download JSON</code> to get the client secret conveniently stored inside a file (e.g. <code>client_secret.json</code>)</li>
       <li>I also had to add <code>https://localhost:8080/</code> in the <code>Authorized javascript origins</code> and <code>Authorized Redirect URIs</code> sections, to complete the first-time authentication.</li>
     </ul>
   </li>
-  <li>Create an <strong>API key</strong> (type: &#8220;Server key&#8221;)<br /><br /></li>
+  <li>Create an <strong>API key</strong> (type: “Server key”)<br /><br /></li>
 </ol>
 
 <p>Once you have these clientID, client secret, and developer/API key, a one-time authentication process is required: this involves connecting to the API through a client of your choosing, and completing the authentication process in a browser window. Since I am using a headless Raspberry pi setup, it was not quite convenient to perfom this initialization directly on the pi. Not to worry, this step can just as well be performed on the host machine, and the generated file will be usable on the pi as is.<br /><br /></p>
@@ -112,6 +128,8 @@ sudo apt-get install python-gflags
 
 <p>Execute the script, it should open a browser window where you can complete the process. Once this is done, a <code>calendar.dat</code> (<code>credentials.dat</code> in my version of the template) file will have been generated, containing the appropriate information for permanent access to the Google API</p>
 
+<hr />
+
 <h3 id="retrieving-calendar-events">Retrieving calendar events</h3>
 
 <p>Once the authentication part is ok, retrieving all the calendar events is as simple as creating a <code>service</code> object and executing a command like so:</p>
@@ -119,20 +137,51 @@ sudo apt-get install python-gflags
 <pre><code>events = service.events().list(singleEvents=True, calendarId='&lt;your calendar Id').execute()	
 </code></pre>
 
-<p>To verify what your calendar Id is, log to your calendar the usual way, go to the settings page, the calendar Id is mentionned in the &#8220;Calendar Address&#8221; section. Mine just equals my email address.
+<p>To verify what your calendar Id is, log to your calendar the usual way, go to the settings page, the calendar Id is mentionned in the “Calendar Address” section. Mine just equals my email address.
 The format of the returned events is available in the Google Calendar API reference (<a href="https://developers.google.com/google-apps/calendar/v3/reference/events">here</a>)</p>
+
+<hr />
 
 <h3 id="generating-audio-notifications">Generating audio notifications</h3>
 
-<p>I hesitated on which voice synthesis solution to use for this project. The noteworthy options I found where:</p>
+<p>There are some open source voice synthesis solutions, but after testing a few (Espeak with MBROLA voices, PICO) I quickly came to the conclusion that their quality was not at the right level (especially in terms of WAF for a home installation). Since this project required a permanent internet connection anyway (for google calendar polling) I looked at online services.<br /><br />
+I initially used the Google translate text to speech API, which has superb quality. However, free use of this API is largely undocumented, Google Translate is mostly a paid service. It worked fine for a while (throughout 2014) but broke a first time due to some API change, which I fixed mid-2015 (see below). When the API broke a second time in December 2015 due to Google’s decision to require specific tokens in the requests, I gave up and looked for an alternative.<br /><br /></p>
+
+<p>Ironically enough, the easiest way out I found was to migrate to <strong>Microsoft Translate</strong> service, which was done in 15 minutes and produces speech quality which is just as good as Google’s service, and is (for now) free of charge for very low frequency requests, with a well documented API.</p>
+
+<hr />
+
+<h4 id="setting-up-and-using-microsoft-translate-api">Setting up and using Microsoft Translate API</h4>
 
 <ul>
-  <li>Espeak with MBROLA add-on voices: open source, usable offline</li>
-  <li>Pico text-to-speech: open source, usable offline</li>
-  <li>Google translate: online<br /><br /></li>
+  <li>If necessary, create a Microsoft account.</li>
+  <li>Register it on [Microsoft Azure Marketplace] (https://datamarket.azure.com/home)</li>
+  <li>Subscribe to the <a href="http://www.aka.ms/TranslatorADM">Translator API service</a>, and select the free service option (limited to processing 2 million characters per month)</li>
+  <li>Register <a href="https://datamarket.azure.com/developer/applications/register">here</a> with a <code>clientID</code> and <code>clientSecret</code> of your choosing.<br /><br /></li>
 </ul>
 
-<p>The quality of Google translate voice synthesis is the best by far, and for this project an internet connection is required anyway, so I selected this option. It may turn out to be inconvenient to maintain on the long run (e.g. there is no guarantee that google translate API will still be there a few years from now) but for now it will do.<br /><br /></p>
+<p>Once this is done, it is then possible to make requests to the Microsoft Translate online API, and among other things to get voice data corresponding to a string of text. There is a multitude of ways to access the API, I of course chose the python way, using the very nice <a href="https://pypi.python.org/pypi/mstranslator">mstranslator</a> library.</p>
+
+<pre><code>sudo apt-get install python-pip
+sudo pip install mstranslator
+</code></pre>
+
+<p>I just use the <code>speak_to_file</code> function of this library, then issue a system command from Python to play the generated WAV file.</p>
+
+<pre><code>from mstranslator import Translator
+trans = Translator([MicrosoftClientID], [microsoftClientSecret])
+f = open("tmp.wav", 'wb')
+trans.speak_to_file(f, theText, "fr", format='audio/wav', best_quality=True)
+os.system("aplay tmp.wav")</code></pre>
+
+<p><strong>Note</strong>: to avoid an SSL connexion warning, I also had to do this:</p>
+
+<pre><code>sudo apt-get install build-essential
+sudo apt-get install libffi-dev
+sudo pip install pyopenssl ndg-httpsclient pyasn1
+</code></pre>
+
+<h4 id="setting-up-and-using-google-translate-for-reference-now-obsolete"> Setting up and using Google translate (for reference, now obsolete)</h4>
 
 <p>The conversion of a text string to a voice output boils down to a one-liner command, stored in the <code>tts.sh</code> script:</p>
 
@@ -148,7 +197,11 @@ say $*
 
 <p><strong>Note</strong>: I added the <code>User-Agent: dummy</code>and <code>&amp;client=t</code> parts during August 2015, after Google decided to protect its translate/tts API with a captcha mechanism, making the previous basic HTTP request fail. See <a href="http://stackoverflow.com/a/31791632/1473219">this link</a> for details.<br /><br /></p>
 
-<p><strong>Note</strong>: I adjusted the <code>tl</code> parameter in the URI to select French voice synthesis. Use <code>tl=en</code> for English voice synthesis.</p>
+<p><strong>Note</strong>: I adjusted the <code>tl</code> parameter in the URI to select French voice synthesis. Use <code>tl=en</code> for English voice synthesis.<br /><br /></p>
+
+<p><strong>Note</strong>: As of December 2015, a <code>token</code> parameter is required for this to (maybe) work again. People willing to hack their way around can look at <a href="http://stackoverflow.com/questions/9893175/google-text-to-speech-api">this</a> thread, personally I gave up.</p>
+
+<hr />
 
 <h3 id="polling--notification-script">Polling &amp; notification script</h3>
 
@@ -159,9 +212,10 @@ say $*
 </ul>
 
 <pre><code>[config]
-developerKey = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+developerKey = xxxxxxxxxxxxxxxxxxxx
+microsoftClientID = xxxxxxxxxxxxxxxxxxxx
+microsoftClientSecret = xxxxxxxxxxxxxxxxxxxx
 calendars = xxxxcalendarID1,xxxxcalendarID2
-tts_cmd = ./tts.sh
 log_filename = /tmp/gcalendarpolling.log
 reminder_minutes_default = 5
 </code></pre>
@@ -175,7 +229,7 @@ reminder_minutes_default = 5
   </li>
   <li>Enter the polling &amp; notification loop<br /><br />
     <ul>
-      <li>Get the events from all specified calendars, filtering the request for start times between &#8220;now&#8221; and &#8220;now + 30 days&#8221;.<br /><br /></li>
+      <li>Get the events from all specified calendars, filtering the request for start times between “now” and “now + 30 days”.<br /><br /></li>
       <li>For each event, retrieve its reminder time value, if any.<br /><br /></li>
       <li>If the time is equal to the start time of the event minus the reminder time, call the voice synthesis script to announce the event, using the calendar event summary as the input text.<br /><br /></li>
       <li>Sleep for 30 seconds before looping to check events again.<br /><br /></li>
@@ -191,6 +245,8 @@ reminder_minutes_default = 5
 
 <pre><code>sudo update-rc.d gcalnotifier.sh defaults
 </code></pre>
+
+<hr />
 
 <h3 id="integration-with-multiroomhomeaudio">Integration with MultiRoomHomeAudio</h3>
 
