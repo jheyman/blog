@@ -21,6 +21,7 @@ http://jheyman.github.io/blog/pages/PostitListWidget/index.html
 http://jheyman.github.io/blog/pages/DIYEthernetPlug/index.html
 http://jheyman.github.io/blog/pages/LinuxTipsAndTricks/index.html
 http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/index.html
+http://jheyman.github.io/blog/pages/HueRaspberryControl/index.html
 http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html
 http://jheyman.github.io/blog/pages/VisioTricks/index.html
 http://jheyman.github.io/blog/pages/PiWebServerAndPHP/index.html

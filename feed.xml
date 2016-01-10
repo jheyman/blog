@@ -178,6 +178,14 @@
                 
                         
                         <item>
+                                <title>Hue control on Raspberry Pi</title>
+                                <description>Interacting with Hue lighting system</description>
+                                <link>http://jheyman.github.io/blog/pages/HueRaspberryControl/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Homemade PCBs</title>
                                 <description>How to etch your own PCBs</description>
                                 <link>http://jheyman.github.io/blog/pages/EtchingCustomPCB/index.html</link>
