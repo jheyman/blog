@@ -262,16 +262,16 @@ Values below 20 correspond to the time when the sensor sees the silver part of t
 <pre><code>sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx
 </code></pre>
 
-<p>2) plug-in a mouse/keyboard/HDMI display and boot-up</p>
+<p>2) plug-in a mouse/keyboard/HDMI display and boot-up<br /><br /></p>
 
-<p>3) Use <code>raspi-config</code> to configure the raspberry as required (e.g. keyboard layout) / Select the correct time zone (In <code>Internationalization options</code> =&gt; select appropriate area and city)</p>
+<p>3) Use <code>raspi-config</code> to configure the raspberry as required (e.g. keyboard layout) / Select the correct time zone (In <code>Internationalization options</code> =&gt; select appropriate area and city) and <strong>enable SPI</strong> from the <code>Advanced</code> options menu<br /><br /></p>
 
 <p>4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.<br /><br /></p>
 
-<p>Once this is done, a few additional actions are required for our setup:</p>
+<p>Once this is done, a few additional actions are required for our setup:<br /><br /></p>
 
 <ul>
-  <li><strong>SPI</strong> is disabled by default on Raspbian, re-enable it by editing <code>/etc/modprobe.d/raspi-blacklist.conf</code>:</li>
+  <li>(OBSOLETE) on older raspbian distributions, <strong>SPI</strong> should be enabled it by editing the file <code>/etc/modprobe.d/raspi-blacklist.conf</code>:</li>
 </ul>
 
 <pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf
@@ -304,6 +304,11 @@ sudo python setup.py install
 
 <pre><code>sudo apt-get install python-pip
 sudo pip install apscheduler
+</code></pre>
+
+<p>As well as the <code>requests</code> library for remote logging</p>
+
+<pre><code>sudo pip install requests
 </code></pre>
 
 <h3 id="logging-scripts">Logging scripts</h3>
