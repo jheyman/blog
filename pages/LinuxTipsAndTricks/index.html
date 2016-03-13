@@ -83,6 +83,7 @@
   <li>To check which UDP and TCP ports are currently in use: <code>netstat -atun</code> and/or <code>(sudo) lsof -i</code></li>
   <li>To search for all IP addresses used in the local 192.168.0.xxx subnet: <code>nmap -sP 192.168.0.0/24</code></li>
   <li>To check the open ports on a specific IP address: <code>nmap 192.168.0.xxx</code></li>
+  <li>To check ethernet bandwidth, install iperf <code>sudo apt-get install iperf</code> then on server side: <code>iperf -s</code>, and on client side: <code>iperf -c &lt;IP of the server&gt;</code></li>
 </ul>
 
 <hr />
