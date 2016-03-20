@@ -83,6 +83,8 @@
 
 <h3 id="installation">Installation</h3>
 
+<h4 id="quick--dirty-mounting-plate">Quick &amp; dirty mounting plate</h4>
+
 <p>To ensure that the sensor would be properly located right above the border of counting wheel, I cut a plastic mount plate fitting the original meter shape and plastic pegs positions, then taped the sensor on top of it. Here is a view of the top:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounting_plate_top.png" alt="mounting plate top" /></p>
@@ -96,6 +98,21 @@
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounted_sensor.png" alt="mounted sensor" /></p>
 
 <p>The two plastic pegs ensure that the device does not move during measurements, yet it can be easily removed if needed.</p>
+
+<h4 id="better-mounting-plate">Better mounting plate</h4>
+
+<p>Even though things worked just fine with the mounting plate described above, I used this as an opportunity to experiment with online 3D printing. Below are two views of the 3D model I created using Sketchup Make:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_3Dfront.png" alt="3D printed mounting plate top" /></p>
+
+<p>The sunked surfaces are there to accomodate the few solder pins that are present on the bottom of the TCRT5000 module PCB</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_3Dback.png" alt="3D printed mounting plate back" /></p>
+
+<p>The square and circular sunked surfaces are there to accomodate the bumps present on the sensus 620&#8217;s front plate, so that the holder can stick perfectly.<br /><br /></p>
+
+<p>I then  used a Sketchup <a href="https://extensions.sketchup.com/fr/content/sketchup-stl">extension</a> to export the Sketchup model to a 3D-printing-friendly STL file, uploaded it on an online printing service (Sculpteo.com), and got it printed for about 10 dollars.<br /><br />
+Both the Sketchup model and the exported STL file are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a>.</p>
 
 <h3 id="arduino-code">Arduino code</h3>
 
