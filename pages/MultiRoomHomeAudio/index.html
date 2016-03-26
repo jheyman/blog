@@ -42,7 +42,47 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>The purpose of this project was to have music available in several rooms at home, while being able to control everything either centrally or locally. The convenient (and extremely expensive) way is to go for a Sonos system. The cheap and fun way is, as usual, to use raspberry pi boards. Three main elements are involved:</p>
+<p>The purpose of this project was to have music available in several rooms at home, while being able to control everything either centrally or locally. The convenient (and extremely expensive) way is to go for a Sonos system. The cheap and fun way is, as usual, to use raspberry pi boards.<br /><br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#raspberry-pi-setup-server-side" id="markdown-toc-raspberry-pi-setup-server-side">Raspberry pi setup: SERVER side</a>    <ul>
+      <li><a href="#installing-logitech-media-server" id="markdown-toc-installing-logitech-media-server">Installing Logitech Media Server</a></li>
+      <li><a href="#setting-up-media-storage" id="markdown-toc-setting-up-media-storage">Setting up media storage</a></li>
+    </ul>
+  </li>
+  <li><a href="#raspberry-pi-setup-client-side" id="markdown-toc-raspberry-pi-setup-client-side">Raspberry pi setup: CLIENT side</a>    <ul>
+      <li><a href="#audio-setup" id="markdown-toc-audio-setup">Audio setup</a></li>
+      <li><a href="#installing-squeezelite" id="markdown-toc-installing-squeezelite">Installing squeezelite</a></li>
+      <li><a href="#sharing-the-usb-card-audio-output-optional" id="markdown-toc-sharing-the-usb-card-audio-output-optional">Sharing the USB card audio output (optional)</a></li>
+      <li><a href="#i2c-setup" id="markdown-toc-i2c-setup">I2C setup</a></li>
+      <li><a href="#installing-lirc" id="markdown-toc-installing-lirc">Installing LIRC</a></li>
+    </ul>
+  </li>
+  <li><a href="#testing-lms--squeezelite" id="markdown-toc-testing-lms--squeezelite">Testing LMS &amp; Squeezelite</a></li>
+  <li><a href="#cabling-overview" id="markdown-toc-cabling-overview">Cabling overview</a></li>
+  <li><a href="#communicating-with-the-amplifier-module" id="markdown-toc-communicating-with-the-amplifier-module">Communicating with the amplifier module</a>    <ul>
+      <li><a href="#configuring-ir-remotereceiver" id="markdown-toc-configuring-ir-remotereceiver">Configuring IR remote/receiver</a></li>
+      <li><a href="#controlling-the-audio-playback" id="markdown-toc-controlling-the-audio-playback">Controlling the audio playback</a></li>
+      <li><a href="#installing-pylirc" id="markdown-toc-installing-pylirc">Installing PyLIRC</a></li>
+    </ul>
+  </li>
+  <li><a href="#automate-launch-at-pi-startup" id="markdown-toc-automate-launch-at-pi-startup">Automate launch at Pi startup</a></li>
+  <li><a href="#physical-installation" id="markdown-toc-physical-installation">Physical installation</a></li>
+  <li><a href="#installing-in-additional-rooms" id="markdown-toc-installing-in-additional-rooms">Installing in additional rooms</a></li>
+  <li><a href="#additional-tuning-for-integration-with-gcalnotifier" id="markdown-toc-additional-tuning-for-integration-with-gcalnotifier">Additional tuning for integration with gcalnotifier</a></li>
+  <li><a href="#squeezelite-robustness-workaround" id="markdown-toc-squeezelite-robustness-workaround">Squeezelite robustness workaround</a></li>
+  <li><a href="#ir-receiver-sensibility-to-z-wave-light-dimmer-control" id="markdown-toc-ir-receiver-sensibility-to-z-wave-light-dimmer-control">IR receiver sensibility to Z-Wave light dimmer control</a></li>
+  <li><a href="#misc" id="markdown-toc-misc">Misc</a></li>
+  <li><a href="#todo" id="markdown-toc-todo">Todo</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
+
+<h3 id="introduction">Introduction</h3>
+
+<p>Three main elements are involved:</p>
 
 <ul>
   <li>a (single) central audio streaming server</li>

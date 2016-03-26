@@ -42,7 +42,35 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>The purpose of this project was to have a way to monitor our water consumption at home, with minimal modifications to the existing installation. There were several options to consider:<br /><br /></p>
+<p>The purpose of this project was to have a way to monitor our water consumption at home, with minimal modifications to the existing installation.<br /><br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#existing-installation" id="markdown-toc-existing-installation">Existing installation</a></li>
+  <li><a href="#assembling-the-sensor-system" id="markdown-toc-assembling-the-sensor-system">Assembling the sensor system</a></li>
+  <li><a href="#installation" id="markdown-toc-installation">Installation</a>    <ul>
+      <li><a href="#quick--dirty-mounting-plate" id="markdown-toc-quick--dirty-mounting-plate">Quick &amp; dirty mounting plate</a></li>
+      <li><a href="#better-mounting-plate" id="markdown-toc-better-mounting-plate">Better mounting plate</a></li>
+    </ul>
+  </li>
+  <li><a href="#arduino-code" id="markdown-toc-arduino-code">Arduino code</a></li>
+  <li><a href="#initial-wireless-solution" id="markdown-toc-initial-wireless-solution">Initial wireless solution</a></li>
+  <li><a href="#data-analysis" id="markdown-toc-data-analysis">Data analysis</a></li>
+  <li><a href="#final-wireless-module" id="markdown-toc-final-wireless-module">Final wireless module</a>    <ul>
+      <li><a href="#software-install-on-the-arduino-side" id="markdown-toc-software-install-on-the-arduino-side">Software install on the arduino side</a></li>
+      <li><a href="#software-install-on-the-raspberry-side" id="markdown-toc-software-install-on-the-raspberry-side">Software install on the raspberry side</a></li>
+    </ul>
+  </li>
+  <li><a href="#logging-scripts" id="markdown-toc-logging-scripts">Logging scripts</a></li>
+  <li><a href="#viewing-data" id="markdown-toc-viewing-data">Viewing data</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
+
+<h3 id="introduction">Introduction</h3>
+
+<p>There were several options to consider:<br /><br /></p>
 
 <ul>
   <li><strong>replacing the existing meter</strong> with a new one equipped with data transmission capability: such meters are expensive, and must generally be associated to even more expensive data acquisition/transmission systems. Also, it requires replacing the original water meter, which I am pretty sure my water company would not allow.<br /><br /></li>
@@ -103,16 +131,34 @@
 
 <p>Even though things worked just fine with the mounting plate described above, I used this as an opportunity to experiment with online 3D printing. Below are two views of the 3D model I created using Sketchup Make:</p>
 
-<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_3Dfront.png" alt="3D printed mounting plate top" /></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_3Dfront.png" alt="3D model mounting plate top" /></p>
 
 <p>The sunked surfaces are there to accomodate the few solder pins that are present on the bottom of the TCRT5000 module PCB</p>
 
-<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_3Dback.png" alt="3D printed mounting plate back" /></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_3Dback.png" alt="3D model mounting plate back" /></p>
 
 <p>The square and circular sunked surfaces are there to accomodate the bumps present on the sensus 620&#8217;s front plate, so that the holder can stick perfectly.<br /><br /></p>
 
 <p>I then  used a Sketchup <a href="https://extensions.sketchup.com/fr/content/sketchup-stl">extension</a> to export the Sketchup model to a 3D-printing-friendly STL file, uploaded it on an online printing service (Sculpteo.com), and got it printed for about 10 dollars.<br /><br />
-Both the Sketchup model and the exported STL file are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a>.</p>
+Both the Sketchup model and the exported STL file are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a>.<br /><br /></p>
+
+<p>I was actually pleasantly surprised by the result: the surface finish is decent, and the plastic is quite stiff.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounting_plate_top_3Dprinted.png" alt="3D printed mounting plate top" /></p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounting_plate_bottom_3Dprinted.png" alt="3D printed mounting plate bottom" /></p>
+
+<p>With TCRT5000 sensor mounted:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounting_plate_top_with_TCRT5000_3Dprinted.png" alt="3D printed mounting plate top with sensor" /></p>
+
+<p>It turns out I had to apply the same trick as with the manually made holder: masking tape with a thin (~1mm) opening window, otherwise reflected light from the sides would make the measurements wrong. I also had to widen the plug holes a bit.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounting_plate_bottom_with_TCRT5000_3Dprinted.png" alt="3D printed mounting plate bottom with sensor" /></p>
+
+<p>Here it is, mounted on the watermeter</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/mounted_sensor_3Dprinted.png" alt="3D printed mounting plate top on meter" /></p>
 
 <h3 id="arduino-code">Arduino code</h3>
 
