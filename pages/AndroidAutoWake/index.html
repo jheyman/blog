@@ -320,28 +320,25 @@ clean:
 
 <h5 id="wait-for-screen-off">Wait for screen off</h5>
 
-<p>After whatever timeout value is configured inside the device, it will try to go to sleep mode. To detect when this happens, we regularly execute the</p>
+<p>After whatever timeout value is configured inside the device, it will try to go back to sleep mode. To detect when this happens, we regularly execute this command:</p>
 
 <pre><code>./adb shell dumpsys power
 </code></pre>
 
-<p>command, and check whether <code>mPowerState=0</code> is present as part of the output. On the (ancient) android version that runs on the VSD220, this is a sign that screen is being turned off after the timeout. Other keys on the dumpsys output might be used for other versions of Android.</p>
+<p>and check whether <code>mPowerState=0</code> is present as part of the output. On the (ancient) android version that runs on the VSD220, this is a sign that screen is being turned off after the timeout. Other keys on the dumpsys output might be used for other versions of Android.<br /><br /></p>
+
+<p><strong>Note</strong>: if during that wait time a new detection is made, we resend a wake command: this will have the effect of restarting the wake timer inside the device, so that it stays on as long as someone is nearby.</p>
 
 <h5 id="prepare-for-sleep">Prepare for sleep</h5>
 
-<p>Now simulate a user pushing the power button to turn the device off (26 corresponds to key event KEYCODE_POWER)</p>
-
-<pre><code>./adb shell input keyevent 26
-</code></pre>
-
-<p>But the thing is, with USB still connected, the VSD220 device will not go to sleep. So we switch off power on the USB port, which is equivalent to physically unplugging the cable.</p>
+<p>For some reason, while USB is connected/powered the VSD220 device will never go back to complete sleep. So we switch off power on the USB port, which is equivalent to physically unplugging the cable, to give the device an opportunity to go back to full sleep mode.</p>
 
 <pre><code>./ykush -d 1
 </code></pre>
 
 <h5 id="prepare-for-next-wake">Prepare for next wake</h5>
 
-<p>This is just an optimization to allow a better reactivity when the next detection/wake happens: since USB communication is not available immediately after powering the interface, we turn it back on now, in advance. The only pitfall is to not turn it back on too quickly, because at least on my VSD220 it takes about ~15seconds between the moment the screen goes off, and the moment the device enters full sleep mode (with screen completely off, not just dimmed). So after 30 seconds, the scripts turns USB power back on:</p>
+<p>This is just an optimization to allow a better reactivity when the next detection/wake happens: since USB communication is not available immediately after powering the interface, we turn it back on now, in advance. The only pitfall is to not turn it back on too quickly, because at least on my VSD220 it takes about ~15 seconds between the moment the screen goes off, and the moment the device enters full sleep mode (with screen completely off, not just dimmed). So after 30 seconds, the scripts turns USB power back on:</p>
 
 <pre><code>./ykush -u 1
 </code></pre>
