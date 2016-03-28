@@ -74,6 +74,14 @@
                 
                         
                         <item>
+                                <title>Android debug tips and tricks</title>
+                                <description>Various android debugging tips I keep forgetting about</description>
+                                <link>http://jheyman.github.io/blog/pages/AndroidDebugTipsAndTricks/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Sketchup survival guide</title>
                                 <description>Personal notes about minimal knowledge required to use Sketchup</description>
                                 <link>http://jheyman.github.io/blog/pages/SketchupSurvivalGuide/index.html</link>
@@ -213,6 +221,14 @@
                                 <title>Giant wall-mounted home tablet</title>
                                 <description>How to customize a smart display to use as a wall-mounted home tablet</description>
                                 <link>http://jheyman.github.io/blog/pages/HomeHubTablet/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Wake an Android device with a PIR sensor</title>
+                                <description>Waking up an android device with a presence sensor</description>
+                                <link>http://jheyman.github.io/blog/pages/AndroidAutoWake/index.html</link>
                         </item>
                         
                 

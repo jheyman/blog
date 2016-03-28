@@ -238,7 +238,12 @@ def remoteLog(valueToLog):
 <pre><code>SELECT * FROM homelogdata WHERE time &gt; now - [delay]h
 </code></pre>
 
-<p>effectively returning all entries between [delay] hours ago and the current time.</p>
+<p>effectively returning all entries between [delay] hours ago and the current time.<br /><br /></p>
+
+<p>The URL for a request of the last 3 days, would for example look like this:</p>
+
+<pre><code>http://[IP]:[port]/query?db=homelog&amp;q=SELECT+*+FROM+homelogdata+WHERE+time+%3E+now%28%29+-+72h
+</code></pre>
 
 <h4 id="settingsactivity">SettingsActivity</h4>
 
