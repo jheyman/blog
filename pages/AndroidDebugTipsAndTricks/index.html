@@ -48,6 +48,7 @@
   <li><a href="#get-logs" id="markdown-toc-get-logs">Get logs</a></li>
   <li><a href="#simulate-user-inputs" id="markdown-toc-simulate-user-inputs">Simulate user inputs</a></li>
   <li><a href="#get-system-info" id="markdown-toc-get-system-info">Get system info</a></li>
+  <li><a href="#remote-screenshot" id="markdown-toc-remote-screenshot">Remote screenshot</a></li>
 </ul>
 
 <hr />
@@ -68,6 +69,11 @@
   <li>LARGE system info dump : <code>adb shell dumpsys</code></li>
   <li>Power management system info dump : <code>adb shell dumpsys power</code></li>
   <li>Dumpable subcategories: <code>adb shell dumpsys | grep "DUMP OF SERVICE"</code></li>
+</ul>
+
+<h3 id="remote-screenshot">Remote screenshot</h3>
+<ul>
+  <li>To grab a screenshot from the host: <code>adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' &gt; screenshot.png</code></li>
 </ul>
 
 
