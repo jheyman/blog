@@ -58,6 +58,14 @@
                 
                         
                         <item>
+                                <title>Photo Frame Android Widget</title>
+                                <description>A dead simple widget displaying a random photo</description>
+                                <link>http://jheyman.github.io/blog/pages/PhotoFrameWidget/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Voice Controlled Radio</title>
                                 <description>A FM Radio controlled by voice commands</description>
                                 <link>http://jheyman.github.io/blog/pages/VoiceControlledRadio/index.html</link>

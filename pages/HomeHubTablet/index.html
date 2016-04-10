@@ -42,6 +42,14 @@
 			<div class="bd">
 				<div class="entry-content">
 					
+<ul id="markdown-toc">
+  <li><a href="#purpose" id="markdown-toc-purpose">Purpose</a></li>
+  <li><a href="#constraints" id="markdown-toc-constraints">Constraints</a></li>
+  <li><a href="#additional-feature" id="markdown-toc-additional-feature">Additional feature</a></li>
+</ul>
+
+<hr />
+
 <h3 id="purpose">Purpose</h3>
 <ul>
   <li><strong>get rid our paper/post-it notes</strong> habit: indeed, we used to have many handwritten notes all over the house, and wanted a cleaner way to handle our day to day notes as well as longer term &#8220;todo&#8221; lists.</li>
@@ -73,23 +81,35 @@ Finally, I stumbled upon something else: &#8220;smart displays&#8221;, i.e. all-
 
 <ul>
   <li>I installed a full black background</li>
-  <li>I got rid of all the regular icons from the homepage. I wanted to have very large icons instead, for the key few applications that we would actually need on this interface. The &#8220;Desktop VisualizeR&#8221; free app from google play store got me what I needed: resizeable widgets with customizable images and associated actions.  I created widget of size 3x3 cells, and googled for high resolution icons of the apps that I need to point to.</li>
+  <li>I got rid of all the regular icons from the homepage. I wanted to have very large icons instead, for the key few applications that we would actually need on this interface. The &#8220;Desktop VisualizeR&#8221; free app from google play store got me what I needed: resizeable widgets with customizable images and associated actions.  I created widget of size 3x3 cells, and googled for high resolution icons of the apps that I need to point to.<br /><br /></li>
+</ul>
+
+<p>Here is a picture of the tablet mounted on the wall with an older setup:
+<img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/homehubtablet_map.png" alt="HomehubTablet complete" /></p>
+
+<ul>
   <li>Two custom android apps were developed from scratch to handle the <strong>shopping list</strong> and the <strong>memo notes</strong> board. There are described <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">here</a> and <a href="http://jheyman.github.io/blog/pages/PostitListWidget">here</a>.</li>
   <li>The long-term <strong>todo-list</strong> relies on the <a href="http://www.mytinytodo.net/">MyTinyTodo</a> code running on the home raspberry pi php/web server.</li>
   <li>the <strong>music control</strong> app is BubbleUPnP, a great UPnP/DLNA Control Point/Renderer/Server. In practice, it sends out commands to the UPnP/DLNA server running on the home raspberry pi, which is itself attached to the actual sound system. I described this setup in <a href="http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi">this</a> page.</li>
+  <li><strong>home lighting control</strong> (not shown in this picture) is available via a simple shortcut to the local URL of openHAB, used to control my z-wave devices. You can check the details <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">here</a>. The shortcut is created using Desktop VisualizeR too, the specific target URL can be set by a long press on the Action while configuring the widget, and selecting &#8220;Clipboard&#8221; (while having previously copied the desired URL in the clipboard, of course)<br /><br /></li>
 </ul>
 
-<p>Here is the picture of the resulting interface:
-<img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/homehubtablet_map.png" alt="HomehubTablet complete" /></p>
+<p>And here is a screenshot of my latest setup:</p>
 
-<p>UPDATE: I finally added home lighting control on the front page too. This is a simple shortcut to the local URL of openHAB, used to control my z-wave devices. You can check the details <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">here</a>. The shortcut is created using Desktop VisualizeR too, the specific target URL can be set by a long press on the Action while configuring the widget, and selecting &#8220;Clipboard&#8221; (while having previously copied the desired URL in the clipboard, of course)</p>
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/homehub_screenshot.png" alt="HomehubTablet screenshot" /></p>
 
-<h3 id="next-steps">Next steps:</h3>
 <ul>
-  <li>Find a way to automatically wake-up the interface when passing by</li>
+  <li>
+    <p>the graph widget displays water consumption over the last three days. It is described <a href="http://jheyman.github.io/blog/pages/GraphViewerWidget">here</a>.</p>
+  </li>
+  <li>
+    <p>the photo frame widget displays a random photo from a remote server, refreshing every 30 minutes. It is described <a href="http://jheyman.github.io/blog/pages/PhotoFrameWidget">here</a>.</p>
+  </li>
 </ul>
 
-<p><br /></p>
+<h3 id="additional-feature">Additional feature</h3>
+
+<p>I added an external presence detection device that turns on the tablet when I walk by: the details are described <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake">here</a>.</p>
 
 
 				</div><!-- entry-content -->
