@@ -45,7 +45,26 @@
 <p>This project started when I stumbled upon <a href="http://www.ebay.fr/itm/1PCS-MAX7219-Dot-matrix-module-MCU-control-Display-module-DIY-kit-for-Arduino-/400552064450?pt=LH_DefaultDomain_0&amp;hash=item5d42c375c2">these</a> dirt-cheap LED matrix modules on eBay. I had no real need for them, but the fact 
 that each module/kit came with its own MAX7219 chip made it more than worth the purchase anyway, since buying standalone MAX7219 is usually (much)
 more expensive than that. 3$ shipping cost included, hard to beat. So I bought 20 of those, and decided to combine them into a single display driven by 
-an Arduino board.</p>
+an Arduino board.<br /><br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#hw-part--led-matrix-module" id="markdown-toc-hw-part--led-matrix-module">HW Part : LED Matrix module</a>    <ul>
+      <li><a href="#spi-communication-refresher" id="markdown-toc-spi-communication-refresher">SPI communication refresher</a></li>
+    </ul>
+  </li>
+  <li><a href="#hw-part--arduino" id="markdown-toc-hw-part--arduino">HW part : Arduino</a></li>
+  <li><a href="#hw-part--power-supply" id="markdown-toc-hw-part--power-supply">HW Part : Power supply</a></li>
+  <li><a href="#sw-part--arduino" id="markdown-toc-sw-part--arduino">SW part : Arduino</a>    <ul>
+      <li><a href="#setting-up-spi" id="markdown-toc-setting-up-spi">setting up SPI</a></li>
+      <li><a href="#drawing-letters--pixels" id="markdown-toc-drawing-letters--pixels">Drawing Letters &amp; Pixels</a></li>
+    </ul>
+  </li>
+  <li><a href="#custom-pcb" id="markdown-toc-custom-pcb">Custom PCB</a></li>
+  <li><a href="#bluetooth-upgrade" id="markdown-toc-bluetooth-upgrade">Bluetooth upgrade</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
 
 <h2 id="hw-part--led-matrix-module">HW Part : LED Matrix module</h2>
 
@@ -70,18 +89,24 @@ the 16 modules took&#8230;a while.</p>
 
 <h3 id="spi-communication-refresher">SPI communication refresher</h3>
 
-<p>A few words about the SPI (Serial Peripheral Interface) communication link that will be used to communicate with the LED Modules, since this is what the MAX7219 requires. This synchronous master/slave protocol relies on four signals : 
-- a Serial Clock (SCLK) signal, driving the sending/receiving of data bits
-- a Slave Select (SS) signal, allowing to enable/disable communication with some or all of the slave devices
-- a Master Out - Slave In (MOSI) signal, carrying the data bits being sent from the master to the slave(s).
-- a Master In - Slave Out (MISO) signal, carrying the data bits being received by the master, from the slave(s).
-There are various flavors of this base concept (depending on the desired clock polarity and phase).</p>
+<p>A few words about the SPI (Serial Peripheral Interface) communication link that will be used to communicate with the LED Modules, since this is what the MAX7219 requires. This synchronous master/slave protocol relies on four signals :</p>
 
-<p>Considering this, the input pins labelling is quite straightforward: 
-* VCC and GND for supplying power (5V)
-* DIN is &#8220;Data In&#8221;, i.e. the MOSI signal
-* CLK if the &#8220;Clock&#8221; pin, that will be driven by the SPI master
-* CS is the &#8220;Chip Select&#8221; pin, also driven by the SPI master</p>
+<ul>
+  <li>a Serial Clock (SCLK) signal, driving the sending/receiving of data bits</li>
+  <li>a Slave Select (SS) signal, allowing to enable/disable communication with some or all of the slave devices</li>
+  <li>a Master Out - Slave In (MOSI) signal, carrying the data bits being sent from the master to the slave(s).</li>
+  <li>a Master In - Slave Out (MISO) signal, carrying the data bits being received by the master, from the slave(s).
+There are various flavors of this base concept (depending on the desired clock polarity and phase).</li>
+</ul>
+
+<p>Considering this, the input pins labelling is quite straightforward:</p>
+
+<ul>
+  <li>VCC and GND for supplying power (5V)</li>
+  <li>DIN is &#8220;Data In&#8221;, i.e. the MOSI signal</li>
+  <li>CLK if the &#8220;Clock&#8221; pin, that will be driven by the SPI master</li>
+  <li>CS is the &#8220;Chip Select&#8221; pin, also driven by the SPI master</li>
+</ul>
 
 <p>The output of the module is similar, with DOUT being the &#8220;Data Out&#8221; pin, which will be used to daisy-chain the output of one module to the input of the next one. For this particular project, there are 16 daisy-chained SPI slaves, sharing common CLK and CS lines. There is no need to manage the modules as 16 independent slaves, since we will always refresh the full display anyway. Also, since there is no need to receive any data from the modules, the MISO signal will be left unused at the SPI master side (i.e. on the Arduino).</p>
 
@@ -99,12 +124,15 @@ he potentiometer is used to allow the user to adjust the scrolling speed: since 
 The pushbutton, when pushed, connects the digital input pin #2 to GND, else it is pulled high to VCC (through the 10k resistor). The SW can therefore read the state of the pushbutton by checking if digital pin #2 is HIGH or LOW.</p>
 
 <h2 id="hw-part--power-supply">HW Part : Power supply</h2>
-<p>When using just a few daisy-chained LED matrices, the power supply from the arduino is enough. It is quite easy to consider that these are just a few LEDs, not drawing too much current anyway. But this particular project has 16 matrices of 8x8 LEDs, so 16x8x8 = 1024 LEDs total. A thousand LEDs each drawing say, 20mA, and we would be drawing 20 Amps (!). But a few factors come into the picture:
-* in most cases, not all LEDs will be on at the same time. Still, this case must be taken into account.
-* the MAX7219 allows to set the intensity of the LED matrix display, so we can adjust the intensity to a small value to limit power consumption.
-* but above all, the MAX7219 internally uses a nice trick: it does not turn on all the active LEDs of the 8x8 matrix it controls at the same time, but instead 
-turns the 8 rows on/off in a sequential manner. This row scanning is performed at a very high speed (800 Hz), so to the naked eye it looks as if all 8 rows are always active. The big difference though is on power consumption: since only one row is active at a given time, the full matrix consumes 1/8 of what the 64 LEDs would normally draw. 
-* In the end, the worst case consumption I measured in my case is about ~3.3 Amps.</p>
+<p>When using just a few daisy-chained LED matrices, the power supply from the arduino is enough. It is quite easy to consider that these are just a few LEDs, not drawing too much current anyway. But this particular project has 16 matrices of 8x8 LEDs, so 16x8x8 = 1024 LEDs total. A thousand LEDs each drawing say, 20mA, and we would be drawing 20 Amps (!). But a few factors come into the picture:</p>
+
+<ul>
+  <li>in most cases, not all LEDs will be on at the same time. Still, this case must be taken into account.</li>
+  <li>the MAX7219 allows to set the intensity of the LED matrix display, so we can adjust the intensity to a small value to limit power consumption.</li>
+  <li>but above all, the MAX7219 internally uses a nice trick: it does not turn on all the active LEDs of the 8x8 matrix it controls at the same time, but instead 
+turns the 8 rows on/off in a sequential manner. This row scanning is performed at a very high speed (800 Hz), so to the naked eye it looks as if all 8 rows are always active. The big difference though is on power consumption: since only one row is active at a given time, the full matrix consumes 1/8 of what the 64 LEDs would normally draw.</li>
+  <li>In the end, the worst case consumption I measured in my case is about ~3.3 Amps.</li>
+</ul>
 
 <p>After a few failures trying to use (too) small 5V power supplies, I finally picked a 5V 3.8Amps supply (8$ at <a href="http://www.dx.com">DealExtreme</a>, shipping included) that would support the worst case current draw.</p>
 
@@ -128,8 +156,6 @@ Since I intended to have a horizontal strip of 16 LED modules, the natural thing
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/LED_mapping_reworked.png" alt="LED RAM mapping reworked" /></p>
 
 <p>This way, the bytes of the buffer can be sent as is to the led matrices, one after the other, to update the corresponding columns.</p>
-
-<p>TODO : explain the sending of 1 line of data</p>
 
 <p>So to update the Xth column of all 16 modules in the display, we must prepare this buffer of data:</p>
 
@@ -161,14 +187,17 @@ smooth scrolling.</p>
 
 <h2 id="custom-pcb">Custom PCB</h2>
 <p>Since the Arduino setup worked fine, it was time to switch to a homemade PCB.
-The PCB integrates the minimum components required for the project:
-- the ATmega328 chip programmed with the Arduino Uno bootloader (about ~3 euros on eBay)
-- a 16 MHz quartz with its two filtering capacitors
-- a potentiometer for adjusting the scroll speed
-- a push button to switch between display modes
-- two pull-up resistors (one on the reset pin, another one one the pin that the push button uses)
-- a header for connecting power and the signals for the LED matrices
-- another 6 pin header for FTDI programming of the arduino</p>
+The PCB integrates the minimum components required for the project:</p>
+
+<ul>
+  <li>the ATmega328 chip programmed with the Arduino Uno bootloader (about ~3 euros on eBay)</li>
+  <li>a 16 MHz quartz with its two filtering capacitors</li>
+  <li>a potentiometer for adjusting the scroll speed</li>
+  <li>a push button to switch between display modes</li>
+  <li>two pull-up resistors (one on the reset pin, another one one the pin that the push button uses)</li>
+  <li>a header for connecting power and the signals for the LED matrices</li>
+  <li>another 6 pin header for FTDI programming of the arduino</li>
+</ul>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/PCB.png" alt="LED matrix strip PCB" /></p>
 
@@ -222,9 +251,9 @@ At this point, changing the messages on the display required updating the Arduin
 <p>On the Arduino software side, communication with the BT module is quite easy, since it is standard serial communication. Using the <code>Serial</code> built-in library allows to write/read characters to/from the module. In practive, the <code>serialEvent</code> callback function was implemented to handle data reception, and notify the main loop when new data is available. This serialEvent callback gets called (behind the scenes) after each the main loop execution.</p>
 
 <p>I (arbitrarily) chose a string format <code>@&lt;cmd&gt;@&lt;data&gt;@</code> as the pattern that the arduino will try to decode while receiving individual bytes
-of data over this serial connection. A quick way to test that communication is ok and that the Arduino decodes the commands properly is to use the &#8220;BlueTerm&#8221; android application from a smartphone, and type in a string of this format.</p>
+of data over this serial connection. A quick way to test that communication is ok and that the Arduino decodes the commands properly is to use the &#8220;BlueTerm&#8221; android application from a smartphone, and type in a string of this format.<br /><br /></p>
 
-<p>The full source code is available <a href="https://github.com/jheyman/LEDmatrixstrip/blob/master/LEDMatrixStrip.ino">HERE</a></p>
+<p>The full source code is available <a href="https://github.com/jheyman/LEDmatrixstrip/blob/master/LEDMatrixStrip.ino">here</a>.<br /><br /></p>
 
 <p>On the host side:</p>
 
