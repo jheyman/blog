@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Visio tips & tricks</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Visio tips & tricks" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Visio tips & tricks</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>This is my personal memo of miscellaneous tips to improve (my) day to day use of Microsoft Visio.</p>
+
+<h3 id="in-diagram-layer-visibility-toggle">In-diagram layer visibility toggle</h3>
+
+<p>Layers are a cornerstone of Visio, and make my life so much easier when I have to come up with a complex diagram with lots of information of different nature. I like to have all the relevant information on a single diagram, and then just be able to switch between different views of the same underlying data: layers are a great way to do this.<br /><br /></p>
+
+<p>However, when using layers quite often, the repeated action of multiple clicks (clicking on Layers menu =&gt; then clicking on Layer properties =&gt; then clicking on checkboxes&#8230;) required to adjust which layers are visible gets a little tedious.<br /><br /></p>
+
+<p>Once layer definition is stable, an easy and more efficient alternative is to insert visio Controls inside the diagram itself, to enable or disable each layer in one click. The two candidate controls for this are the checkbox and the toggle button, available from the Developer tab:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTips/visio_controls.png" alt="visio controls" /></p>
+
+<p>The checkbox control would be perfect IF it did not have an annoying property: even though the checkbox text font/size can be modified, the size of the box itself cannot be resized. This means that on diagrams requiring to zoom out a lot, the checkbox can become ridiculously small, and not usable in practice anymore. I went for a toggle button instead, which can be resized arbitrarily.<br /><br /></p>
+
+<p>Once the toggle button is placed on the diagram, to add some code to handle the button push action, switch to <code>Design Mode</code> in the <code>Developer tab</code>, right-click the button, select <code>Toggle button object</code> and <code>View Code</code>, then insert the VBA code as required:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTips/edit_code.png" alt="edit code" /></p>
+
+<p>As an example, I use this code snippet to activate/dea-activate a specific layer based on the push-button&#8217;s state:</p>
+
+<pre><code>Private Sub ToggleButton1_Click()
+    Dim LayersObj As Visio.Layers
+    Dim LayerObj As Visio.Layer
+    Dim LayerName As String
+    Dim LayerCellObj As Visio.Cell
+    
+    Set LayersObj = ActivePage.Layers
+    For Each LayerObj In LayersObj
+        LayerName = LayerObj.Name
+        If LayerName = "Layer1" Then
+            Set LayerCellObj = LayerObj.CellsC(visLayerVisible)
+            If ToggleButton1.Value Then
+                LayerCellObj.Formula = True Or 1
+            Else
+                LayerCellObj.Formula = False Or 0
+            End If
+        End If
+    Next
+End Sub
+</code></pre>
+
+<p>Et voila, now the button on the diagram can be used to hide/show the associated layer very quickly. I usually create one such toggle button per useful layer on the diagram, this has the added benefit to show at all times which layers are currently activated and which are not, without having to go into the Layers menu.<br /><br /></p>
+
+<p>Here is a dummy example with all layers activated:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTips/all_layers.png" alt="all layers" /></p>
+
+<p>And the same example after clicking LayerA and LayerB buttons:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioTips/one_layer.png" alt="some layers" /></p>
+
+<p>An obvious flaw is that if you then change a layer visibility manually from the layer menu icon, the button state might temporarily become inconsistent with the layer activation state. One could write some hook code triggered on layer visibility changes, to solve this (minor) inconvenience.</p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/VisioTips/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

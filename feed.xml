@@ -10,9 +10,9 @@
                 
                         
                         <item>
-                                <title>Music server on Raspberry pi</title>
-                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
-                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
+                                <title>Homemade Video Surveillance</title>
+                                <description>A basic video surveillance system with raspberry pi</description>
+                                <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
                         </item>
                         
                 
@@ -122,9 +122,9 @@
                 
                         
                         <item>
-                                <title>Homemade Video Surveillance</title>
-                                <description>A basic video surveillance system with raspberry pi</description>
-                                <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
+                                <title>Visio tips & tricks</title>
+                                <description>tips with Microsoft Visio VBA API</description>
+                                <link>http://jheyman.github.io/blog/pages/VisioTips/index.html</link>
                         </item>
                         
                 
@@ -141,6 +141,14 @@
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Tools of the trade</title>
+                                <description>A list of useful tools for DIY projects</description>
+                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
                         </item>
                         
                 
@@ -210,14 +218,6 @@
                 
                         
                         <item>
-                                <title>Auto-computed values in Visio diagrams with VBA</title>
-                                <description>Experiments with Microsoft Visio VBA API</description>
-                                <link>http://jheyman.github.io/blog/pages/VisioTricks/index.html</link>
-                        </item>
-                        
-                
-                        
-                        <item>
                                 <title>Setup Nginx and PHP on Raspberry Pi</title>
                                 <description>Setting up Nginx and PHP on Raspberry Pi</description>
                                 <link>http://jheyman.github.io/blog/pages/PiWebServerAndPHP/index.html</link>
@@ -229,6 +229,14 @@
                                 <title>Giant wall-mounted home tablet</title>
                                 <description>How to customize a smart display to use as a wall-mounted home tablet</description>
                                 <link>http://jheyman.github.io/blog/pages/HomeHubTablet/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Auto-computed values in Visio diagrams with VBA</title>
+                                <description>Experiments with Microsoft Visio VBA API</description>
+                                <link>http://jheyman.github.io/blog/pages/VisioAutoCompute/index.html</link>
                         </item>
                         
                 
@@ -258,9 +266,9 @@
                 
                         
                         <item>
-                                <title>Tools of the trade</title>
-                                <description>A list of useful tools for DIY projects</description>
-                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
+                                <title>Music server on Raspberry pi</title>
+                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
                         </item>
                         
                 
