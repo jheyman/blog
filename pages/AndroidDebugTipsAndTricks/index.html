@@ -46,6 +46,7 @@
 
 <ul id="markdown-toc">
   <li><a href="#get-logs" id="markdown-toc-get-logs">Get logs</a></li>
+  <li><a href="#install-application" id="markdown-toc-install-application">Install application</a></li>
   <li><a href="#simulate-user-inputs" id="markdown-toc-simulate-user-inputs">Simulate user inputs</a></li>
   <li><a href="#get-system-info" id="markdown-toc-get-system-info">Get system info</a></li>
   <li><a href="#remote-screenshot" id="markdown-toc-remote-screenshot">Remote screenshot</a></li>
@@ -56,6 +57,11 @@
 <h3 id="get-logs">Get logs</h3>
 <ul>
   <li>To get the timestamped logcat traces from a remote host : <code>adb logcat -v time &gt; logcat.txt</code></li>
+</ul>
+
+<h3 id="install-application">Install application</h3>
+<ul>
+  <li>To force the (re)install of an application package: <code>adb install -r app.apk</code></li>
 </ul>
 
 <h3 id="simulate-user-inputs">Simulate user inputs</h3>
