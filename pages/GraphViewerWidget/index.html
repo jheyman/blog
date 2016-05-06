@@ -53,7 +53,6 @@
       <li><a href="#widget-layout" id="markdown-toc-widget-layout">Widget layout</a></li>
       <li><a href="#graphviewerwidgetprovider" id="markdown-toc-graphviewerwidgetprovider">GraphViewerWidgetProvider</a></li>
       <li><a href="#graphviewerwidgetservice" id="markdown-toc-graphviewerwidgetservice">GraphViewerWidgetService</a></li>
-      <li><a href="#stackremoteviewsfactory" id="markdown-toc-stackremoteviewsfactory">StackRemoteViewsFactory</a></li>
       <li><a href="#graphviewerdataprovider" id="markdown-toc-graphviewerdataprovider">GraphViewerDataProvider</a></li>
       <li><a href="#settingsactivity" id="markdown-toc-settingsactivity">SettingsActivity</a></li>
     </ul>
@@ -139,7 +138,6 @@ def remoteLog(valueToLog):
     </ul>
   </li>
   <li>the declaration of a <strong>Service</strong> class that will provide/adapt the RemoteViews for displaying the widget.</li>
-  <li>the declaration of a <strong>Content Provider</strong> class for the widget, in charge of providing the source data to be displayed in the widget.</li>
   <li>the declaration of an <strong>Activity</strong> class to manage the settings page that a widget can optionally provide.</li>
 </ul>
 
@@ -157,11 +155,7 @@ def remoteLog(valueToLog):
     </ul>
   </li>
   <li>the <strong>separator section</strong> for now just contains a 1px-height line, but could be made to be a more fancy info bar or whatever.</li>
-  <li>the <strong>body section</strong> will contain the vertical list of graphs to be displayed
-    <ul>
-      <li>each list item is defined (in <code>widget_item.xml</code>) as a single ImageView.</li>
-    </ul>
-  </li>
+  <li>the <strong>body section</strong> will contain the graph to be displayed, rendered as a single ImageView.</li>
   <li>the <strong>footer section</strong> contains a single ImageView that will be rendered dynamically to include timestamp markers (text and vertical lines)</li>
 </ul>
 
@@ -170,8 +164,7 @@ def remoteLog(valueToLog):
 
 <ul>
   <li>it implements appropriate actions to be executed when the widget is <strong>installed/removed</strong> by the user, in <code>onEnabled/onDeleted</code> callbacks.</li>
-  <li>it registers a <strong>graphical layout</strong> definition, and a RemoteAdapter service to provide its elements, to the Android widget management framework.</li>
-  <li>it registers a <strong>data provider</strong> (through the context’s content resolver)</li>
+  <li>it registers a <strong>graphical layout</strong> definition to the Android widget management framework.</li>
   <li>it registers specific <code>PendingIntents</code> on the <strong>clickable buttons</strong> (i.e. it defines which event will be sent to the widget when user clicks this button)</li>
   <li>it renders the <strong>header</strong> and <strong>footer</strong> bitmaps
     <ul>
@@ -184,6 +177,7 @@ def remoteLog(valueToLog):
       </li>
     </ul>
   </li>
+  <li>it delegates the gathering of data and rendering of the graph to the GraphViewerWidgetService, through a <code>startService</code> call</li>
   <li>it manages incoming <strong>events</strong>
     <ul>
       <li>update requests (from Android, following the requested update period)</li>
@@ -195,14 +189,13 @@ def remoteLog(valueToLog):
 
 <h4 id="graphviewerwidgetservice">GraphViewerWidgetService</h4>
 
-<p>Pretty much an empty shell, it only overrides the <code>onGetViewFactory</code> to reference our <code>StackRemoteViewsFactory</code> class as being the provider/adapter of remote views to fill the widget’s body.</p>
-
-<h4 id="stackremoteviewsfactory">StackRemoteViewsFactory</h4>
-
 <p>This is where the bulk of the job is done:</p>
 
 <ul>
-  <li>whenever Android needs to render the widget, and specifically its body (our ListView), it calls <code>getCount</code> on this class to know how many items are in the list, then calls <code>getViewAt(position)</code> for all visible items in the list, to get the remote view to be rendered for each item. Specifically here, <code>getCount</code> returns the number of graphs to be displayed, and <code>getViewAt(position)</code>returns a bitmap (wrapped in a remote view) corresponding to the graph for this position in the list view. I currently implemented two types of graphs:
+  <li>it performs a query on the data provider, and receives a JSON-structured set of raw data (“raw” in the sense that values for different graphs are mixed up, since they are ordered in the order they were logged to the server).</li>
+  <li>it parses the result, transforming the received JSON structure containing all unsorted data values into data values sorted by <code>dataId</code> key.</li>
+  <li>each individual graph is rendered onto the same Bitmap object/buffer, using the Android <code>Canvas</code> API (providing very basic functions to draw lines, boxes, texts, …). This bitmap is then set as the source for the main <code>ImageView</code> inside the <code>RemoteViews</code> representing the widget.</li>
+  <li>I currently implemented two types of graphs:
     <ul>
       <li><strong>bargraph</strong>, with automatic vertical scaling based on the maximum value in the dataset over the displayed period of time
         <ul>
@@ -210,23 +203,17 @@ def remoteLog(valueToLog):
           <li>and an additional ability to specify a given time range of interest, where the cumulated value is computed and displayed (say, to monitor daily water consumption between 6am and 8am)</li>
         </ul>
       </li>
-      <li><strong>binary graph</strong>, drawing a unique horizontal strip that is either green when value is 1.0, or red when value is 0.0<br /><br /></li>
+      <li><strong>binary graph</strong>, drawing a unique horizontal strip that is either green when value is 1.0, or red when value is 0.0</li>
     </ul>
   </li>
-  <li>the data to be displayed on the graphs is refreshed whenever the <code>onDataSetChanged</code> notification is called (more on this later):
-    <ul>
-      <li>the class performs a query on the data provider, and receives a JSON-structured set of raw data (“raw” in the sense that values for different graphs are mixed up, since they are ordered in the order they were logged to the server).</li>
-      <li>it parses the result, transforming the received JSON structure containing all unsorted data values into data values sorted by <code>dataId</code> key.<br /><br /></li>
-    </ul>
-  </li>
-  <li>
-    <p>each individual graph is drawn in memory by creating a Bitmap object/buffer, then computing data plot coordinates and rendering into the bitmap buffer using the Android <code>Canvas</code> API (providing very basic functions to draw lines, boxes, texts, …). This is bitmap is then registered to the appropriate RemoteView (<code>setImageViewBitmap</code> called in <code>getViewAt</code>)<br /><br /></p>
-  </li>
-  <li>A major difficulty I had was just to figure out the width and height of the graph to be rendered, since I am rendering bitmaps. For the life of me, with Android API 15 I dit not find any way to programmatically get the exact current height/width of the widget (or of any individual list item), so I went the lame way:
+  <li>A major difficulty I had was just to figure out the width and height of the graph to be rendered, since I am rendering bitmaps. For the life of me, with Android API 15 I dit not find any way to programmatically get the exact current height/width of the widget, so I implemented an ugly but efficient workaround:
     <ul>
       <li>set the widget layout parameters so that the rendered images are stretched horizontally to the widget’s width.</li>
-      <li>enforce a predefined height (and scale the graphs as appropriate).</li>
-      <li>let the rendering width be a parameter modifiable in the settings screen, and adjust it manually so that the artifacts of the automatic stretching are minimized.</li>
+      <li>use a default width/height.</li>
+      <li>register a callback on the ImageViews I need the dimensions of.</li>
+      <li>when one clicks on these ImageViews, these callbacks are invoked and it is then possible to call <code>getSourceBounds</code>, which contains the width and height of the source ImageView.</li>
+      <li>store these width/height values in the application’s <code>SharedPreferences</code>, so that they become the default values.</li>
+      <li>this ensures that rendering in each of the three ImageViews is done with the exact pixel size of the rendered widget on screen, avoiding any scaling artefacts.</li>
     </ul>
   </li>
 </ul>
@@ -247,7 +234,7 @@ def remoteLog(valueToLog):
 
 <h4 id="settingsactivity">SettingsActivity</h4>
 
-<p>This class is derived from Android’s PreferenceActivity, and implements the (full screen) page that pops-up when one clicks on the settings icon of the widget. Upon creation, this activity loads the <code>graph_settings.xml</code> layout definition file, which structure is:</p>
+<p>This class is derived from Android’s <code>PreferenceActivity</code>, and implements the (full screen) page that pops-up when one clicks on the settings icon of the widget. Upon creation, this activity loads the <code>graph_settings.xml</code> layout definition file, which structure is:</p>
 
 <pre><code>&lt;PreferenceScreen &gt;
   &lt;PreferenceCategory&gt;
@@ -257,14 +244,7 @@ def remoteLog(valueToLog):
 &lt;/PreferenceScreen&gt;
 </code></pre>
 
-<p>This defines a single preference/settings screen, containing a single category/section, containing two settings:</p>
-
-<ul>
-  <li>an editable text for defining the width in pixels for graph rendering</li>
-  <li>a multiple-choice list for defining the graph’s history depth.</li>
-</ul>
-
-<p>The history depth list values are defined in <code>array.xml</code>, it defines both the list of text to be displayed (the available durations), and the list of associated numerical values (hours)</p>
+<p>This defines a single preference/settings screen, containing a single category/section, containing a single setting: a multiple-choice list for defining the graph’s history depth. The history depth list values are defined in <code>array.xml</code>, it defines both the list of text to be displayed (the available durations), and the list of associated numerical values (hours)</p>
 
 <pre><code>&lt;string-array name="history_length_display"&gt;
 &lt;item&gt;8 hours&lt;/item&gt;
@@ -303,7 +283,7 @@ Finally, the retrieved settings values are managed in a <code>GraphSettings</cod
 
 <p><img src="http://jheyman.github.io/blog/assets/images/GraphViewerWidget/widget_screenshot.png" alt="widget screenshot" /></p>
 
-<p>And here it is integrated in <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">home hub tablet</a>:</p>
+<p>And here it is integrated in my <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">home hub tablet</a>:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/GraphViewerWidget/integration_in_tablet.png" alt="integration" /></p>
 
@@ -313,6 +293,7 @@ Finally, the retrieved settings values are managed in a <code>GraphSettings</cod
   <li>Android widget mechanics are slightly convoluted, and widgets are much more restricted (by design) than regular android apps. I gave up on finding a robust way to get the current size of the widget programmatically, and with this Android API version.</li>
   <li>I still like them better for this kind of use though (and deriving a 2nd widget is easy once the initial effort has been done)</li>
   <li>Manually rendering a custom bitmap via the Android Canvas API is easy enough for very simple graphics like this.</li>
+  <li>I originally implemented the graphs as a ListView containing individual ImageViews, rendered individually. On low-performance android device, this turns out to be inefficient, and buggy (partially refreshed list). Rendering all sub-graphs into a single Bitmap is much more efficient, even though it requires a bit more code to get things at the right place in the graph.</li>
   <li>For storing and retrieving timestamped data efficiently, do yourself a favor and use a time-series database instead of a general purpose database</li>
 </ul>
 
