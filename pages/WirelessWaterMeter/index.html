@@ -63,6 +63,7 @@
   </li>
   <li><a href="#logging-scripts" id="markdown-toc-logging-scripts">Logging scripts</a></li>
   <li><a href="#viewing-data" id="markdown-toc-viewing-data">Viewing data</a></li>
+  <li><a href="#misc-notes" id="markdown-toc-misc-notes">Misc notes</a></li>
   <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
 </ul>
 
@@ -392,6 +393,13 @@ sudo update-rc.d watermeter_logger.sh defaults</code></pre>
 <h3 id="viewing-data">Viewing data</h3>
 
 <p>I wanted to integrate the ability to display logged data over of specified period of time in my <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHubTablet</a> display, so I developed an Android <a href="http://jheyman.github.io/blog/pages/GraphViewerWidget">graph viewer widget</a> to achieve this.</p>
+
+<h3 id="misc-notes">Misc notes</h3>
+
+<p>Over time, I noticed intermittent (~once a month) robustness issues on the nRF24 library on reception side (on raspberry pi), where the script would stop detecting messages after a while, and just restarting the service would fix the situation. As a workaround, I implemented a cron job to automatically restart the service nightly, by adding this line in the crontab:</p>
+
+<pre><code>0 3 * * * service watermeter_logger restart &gt;&gt; /home/pi/waterrestart.log 2&gt;&amp;1
+</code></pre>
 
 <h3 id="lessons-learned">Lessons learned</h3>
 

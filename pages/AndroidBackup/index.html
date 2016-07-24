@@ -228,7 +228,12 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 
 <h4 id="scripting-it-all">Scripting it all</h4>
 
-<p>The python script that sequences everything, reads params from a config file, and provides logging capability is archived <a href="https://github.com/jheyman/androidbackup">here</a>, along with the associated rsync binary and config file.</p>
+<p>The python script that sequences everything, reads params from a config file, and provides logging capability is archived <a href="https://github.com/jheyman/androidbackup">here</a>, along with the associated rsync binary and config file.<br /><br /></p>
+
+<p>The script is called every night at 3am by adding the following line to the Pi’s crontab:</p>
+
+<pre><code>0 3 * * * /home/pi/androidbackup/androidbackup.py
+</code></pre>
 
 <h3 id="casing">Casing</h3>
 
