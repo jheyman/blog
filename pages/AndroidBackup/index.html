@@ -1,0 +1,341 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Charging & autobackup dock for Android devices</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Charging & autobackup dock for Android devices" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Charging & autobackup dock for Android devices</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>One day I got tired of the mess of plugs and cables required to charge the three android devices we have at home. I also realized that I had no regular-enough backup routine, which would turn out to be a big problem one day. The common solution is to buy a multi-devices charger dock, and install some fancy backup App on the devices themselves, that could perform regular backups over Wifi.<br /><br /></p>
+
+<p>But I thought it would be fun to try and come up with a custom solution to plug all three devices on a single dock for nightly charging, and have it perform automatic backup of critical data behind the scenes, and not requiring wifi to be turned on or any specific app to be installed.<br /><br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#requirements" id="markdown-toc-requirements">Requirements</a></li>
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#disclaimer" id="markdown-toc-disclaimer">Disclaimer</a></li>
+  <li><a href="#hw-setup" id="markdown-toc-hw-setup">HW setup</a>    <ul>
+      <li><a href="#raspberry-pi-install" id="markdown-toc-raspberry-pi-install">Raspberry pi install</a></li>
+      <li><a href="#raspberry-pi-wifi-setup" id="markdown-toc-raspberry-pi-wifi-setup">Raspberry pi Wifi setup</a></li>
+      <li><a href="#nas-access-setup" id="markdown-toc-nas-access-setup">NAS access setup</a></li>
+      <li><a href="#usb-chargerhub" id="markdown-toc-usb-chargerhub">USB Charger/Hub</a></li>
+    </ul>
+  </li>
+  <li><a href="#sw-implementation" id="markdown-toc-sw-implementation">SW implementation</a>    <ul>
+      <li><a href="#using-adb-with-multiple-devices" id="markdown-toc-using-adb-with-multiple-devices">Using ADB with multiple devices</a></li>
+      <li><a href="#installing--starting-android-rsync-daemon" id="markdown-toc-installing--starting-android-rsync-daemon">Installing &amp; starting Android rsync daemon</a></li>
+      <li><a href="#unlocking" id="markdown-toc-unlocking">Unlocking</a></li>
+      <li><a href="#backup-photos" id="markdown-toc-backup-photos">Backup Photos</a></li>
+      <li><a href="#backup-contacts" id="markdown-toc-backup-contacts">Backup Contacts</a></li>
+      <li><a href="#scripting-it-all" id="markdown-toc-scripting-it-all">Scripting it all</a></li>
+    </ul>
+  </li>
+  <li><a href="#casing" id="markdown-toc-casing">Casing</a></li>
+  <li><a href="#notes--lessons-learned" id="markdown-toc-notes--lessons-learned">Notes &amp; Lessons learned</a></li>
+</ul>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>So my target usecase dictates:</p>
+
+<ul>
+  <li>ability to backup photos and contacts (all the rest I don’t really care about)</li>
+  <li>no need for installing anything on the devices</li>
+  <li>no need to root the devices</li>
+  <li>no need to activate wifi on the devices</li>
+  <li>minimal length of cabling between dock and devices</li>
+  <li>ability to perform incremental backup</li>
+  <li>ability to transfer backup data to NAS on local network</li>
+  <li>a casing that looks good enough to stay at all times on the kitchen bar countertop where we usually plug our devices</li>
+</ul>
+
+<h3 id="overview">Overview</h3>
+
+<p>My target setup is as follows:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/AndroidBackup/overview.png" alt="Overview" /></p>
+
+<ul>
+  <li>Target devices will be charged by a <strong>powered USB hub/charger</strong>, that specifically supports <strong>high-power charging</strong> over USB.</li>
+  <li>the Raspberry pi with its Wifi dongle is in charge of performing the <strong>backup over USB</strong> and sending data to the local NAS.</li>
+  <li>a Python script wraps a set of <strong><code>adb</code></strong> and <strong><code>rsync</code></strong> commands to do the job.</li>
+</ul>
+
+<h3 id="disclaimer">Disclaimer</h3>
+
+<p>This setup relies extensively on <code>adb</code> tool, which itself requires <code>USB debugging</code> to be activated on the target devices, which is not acceptable if you have security concerns.</p>
+
+<h3 id="hw-setup">HW setup</h3>
+
+<h4 id="raspberry-pi-install">Raspberry pi install</h4>
+
+<p>I used a Raspbian light image, but any distro will do.</p>
+
+<h4 id="raspberry-pi-wifi-setup">Raspberry pi Wifi setup</h4>
+
+<p>On the pi, create the wifi config file:</p>
+
+<pre><code>sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+</code></pre>
+
+<p>And populate it with your wifi access point and password information:</p>
+
+<pre><code>network={
+	ssid=”&lt;wifi access point name&gt;”
+	psk=”&lt;passphrase&gt;”
+}
+</code></pre>
+
+<p>then reboot.</p>
+
+<h4 id="nas-access-setup">NAS access setup</h4>
+
+<p>I mounted a shared directory from my local NAS by editing <code>etc/fstab</code> and adding the line:</p>
+
+<pre><code>192.168.0.12:/volume1/backup/smartphones /mnt/remotebackup nfs defaults,user,auto,noatime,nolock 0 0
+</code></pre>
+
+<h4 id="usb-chargerhub">USB Charger/Hub</h4>
+
+<p>Regular powered USB hubs only provide 500mA max per USB port, as per the USB specification. At this rate, it takes a long time to fully charge up a device, so I went for a powered USB hub that specifically provides charging capability, by providing ports compliant with the <code>Battery Charging (BC)</code> specification. <br /><br />
+Also, since I want this hub to stay on permanently, I stayed away from cheapest models and bought a decent 4-port USB 2.0 model from Plugable. Here it is, providing power to the Pi through the USB cable on the right, and connected to one android device through the USB cable on the left.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/AndroidBackup/hub_and_pi.png" alt="Hub" /></p>
+
+<p>This 4-ports version will be just right to sync 3 devices + power the Pi.</p>
+
+<h3 id="sw-implementation">SW implementation</h3>
+
+<h4 id="using-adb-with-multiple-devices">Using ADB with multiple devices</h4>
+
+<p><code>Android Debug Bridge</code> (adb) comes with the Android sdk, and is the cornerstone of command line debugging of a device connected over USB. I captured the instructions to compile it for Raspberry it <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake/#compile-adb">here</a>.<br /><br /></p>
+
+<p>When working with multiple android devices plugged to the same USB host, the <code>-s &lt;deviceId&gt;</code> option needs to be added to specify which device the adb command is addressed to.</p>
+
+<h4 id="installing--starting-android-rsync-daemon">Installing &amp; starting Android rsync daemon</h4>
+
+<p>Since I want to perform an incremental backup only, I use <code>rsync</code> to only get new/modified files. To avoid having to install an rsync app on the device, I retrieved a binary version compiled for Android (<a href="http://github.com/pts/rsyncbin/raw/master/rsync.rsync4android">here</a>), and it gets pushed onto the device through adb.</p>
+
+<ul>
+  <li>push android rsync binary to the device: <code>adb -s &lt;deviceId&gt; push rsync.bin /data/local/tmp/rsync</code></li>
+  <li>push rsync daemon config file to the device: <code>adb -s &lt;deviceId&gt; push rsyncd.conf /data/local/tmp</code></li>
+  <li>make the binary executable on the device: <code>adb -s &lt;deviceId&gt; shell chmod 755 /data/local/tmp/rsync</code></li>
+  <li>start the rsync daemon: <code>adb -s &lt;deviceId&gt; shell '/data/local/tmp/rsync --daemon --config=/data/local/tmp/rsyncd.conf --log-file=/data/local/tmp/rsync.log; sleep 1'</code><br /><br /></li>
+</ul>
+
+<p>Credits go to <a href="http://ptspts.blogspot.fr/2015/03/how-to-use-rsync-over-adb-on-android.html">this</a> guy for these steps.</p>
+
+<h4 id="unlocking">Unlocking</h4>
+
+<p>Some of the next steps will require the device to be unlocked. I happen to use a passcode lock, and using adb remotely unlocking boils down to using:</p>
+
+<pre><code>adb shell input text &lt;passcode&gt;  
+</code></pre>
+
+<p>Note: if the device was locked with a pattern, one could use</p>
+
+<pre><code>adb shell input swipe &lt;...&gt;
+</code></pre>
+
+<p>instead.<br /><br /></p>
+
+<p><strong>Note</strong>: I was not able to find a robust way to determine through adb if device is locked and requires unlocking or not….<br /><br /></p>
+
+<p>Also, all of this works only if screen responds to user interaction, i.e. is turned on. I determine screen status with :</p>
+
+<pre><code>adb shell dumpsys input_method | grep 'mScreenOn|mInteractive'
+</code></pre>
+
+<p>and then turn it on if needed by simulating the POWER button:</p>
+
+<pre><code>adb shell input keyevent 26
+</code></pre>
+
+<h4 id="backup-photos">Backup Photos</h4>
+
+<p><code>adb</code> allows to get any user-accessible file on the device. Since photos are available by default in a visible/accessible folder, getting them is easy. An appropriate target backup folder is created on the NAS and then a local rsync client is launched on the raspberry pi to copy them:</p>
+
+<pre><code>rsync -az rsync://localhost:6010/root/sdcard/DCIM/Camera &lt;NAS directory&gt;
+</code></pre>
+
+<h4 id="backup-contacts">Backup Contacts</h4>
+
+<p>For Contacts, things get much more difficult. Different Android versions use different locations for the Contacts database, which is not accessible externally on a non-rooted device anyway. I also happen to use multiple Google accounts on the same device, which makes things more complex. The most simple and robust way I found to get ALL contact information is to use the Contacts app itself to export the contacts to a single file on the SD card, and then get this file through adb. This is quite straightforward to do manually, but much harder to automate. But not to worry, adb provides the ability to simulate user taps on the screen, so we just have to note the coordinates of the appropriate touch points and replay them later.<br /><br /></p>
+
+<p>To figure out what the touch coordinates should be, there is a nice option in the Developer options menu to display an overlay with X and Y coordinates whenever user touches the screen:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/AndroidBackup/coords_overlay.png" alt="Coords overlay" /></p>
+
+<p>Once a list of manual touch points is available, the first step is to remotely launch the Contacts app:</p>
+
+<pre><code>adb shell am start -n com.android.contacts/com.android.contacts.DialtactsContactsEntryActivity
+</code></pre>
+
+<p>Then simulate the user pressing the MENU button:</p>
+
+<pre><code>adb shell input keyevent 82
+</code></pre>
+
+<p>And then use the predefined list of user touch points, to make a series of <code>adb shell input tap &lt;x&gt; &lt;y&gt;</code> calls to simulate the user actions:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/AndroidBackup/export_contacts.gif" alt="Export Contacts" /></p>
+
+<p>The only catch here is that obviously, touch coordinates will not be the same between two devices, and depends on whether the device is in portrait or landscape orientation at the time of execution. To address this, I stored different lists of touch points for each device to be sync’ed, and for both portrait and landscape configurations. To figure out at runtime the device orientation, I used:</p>
+
+<pre><code>adb shell dumpsys input | grep -i SurfaceOrientation
+</code></pre>
+
+<p>Once this remote operation is complete, a <code>Contacts.vcf</code> has been created on the SD card and can be retrieved with:</p>
+
+<pre><code>adb pull &lt;contacts.vcf filepath&gt; &lt;backup destination&gt;
+</code></pre>
+
+<h4 id="scripting-it-all">Scripting it all</h4>
+
+<p>The python script that sequences everything, reads params from a config file, and provides logging capability is archived <a href="https://github.com/jheyman/androidbackup">here</a>, along with the associated rsync binary and config file.</p>
+
+<h3 id="casing">Casing</h3>
+
+<p>TODO !</p>
+
+<h3 id="notes--lessons-learned">Notes &amp; Lessons learned</h3>
+
+<ul>
+  <li><code>adb</code> is quite a very versatile tool.</li>
+  <li>It would be good to find a solution that does not require USB debugging to stay activated. But given the list of requirements I tried to stick to, I do not see any obvious alternative.</li>
+  <li>there are plenty of steps in the set of adb commands used here that will potentially be broken over time with future versions of android. Hopefully the script updates to keep things up and running should not be too hard.</li>
+</ul>
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/AndroidBackup/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
