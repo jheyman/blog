@@ -398,7 +398,7 @@ sudo update-rc.d watermeter_logger.sh defaults</code></pre>
 
 <p>Over time, I noticed intermittent (~once a month) robustness issues on the nRF24 library on reception side (on raspberry pi), where the script would stop detecting messages after a while, and just restarting the service would fix the situation. As a workaround, I implemented a cron job to automatically restart the service nightly, by adding this line in the crontab:</p>
 
-<pre><code>0 3 * * * service watermeter_logger.sh restart &gt;&gt; /home/pi/waterrestart.log 2&gt;&amp;1
+<pre><code>0 3 * * * /usr/sbin/service watermeter_logger.sh restart &gt;&gt; /home/pi/waterrestart.log 2&gt;&amp;1
 </code></pre>
 
 <h3 id="lessons-learned">Lessons learned</h3>
