@@ -68,9 +68,14 @@
 <h3 id="introduction">Introduction</h3>
 
 <ul>
-  <li>I aimed for a minimalistic design: just a plain display of a photo, with no associated UI/buttons, and an automatic refresh to display a new photo periodically. I only added the display of the image path &amp; name, which helps to remember where/when the photo is from when it is picked randomly from a set of 50.000+ images&#8230;</li>
+  <li>I aimed for a minimalistic design: just a plain display of a photo, with no minimal associated UI/buttons, and an automatic refresh to display a new photo periodically. So the widget only has:
+    <ul>
+      <li>the photo to be displayed. A user touch on it triggers the reload of a new photo.</li>
+      <li>the display of the image path &amp; name, which helps to remember where/when the photo is from when it is picked randomly from a set of 50.000+ images&#8230;</li>
+      <li>a small email icon, to send the currently displayed image as an attachment.</li>
+    </ul>
+  </li>
   <li>Since I did not want to rely on any local storage, the source of the images is a remote shared folder on a NAS accessed via the local network.</li>
-  <li>The only possible user interaction is to touch the widget, which forces the reload of a new photo.</li>
 </ul>
 
 <h3 id="implementation">Implementation</h3>
@@ -117,15 +122,21 @@
 <p>The widget graphical layout consists of:</p>
 
 <ul>
-  <li>a <code>LinearLayout</code> with one <code>ImageView</code> to receive the bitmap, and a <code>TextView</code> above it to display the image path &amp; name.</li>
-  <li>a progress bar that is overlapped with the aforementioned LinearLayout by placing both in a <code>RelativeLayout</code> and specifiying <code>android:layout_centerHorizontal="true"</code> and <code>android:layout_centerVertical="true"</code><br /><br /></li>
+  <li>a <code>LinearLayout</code> with
+    <ul>
+      <li>a <code>RelativeLayout</code> containing a <code>TextView</code> to display the image path &amp; name, and an <code>ImageView</code> for the email icon.</li>
+      <li>one <code>ImageView</code> to receive the bitmap</li>
+    </ul>
+  </li>
+  <li>around this, a <code>RelativeLayout</code> containing the above layout and a <code>ProgressBar</code>, that will be invisible by default, and made visible when loading is in progress. This way, the progress bar is layered on top of the rest of the widget
+<br /><br /></li>
 </ul>
 
 <p>The <code>AndroidManifest.xml</code> contains the minimal setup required for a homescreen widget, and refers to the two main classes:</p>
 
 <h5 id="photoframewidgetprovider">PhotoFrameWidgetProvider</h5>
 
-<p>PhotoFrameWidgetProvider class handles the APP_UPDATE events that are triggered every 30 minutes, delegating the refresh of the widget&#8217;s <code>RemoteViews</code> to the background PhotoFrameWidgetService.</p>
+<p>PhotoFrameWidgetProvider class handles the APP_UPDATE events that are triggered every 30 minutes, delegating the refresh of the widget&#8217;s <code>RemoteViews</code> to the background PhotoFrameWidgetService. It also deals with the user intent to send the currently displayed photo as an email attachment.</p>
 
 <h5 id="photoframewidgetservice">PhotoFrameWidgetService</h5>
 
@@ -137,10 +148,12 @@
   <li>the reason of the <strong>two-pass approach</strong> is that knowing the image size in advance of receiving the image data allows to specify an appropriate subsampling factor. Otherwise, the decoding to a Bitmap would happen by default at the original resolution, which can take huge amounts of memory for large photos, that the android device might not be able to provide.</li>
   <li>therefore to be able to specify this <strong>subsampling</strong>, the <code>BitmapFactory::decodeResourceStream</code> that is normally used to create bitmaps from local resources is used, passing along a <code>BitmapFactory:Options</code> object with parameter <code>inSampleSize</code>equal to the ratio of the original image size to the (much smaller) target rendered image size.</li>
   <li>since even downsampled images might still be too big, we first check for available memory before decoding resampled image.</li>
-  <li>the <strong>progress bar</strong> is initially invisible: whenever onUpdate is called, is becomes visible, and is made invisible again upon completion of the image reloading service execution.&lt;</li>
+  <li>the <strong>progress bar</strong> is initially invisible: whenever onUpdate is called, is becomes visible, and is made invisible again upon completion of the image reloading service execution.</li>
   <li>the <strong>orientation</strong> of the image (gathered from its EXIF data by the server) is taken into account to rotate it before display, so that it always shows heads-up.</li>
-  <li>I also experimented with doing subsampling and rotation on server side to spare network bandwidth, but it turns out that in my case it was much slower than doing it on the client side (the server running on a raspberry pi model B).</li>
+  <li>I also experimented with doing subsampling and rotation on server side to spare network bandwidth, but it turns out that in my case it was much slower than doing it on the client side (the server running on a raspberry pi model B).<br /><br /></li>
 </ul>
+
+<p>Sending the photo as an email attachment boils down to sending an ACTION_SEND intent, with the content of the photo filled into the EXTRA_STREAM field. Whatever email client happens to be installed on the device	will receive this intent and handle it.</p>
 
 <h3 id="result">Result</h3>
 
