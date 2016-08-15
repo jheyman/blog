@@ -10,9 +10,17 @@
                 
                         
                         <item>
-                                <title>Music server on Raspberry pi</title>
-                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
-                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
+                                <title>Homemade Video Surveillance</title>
+                                <description>A basic video surveillance system with raspberry pi</description>
+                                <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>ZWave control Widget</title>
+                                <description>Simplistic android widget to check/control Zwave devices</description>
+                                <link>http://jheyman.github.io/blog/pages/ZWaveWidget/index.html</link>
                         </item>
                         
                 
@@ -130,14 +138,6 @@
                 
                         
                         <item>
-                                <title>Homemade Video Surveillance</title>
-                                <description>A basic video surveillance system with raspberry pi</description>
-                                <link>http://jheyman.github.io/blog/pages/VideoSurveillance/index.html</link>
-                        </item>
-                        
-                
-                        
-                        <item>
                                 <title>Graph viewer widget for Android</title>
                                 <description>an Android homescreen widget to show data graphs</description>
                                 <link>http://jheyman.github.io/blog/pages/GraphViewerWidget/index.html</link>
@@ -149,6 +149,14 @@
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/index.html</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Tools of the trade</title>
+                                <description>A list of useful tools for DIY projects</description>
+                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
                         </item>
                         
                 
@@ -274,9 +282,9 @@
                 
                         
                         <item>
-                                <title>Tools of the trade</title>
-                                <description>A list of useful tools for DIY projects</description>
-                                <link>http://jheyman.github.io/blog/pages/Tools/index.html</link>
+                                <title>Music server on Raspberry pi</title>
+                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi/index.html</link>
                         </item>
                         
                 
