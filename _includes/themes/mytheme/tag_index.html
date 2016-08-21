@@ -1,0 +1,47 @@
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">{{ page.title }}</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+
+				  {% assign sep = false %}
+				  {% for article in page.pages_by_tags %}
+
+				  {% if sep %}
+				    <hr/>
+				  {% endif %}
+
+				  <h3>{{ article[0].name }}</h3>
+				    <ul>
+				    {% for item in article[1] %}
+				        <li><a href="{{item.url}}">{{item.title}}</a></li>
+				    {% endfor %}
+				    </ul>
+
+				  {% assign sep = true %}
+				  {% endfor %}
+
+				</div><!-- entry-content -->
+
+		
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>

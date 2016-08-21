@@ -1,0 +1,14 @@
+---
+layout: page
+title: Topic1
+tagline: Supporting tagline
+---
+{% include JB/setup %}
+
+This is a test !
+![an image]({{ site.baseurl }}/assets/images/testimage.png)
+# Title
+text in between
+## Other title
+### little title
+***

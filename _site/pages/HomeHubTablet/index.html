@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Giant wall-mounted home tablet</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Giant wall-mounted home tablet" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Giant wall-mounted home tablet</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<ul id="markdown-toc">
+  <li><a href="#purpose" id="markdown-toc-purpose">Purpose</a></li>
+  <li><a href="#constraints" id="markdown-toc-constraints">Constraints</a></li>
+  <li><a href="#additional-feature" id="markdown-toc-additional-feature">Additional feature</a></li>
+</ul>
+
+<hr />
+
+<h3 id="purpose">Purpose</h3>
+<ul>
+  <li><strong>get rid our paper/post-it notes</strong> habit: indeed, we used to have many handwritten notes all over the house, and wanted a cleaner way to handle our day to day notes as well as longer term “todo” lists.</li>
+  <li>have a <strong>digital whiteboard</strong> to (possibly remotely) leave each other messages</li>
+  <li>use this same interface for possible <strong>home automation</strong> features (priority #1: music control)</li>
+</ul>
+
+<h3 id="constraints">Constraints</h3>
+
+<ul>
+  <li><strong>minimal power consumption</strong>, especially in standby/sleep mode. Both to minimize the power bill impact, and keep thermal dissipation (very) low.</li>
+  <li>ability to <strong>unplug electrical power supply</strong> completely (when leaving for a long vacation…)</li>
+  <li><strong>wall-mountable</strong></li>
+  <li><strong>wifi access</strong> to the home LAN</li>
+  <li>quick and friendly way to <strong>input text</strong>: voice-controlled input and/or large virtual keyboard.</li>
+  <li>ability to display messages/play sound upon <strong>notifications</strong>, ideally triggered by passing by in front of the interface.</li>
+  <li>reasonable <strong>budget</strong></li>
+</ul>
+
+<p><br />
+My initial plan was to find a cheap display with touchscreen, use a low power board (e.g. raspberry pi), then homebrew a software solution based on linux/Qt or android.  The very first thing I did was make several cardboard mock-ups of the interface, of various sizes, and search for the right size and right place in the hall where it would be wall-mounted. I determined that for our specific need, a 21/22 inches display would be ideal. Then came the reality check: finding and buying a 21 inch touch display as a standalone part was a non-starter. Way too expensive, and/or unpractical. I checked eBay for a second-hand point-of-sale touch screen, no luck either. Also, buying a bare LCD/touchscreen without a case would mean…having to make a case, and I do not have the right skills to do something that looks good enough to stay in the hall at all times.</p>
+
+<p><br />
+Finally, I stumbled upon something else: “smart displays”, i.e. all-in-one PCs integrating a low-power (and low-performance…) ARM CPU into a traditional PC display case. Checking the specifications of various models, it seemed to me that this was in fact quite a good match for my input constraints: these smart displays have very low power consumption, large screen, touch capability, and last but not least they run Android. I finally settled on the Viewsonic VSD220, an aging model soon to be replaced by a faster model that was therefore on sale. For 285 euros, I got a 21.5 inches capacitive touchscreen display, Android 4.0.4, 0.5W power consumption in sleep mode, wall-mountable through a standard VESA mount…jackpot !</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/viewsonic_vsd220.png" alt="viewsonic VSD220" /></p>
+
+<p>I customized the Android home screen, to move away from the “giant smartphone on the wall” feeling it gave by default:</p>
+
+<ul>
+  <li>I installed a full black background</li>
+  <li>I got rid of all the regular icons from the homepage. I wanted to have very large icons instead, for the key few applications that we would actually need on this interface. The “Desktop VisualizeR” free app from google play store got me what I needed: resizeable widgets with customizable images and associated actions.  I created widget of size 3x3 cells, and googled for high resolution icons of the apps that I need to point to.<br /><br /></li>
+</ul>
+
+<p>Here is a picture of the tablet mounted on the wall with an older setup:
+<img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/homehubtablet_map.png" alt="HomehubTablet complete" /></p>
+
+<ul>
+  <li>Two custom android apps were developed from scratch to handle the <strong>shopping list</strong> and the <strong>memo notes</strong> board. There are described <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">here</a> and <a href="http://jheyman.github.io/blog/pages/PostitListWidget">here</a>.</li>
+  <li>The long-term <strong>todo-list</strong> relies on the <a href="http://www.mytinytodo.net/">MyTinyTodo</a> code running on the home raspberry pi php/web server.</li>
+  <li>the <strong>music control</strong> app is BubbleUPnP, a great UPnP/DLNA Control Point/Renderer/Server. In practice, it sends out commands to the UPnP/DLNA server running on the home raspberry pi, which is itself attached to the actual sound system. I described this setup in <a href="http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi">this</a> page.</li>
+  <li><strong>home lighting control</strong> (not shown in this picture) is available via a simple shortcut to the local URL of openHAB, used to control my z-wave devices. You can check the details <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">here</a>. The shortcut is created using Desktop VisualizeR too, the specific target URL can be set by a long press on the Action while configuring the widget, and selecting “Clipboard” (while having previously copied the desired URL in the clipboard, of course)<br /><br /></li>
+</ul>
+
+<p>And here is a screenshot of my latest setup:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/homehub_screenshot.png" alt="HomehubTablet screenshot" /></p>
+
+<ul>
+  <li>
+    <p>the graph widget displays water consumption over the last three days. It is described <a href="http://jheyman.github.io/blog/pages/GraphViewerWidget">here</a>.</p>
+  </li>
+  <li>
+    <p>the photo frame widget displays a random photo from a remote server, refreshing every 30 minutes. It is described <a href="http://jheyman.github.io/blog/pages/PhotoFrameWidget">here</a>.</p>
+  </li>
+</ul>
+
+<h3 id="additional-feature">Additional feature</h3>
+
+<p>I added an external presence detection device that turns on the tablet when I walk by: the details are described <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake">here</a>.</p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/HomeHubTablet/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
