@@ -57,7 +57,7 @@
 - <strong>Flash</strong> (non-volatile) to store program binary; 32 KB on the Arduino Uno
 - <strong>SRAM</strong> (volatile) to store variables during program execution; 2KB on the Arduino Uno</p>
 
-<p>These are relatively small, but a good fit for the typical usage scenarios of an Arduino. I did face a few cases where I ran out of SRAM, and it bites real hard since the behavior of the chip then becomes quite weird. You would expect it to just crash/freeze, but sometimes it doesn&#8217;t and just produces unexpected behaviors.
+<p>These are relatively small, but a good fit for the typical usage scenarios of an Arduino. I did face a few cases where I ran out of SRAM, and it bites real hard since the behavior of the chip then becomes quite weird. You would expect it to just crash/freeze, but sometimes it doesn’t and just produces unexpected behaviors.
 Since then, I have made an habit of specifically checking how much SRAM I am currently using, to figure out what kind of margin I have left at any time during development.</p>
 
 <p>Here is the code snippet I borrowed to do this:</p>
@@ -146,7 +146,7 @@ Since then, I have made an habit of specifically checking how much SRAM I am cur
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ArduinoUnderTheHood/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ArduinoUnderTheHood/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

@@ -78,7 +78,7 @@
 
 <h4 id="zwavewidgetprovider">ZWaveWidgetProvider</h4>
 
-<p>The first specificity is that the usual APP_UPDATE mechanism that serves to refresh homescreen widgets is not used in this project. The reason is that many Android versions put a lower limit to the possible refresh rate, mainly to save battery on mobile Android devices. I want my z-wave devices statuses to be refreshed very often, and my target usecase is a wall-mounted Android tablet, so I really don&#8217;t care about battery-related constraints. So, I set <code>android:updatePeriodMillis</code> to 0 in the widget&#8217;s definition file, and instead used a custom <code>Handler</code> with a <code>Runnable</code> function called every 2 seconds to refresh the widget.<br /><br /></p>
+<p>The first specificity is that the usual APP_UPDATE mechanism that serves to refresh homescreen widgets is not used in this project. The reason is that many Android versions put a lower limit to the possible refresh rate, mainly to save battery on mobile Android devices. I want my z-wave devices statuses to be refreshed very often, and my target usecase is a wall-mounted Android tablet, so I really don’t care about battery-related constraints. So, I set <code>android:updatePeriodMillis</code> to 0 in the widget’s definition file, and instead used a custom <code>Handler</code> with a <code>Runnable</code> function called every 2 seconds to refresh the widget.<br /><br /></p>
 
 <p>Only the very first <code>onUpdate</code> call is useful, to register the click callbacks on each device icon, and kick-off the background auto-refresh Runnable.<br /><br /></p>
 
@@ -111,7 +111,7 @@
 
 <p>The timestamp is provided in unix time format (seconds elasped since Jan 1st 1970). So, when refresh is called, it passes the (server-side) timestamp of the previous refresh call, and gets in return the list of all device states that have changed in the meantime. Sweet! And much more efficient than having to poll every device individually. In addition to the list of state changes, the returned data contains an <code>updateTime</code> field, that will be used during next refresh call. <br /><br /></p>
 
-<p>The service then parses this returned data, and checks for each displayed device if a change happened. If it did, there will be an entry of the form <code>devices.xx.instances.yy.commandClasses.zz.data.level</code> in the data, where xx is the device Id, yy is the instance id within this device, and zz is the command class number (e.g. &#8220;38&#8221; for SwitchMultiLevel change)<br /><br /></p>
+<p>The service then parses this returned data, and checks for each displayed device if a change happened. If it did, there will be an entry of the form <code>devices.xx.instances.yy.commandClasses.zz.data.level</code> in the data, where xx is the device Id, yy is the instance id within this device, and zz is the command class number (e.g. “38” for SwitchMultiLevel change)<br /><br /></p>
 
 <p>For example, update data received after device 27 is switched on looks like this:</p>
 
@@ -141,7 +141,7 @@
 }
 </code></pre>
 
-<p><strong>Note</strong>: for some weird reason, ONE of my Fibaro dimmers has its state changes sometimes notified to the server under a different/generic set of id/instance/cmdclass than its own. More precisely, state changes happening after explicit calls to the API are notified normally, while state changes happening when manually pushing this switch get notified with these other values. So I implemented a set of &#8220;alternate&#8221; values to look for, as a hackish workaround to cover both remotely-triggered and locally/physically-triggered changes in this wallswitch.<br /><br /></p>
+<p><strong>Note</strong>: for some weird reason, ONE of my Fibaro dimmers has its state changes sometimes notified to the server under a different/generic set of id/instance/cmdclass than its own. More precisely, state changes happening after explicit calls to the API are notified normally, while state changes happening when manually pushing this switch get notified with these other values. So I implemented a set of “alternate” values to look for, as a hackish workaround to cover both remotely-triggered and locally/physically-triggered changes in this wallswitch.<br /><br /></p>
 
 <p>Since Z-way protocol is largely asynchronous, an important trick is to check the time ordering of <code>updateTime</code> and <code>invalidateTime</code> fields within the received notification: this allows to discard notification for state changes that are not valid anymore, because an update of the device state is in progress.</p>
 
@@ -243,7 +243,7 @@
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ZWaveWidget/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ZWaveWidget/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

@@ -75,7 +75,7 @@
 
 <ul>
   <li><strong>replacing the existing meter</strong> with a new one equipped with data transmission capability: such meters are expensive, and must generally be associated to even more expensive data acquisition/transmission systems. Also, it requires replacing the original water meter, which I am pretty sure my water company would not allow.<br /><br /></li>
-  <li><strong>buying the sensor add-on</strong> specifically designed to go with my model of water meter (&#8220;HRI pulse unit&#8221; for Sensus 620): not intrusive, it plugs on top of the original meter, it is however expensive and requires a specific proprietary data acquisition system to read the data.<br /><br /></li>
+  <li><strong>buying the sensor add-on</strong> specifically designed to go with my model of water meter (“HRI pulse unit” for Sensus 620): not intrusive, it plugs on top of the original meter, it is however expensive and requires a specific proprietary data acquisition system to read the data.<br /><br /></li>
   <li><strong>building a custom readout device</strong>, attached where the proprietary add-on is supposed to go: I used this project as an opportunity to experiment with wireless sensors, especially after discovering a ton of interesting usecases on the <a href="http://mysensors.org">mysensors.org</a> site. Results are detailed below.<br /><br /></li>
 </ul>
 
@@ -138,7 +138,7 @@
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/sensor_holder_v2_3Dback.png" alt="3D model mounting plate back" /></p>
 
-<p>The square and circular sunked surfaces are there to accomodate the bumps present on the sensus 620&#8217;s front plate, so that the holder can stick perfectly.<br /><br /></p>
+<p>The square and circular sunked surfaces are there to accomodate the bumps present on the sensus 620’s front plate, so that the holder can stick perfectly.<br /><br /></p>
 
 <p>I then  used a Sketchup <a href="https://extensions.sketchup.com/fr/content/sketchup-stl">extension</a> to export the Sketchup model to a 3D-printing-friendly STL file, uploaded it on an online printing service (Sculpteo.com), and got it printed for about 10 dollars.<br /><br />
 Both the Sketchup model and the exported STL file are available <a href="https://github.com/jheyman/wirelesswatermeter">here</a>.<br /><br /></p>
@@ -211,11 +211,11 @@ void loop(){
 }
 </code></pre>
 
-<p>On the (linux) host side, I used a USB bluetooth adapter, connected to the bluetooth module using Ubuntu bluetooth manager and initial pin code &#8220;1234&#8221;. Then from the command line:</p>
+<p>On the (linux) host side, I used a USB bluetooth adapter, connected to the bluetooth module using Ubuntu bluetooth manager and initial pin code “1234”. Then from the command line:</p>
 
 <ul>
   <li>
-    <p>find the bluetooth device&#8217;s MAC address using <code>hcitool scan</code></p>
+    <p>find the bluetooth device’s MAC address using <code>hcitool scan</code></p>
   </li>
   <li>
     <p>modify <code>/etc/bluetooth/rfcomm.conf</code> to specify MAC address and name the device:</p>
@@ -258,11 +258,11 @@ Values below 20 correspond to the time when the sensor sees the silver part of t
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/graph2.png" alt="graph2" /></p>
 
-<p>faster&#8230;.</p>
+<p>faster….</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/graph3.png" alt="graph3" /></p>
 
-<p>even faster&#8230;
+<p>even faster…
 <img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/graph4.png" alt="graph 4" /></p>
 
 <p>This is the worst case / fastest case I noticed, and the peaks only contain two samples. Therefore I decided to increase the acquisition rate, from 4 to 10 Hz, by reducing the delay to 100ms between readouts.</p>
@@ -271,7 +271,7 @@ Values below 20 correspond to the time when the sensor sees the silver part of t
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/graph5.png" alt="graph 5" /></p>
 
-<p>(water flow stopped right when reaching the peak&#8230;then restarted later)</p>
+<p>(water flow stopped right when reaching the peak…then restarted later)</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/graph6.png" alt="graph 6" /></p>
 
@@ -300,14 +300,14 @@ Values below 20 correspond to the time when the sensor sees the silver part of t
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/cabling_raspi_funduino_5V.png" alt="Cabling" /></p>
 
-<p><strong>Note</strong>: on the raspberry side, even though 3.3V is available on the GPIO connector, I also used a 5V/3.3V adapter like on the Arduino side. I initially connected the 3.3V directly, but found out that the range of the wireless link was largely degraded. The nRF24L01 appears to be quite sensitive to the quality of the input 3.3V supply, and the adapter&#8217;s regulator allows to have a cleaner 3.3V supply.<br /><br /></p>
+<p><strong>Note</strong>: on the raspberry side, even though 3.3V is available on the GPIO connector, I also used a 5V/3.3V adapter like on the Arduino side. I initially connected the 3.3V directly, but found out that the range of the wireless link was largely degraded. The nRF24L01 appears to be quite sensitive to the quality of the input 3.3V supply, and the adapter’s regulator allows to have a cleaner 3.3V supply.<br /><br /></p>
 
 <p>Below is a view of the arduino part, integrated inside a small box that is then mounted near the water meter (the USB connector/cable goes to the TCRT5000 module, I just used the 4 available wires in the cable, and happened to have a spare female USB connector lying around. The cable on the left is the 5V power supply)</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/WirelessWaterMeter/arduino_box.png" alt="arduino box" /></p>
 
 <h4 id="software-install-on-the-arduino-side">Software install on the arduino side</h4>
-<p>I downloaded the RF24 library <a href="https://github.com/maniacbug/RF24">here</a> as a zip file then from the Arduino IDE, imported it (<code>Sketch</code> / <code>Import library</code> / <code>Add library</code>&#8230; then navigate to zip file)</p>
+<p>I downloaded the RF24 library <a href="https://github.com/maniacbug/RF24">here</a> as a zip file then from the Arduino IDE, imported it (<code>Sketch</code> / <code>Import library</code> / <code>Add library</code>… then navigate to zip file)</p>
 
 <h4 id="software-install-on-the-raspberry-side">Software install on the raspberry side</h4>
 
@@ -476,7 +476,7 @@ sudo update-rc.d watermeter_logger.sh defaults</code></pre>
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/WirelessWaterMeter/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/WirelessWaterMeter/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

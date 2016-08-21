@@ -69,7 +69,7 @@ an Arduino board.<br /><br /></p>
 <h2 id="hw-part--led-matrix-module">HW Part : LED Matrix module</h2>
 
 <p>These modules are delivered completely unassembled, so it required manual soldering. Nothing too difficult, but at about ~60 solder points per module, assembling
-the 16 modules took&#8230;a while.</p>
+the 16 modules took…a while.</p>
 
 <p>Here is the 8x8 LED matrix itself:</p>
 
@@ -103,12 +103,12 @@ There are various flavors of this base concept (depending on the desired clock p
 
 <ul>
   <li>VCC and GND for supplying power (5V)</li>
-  <li>DIN is &#8220;Data In&#8221;, i.e. the MOSI signal</li>
-  <li>CLK if the &#8220;Clock&#8221; pin, that will be driven by the SPI master</li>
-  <li>CS is the &#8220;Chip Select&#8221; pin, also driven by the SPI master</li>
+  <li>DIN is “Data In”, i.e. the MOSI signal</li>
+  <li>CLK if the “Clock” pin, that will be driven by the SPI master</li>
+  <li>CS is the “Chip Select” pin, also driven by the SPI master</li>
 </ul>
 
-<p>The output of the module is similar, with DOUT being the &#8220;Data Out&#8221; pin, which will be used to daisy-chain the output of one module to the input of the next one. For this particular project, there are 16 daisy-chained SPI slaves, sharing common CLK and CS lines. There is no need to manage the modules as 16 independent slaves, since we will always refresh the full display anyway. Also, since there is no need to receive any data from the modules, the MISO signal will be left unused at the SPI master side (i.e. on the Arduino).</p>
+<p>The output of the module is similar, with DOUT being the “Data Out” pin, which will be used to daisy-chain the output of one module to the input of the next one. For this particular project, there are 16 daisy-chained SPI slaves, sharing common CLK and CS lines. There is no need to manage the modules as 16 independent slaves, since we will always refresh the full display anyway. Also, since there is no need to receive any data from the modules, the MISO signal will be left unused at the SPI master side (i.e. on the Arduino).</p>
 
 <p>So, here is the overall view on the principle of the project:</p>
 
@@ -144,14 +144,14 @@ turns the 8 rows on/off in a sequential manner. This row scanning is performed a
 
 <h3 id="setting-up-spi">setting up SPI</h3>
 <p>Originally, I used the <code>LEDControl</code> library, starting from the <code>LCDemoMatrix</code> example provided with the arduino IDE. It uses pin 12 for SPI data output, pin 11 for
-the SPI clock, and pin 10 for the SPI &#8220;LOAD&#8221; (i.e. CS).</p>
+the SPI clock, and pin 10 for the SPI “LOAD” (i.e. CS).</p>
 
 <p>The required data in arduino memory representing the values of the 16x8x8 LEDs are stored as a buffer of 16x8 bytes (i.e. 1 bit per LED state).
-Since I intended to have a horizontal strip of 16 LED modules, the natural thing to do was to organize these bytes so that the first byte corresponds to the first 8 pixels of the first row, the second byte corresponds to the next 8 pixels on the same row, etc&#8230;as would be the case for the video RAM of a regular display.</p>
+Since I intended to have a horizontal strip of 16 LED modules, the natural thing to do was to organize these bytes so that the first byte corresponds to the first 8 pixels of the first row, the second byte corresponds to the next 8 pixels on the same row, etc…as would be the case for the video RAM of a regular display.</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/LED_mapping.png" alt="LED RAM mapping" /></p>
 
-<p>But in this specific case, given the physical orientation of the modules, what the MAX7219 considers as &#8220;rows&#8221; are actually the columns of the 8x8 matrix, so we need to send out the data column by column. This means reconstructing the column bytes from the row bytes. This is not difficult, but it does mean that lots of CPU cycles would be used just for re-arranging the data, each time the LED matrices are updated. The performance implications are far from being negligeable on an Arduino. So instead, it is better to store the data directly in a column-friendly format :</p>
+<p>But in this specific case, given the physical orientation of the modules, what the MAX7219 considers as “rows” are actually the columns of the 8x8 matrix, so we need to send out the data column by column. This means reconstructing the column bytes from the row bytes. This is not difficult, but it does mean that lots of CPU cycles would be used just for re-arranging the data, each time the LED matrices are updated. The performance implications are far from being negligeable on an Arduino. So instead, it is better to store the data directly in a column-friendly format :</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/LED_mapping_reworked.png" alt="LED RAM mapping reworked" /></p>
 
@@ -166,7 +166,7 @@ to left.</p>
 
 <p>This worked fine, however I soon encountered a performance issue: even with this daya layout, when using that many LED matrix modules, 
 refreshing the full display takes a significant amount of time, therefore limiting the display refresh rate. Taking a closer look at the LedControl library, I
-noticed that it performed the SPI data transfer by programmatically sending out the data bit by bit (i.e. &#8220;bit banging&#8221;). The library does it this way to be as flexible as possible regarding the mapping of the Data pin, but the downside is that it does not use the built-in (i.e. in HW) SPI capability of the arduino 
+noticed that it performed the SPI data transfer by programmatically sending out the data bit by bit (i.e. “bit banging”). The library does it this way to be as flexible as possible regarding the mapping of the Data pin, but the downside is that it does not use the built-in (i.e. in HW) SPI capability of the arduino 
 (available on pins 10,11,12 and 13 on the Arduino Uno board). The <code>SPI</code>library does make use of these pins, and is therefore able to send out data much faster that
 with bit banging. The SPI sending frequency can be set through <code>setClockDivider</code>, and the fastest setting is <code>SPI_CLOCK_DIV2</code>, which will run the SPI transfer at 1/2 the frequency of the arduino (1/2 x 16 MHz in my case).</p>
 
@@ -183,7 +183,7 @@ smooth scrolling.</p>
 
 <p>To efficiently draw characters into the buffer, the font is stored as a series a column data, so the only remaining job to draw a given letter is to copy the 8 bytes corresponding to the 8 columns of this letter, at the appropriate offset in the buffer. In fact, the font is defined in the code as series of bytes representing the line-by-line values, since this is easier to find, and the letter are then all converted into the column-based format using a specific <code>rotateFont</code> function, called once at startup.</p>
 
-<p>To draw individual pixels in arbitrary (x,y) locations, the line-to-column bit manipulation ares still required, to be able to keep the natural (x,y) coordinate system. At least this is a performance compromise I am willing to make, to keep the pixel-related code clear enough. Since we usually don&#8217;t draw that many individual pixels anyway, the performance impact is ok.</p>
+<p>To draw individual pixels in arbitrary (x,y) locations, the line-to-column bit manipulation ares still required, to be able to keep the natural (x,y) coordinate system. At least this is a performance compromise I am willing to make, to keep the pixel-related code clear enough. Since we usually don’t draw that many individual pixels anyway, the performance impact is ok.</p>
 
 <h2 id="custom-pcb">Custom PCB</h2>
 <p>Since the Arduino setup worked fine, it was time to switch to a homemade PCB.
@@ -203,7 +203,7 @@ The PCB integrates the minimum components required for the project:</p>
 
 <p>Etching was done using <a href="http://jheyman.github.io/blog/pages/EtchingCustomPCB">this</a> method</p>
 
-<p>Here&#8217;s a snapshot in the middle of the process:</p>
+<p>Here’s a snapshot in the middle of the process:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/PCB_unfinished.png" alt="PCB unfinished" /></p>
 
@@ -220,24 +220,24 @@ At this point, changing the messages on the display required updating the Arduin
 
 <h2 id="bluetooth-upgrade">Bluetooth upgrade</h2>
 
-<p>To be able to customize the displayed messages/animations more easily, I considered adding a wireless communication module. There are many options to choose from (WiFi, XBee, Bluetooth, RF, &#8230;) and for lack of a better reason, I went for a cheap one after finding a bluetooth module for 8$ on DealExtreme (&#8220;JY-MCU Bluetooth Wireless Serial Port Module for Arduino&#8221;):</p>
+<p>To be able to customize the displayed messages/animations more easily, I considered adding a wireless communication module. There are many options to choose from (WiFi, XBee, Bluetooth, RF, …) and for lack of a better reason, I went for a cheap one after finding a bluetooth module for 8$ on DealExtreme (“JY-MCU Bluetooth Wireless Serial Port Module for Arduino”):</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/bluetoothmodule_front.png" alt="bluetooth module front" /></p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/LEDMatrixStrip/bluetoothmodule_back.png" alt="bluetooth module back" /></p>
 
-<p>It doesn&#8217;t get any easier than this: VCC and GND for supplying power (5V from Arduino), and RXD/TXD to send/receive the data through serial communication.</p>
+<p>It doesn’t get any easier than this: VCC and GND for supplying power (5V from Arduino), and RXD/TXD to send/receive the data through serial communication.</p>
 
-<p>Even though the module works just fine out of the box, you may want to change a few of its internal settings. The way to do this is to connect to the module over its serial line (using whatever mean, I used my FTDI cable and launched a minicom terminal on /dev/ttyUSB0&#8230;), then send a few &#8220;AT&#8221; commands to configure the device. Note that to make sure the command being sent is read entirely, it is better to prepare the command in a text editor somewhere, then copy/paste the full command into the serial terminal.</p>
+<p>Even though the module works just fine out of the box, you may want to change a few of its internal settings. The way to do this is to connect to the module over its serial line (using whatever mean, I used my FTDI cable and launched a minicom terminal on /dev/ttyUSB0…), then send a few “AT” commands to configure the device. Note that to make sure the command being sent is read entirely, it is better to prepare the command in a text editor somewhere, then copy/paste the full command into the serial terminal.</p>
 
 <ul>
-  <li><code>AT</code> : will print out &#8220;OK&#8221; in return if everything is working.</li>
-  <li><code>AT+NAMEmycustomname</code> : sets the Bluetooth device name to &#8220;mycustomname&#8221;, prints out &#8220;OKsetname&#8221; if successful.</li>
-  <li><code>AT+PINxxxx</code> : sets the PIN code to xxxx, prints out &#8220;OKsetPIN&#8221; if successful.</li>
+  <li><code>AT</code> : will print out “OK” in return if everything is working.</li>
+  <li><code>AT+NAMEmycustomname</code> : sets the Bluetooth device name to “mycustomname”, prints out “OKsetname” if successful.</li>
+  <li><code>AT+PINxxxx</code> : sets the PIN code to xxxx, prints out “OKsetPIN” if successful.</li>
   <li><code>AT+BAUDx</code> : sets the baud rate to speed number x (4 for 9600 (default), 8 for 115200)</li>
 </ul>
 
-<p>For this project, 9600 baud rate is ok for me, so I just changed the device name for something easily recognizable (&#8220;LEDdisplay&#8221;) and adjusted the PIN number (not that I cared if anyone hijacked my LED display&#8230;)</p>
+<p>For this project, 9600 baud rate is ok for me, so I just changed the device name for something easily recognizable (“LEDdisplay”) and adjusted the PIN number (not that I cared if anyone hijacked my LED display…)</p>
 
 <p>Since I needed a way to attach this bluetooth module to the rest of the LED strip, I created a small PCB to host it, and deal with two required tricks at the same time:
 * The BT input/output pins use 3.3V logic, whereas my arduino chip only supported 5V logic. Even though my initial tests showed that it just worked anyway, it was better to include a voltage divider between the TX output of the arduino and the RXD input pin of the BT module.  A 1.2k and a 2.2k resistor did the job. In the other direction (from BT TX to Arduino RX), no voltage scaler is required since the arduino will take the 3.3V logic just fine.</p>
@@ -251,7 +251,7 @@ At this point, changing the messages on the display required updating the Arduin
 <p>On the Arduino software side, communication with the BT module is quite easy, since it is standard serial communication. Using the <code>Serial</code> built-in library allows to write/read characters to/from the module. In practive, the <code>serialEvent</code> callback function was implemented to handle data reception, and notify the main loop when new data is available. This serialEvent callback gets called (behind the scenes) after each the main loop execution.</p>
 
 <p>I (arbitrarily) chose a string format <code>@&lt;cmd&gt;@&lt;data&gt;@</code> as the pattern that the arduino will try to decode while receiving individual bytes
-of data over this serial connection. A quick way to test that communication is ok and that the Arduino decodes the commands properly is to use the &#8220;BlueTerm&#8221; android application from a smartphone, and type in a string of this format.<br /><br /></p>
+of data over this serial connection. A quick way to test that communication is ok and that the Arduino decodes the commands properly is to use the “BlueTerm” android application from a smartphone, and type in a string of this format.<br /><br /></p>
 
 <p>The full source code is available <a href="https://github.com/jheyman/LEDmatrixstrip/blob/master/LEDMatrixStrip.ino">here</a>.<br /><br /></p>
 
@@ -259,7 +259,7 @@ of data over this serial connection. A quick way to test that communication is o
 
 <ul>
   <li>
-    <p>find the device&#8217;s MAC address using <code>hcitool scan</code></p>
+    <p>find the device’s MAC address using <code>hcitool scan</code></p>
   </li>
   <li>
     <p>modify <code>/etc/bluetooth/rfcomm.conf</code> to specify MAC address and name the device:</p>
@@ -285,7 +285,7 @@ rfcomm0 {
 <ul>
   <li>Watch the wire lengths. Long wires are fine when testing one of two modules on a protoboard, but when chaining more than 10 of these MAX7219 modules,
 the noise/distorsion introduced by the wires is enough to corrupt the data arriving at the last modules.</li>
-  <li>Using &#8220;common rails&#8221; for CLK and CS worked better than daisy-chaining the signals from the output of one module to the input of the next.</li>
+  <li>Using “common rails” for CLK and CS worked better than daisy-chaining the signals from the output of one module to the input of the next.</li>
   <li>Estimate the power consumption beforehand.</li>
   <li>Triple check the wiring before applying power. I burned two MAX7219 along the course of the project.</li>
   <li>When possible, use HW-supported SPI communication instead of SW bit-banged SPI, for (much) faster communication.</li>
@@ -361,7 +361,7 @@ the noise/distorsion introduced by the wires is enough to corrupt the data arriv
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/LEDMatrixStrip/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/LEDMatrixStrip/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

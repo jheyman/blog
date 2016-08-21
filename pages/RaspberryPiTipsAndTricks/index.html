@@ -45,6 +45,7 @@
 <p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br /><br /></p>
 
 <ul id="markdown-toc">
+  <li><a href="#set-usb-sound-card-as-alsa-default" id="markdown-toc-set-usb-sound-card-as-alsa-default">Set USB sound card as ALSA default</a></li>
   <li><a href="#customizing-hostname" id="markdown-toc-customizing-hostname">Customizing hostname</a></li>
   <li><a href="#enabling-i2c-bus" id="markdown-toc-enabling-i2c-bus">Enabling I2C bus</a></li>
   <li><a href="#using-an-external-rtc" id="markdown-toc-using-an-external-rtc">Using an external RTC</a>    <ul>
@@ -57,6 +58,21 @@
 
 <hr />
 
+<h3 id="set-usb-sound-card-as-alsa-default">Set USB sound card as ALSA default</h3>
+
+<p>On Raspbian jessie, to set an external USB sound card as the default card used by ALSA (instead of the internal bcm2835 snd card), edit</p>
+
+<pre><code>/usr/share/alsa/alsa.conf
+</code></pre>
+
+<p>and change <code>defaults.ctl.card</code> and <code>defaults.pcm.card</code> to the id of the USB snd card (“1” in my case):</p>
+
+<pre><code>defaults.ctl.card 1
+defaults.pcm.card 1
+</code></pre>
+
+<hr />
+
 <h3 id="customizing-hostname">Customizing hostname</h3>
 <p>By default, any raspberry pi has the hostname <code>raspberrypi</code> assigned to it, which may turn out to be a problem when deploying multiple raspberry pis in a single local network (for example, if two or more pis share folders over the network using samba, only one of them will be seen due to the hostname conflict). To customize the hostname of each indivudal raspi, refer to <a href="http://jheyman.github.io/blog/pages/LinuxTipsAndTricks">this page</a>.</p>
 
@@ -64,7 +80,7 @@
 
 <h3 id="enabling-i2c-bus">Enabling I2C bus</h3>
 
-<p>The Raspberry Pi&#8217;s I2C bus capability is not enabled by default. Below are instructions to configure it.<br /><br /></p>
+<p>The Raspberry Pi’s I2C bus capability is not enabled by default. Below are instructions to configure it.<br /><br /></p>
 
 <p><strong>For older Raspbian versions (pre-2014)</strong>:</p>
 
@@ -130,7 +146,7 @@ i2c-dev
 
 <h3 id="using-an-external-rtc">Using an external RTC</h3>
 
-<p>One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the &#8220;fake hw clock&#8221; and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br /><br /></p>
+<p>One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the “fake hw clock” and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br /><br /></p>
 
 <p>One solution is to use an actual, battery-backed real time clock module, and let the pi get its system time from there. I bought such a module (DS3231) for a few bucks:</p>
 
@@ -146,7 +162,7 @@ i2c-dev
 <pre><code>sudo i2cdetect -y 1
 </code></pre>
 
-<p>should detect the RTC module at address 0x68 (note: for some pi models, use &#8220;0&#8221; instead of &#8220;1&#8221;)</p>
+<p>should detect the RTC module at address 0x68 (note: for some pi models, use “0” instead of “1”)</p>
 
 <pre><code>     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
 00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
@@ -227,7 +243,7 @@ exit
 }
 </code></pre>
 
-<p>Modify the &#8220;start)&#8221; part to call this procedure, as well as comment out the udev detection:</p>
+<p>Modify the “start)” part to call this procedure, as well as comment out the udev detection:</p>
 
 <pre><code>case "$1" in
    start)
@@ -240,7 +256,7 @@ exit
 #      fi
 </code></pre>
 
-<p>Finally, remove the old &#8220;fake hw clock&#8221; daemon and associated cron jobs:</p>
+<p>Finally, remove the old “fake hw clock” daemon and associated cron jobs:</p>
 
 <pre><code>sudo update-rc.d hwclock.sh enable
 sudo update-rc.d fake-hwclock remove
@@ -348,7 +364,7 @@ options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/RaspberryPiTipsAndTricks/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/RaspberryPiTipsAndTricks/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

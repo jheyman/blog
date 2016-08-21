@@ -47,8 +47,7 @@
 <ul id="markdown-toc">
   <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
   <li><a href="#data-server" id="markdown-toc-data-server">Data server</a></li>
-  <li><a href="#data-logger" id="markdown-toc-data-logger">Data logger</a></li>
-  <li><a href="#android-widget" id="markdown-toc-android-widget"> Android widget</a>    <ul>
+  <li><a href="#data-logger" id="markdown-toc-data-logger">Data logger</a>    <ul>
       <li><a href="#android-manifest" id="markdown-toc-android-manifest">Android manifest</a></li>
       <li><a href="#widget-layout" id="markdown-toc-widget-layout">Widget layout</a></li>
       <li><a href="#graphviewerwidgetprovider" id="markdown-toc-graphviewerwidgetprovider">GraphViewerWidgetProvider</a></li>
@@ -57,7 +56,6 @@
       <li><a href="#settingsactivity" id="markdown-toc-settingsactivity">SettingsActivity</a></li>
     </ul>
   </li>
-  <li><a href="#results" id="markdown-toc-results"> Results</a></li>
   <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
 </ul>
 
@@ -117,7 +115,7 @@ def remoteLog(valueToLog):
 
 <p>Another source of data is a python script performing a basic monitoring of my LAN devices ping status (nothing noteworthy, it just pings a predefined list of devices and logs the result in the data server, logging 1.0 for a successful ping and 0.0 for a failed ping (the source code is <a href="https://github.com/jheyman/HealthMonitor">here</a>)</p>
 
-<h3 id="android-widget"> Android widget</h3>
+<p>### Android widget</p>
 
 <p>Preliminary notes:</p>
 
@@ -277,7 +275,7 @@ def remoteLog(valueToLog):
 <p>which references a single preference header, implemented by the <code>GraphSettingsFragment</code> in the code. <br /><br />
 Finally, the retrieved settings values are managed in a <code>GraphSettings</code> class used in the rest of the code.</p>
 
-<h3 id="results"> Results</h3>
+<p>### Results</p>
 
 <p>Below is a capture of the android widget, showing the daily water consumption (in blue), the specific water consumption in predefined time slots (in purple), and the view of ping statuses of the various raspberry pi around the house:</p>
 
@@ -366,7 +364,7 @@ Finally, the retrieved settings values are managed in a <code>GraphSettings</cod
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/GraphViewerWidget/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/GraphViewerWidget/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

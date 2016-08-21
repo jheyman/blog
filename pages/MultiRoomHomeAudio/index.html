@@ -90,14 +90,14 @@
   <li>a user interface</li>
 </ul>
 
-<p><br />For the <strong>audio server</strong>, my home&#8217;s main raspberry pi sounded like the default choice. There are plenty of SW options to choose from, I chose to use the well-known (if somewhat ageing) <code>Logitech Media Server</code> open source music server. An alternative could have been to use <code>minidlna</code> + <code>BubbleUPnP</code>. For media content storage, anything from a simple USB thumbdrive to a full-fledged NAS will do the job, depending on your needs. I chose to use a 500GB HDD USB external drive.<br /><br /></p>
+<p><br />For the <strong>audio server</strong>, my home’s main raspberry pi sounded like the default choice. There are plenty of SW options to choose from, I chose to use the well-known (if somewhat ageing) <code>Logitech Media Server</code> open source music server. An alternative could have been to use <code>minidlna</code> + <code>BubbleUPnP</code>. For media content storage, anything from a simple USB thumbdrive to a full-fledged NAS will do the job, depending on your needs. I chose to use a 500GB HDD USB external drive.<br /><br /></p>
 
-<p>For the <strong>audio player/client</strong> part, given the choice of LMS as the server, the <code>squeezelite</code> client was a logical choice. On the HW side, since the embedded audio output on the pi is pretty low-end, a simple USB DAC will provide a decent sound quality, which I consider to be OK. Audiophiles may prefer to go for a higher-end sound card for the Pi, e.g. HifiBerry or Wolfson. I am not too fond of custom raspberry pi add-ons like these for a specific reason: their connector typically take up most if not all of the pi&#8217;s GPIO pins, making them unavailable for other purposes. Finally, since I wanted to use large external speakers beyond what a USB DAC can drive, I added an audio amplification board from Adafruit. There are cheaper options but the adafruit module is quite convenient with its 20W amplification, 3.5mm jack input, terminal blocks for speaker outputs, and has digital volume control available through I2C.
+<p>For the <strong>audio player/client</strong> part, given the choice of LMS as the server, the <code>squeezelite</code> client was a logical choice. On the HW side, since the embedded audio output on the pi is pretty low-end, a simple USB DAC will provide a decent sound quality, which I consider to be OK. Audiophiles may prefer to go for a higher-end sound card for the Pi, e.g. HifiBerry or Wolfson. I am not too fond of custom raspberry pi add-ons like these for a specific reason: their connector typically take up most if not all of the pi’s GPIO pins, making them unavailable for other purposes. Finally, since I wanted to use large external speakers beyond what a USB DAC can drive, I added an audio amplification board from Adafruit. There are cheaper options but the adafruit module is quite convenient with its 20W amplification, 3.5mm jack input, terminal blocks for speaker outputs, and has digital volume control available through I2C.
 <br /><br /></p>
 
-<p>For the <strong>system control/user interface</strong>, the usual way is to rely on LMS web interface, or the corresponding phone app. I do have a logical place to access this from (<a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHub</a>), but somehow it did not feel very convenient to have to go to the wall-mounted tablet to control the music, and since I do not carry my smartphone at all times it was not a convenient choice either. So I went for the old-style option : a remote control. A small &amp; thin IR remote control costs a few bucks only, same goes for an IR receiver diode. On the SW side, the <code>LIRC</code> library is perfect to decode commands from the remote, and the <code>pyLIRC</code> python wrapper for LIRC provides a convenient API (a C program would be fine too, but I&#8217;m lazy)<br /><br /></p>
+<p>For the <strong>system control/user interface</strong>, the usual way is to rely on LMS web interface, or the corresponding phone app. I do have a logical place to access this from (<a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHub</a>), but somehow it did not feel very convenient to have to go to the wall-mounted tablet to control the music, and since I do not carry my smartphone at all times it was not a convenient choice either. So I went for the old-style option : a remote control. A small &amp; thin IR remote control costs a few bucks only, same goes for an IR receiver diode. On the SW side, the <code>LIRC</code> library is perfect to decode commands from the remote, and the <code>pyLIRC</code> python wrapper for LIRC provides a convenient API (a C program would be fine too, but I’m lazy)<br /><br /></p>
 
-<p>Here&#8217;s an overview of the system:</p>
+<p>Here’s an overview of the system:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/global_overview.png" alt="overview" /></p>
 
@@ -252,7 +252,7 @@ sudo chmod a+x /usr/bin/squeezelite-armv6hf
 
 <p>The <code>bcm2835</code> entries correspond to the raspberry pi internal audio. In my case, the audio output from the USB sound card corresponds to <code>front:CARD=Set,DEV=0</code><br /><br /></p>
 
-<p>Let&#8217;s now make squeezelite start automatically at boot as a daemon. <a href="http://www.gerrelt.nl/RaspberryPi/squeezelitehf.sh">Gerrelt&#8217;s script</a> will do fine.<br /><br /></p>
+<p>Let’s now make squeezelite start automatically at boot as a daemon. <a href="http://www.gerrelt.nl/RaspberryPi/squeezelitehf.sh">Gerrelt’s script</a> will do fine.<br /><br /></p>
 
 <p>Edit the file:</p>
 
@@ -321,7 +321,7 @@ ctl.mixer0 {
 }
 </code></pre>
 
-<p>This piece of configuration tells alsa to declare a &#8220;dmixer&#8221; device leveraging the dmix plugin, and to set it as the default device for audio output. The second part then consists in modifying the squeezelite configuration itself (<code>/etc/init.d/squeezelite</code>) to modify the SL_SOUNDCARD parameter:</p>
+<p>This piece of configuration tells alsa to declare a “dmixer” device leveraging the dmix plugin, and to set it as the default device for audio output. The second part then consists in modifying the squeezelite configuration itself (<code>/etc/init.d/squeezelite</code>) to modify the SL_SOUNDCARD parameter:</p>
 
 <pre><code>SL_SOUNDCARD="default" 
 </code></pre>
@@ -392,7 +392,7 @@ LIRCMD_CONF=""
 
 <h3 id="testing-lms--squeezelite">Testing LMS &amp; Squeezelite</h3>
 
-<p>To check that everything is in order, let&#8217;s check audio streaming (you can just plug a set of earphones at the USB DAC output for now). In this project the squeezelite client is launched at boot as a daemon. 
+<p>To check that everything is in order, let’s check audio streaming (you can just plug a set of earphones at the USB DAC output for now). In this project the squeezelite client is launched at boot as a daemon. 
 But if this not the case, one can launch it manually:</p>
 
 <pre><code>squeezelite-armv6hf -s {IP address of the pi hosting LMS}
@@ -403,13 +403,13 @@ At initial launch, an installation wizard is executed, just tell it where your m
 
 <h3 id="cabling-overview">Cabling overview</h3>
 
-<p>Let&#8217;s now add audio amplification and remote control. The different elements will be connected as depicted below:</p>
+<p>Let’s now add audio amplification and remote control. The different elements will be connected as depicted below:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/cabling.png" alt="Cabling overview" /></p>
 
 <ul>
-  <li>To amplifier: GND, VI2C, SDA and SCL are the required connections for I2C communication with the amplifier to digitally adjust gain/volume. In addition, the SHDN (Shutdown) pin of the amplifier is connected to one of the pi&#8217;s GPIO, so as to be able to disable the amplifier when not used.</li>
-  <li>To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi&#8217;s GPIO #18, as configured in LIRC). I also successfully tested this setup using TSOP4838, taking into account its specific pinout.<br /><br /></li>
+  <li>To amplifier: GND, VI2C, SDA and SCL are the required connections for I2C communication with the amplifier to digitally adjust gain/volume. In addition, the SHDN (Shutdown) pin of the amplifier is connected to one of the pi’s GPIO, so as to be able to disable the amplifier when not used.</li>
+  <li>To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi’s GPIO #18, as configured in LIRC). I also successfully tested this setup using TSOP4838, taking into account its specific pinout.<br /><br /></li>
 </ul>
 
 <p>Here is a work-in-progress view:</p>
@@ -425,7 +425,7 @@ At initial launch, an installation wizard is executed, just tell it where your m
   <li>SCL: Serial CLock</li>
 </ul>
 
-<p>In addition to these two pins and the GND, the reference voltage for I2C communication shall also be provided to the amplifier: just connect one of the raspi 5V pins to the amp&#8217;s VI2C pin.</p>
+<p>In addition to these two pins and the GND, the reference voltage for I2C communication shall also be provided to the amplifier: just connect one of the raspi 5V pins to the amp’s VI2C pin.</p>
 
 <p>Scan the bus, the amp should be detected at address 0x4B:</p>
 
@@ -442,7 +442,7 @@ At initial launch, an installation wizard is executed, just tell it where your m
 70: -- -- -- -- -- -- -- --   
 </code></pre>
 
-<p><strong>Note</strong>: with some raspi distributions you may see a &#8220;UU&#8221; value at address 0x1b: this is due to the kernel driver for tas5713 amplifier that comes in the Wolfson audio add-on card for rasp. Not sure why this is not blacklisted by default since most people do not have this addon card on their pi, but anyway, I did not want to take any chance of an unused kernel driver using the I2C bus while I am using it to communicate with the external amplifier. So I blacklisted the TAS5713 driver:</p>
+<p><strong>Note</strong>: with some raspi distributions you may see a “UU” value at address 0x1b: this is due to the kernel driver for tas5713 amplifier that comes in the Wolfson audio add-on card for rasp. Not sure why this is not blacklisted by default since most people do not have this addon card on their pi, but anyway, I did not want to take any chance of an unused kernel driver using the I2C bus while I am using it to communicate with the external amplifier. So I blacklisted the TAS5713 driver:</p>
 
 <pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf
 </code></pre>
@@ -459,7 +459,7 @@ At initial launch, an installation wizard is executed, just tell it where your m
 
 <h4 id="configuring-ir-remotereceiver">Configuring IR remote/receiver</h4>
 
-<p>First, let&#8217;s stop the LIRC daemon since we will be accessing the LIRC input device for these tests:</p>
+<p>First, let’s stop the LIRC daemon since we will be accessing the LIRC input device for these tests:</p>
 
 <pre><code>sudo /etc/init.d/lirc stop
 </code></pre>
@@ -469,13 +469,13 @@ At initial launch, an installation wizard is executed, just tell it where your m
 <pre><code>mode2 -d /dev/lirc0
 </code></pre>
 
-<p>When pressing buttons on the remote, you should see messages (&#8220;pulse xxx space yyy&#8221;) being displayed.<br /><br />
+<p>When pressing buttons on the remote, you should see messages (“pulse xxx space yyy”) being displayed.<br /><br />
 Next, we need to generate the config file associated to our remote:</p>
 
 <pre><code>irrecord -d /dev/lirc0 -f lircd.conf
 </code></pre>
 
-<p><strong>Note</strong>: the <code>-f</code> option is normally not necessary. It worked fine without this option with one kind of remote I had, but I had to add it for the specific model of remote I finally used, otherwise I was getting an error &#8220;Something went wrong&#8221; during the irrecord setup process. <br /><br /></p>
+<p><strong>Note</strong>: the <code>-f</code> option is normally not necessary. It worked fine without this option with one kind of remote I had, but I had to add it for the specific model of remote I finally used, otherwise I was getting an error “Something went wrong” during the irrecord setup process. <br /><br /></p>
 
 <p>This will guide you through a sequence of actions with the remote. First, a detection is performed by just pressing various buttons on the remote repeatedly. In the end, you will be requested to map the key codes (which names are available by executing:	<code>irrecord --list-namespace</code>), and to press the corresponding button on the remote.<br /><br /></p>
 
@@ -499,7 +499,7 @@ KEY_8
 KEY_9
 </code></pre>
 
-<p>Edit the generated <code>lircd.conf</code> file and provide a name for your remote (e.g. &#8220;piremote&#8221;). Then copy the file to its official location:</p>
+<p>Edit the generated <code>lircd.conf</code> file and provide a name for your remote (e.g. “piremote”). Then copy the file to its official location:</p>
 
 <pre><code>sudo cp lircd.conf /etc/lirc/lircd.conf
 </code></pre>
@@ -653,7 +653,7 @@ sudo python setup.py install
   <li>error management: since the pi hosting this code will not be easily accessible once installed, I added various checks &amp; try/repeat loops to handle error cases, so that the script is as robust as possible to error conditions.</li>
 </ul>
 
-<p>My config file is available <a href="https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/conf">here</a>, and <a href="https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audioController.py">here&#8217;s</a> the controller code. The script uses an external configuration file to store the server IP address and its own MAC address, as well as the path to the file when outputs are logged.</p>
+<p>My config file is available <a href="https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/conf">here</a>, and <a href="https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/audioController.py">here’s</a> the controller code. The script uses an external configuration file to store the server IP address and its own MAC address, as well as the path to the file when outputs are logged.</p>
 
 <h3 id="automate-launch-at-pi-startup">Automate launch at Pi startup</h3>
 
@@ -666,7 +666,7 @@ sudo update-rc.d audiocontroller.sh defaults
 
 <p>Reboot the pi: traces of the successful execution of the audio controller script should be visible in <code>/tmp/audiocontroller.log</code> file.<br /><br /></p>
 
-<p>NOTE: in my case, it&#8217;s a good thing I inserted a check &amp; retry loop on pinging the LMS server at the beginning of the script, since the wifi connection does not come up immediately at startup, and the script would otherwise exit in error.<br /><br /></p>
+<p>NOTE: in my case, it’s a good thing I inserted a check &amp; retry loop on pinging the LMS server at the beginning of the script, since the wifi connection does not come up immediately at startup, and the script would otherwise exit in error.<br /><br /></p>
 
 <p>Final touch: since at least one of the client pi is installed in my attic, I wanted to be able to power-cycle it in case of errors. To achieve this, I just plugged the pi power supply on a Z-Wave relay, that can be turned off/on remotely. See <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">ZwaveHomeAutomation</a> project for details.</p>
 
@@ -703,7 +703,7 @@ Wash, rinse and repeat.</p>
 KEY_END_ANNOUNCE                0x5678
 </code></pre>
 
-<p>(note: this format only works if the lird.conf file does not use raw code format, i.e. if <code>-f</code> option was not used. I have not found an easy way to create dummy raw_codes AND be able to simulate them, but there&#8217;s probably a way to do it&#8230;) <br /><br />
+<p>(note: this format only works if the lird.conf file does not use raw code format, i.e. if <code>-f</code> option was not used. I have not found an easy way to create dummy raw_codes AND be able to simulate them, but there’s probably a way to do it…) <br /><br />
 They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc <code>conf</code> file with these two entries:</p>
 
 <pre><code>begin
@@ -731,13 +731,13 @@ irsend simulate "0000000000022136 0 KEY_END_ANNOUNCE piremote"
 <p>(the key code must have exactly 16 digits and be written in decimal format)<br /><br /></p>
 
 <p>Finally, I modified the audio controller script to react to these two events:
-- when receiving &#8220;start_announce&#8221;, mute the music (if required) and activate amplifier (if required e.g. if audio controller was &#8220;off&#8221;) 
-- when receiving &#8220;end_announce&#8221;, unmute the music (if required), and desactivate amplifier again (unless audio controller is still &#8220;on&#8221;)</p>
+- when receiving “start_announce”, mute the music (if required) and activate amplifier (if required e.g. if audio controller was “off”) 
+- when receiving “end_announce”, unmute the music (if required), and desactivate amplifier again (unless audio controller is still “on”)</p>
 
 <h3 id="squeezelite-robustness-workaround">Squeezelite robustness workaround</h3>
 <p>I encountered an issue where the audio controller would stop working correctly after a few hours. The problem turned out to be in squeezelite, since the rest of the controller was still responding correctly, and just restarting the squeezelite daemon was fixing the issue. It might be related to <a href="http://code.google.com/p/squeezelite/issues/detail?id=17">this</a>, especially since I only encountered this issue in the setup where audio output is shared (my other setups based on the same squeezelite with exclusive access to the sound output do not show this problem). But anyway since there was no clue in squeezelite logs as to what the problem might be, I gave up and first implemented a simple workaround: restarting the local squeezelite client every time the audio controller is turned on. <br /><br /></p>
 
-<p>However, additional investigation showed that this robustness issue was apparently due to the use of the shared sound output through alsa&#8217;s dmix. If I turned off this sharing configuration, with the DAC being exclusively allocated to squeezelite, the setup would run A-OK for days. Since I really wanted to keep the ability to host both this music player and the calendar audio notifier on the same raspberry, I finally chose a brutal workaround: using two DACs and mixing their outputs in HW.</p>
+<p>However, additional investigation showed that this robustness issue was apparently due to the use of the shared sound output through alsa’s dmix. If I turned off this sharing configuration, with the DAC being exclusively allocated to squeezelite, the setup would run A-OK for days. Since I really wanted to keep the ability to host both this music player and the calendar audio notifier on the same raspberry, I finally chose a brutal workaround: using two DACs and mixing their outputs in HW.</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/MultiRoomHomeAudio/doubleDAC_mixing.png" alt="double DAC mixing" /></p>
 
@@ -791,8 +791,8 @@ space 19995
 
 <h3 id="misc">Misc</h3>
 <ul>
-  <li>I was a bit concerned regarding the amount of CPU power required to run the audio server and clients. As it turns out, streaming audio LMS takes less than 3% CPU time on the server, while on the client side squeezelite takes about 10-20% CPU time. So no big deal in either case, both the server and the client pi&#8217;s can handle a lot of additional functions.</li>
-  <li>One note though: when idle, squeezelite client continuously sends silent data to audio output (instead of turning the audio output off) which apparently was done to avoid clicks and pops when turning the audio output on and off. It is a bit weird to see squeezelite taking up to 20% CPU time in idle, while doing &#8220;nothing&#8221;, and the blinky led on my USB DAC therefore keeps flashing continuously. As of squeezelite 1.8, there is an option (<code>-C &lt;timeout in seconds&gt;</code>) allowing to turn off audio output if the client is idle for more than timeout seconds as an alternative to this default behavior. I did not test it yet, but found a compiled version of squeezelite1.8.3 <a href="http://www.mediafire.com/download/9m2kah1psoy3miw/squeezelite-1.8.3-717-armv6hf.tar.gz">here</a> to do so.</li>
+  <li>I was a bit concerned regarding the amount of CPU power required to run the audio server and clients. As it turns out, streaming audio LMS takes less than 3% CPU time on the server, while on the client side squeezelite takes about 10-20% CPU time. So no big deal in either case, both the server and the client pi’s can handle a lot of additional functions.</li>
+  <li>One note though: when idle, squeezelite client continuously sends silent data to audio output (instead of turning the audio output off) which apparently was done to avoid clicks and pops when turning the audio output on and off. It is a bit weird to see squeezelite taking up to 20% CPU time in idle, while doing “nothing”, and the blinky led on my USB DAC therefore keeps flashing continuously. As of squeezelite 1.8, there is an option (<code>-C &lt;timeout in seconds&gt;</code>) allowing to turn off audio output if the client is idle for more than timeout seconds as an alternative to this default behavior. I did not test it yet, but found a compiled version of squeezelite1.8.3 <a href="http://www.mediafire.com/download/9m2kah1psoy3miw/squeezelite-1.8.3-717-armv6hf.tar.gz">here</a> to do so.</li>
   <li>I encountered cases where mp3 music playback was too fast. It turns out this was due to a mismatch between the mp3 sample rate (usually 44100kHz) and the supported rates on the selected audio output. For example, with my USB DAC, when selecting it as <code>front:CARD=Device,DEV=0</code> in squeezelite startup script, it seems to only support 48000 kHz, so it was playing 44100 kHz data at 48000kHz, resulting in accelerated playback:</li>
 </ul>
 
@@ -838,7 +838,7 @@ space 19995
 
 <h3 id="todo">Todo</h3>
 
-<p>I&#8217;d like to leverage the newly added audio capabilty in each equipped room for:</p>
+<p>I’d like to leverage the newly added audio capabilty in each equipped room for:</p>
 
 <ul>
   <li>adding a microphone to the setup, in order to use the client pi as intercom endpoints between rooms.</li>
@@ -931,7 +931,7 @@ space 19995
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/MultiRoomHomeAudio/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/MultiRoomHomeAudio/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

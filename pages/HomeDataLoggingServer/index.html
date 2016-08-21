@@ -183,7 +183,7 @@ The test files for creating this test database and for measuring query time are 
 
 <ul>
   <li>the network port on which the Web user interface is available, changed from 8083 to 8085 (since 8083 conflicted with my Z-way-server installed on the same rasperry pi).</li>
-  <li>the data storage location and WAL (Write-Ahead Logging) storage locations, modified to point to an external USB disk plugged on the pi (since relying on the Pi&#8217;s internal flash to store the database would sooner or later have become a problem, both due to the growing size of the database and to the induced wearout on the flash memory).</li>
+  <li>the data storage location and WAL (Write-Ahead Logging) storage locations, modified to point to an external USB disk plugged on the pi (since relying on the Pi’s internal flash to store the database would sooner or later have become a problem, both due to the growing size of the database and to the induced wearout on the flash memory).</li>
   <li>Note that I had to add the option <code>umask=0000</code> in <code>etc/fstab</code> on the line mounting the USB disk, otherwise influxDB would report a permission denied error at startup (due to influxdb user not having the appropriate write permissions to this USB mount point).<br /><br /></li>
 </ul>
 
@@ -286,7 +286,7 @@ SIGABRT: abort
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/HomeDataLoggingServer/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/HomeDataLoggingServer/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

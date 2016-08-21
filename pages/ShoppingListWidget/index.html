@@ -58,12 +58,12 @@ The android apps gets data from the database through a HTTP request, and receive
 
 <h3 id="server-side">Server side</h3>
 
-<p>The three php files used to interact with the database are very simple, and of very poor quality (error management is mostly missing, no protection against SQL injections, you name it&#8230;). This is just the absolute minimum to get things working, and it suits my purpose :)
+<p>The three php files used to interact with the database are very simple, and of very poor quality (error management is mostly missing, no protection against SQL injections, you name it…). This is just the absolute minimum to get things working, and it suits my purpose :)
 The three files are available <a href="https://github.com/jheyman/ShoppingList_ServerSide">here</a></p>
 
 <h3 id="android-side">Android side</h3>
 
-<p>Since the shopping list is meant to be constantly accessible directly from the homescreen, the application was created as a Widget app, which is significantly different than a regular Android app (and comes with some limitations too). The base idea is that the widget being displayed is a RemoteViews provided by something else (typically a regular android app). The widget gets refresh notifications from the system at a preconfigured period (greater than 30 minutes though). The widget core is an AppWidgetProvider, which is a broadcast receiver that is registered for these refresh/update messages. It manages the overall widget, controls its layout, deals with the user clicks, etc&#8230;
+<p>Since the shopping list is meant to be constantly accessible directly from the homescreen, the application was created as a Widget app, which is significantly different than a regular Android app (and comes with some limitations too). The base idea is that the widget being displayed is a RemoteViews provided by something else (typically a regular android app). The widget gets refresh notifications from the system at a preconfigured period (greater than 30 minutes though). The widget core is an AppWidgetProvider, which is a broadcast receiver that is registered for these refresh/update messages. It manages the overall widget, controls its layout, deals with the user clicks, etc…
 Since the main part of the layout is a ListView, the AppWidgetProvider delegates another class (a RemoteViewsService) as the content provided for the actual content of the list.</p>
 
 <p>A high-level view of the app is given below:</p>
@@ -144,7 +144,7 @@ Since the main part of the layout is a ListView, the AppWidgetProvider delegates
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ShoppingListWidget/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/ShoppingListWidget/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

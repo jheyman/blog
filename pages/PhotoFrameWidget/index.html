@@ -71,7 +71,7 @@
   <li>I aimed for a minimalistic design: just a plain display of a photo, with no minimal associated UI/buttons, and an automatic refresh to display a new photo periodically. So the widget only has:
     <ul>
       <li>the photo to be displayed. A user touch on it triggers the reload of a new photo.</li>
-      <li>the display of the image path &amp; name, which helps to remember where/when the photo is from when it is picked randomly from a set of 50.000+ images&#8230;</li>
+      <li>the display of the image path &amp; name, which helps to remember where/when the photo is from when it is picked randomly from a set of 50.000+ images…</li>
       <li>a small email icon, to send the currently displayed image as an attachment.</li>
     </ul>
   </li>
@@ -136,11 +136,11 @@
 
 <h5 id="photoframewidgetprovider">PhotoFrameWidgetProvider</h5>
 
-<p>PhotoFrameWidgetProvider class handles the APP_UPDATE events that are triggered every 30 minutes, delegating the refresh of the widget&#8217;s <code>RemoteViews</code> to the background PhotoFrameWidgetService. It also deals with the user intent to send the currently displayed photo as an email attachment.</p>
+<p>PhotoFrameWidgetProvider class handles the APP_UPDATE events that are triggered every 30 minutes, delegating the refresh of the widget’s <code>RemoteViews</code> to the background PhotoFrameWidgetService. It also deals with the user intent to send the currently displayed photo as an email attachment.</p>
 
 <h5 id="photoframewidgetservice">PhotoFrameWidgetService</h5>
 
-<p>This service performs a first HTTP GET request on a remote server to get the name and size of an image picked randomly by the server, and then performs a second GET request to receive the image data itself. The received data (from a remote image file e.g. PNG, JPG, &#8230;) is decoded into a Bitmap, which is then set to fill the layout&#8217;s <code>ImageView</code>. <br /><br /></p>
+<p>This service performs a first HTTP GET request on a remote server to get the name and size of an image picked randomly by the server, and then performs a second GET request to receive the image data itself. The received data (from a remote image file e.g. PNG, JPG, …) is decoded into a Bitmap, which is then set to fill the layout’s <code>ImageView</code>. <br /><br /></p>
 
 <p><strong>Notes</strong>:</p>
 
@@ -240,7 +240,7 @@
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/PhotoFrameWidget/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/PhotoFrameWidget/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

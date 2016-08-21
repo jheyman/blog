@@ -52,7 +52,7 @@
 
 <h3 id="purpose">Purpose</h3>
 <ul>
-  <li><strong>get rid our paper/post-it notes</strong> habit: indeed, we used to have many handwritten notes all over the house, and wanted a cleaner way to handle our day to day notes as well as longer term &#8220;todo&#8221; lists.</li>
+  <li><strong>get rid our paper/post-it notes</strong> habit: indeed, we used to have many handwritten notes all over the house, and wanted a cleaner way to handle our day to day notes as well as longer term “todo” lists.</li>
   <li>have a <strong>digital whiteboard</strong> to (possibly remotely) leave each other messages</li>
   <li>use this same interface for possible <strong>home automation</strong> features (priority #1: music control)</li>
 </ul>
@@ -61,7 +61,7 @@
 
 <ul>
   <li><strong>minimal power consumption</strong>, especially in standby/sleep mode. Both to minimize the power bill impact, and keep thermal dissipation (very) low.</li>
-  <li>ability to <strong>unplug electrical power supply</strong> completely (when leaving for a long vacation&#8230;)</li>
+  <li>ability to <strong>unplug electrical power supply</strong> completely (when leaving for a long vacation…)</li>
   <li><strong>wall-mountable</strong></li>
   <li><strong>wifi access</strong> to the home LAN</li>
   <li>quick and friendly way to <strong>input text</strong>: voice-controlled input and/or large virtual keyboard.</li>
@@ -70,18 +70,18 @@
 </ul>
 
 <p><br />
-My initial plan was to find a cheap display with touchscreen, use a low power board (e.g. raspberry pi), then homebrew a software solution based on linux/Qt or android.  The very first thing I did was make several cardboard mock-ups of the interface, of various sizes, and search for the right size and right place in the hall where it would be wall-mounted. I determined that for our specific need, a 21/22 inches display would be ideal. Then came the reality check: finding and buying a 21 inch touch display as a standalone part was a non-starter. Way too expensive, and/or unpractical. I checked eBay for a second-hand point-of-sale touch screen, no luck either. Also, buying a bare LCD/touchscreen without a case would mean&#8230;having to make a case, and I do not have the right skills to do something that looks good enough to stay in the hall at all times.</p>
+My initial plan was to find a cheap display with touchscreen, use a low power board (e.g. raspberry pi), then homebrew a software solution based on linux/Qt or android.  The very first thing I did was make several cardboard mock-ups of the interface, of various sizes, and search for the right size and right place in the hall where it would be wall-mounted. I determined that for our specific need, a 21/22 inches display would be ideal. Then came the reality check: finding and buying a 21 inch touch display as a standalone part was a non-starter. Way too expensive, and/or unpractical. I checked eBay for a second-hand point-of-sale touch screen, no luck either. Also, buying a bare LCD/touchscreen without a case would mean…having to make a case, and I do not have the right skills to do something that looks good enough to stay in the hall at all times.</p>
 
 <p><br />
-Finally, I stumbled upon something else: &#8220;smart displays&#8221;, i.e. all-in-one PCs integrating a low-power (and low-performance&#8230;) ARM CPU into a traditional PC display case. Checking the specifications of various models, it seemed to me that this was in fact quite a good match for my input constraints: these smart displays have very low power consumption, large screen, touch capability, and last but not least they run Android. I finally settled on the Viewsonic VSD220, an aging model soon to be replaced by a faster model that was therefore on sale. For 285 euros, I got a 21.5 inches capacitive touchscreen display, Android 4.0.4, 0.5W power consumption in sleep mode, wall-mountable through a standard VESA mount&#8230;jackpot !</p>
+Finally, I stumbled upon something else: “smart displays”, i.e. all-in-one PCs integrating a low-power (and low-performance…) ARM CPU into a traditional PC display case. Checking the specifications of various models, it seemed to me that this was in fact quite a good match for my input constraints: these smart displays have very low power consumption, large screen, touch capability, and last but not least they run Android. I finally settled on the Viewsonic VSD220, an aging model soon to be replaced by a faster model that was therefore on sale. For 285 euros, I got a 21.5 inches capacitive touchscreen display, Android 4.0.4, 0.5W power consumption in sleep mode, wall-mountable through a standard VESA mount…jackpot !</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/HomeHubTablet/viewsonic_vsd220.png" alt="viewsonic VSD220" /></p>
 
-<p>I customized the Android home screen, to move away from the &#8220;giant smartphone on the wall&#8221; feeling it gave by default:</p>
+<p>I customized the Android home screen, to move away from the “giant smartphone on the wall” feeling it gave by default:</p>
 
 <ul>
   <li>I installed a full black background</li>
-  <li>I got rid of all the regular icons from the homepage. I wanted to have very large icons instead, for the key few applications that we would actually need on this interface. The &#8220;Desktop VisualizeR&#8221; free app from google play store got me what I needed: resizeable widgets with customizable images and associated actions.  I created widget of size 3x3 cells, and googled for high resolution icons of the apps that I need to point to.<br /><br /></li>
+  <li>I got rid of all the regular icons from the homepage. I wanted to have very large icons instead, for the key few applications that we would actually need on this interface. The “Desktop VisualizeR” free app from google play store got me what I needed: resizeable widgets with customizable images and associated actions.  I created widget of size 3x3 cells, and googled for high resolution icons of the apps that I need to point to.<br /><br /></li>
 </ul>
 
 <p>Here is a picture of the tablet mounted on the wall with an older setup:
@@ -91,7 +91,7 @@ Finally, I stumbled upon something else: &#8220;smart displays&#8221;, i.e. all-
   <li>Two custom android apps were developed from scratch to handle the <strong>shopping list</strong> and the <strong>memo notes</strong> board. There are described <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">here</a> and <a href="http://jheyman.github.io/blog/pages/PostitListWidget">here</a>.</li>
   <li>The long-term <strong>todo-list</strong> relies on the <a href="http://www.mytinytodo.net/">MyTinyTodo</a> code running on the home raspberry pi php/web server.</li>
   <li>the <strong>music control</strong> app is BubbleUPnP, a great UPnP/DLNA Control Point/Renderer/Server. In practice, it sends out commands to the UPnP/DLNA server running on the home raspberry pi, which is itself attached to the actual sound system. I described this setup in <a href="http://jheyman.github.io/blog/pages/UPnPOnRaspberryPi">this</a> page.</li>
-  <li><strong>home lighting control</strong> (not shown in this picture) is available via a simple shortcut to the local URL of openHAB, used to control my z-wave devices. You can check the details <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">here</a>. The shortcut is created using Desktop VisualizeR too, the specific target URL can be set by a long press on the Action while configuring the widget, and selecting &#8220;Clipboard&#8221; (while having previously copied the desired URL in the clipboard, of course)<br /><br /></li>
+  <li><strong>home lighting control</strong> (not shown in this picture) is available via a simple shortcut to the local URL of openHAB, used to control my z-wave devices. You can check the details <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">here</a>. The shortcut is created using Desktop VisualizeR too, the specific target URL can be set by a long press on the Action while configuring the widget, and selecting “Clipboard” (while having previously copied the desired URL in the clipboard, of course)<br /><br /></li>
 </ul>
 
 <p>And here is a screenshot of my latest setup:</p>
@@ -181,7 +181,7 @@ Finally, I stumbled upon something else: &#8220;smart displays&#8221;, i.e. all-
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/HomeHubTablet/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/HomeHubTablet/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

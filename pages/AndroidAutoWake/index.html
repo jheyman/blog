@@ -142,7 +142,7 @@
   <li>a 5V power input, that can be supplied either through a dedicated connector or more simply through a micro-USB connector<br /><br /></li>
 </ul>
 
-<p>Just like any powered USB hub, the 5V input power should ideally come from a dedicated external power supply. However, in my usecase I am not going to plug anything else than the USB cable to the tablet on this board, so the power draw will be very small, nothing that the Raspberry&#8217;s USB ports cannot provide. So I just plugged two USB cables, one mini-USB and one micro-USB, between the YKush and the raspberry.<br /><br /></p>
+<p>Just like any powered USB hub, the 5V input power should ideally come from a dedicated external power supply. However, in my usecase I am not going to plug anything else than the USB cable to the tablet on this board, so the power draw will be very small, nothing that the Raspberry’s USB ports cannot provide. So I just plugged two USB cables, one mini-USB and one micro-USB, between the YKush and the raspberry.<br /><br /></p>
 
 <p>Ideally, a much simpler solution would be to use a simple transistor to switch the 5V of the USB cable on and off, commanded directly by a raspberry GPIO.</p>
 
@@ -165,7 +165,7 @@
 
 <h4 id="compile-ykush-utility">Compile ykush utility</h4>
 
-<p>A simple command line utility is available from Yepkit&#8217;s website to manage the YKush board. I compiled it this way:</p>
+<p>A simple command line utility is available from Yepkit’s website to manage the YKush board. I compiled it this way:</p>
 
 <pre><code>sudo apt-get install libusb-1.0-0-dev libusb-1.0-0
 wget https://www.yepkit.com/uploads/documents/fd484_ykush_v1.4.1.tar.gz
@@ -188,7 +188,7 @@ make
 
 <h4 id="compile-adb">Compile adb</h4>
 
-<p><a href="http://forum.xda-developers.com/showthread.php?p=55619695#post55619695">These</a> useful instructions were used to compile a version of android SDK&#8217;s <code>adb</code> tool, that is the almighty command line utility to communicate with an android device over USB. The version compiled below is old, but for such a simple task as sending a key input command, it works fine, and using a very specific git tag to get source code and build it provides some level of protection against evolutions of the source code that might break these instructions. Anyway, here they are:</p>
+<p><a href="http://forum.xda-developers.com/showthread.php?p=55619695#post55619695">These</a> useful instructions were used to compile a version of android SDK’s <code>adb</code> tool, that is the almighty command line utility to communicate with an android device over USB. The version compiled below is old, but for such a simple task as sending a key input command, it works fine, and using a very specific git tag to get source code and build it provides some level of protection against evolutions of the source code that might break these instructions. Anyway, here they are:</p>
 
 <pre><code>sudo apt-get update
 sudo apt-get install git build-essential libncurses5-dev libssl-dev
@@ -294,11 +294,11 @@ clean:
 <pre><code>SUBSYSTEM=="usb", ATTR{idVendor}=="0408", MODE="0666", GROUP="plugdev"
 </code></pre>
 
-<p>Of course, the &#8220;0408&#8221; vendorId should be modified to suit the vendorId of your specific device.</p>
+<p>Of course, the “0408” vendorId should be modified to suit the vendorId of your specific device.</p>
 
 <h4 id="python-script">Python script</h4>
 
-<p>As usual, since there is no strong performance constraint anywhere in this project, a python script to manage the overall logic is just fine. The script&#8217;s sequence is detailed step by step below, and the source code is available <a href="https://github.com/jheyman/androidautowake">here</a>.</p>
+<p>As usual, since there is no strong performance constraint anywhere in this project, a python script to manage the overall logic is just fine. The script’s sequence is detailed step by step below, and the source code is available <a href="https://github.com/jheyman/androidautowake">here</a>.</p>
 
 <h5 id="initialise-gpio-pins">Initialise GPIO pins</h5>
 
@@ -330,7 +330,7 @@ clean:
 <pre><code>./adb shell input keyevent 224
 </code></pre>
 
-<p>Note: 224 is KEYCODE_WAKEUP, which behaves similar to key event &#8220;power&#8221; but has no effect if devices is already awake.</p>
+<p>Note: 224 is KEYCODE_WAKEUP, which behaves similar to key event “power” but has no effect if devices is already awake.</p>
 
 <h5 id="wait-for-screen-off">Wait for screen off</h5>
 
@@ -437,7 +437,7 @@ clean:
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/AndroidAutoWake/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/AndroidAutoWake/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

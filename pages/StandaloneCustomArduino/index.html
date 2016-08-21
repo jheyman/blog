@@ -42,7 +42,7 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>Using a regular arduino board is great for quick prototyping. However, for some projects it is not always desirable to embed a full-fledged arduino board in the final setup, for example due to space/weight constraints, or maybe just because you don&#8217;t want to buy a new Arduino board for each new project. In such cases one can design a custom circuit board integrating only the core of the arduino board: the ATmega microcontroller. The chip alone (for example, the ATmega328 found on the old entry-level arduinos) only costs a few dollars, versus about 30 dollars for an actual Arduino board. It can even be bought pre-burnt with the arduino bootloader.</p>
+<p>Using a regular arduino board is great for quick prototyping. However, for some projects it is not always desirable to embed a full-fledged arduino board in the final setup, for example due to space/weight constraints, or maybe just because you don’t want to buy a new Arduino board for each new project. In such cases one can design a custom circuit board integrating only the core of the arduino board: the ATmega microcontroller. The chip alone (for example, the ATmega328 found on the old entry-level arduinos) only costs a few dollars, versus about 30 dollars for an actual Arduino board. It can even be bought pre-burnt with the arduino bootloader.</p>
 
 <h3 id="standalone-arduino-style-circuit">Standalone arduino-style circuit</h3>
 
@@ -63,7 +63,7 @@
 <p>When using a regular arduino board, the programming of the chip just boils down to plugging the USB cable to a PC, and using the arduino IDE to send the binary into the chip. With a standalone design however, programming the chip is a bit less simple. Here are a few options:</p>
 
 <ul>
-  <li>Use a regular Arduino board, unplug the original Atmega chip, plug the new chip to be programmed, use the IDE as usual, then switch the original chip back in place. This is the easiest, but is a bit tedious and hazardous (unplugging/replugging the chip is an opportunity to bend a pin or something&#8230;)</li>
+  <li>Use a regular Arduino board, unplug the original Atmega chip, plug the new chip to be programmed, use the IDE as usual, then switch the original chip back in place. This is the easiest, but is a bit tedious and hazardous (unplugging/replugging the chip is an opportunity to bend a pin or something…)</li>
   <li>Use a regular Arduino board as a programmer. The arduino site has a dedicated <a href="http://arduino.cc/en/Tutorial/ArduinoToBreadboard">page</a> with all the information.</li>
   <li>Use an FTDI programmer, and connect the few required pins directly on the standalone circuit:</li>
 </ul>
@@ -142,7 +142,7 @@
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/StandaloneCustomArduino/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/StandaloneCustomArduino/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

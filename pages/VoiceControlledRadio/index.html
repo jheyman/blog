@@ -54,7 +54,7 @@
 <img src="http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/speaker.png" alt="speaker" /></li>
   <li>an FM module with I2C control interface (e.g. TEA5767 FM Radio Module, got 5 of them on eBay for 10$)
 <img src="http://jheyman.github.io/blog/assets/images/VoiceControlledRadio/tea5767_units.png" alt="Tea5767_units" />
-Note: these things are SMALL. Resistor included in the image for scale&#8230;</li>
+Note: these things are SMALL. Resistor included in the image for scale…</li>
 </ul>
 
 <h3 id="raspberry-pi-setup">Raspberry pi setup</h3>
@@ -122,7 +122,7 @@ Note: these things are SMALL. Resistor included in the image for scale&#8230;</l
 <p>NOTES:</p>
 
 <ul>
-  <li>I borrowed this command line somewhere on the raspberry pi forums, can&#8217;t remember where exactly.</li>
+  <li>I borrowed this command line somewhere on the raspberry pi forums, can’t remember where exactly.</li>
   <li>this command line is configured for french voice, the language can be changed with the <code>lang=xxx</code> option</li>
   <li>you might need to install flac: <code>sudo apt-get install flac</code></li>
 </ul>
@@ -219,7 +219,7 @@ export PYTHONPATH=$PYTHONPATH:$QUICK2WIRE_API_HOME
 
 <h3 id="using-a-push-button-to-trig-the-voice-recording">Using a push button to trig the voice recording</h3>
 
-<p>I used one GPIO pin of the raspberry to get notified when the button is pushed, and trig the voice recording/command. This GPIO pin (GPIO 17 in this case) is normally pulled-up to 3.3V through a ~10k resistor, so it will read a logical &#8220;1&#8221;. When the button is pushed, the pin is pulled to GND through a 1k resistor hence reads a &#8220;0&#8221;.</p>
+<p>I used one GPIO pin of the raspberry to get notified when the button is pushed, and trig the voice recording/command. This GPIO pin (GPIO 17 in this case) is normally pulled-up to 3.3V through a ~10k resistor, so it will read a logical “1”. When the button is pushed, the pin is pulled to GND through a 1k resistor hence reads a “0”.</p>
 
 <p>To create a GPIO file access to pin 17:</p>
 
@@ -317,7 +317,7 @@ An example (button_poll.py) is available <a href="https://github.com/jheyman/Voi
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/VoiceControlledRadio/index.html" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/VoiceControlledRadio/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>
