@@ -86,7 +86,7 @@ It soon became clear that on any non-trivial graph, visually following a given f
 
 Here is a more realistic example with chained nodes, multiple flows, and automatic coloring:
 
-<p><img src="/assets/images/VisioAutoFlow/nominal.png" alt="nominal" width="800"/></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoFlow/nominal.png" alt="nominal" width="800"/></p>
 
 ### Dynamic diagram update
 
@@ -106,7 +106,7 @@ Also,
 * **invalid flows** are highlighted in red (e.g. multiple flows with the same name on a startpoint or endpoint)
 * **incomplete flows** are set to dashed grey lines (i.e. flows that may become valid but that do not belong to any valid/complete dataflows)
 
-<p><img src="/assets/images/VisioAutoFlow/invalidflows.png" alt="invalidflows" width="800"/></p>
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoFlow/invalidflows.png" alt="invalidflows" width="800"/></p>
 
 ## VBA implementation
 
