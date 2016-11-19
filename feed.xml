@@ -18,6 +18,14 @@
                 
                         
                         <item>
+                                <title>Dynamic dataflows in Visio diagrams with VBA</title>
+                                <description>Experiments with Microsoft Visio VBA API</description>
+                                <link>http://jheyman.github.io/blog/pages/VisioAutoFlow/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>ZWave control Widget</title>
                                 <description>Simplistic android widget to check/control Zwave devices</description>
                                 <link>http://jheyman.github.io/blog/pages/ZWaveWidget/</link>
@@ -221,6 +229,14 @@
                                 <title>Hue control on Raspberry Pi</title>
                                 <description>Interacting with Hue lighting system</description>
                                 <link>http://jheyman.github.io/blog/pages/HueRaspberryControl/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Home intercom/paging system</title>
+                                <description>Leveraging raspberry pi to build an intercom system</description>
+                                <link>http://jheyman.github.io/blog/pages/Intercom/</link>
                         </item>
                         
                 
