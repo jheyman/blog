@@ -65,6 +65,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
+  <td><div id="container" style="height:200px;"><img src="{{ site.baseurl }}/assets/images/Intercom/logo.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/Intercom">Intercom System</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
   <td><div id="container" style="height:200px;"><img src="{{ site.baseurl }}/assets/images/GoogleCalendarAudioNotifier/logo.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/GoogleCalendarAudioNotifier">Audio notifications from Google calendars</a></td>
 </tr>
@@ -88,6 +95,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 <tr>
   <td><div id="container" style="height:200px;"><img src="{{ site.baseurl }}/assets/images/VisioAutoCompute/overview.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/VisioAutoCompute">Auto-computed values in Visio diagrams with VBA</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container" style="height:200px;"><img src="{{ site.baseurl }}/assets/images/VisioAutoFlow/overview.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/VisioAutoFlow">Dynamic data flows in Visio diagrams with VBA</a></td>
 </tr>
 </table>
 

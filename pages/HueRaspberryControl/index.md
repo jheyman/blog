@@ -130,7 +130,8 @@ Blue example
 
 ---
 
-### Python script
+### Python script
+
 
 With `json` and `requests` libraries, access to the bridge boils down to a few lines, e.g.:
 

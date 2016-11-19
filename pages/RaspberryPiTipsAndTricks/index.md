@@ -14,6 +14,18 @@ Below is a set of notes to myself regarding various tips and tricks I had to use
 
 ---
 
+### Disable onboard sound (Raspbian Wheezy)
+
+Edit `/etc/modules`, comment out `snd_bcm2835`, and reboot
+
+--- 
+
+### Disable onboard sound (Raspbian Jessie)
+
+Add `blacklist snd_bcm2835` in `/etc/modprobe.d/alsa-blacklist.conf`, and reboot
+
+---
+
 ### Set USB sound card as ALSA default
 
 On Raspbian jessie, to set an external USB sound card as the default card used by ALSA (instead of the internal bcm2835 snd card), edit
@@ -28,7 +40,15 @@ and change `defaults.ctl.card` and `defaults.pcm.card` to the id of the USB snd 
 ---
 
 ### Customizing hostname
-By default, any raspberry pi has the hostname `raspberrypi` assigned to it, which may turn out to be a problem when deploying multiple raspberry pis in a single local network (for example, if two or more pis share folders over the network using samba, only one of them will be seen due to the hostname conflict). To customize the hostname of each indivudal raspi, refer to [this page]({{ site.baseurl }}/pages/LinuxTipsAndTricks).
+By default, any raspberry pi has the hostname `raspberrypi` assigned to it, which may turn out to be a problem when deploying multiple raspberry pis in a single local network (for example, if two or more pis share folders over the network using samba, only one of them will be seen due to the hostname conflict). To customize the hostname of each individual raspi, refer to [this page]({{ site.baseurl }}/pages/LinuxTipsAndTricks).
+
+---
+
+### Determine installed distribution 
+
+To check which linux distribution is installed on a pi:
+
+	cat /etc/os-release
 
 --- 
 
