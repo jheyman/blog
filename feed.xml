@@ -18,6 +18,14 @@
                 
                         
                         <item>
+                                <title>Oldschool demo effects with OpenGL</title>
+                                <description>Oldschool demo effects with OpenGL</description>
+                                <link>http://jheyman.github.io/blog/pages/OpenGLOldschool/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Dynamic dataflows in Visio diagrams with VBA</title>
                                 <description>Experiments with Microsoft Visio VBA API</description>
                                 <link>http://jheyman.github.io/blog/pages/VisioAutoFlow/</link>
