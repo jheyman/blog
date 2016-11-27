@@ -269,6 +269,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
+  <td><div id="container"><img src="{{ site.baseurl }}/assets/images/OpenGLOldschool/part4_small.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/OpenGLOldschool">OpenGL tribute to oldschool demos</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
   <td><div id="container"><img src="{{ site.baseurl }}/assets/images/MuseumOfHorrors/3DLEDPov_v0.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/MuseumOfHorrors">Museum of Horrors</a></td>
 </tr>
