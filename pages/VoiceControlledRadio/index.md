@@ -187,6 +187,9 @@ Add a line in `/etc/rc.local` to launch this script and you are good to go.
 Final view of the hackishly assembled system (with only one audio output connected)
 ![assembled]({{ site.baseurl }}/assets/images/VoiceControlledRadio/assembled.png)
 
+And here is a short video:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/obaSKXnhKpg" frameborder="0" allowfullscreen></iframe>
 
 
 
