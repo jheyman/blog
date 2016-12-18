@@ -40,7 +40,7 @@ The required configuration steps for the audio part are described in [this proje
 
 ### Setting up the Google (calendar) API
 
-Google provides an API to very easily access your calendar data, and a Python client is available for this API. It does require however a slightly complex authentication process, which is the part that required the most effort to get right, especially since instructions out there on the internet usually do not specific which API version they are based on. Since Google calendar v2 API was deprecated in November 2014, the instructions below apply to v3 API<br><br>
+Google provides an API to very easily access your calendar data, and a Python client is available for this API. It does require however a slightly complex authentication process, which is the part that required the most effort to get right, especially since instructions out there on the internet usually do not specify which API version they are based on. Since Google calendar v2 API was deprecated in November 2014, the instructions below apply to v3 API<br><br>
 
 The authentication process will require you to have two things available:
 
@@ -88,11 +88,59 @@ The format of the returned events is available in the Google Calendar API refere
 There are some open source voice synthesis solutions, but after testing a few (Espeak with MBROLA voices, PICO) I quickly came to the conclusion that their quality was not at the right level (especially in terms of WAF for a home installation). Since this project required a permanent internet connection anyway (for google calendar polling) I looked at online services.<br><br>
 I initially used the Google translate text to speech API, which has superb quality. However, free use of this API is largely undocumented, Google Translate is mostly a paid service. It worked fine for a while (throughout 2014) but broke a first time due to some API change, which I fixed mid-2015 (see below). When the API broke a second time in December 2015 due to Google's decision to require specific tokens in the requests, I gave up and looked for an alternative.<br><br>
 
-Ironically enough, the easiest way out I found was to migrate to **Microsoft Translate** service, which was done in 15 minutes and produces speech quality which is just as good as Google's service, and is (for now) free of charge for very low frequency requests, with a well documented API.
+Ironically enough, the easiest way out I found was to migrate to **Microsoft Translate** service, which was done in 15 minutes and produces speech quality which is just as good as Google's service, and is (for now) free of charge for very low frequency requests, with a well documented API.<br><br>
+
+All was good until December 2016, when Microsoft dedided to suspend its translate API on Azure DataMarket and I had to migrate the code to use the new "Cognitive Services" on their new Azure platform (keeping track of the names they are using is a job by itself...). That required a moderate effort, but this keeps reminding me that I would need a LOCAL speech engine with equivalent quality, to get out of this endless loop of migration every year or so...
 
 ---
 
-#### Setting up and using Microsoft Translate API
+#### Setting up and using Microsoft's Bing Text To Speech API
+
+As of end of 2016, the Microsoft Translate API on azure datamarket is being closed. I had to update the code to use the new Microsoft text to speech service ("Bing Text To Speech API" that comes as part of Microsoft Cognitive Services on Azure platform)
+
+The API is documented [here](https://www.microsoft.com/cognitive-services/en-us/Speech-api/documentation/API-Reference-REST/BingVoiceOutput).<br><br>
+
+Steps:
+
+* Register to get a free account [here](https://www.microsoft.com/cognitive-services/en-US/subscriptions)
+* Write down "Key 1" value, it is used in the python code to get an access token to use the text to speech service:<br><br>
+
+The code to get the token boils down to:
+
+<pre><code>headers = {"Ocp-Apim-Subscription-Key": microsoftKey}
+url = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+r = requests.post(url, data = {'key':'value'}, headers=headers)
+accesstoken = r.text.decode("UTF-8")</code></pre>
+
+Once the token is available, it can be used to submit a text to speech request, and get raw sound data returned:
+
+<pre><code>def speak(theText):
+
+	f = open("tmp.wav", 'wb')
+
+	body = "<speak version='1.0' xml:lang='fr-FR'><voice xml:lang='fr-FR' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (fr-FR, Julie, Apollo)'>"+theText+"</voice></speak>"
+
+	headers = {"Content-type": "application/ssml+xml", 
+	            "X-Microsoft-OutputFormat": "riff-16khz-16bit-mono-pcm", 
+	            "Authorization": "Bearer " + accesstoken, 
+	            "X-Search-AppId": "07D3234E49CE426DAA29772419F436CA", 
+	            "X-Search-ClientID": "1ECFAE91408841A480F00935DC390960", 
+	            "User-Agent": "TTSForPython"}
+            
+	url = 'https://speech.platform.bing.com/synthesize'
+
+	r = requests.post(url, data = body, headers=headers)
+	logger.info(str(r.status_code))
+	logger.info(r.reason)
+
+	f.write(r.content)
+	f.close()
+
+	os.system("aplay tmp.wav")</code></pre>
+
+ 
+
+#### (OBSOLETE) Setting up and using Microsoft Translate API on DataMarket
 
 * If necessary, create a Microsoft account.
 * Register it on [Microsoft Azure Marketplace] (https://datamarket.azure.com/home)
@@ -118,7 +166,8 @@ os.system("aplay tmp.wav")</code></pre>
 	sudo apt-get install libffi-dev
 	sudo pip install pyopenssl ndg-httpsclient pyasn1
 
-#### Setting up and using Google translate (for reference, now obsolete)
+    
+#### (OBSOLETE) Setting up and using Google translate
 
 The conversion of a text string to a voice output boils down to a one-liner command, stored in the `tts.sh` script:
 
@@ -140,14 +189,13 @@ The conversion of a text string to a voice output boils down to a one-liner comm
 
 ### Polling & notification script
 
-I cooked up a Python script (get it [here](https://github.com/jheyman/gcalnotifier)) that performs the following operations:<br><br>
+I cooked up a Python script that performs the following operations:<br><br>
 
 * Read a config file (using `ConfigParser` python lib) to retrieve my developer key, specify the list of calendar Ids I want to manage audio notifications for, the path to the voice synthesis script, the name of the file the script will log traces into, and a default value for the reminder time to use if calendar events do not have a reminder time set: 
 
 <pre><code>[config]
 developerKey = xxxxxxxxxxxxxxxxxxxx
-microsoftClientID = xxxxxxxxxxxxxxxxxxxx
-microsoftClientSecret = xxxxxxxxxxxxxxxxxxxx
+microsoftKey = xxxxxxxxxxxxxxxxxxxx
 calendars = xxxxcalendarID1,xxxxcalendarID2
 log_filename = /tmp/gcalendarpolling.log
 reminder_minutes_default = 5
@@ -171,6 +219,10 @@ reminder_minutes_default = 5
 Once the script was finalized, I turned it into a background service/daemon on the raspberry, using [these](http://blog.scphillips.com/2013/07/getting-a-python-script-to-run-in-the-background-as-a-service-on-boot/) great instructions. My version is available [here](https://github.com/jheyman/gcalnotifier/blob/master/gcalnotifier.sh), I just added the `--chdir` option in the `start-stop-daemon` command to set the working directory of the service to be the one the script and its associated files are stored in, so that no absolute paths need to be specified inside the script. Just copy this script to `/etc/init.d`, make sure it has execution rights, then add activate this service using:
 
 	sudo update-rc.d gcalnotifier.sh defaults
+
+### Source code
+
+The python script & config files is available [here](https://github.com/jheyman/gcalnotifier).
 
 --- 
 
