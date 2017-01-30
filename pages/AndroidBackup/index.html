@@ -42,9 +42,9 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>One day I got tired of the mess of plugs and cables required to charge the three android devices we have at home. I also realized that I had no regular-enough backup routine, which would turn out to be a big problem one day. The common solution is to buy a multi-devices charger dock, and install some fancy backup App on the devices themselves, that could perform regular backups over Wifi.<br /><br /></p>
+<p>One day I got tired of the mess of plugs and cables required to charge the three android devices we have at home. I also realized that I had no regular-enough backup routine, which would turn out to be a big problem one day. The common solution is to buy a multi-devices charger dock, and install some fancy backup App on the devices themselves, that could perform regular backups over Wifi.</p>
 
-<p>But I thought it would be fun to try and come up with a custom solution to plug all three devices on a single dock for nightly charging, and have it perform automatic backup of critical data behind the scenes, and not requiring wifi to be turned on or any specific app to be installed.<br /><br /></p>
+<p>But I thought it would be fun to try and come up with a custom solution to plug all three devices on a single dock for nightly charging, and have it perform automatic backup of critical data behind the scenes, and not requiring wifi to be turned on or any specific app to be installed.</p>
 
 <ul id="markdown-toc">
   <li><a href="#requirements" id="markdown-toc-requirements">Requirements</a></li>
@@ -133,7 +133,7 @@
 
 <h4 id="usb-chargerhub">USB Charger/Hub</h4>
 
-<p>Regular powered USB hubs only provide 500mA max per USB port, as per the USB specification. At this rate, it takes a long time to fully charge up a device, so I went for a powered USB hub that specifically provides charging capability, by providing ports compliant with the <code>Battery Charging (BC)</code> specification. <br /><br />
+<p>Regular powered USB hubs only provide 500mA max per USB port, as per the USB specification. At this rate, it takes a long time to fully charge up a device, so I went for a powered USB hub that specifically provides charging capability, by providing ports compliant with the <code>Battery Charging (BC)</code> specification. <br />
 Also, since I want this hub to stay on permanently, I stayed away from cheapest models and bought a decent 4-port USB 2.0 model from Plugable. Here it is, providing power to the Pi through the USB cable on the right, and connected to one android device through the USB cable on the left.</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/AndroidBackup/hub_and_pi.png" alt="Hub" /></p>
@@ -144,7 +144,7 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 
 <h4 id="using-adb-with-multiple-devices">Using ADB with multiple devices</h4>
 
-<p><code>Android Debug Bridge</code> (adb) comes with the Android sdk, and is the cornerstone of command line debugging of a device connected over USB. I captured the instructions to compile it for Raspberry it <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake/#compile-adb">here</a>.<br /><br /></p>
+<p><code>Android Debug Bridge</code> (adb) comes with the Android sdk, and is the cornerstone of command line debugging of a device connected over USB. I captured the instructions to compile it for Raspberry it <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake/#compile-adb">here</a>.<br /></p>
 
 <p>When working with multiple android devices plugged to the same USB host, the <code>-s &lt;deviceId&gt;</code> option needs to be added to specify which device the adb command is addressed to.</p>
 
@@ -156,7 +156,7 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
   <li>push android rsync binary to the device: <code>adb -s &lt;deviceId&gt; push rsync.bin /data/local/tmp/rsync</code></li>
   <li>push rsync daemon config file to the device: <code>adb -s &lt;deviceId&gt; push rsyncd.conf /data/local/tmp</code></li>
   <li>make the binary executable on the device: <code>adb -s &lt;deviceId&gt; shell chmod 755 /data/local/tmp/rsync</code></li>
-  <li>start the rsync daemon: <code>adb -s &lt;deviceId&gt; shell '/data/local/tmp/rsync --daemon --config=/data/local/tmp/rsyncd.conf --log-file=/data/local/tmp/rsync.log; sleep 1'</code><br /><br /></li>
+  <li>start the rsync daemon: <code>adb -s &lt;deviceId&gt; shell '/data/local/tmp/rsync --daemon --config=/data/local/tmp/rsyncd.conf --log-file=/data/local/tmp/rsync.log; sleep 1'</code><br /></li>
 </ul>
 
 <p>Credits go to <a href="http://ptspts.blogspot.fr/2015/03/how-to-use-rsync-over-adb-on-android.html">this</a> guy for these steps.</p>
@@ -173,9 +173,9 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 <pre><code>adb shell input swipe &lt;...&gt;
 </code></pre>
 
-<p>instead.<br /><br /></p>
+<p>instead.<br /></p>
 
-<p><strong>Note</strong>: I was not able to find a robust way to determine through adb if device is locked and requires unlocking or not….<br /><br /></p>
+<p><strong>Note</strong>: I was not able to find a robust way to determine through adb if device is locked and requires unlocking or not….<br /></p>
 
 <p>Also, all of this works only if screen responds to user interaction, i.e. is turned on. I determine screen status with :</p>
 
@@ -196,7 +196,7 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 
 <h4 id="backup-contacts">Backup Contacts</h4>
 
-<p>For Contacts, things get much more difficult. Different Android versions use different locations for the Contacts database, which is not accessible externally on a non-rooted device anyway. I also happen to use multiple Google accounts on the same device, which makes things more complex. The most simple and robust way I found to get ALL contact information is to use the Contacts app itself to export the contacts to a single file on the SD card, and then get this file through adb. This is quite straightforward to do manually, but much harder to automate. But not to worry, adb provides the ability to simulate user taps on the screen, so we just have to note the coordinates of the appropriate touch points and replay them later.<br /><br /></p>
+<p>For Contacts, things get much more difficult. Different Android versions use different locations for the Contacts database, which is not accessible externally on a non-rooted device anyway. I also happen to use multiple Google accounts on the same device, which makes things more complex. The most simple and robust way I found to get ALL contact information is to use the Contacts app itself to export the contacts to a single file on the SD card, and then get this file through adb. This is quite straightforward to do manually, but much harder to automate. But not to worry, adb provides the ability to simulate user taps on the screen, so we just have to note the coordinates of the appropriate touch points and replay them later.<br /></p>
 
 <p>To figure out what the touch coordinates should be, there is a nice option in the Developer options menu to display an overlay with X and Y coordinates whenever user touches the screen:</p>
 
@@ -228,7 +228,7 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 
 <h4 id="scripting-it-all">Scripting it all</h4>
 
-<p>The python script that sequences everything, reads params from a config file, and provides logging capability is archived <a href="https://github.com/jheyman/androidbackup">here</a>, along with the associated rsync binary and config file.<br /><br /></p>
+<p>The python script that sequences everything, reads params from a config file, and provides logging capability is archived <a href="https://github.com/jheyman/androidbackup">here</a>, along with the associated rsync binary and config file.<br /></p>
 
 <p>The script is called every night at 3am by adding the following line to the Pi’s crontab:</p>
 
@@ -245,7 +245,7 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 
 <p><img src="http://jheyman.github.io/blog/assets/images/AndroidBackup/case_out.png" alt="Case_out" /></p>
 
-<p>There you go, no more dangling cables, and under its inconpiscuous look it wakes up at 3am every night to take care of my precious photos &amp; contacts.</p>
+<p>There you go, no more dangling cables, and under its inconspicuous look it wakes up at 3am every night to take care of my precious photos &amp; contacts.</p>
 
 <h3 id="notes--lessons-learned">Notes &amp; Lessons learned</h3>
 

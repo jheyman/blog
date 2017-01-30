@@ -42,7 +42,7 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>After a first experience with Visio automation (see <a href="http://jheyman.github.io/blog/pages/VisioAutoCompute">here</a>) and some external motivation (thanks Kevin for the inspiration!), it was time to dig further down the rabbit hole of what VBA (among other languages) can bring to Visio to implement dynamic diagrams, and have fun along the way.<br /><br /></p>
+<p>After a first experience with Visio automation (see <a href="http://jheyman.github.io/blog/pages/VisioAutoCompute">here</a>) and some external motivation (thanks Kevin for the inspiration!), it was time to dig further down the rabbit hole of what VBA (among other languages) can bring to Visio to implement dynamic diagrams, and have fun along the way.<br /></p>
 
 <ul id="markdown-toc">
   <li><a href="#usecase--features" id="markdown-toc-usecase--features">Usecase &amp; features</a>    <ul>
@@ -89,7 +89,7 @@
 
 <h3 id="user-fields">User fields</h3>
 
-<p>Object data are internally stored as Visio <strong>shape data</strong>, but I wanted a more direct way to modify configurable values than having to open the shape data menu, and edit the appropriate line. Also, while some shape data are intended to be modified by user, others are computation results intended to be displayed but not modified, and others still are shape data supporting the implementation itself that should not be modified manually.<br /><br /></p>
+<p>Object data are internally stored as Visio <strong>shape data</strong>, but I wanted a more direct way to modify configurable values than having to open the shape data menu, and edit the appropriate line. Also, while some shape data are intended to be modified by user, others are computation results intended to be displayed but not modified, and others still are shape data supporting the implementation itself that should not be modified manually.<br /></p>
 
 <p>So two dedicated objects are available: one for user inputs:</p>
 
@@ -120,7 +120,7 @@
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoFlow/node.png" alt="node" /></p>
 
-<p>Node are steps in the data flow, that process incoming flows to generate corresponding outgoing flows. For the sake of simplicity, this prototype only includes two trivial processing functions: summing and multiplying. <br /><br /></p>
+<p>Node are steps in the data flow, that process incoming flows to generate corresponding outgoing flows. For the sake of simplicity, this prototype only includes two trivial processing functions: summing and multiplying. <br /></p>
 
 <p>In this example, two properties are summable along the flows (<code>cost</code> and <code>time</code>) and one property is multipliable along the path (<code>yield</code>). Also, the Node applies the <code>yield</code> factor to the incoming quantity of items, and propapates only the resulting number of items towards the outgoing flow.</p>
 
@@ -154,9 +154,9 @@
 
 <h3 id="dynamic-diagram-update">Dynamic diagram update</h3>
 
-<p>Since all objects in the graph have associated data that can potentially impact the results, the difficulty is to make sure that everytime one data is modified (either by the user or automatically), adequate recomputations occur. The hard way to do this is to identify individual dependencies of each object’s data and recompute dependent data upon modification, and the lazy way (which I chose, obviously) is just to recompute everything each time something changes. The performance is not as good, but I did not care too much about it in the context of this experimentation, and it simplifies the code a lot and the debugging a WHOLE lot. <br /><br /></p>
+<p>Since all objects in the graph have associated data that can potentially impact the results, the difficulty is to make sure that everytime one data is modified (either by the user or automatically), adequate recomputations occur. The hard way to do this is to identify individual dependencies of each object’s data and recompute dependent data upon modification, and the lazy way (which I chose, obviously) is just to recompute everything each time something changes. The performance is not as good, but I did not care too much about it in the context of this experimentation, and it simplifies the code a lot and the debugging a WHOLE lot. <br /></p>
 
-<p>So basically, everytime an object is added/deleted, a flow connected/disconnected from a shape, or a user data modified manually, a two-step recompute happens:<br /><br /></p>
+<p>So basically, everytime an object is added/deleted, a flow connected/disconnected from a shape, or a user data modified manually, a two-step recompute happens:<br /></p>
 
 <ul>
   <li><strong>Backtrace each endpoint</strong>, looking for a valid/complete path back toward the associated flow’s start point.</li>
@@ -178,13 +178,13 @@ Also,</p>
 
 <h2 id="vba-implementation">VBA implementation</h2>
 
-<p>I reused the baseline implementation from <a href="http://jheyman.github.io/blog/pages/VisioAutoCompute">this</a> other project, so this is still using Visual Basic for Applications (VBA). All Visio-specific base principles (shape types, shape data, and how to programmatically use shape relationships to parse diagrams) are described there, so the information below is the part specific to this project.<br /><br /></p>
+<p>I reused the baseline implementation from <a href="http://jheyman.github.io/blog/pages/VisioAutoCompute">this</a> other project, so this is still using Visual Basic for Applications (VBA). All Visio-specific base principles (shape types, shape data, and how to programmatically use shape relationships to parse diagrams) are described there, so the information below is the part specific to this project.<br /></p>
 
 <p>I did a major refactoring of the code at the same time, to make it a little more structured, though it is still hobbyist-grade code and would probably make a seasoned VBA developer have a heart attack just by looking at it.</p>
 
 <h3 id="walking-through-connected-shapes">Walking through connected shapes</h3>
 
-<p>Even though Visio provides a <code>ConnectedShapes</code> functions that returns shapes connected to a given shape, but in my case to enumerate the connectors (flows) on a node, I used the <code>GluedShapes</code> function instead, filtering for 1D-shapes. <br /><br /></p>
+<p>Even though Visio provides a <code>ConnectedShapes</code> functions that returns shapes connected to a given shape, but in my case to enumerate the connectors (flows) on a node, I used the <code>GluedShapes</code> function instead, filtering for 1D-shapes. <br /></p>
 
 <p>The next difficulty is to figure out the <strong>direction</strong> of the flow. Each visio connector has a “start” point and an “end” point, however the style of each end of the connector can be either nothing or an arrow (or some other style), so there could very well be an arrow on the “start” side and nothing on the end side. The code looks for other internal Visio properties to determine the direction of a connector with respect to a shape it is connected to.</p>
 

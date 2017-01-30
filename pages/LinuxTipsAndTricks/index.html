@@ -47,6 +47,7 @@
 <ul id="markdown-toc">
   <li><a href="#installing--uninstalling-packages" id="markdown-toc-installing--uninstalling-packages">Installing / Uninstalling packages</a></li>
   <li><a href="#customizing-hostname" id="markdown-toc-customizing-hostname">Customizing hostname</a></li>
+  <li><a href="#networking" id="markdown-toc-networking">Networking</a></li>
   <li><a href="#services--daemons" id="markdown-toc-services--daemons">Services / Daemons</a></li>
   <li><a href="#files--directories" id="markdown-toc-files--directories">Files &amp; Directories</a></li>
   <li><a href="#console" id="markdown-toc-console">Console</a></li>
@@ -77,11 +78,14 @@
 
 <hr />
 
-<p>### Networking
-* To check which UDP and TCP ports are currently in use: <code>netstat -atun</code> and/or <code>(sudo) lsof -i</code>
-* To search for all IP addresses used in the local 192.168.0.xxx subnet: <code>nmap -sP 192.168.0.0/24</code>
-* To check the open ports on a specific IP address: <code>nmap 192.168.0.xxx</code>
-* To check ethernet bandwidth, install iperf <code>sudo apt-get install iperf</code> then on server side: <code>iperf -s</code>, and on client side: <code>iperf -c &lt;IP of the server&gt;</code></p>
+<h3 id="networking">Networking</h3>
+
+<ul>
+  <li>To check which UDP and TCP ports are currently in use: <code>netstat -atun</code> and/or <code>(sudo) lsof -i</code></li>
+  <li>To search for all IP addresses used in the local 192.168.0.xxx subnet: <code>nmap -sP 192.168.0.0/24</code></li>
+  <li>To check the open ports on a specific IP address: <code>nmap 192.168.0.xxx</code></li>
+  <li>To check ethernet bandwidth, install iperf <code>sudo apt-get install iperf</code> then on server side: <code>iperf -s</code>, and on client side: <code>iperf -c &lt;IP of the server&gt;</code></li>
+</ul>
 
 <hr />
 
