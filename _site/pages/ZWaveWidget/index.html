@@ -43,7 +43,7 @@
 				<div class="entry-content">
 					
 <p>My home automation setup is based on Z-wave devices controlled by a Z-way server (see <a href="http://jheyman.github.io/blog/pages/ZwaveHomeAutomation">here</a>). Even though there are nice UIs provided with Z-way, I wanted to have something minimalistic that would visible at all times, without the need to launch a specific app/URL. So I thought a little Android homescreen widget running on my <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHub</a> tablet would be nice.
-<br /><br /></p>
+<br /></p>
 
 <ul id="markdown-toc">
   <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
@@ -78,9 +78,9 @@
 
 <h4 id="zwavewidgetprovider">ZWaveWidgetProvider</h4>
 
-<p>The first specificity is that the usual APP_UPDATE mechanism that serves to refresh homescreen widgets is not used in this project. The reason is that many Android versions put a lower limit to the possible refresh rate, mainly to save battery on mobile Android devices. I want my z-wave devices statuses to be refreshed very often, and my target usecase is a wall-mounted Android tablet, so I really don’t care about battery-related constraints. So, I set <code>android:updatePeriodMillis</code> to 0 in the widget’s definition file, and instead used a custom <code>Handler</code> with a <code>Runnable</code> function called every 2 seconds to refresh the widget.<br /><br /></p>
+<p>The first specificity is that the usual APP_UPDATE mechanism that serves to refresh homescreen widgets is not used in this project. The reason is that many Android versions put a lower limit to the possible refresh rate, mainly to save battery on mobile Android devices. I want my z-wave devices statuses to be refreshed very often, and my target usecase is a wall-mounted Android tablet, so I really don’t care about battery-related constraints. So, I set <code>android:updatePeriodMillis</code> to 0 in the widget’s definition file, and instead used a custom <code>Handler</code> with a <code>Runnable</code> function called every 2 seconds to refresh the widget.<br /></p>
 
-<p>Only the very first <code>onUpdate</code> call is useful, to register the click callbacks on each device icon, and kick-off the background auto-refresh Runnable.<br /><br /></p>
+<p>Only the very first <code>onUpdate</code> call is useful, to register the click callbacks on each device icon, and kick-off the background auto-refresh Runnable.<br /></p>
 
 <p>Since refreshing the widget involves performing HTTP requests (that could take an arbitrarily long time to complete), it gets done in a separate asynchronous <code>Service</code>. Also, when a user touch/click on a device is detected, a service is started to perform the device state toggle, for the same reasons.</p>
 
@@ -109,9 +109,9 @@
 <pre><code>http://[IP address of Z-way server]:[Z-way port]/ZWaveAPI/Data/[timestamp]
 </code></pre>
 
-<p>The timestamp is provided in unix time format (seconds elasped since Jan 1st 1970). So, when refresh is called, it passes the (server-side) timestamp of the previous refresh call, and gets in return the list of all device states that have changed in the meantime. Sweet! And much more efficient than having to poll every device individually. In addition to the list of state changes, the returned data contains an <code>updateTime</code> field, that will be used during next refresh call. <br /><br /></p>
+<p>The timestamp is provided in unix time format (seconds elasped since Jan 1st 1970). So, when refresh is called, it passes the (server-side) timestamp of the previous refresh call, and gets in return the list of all device states that have changed in the meantime. Sweet! And much more efficient than having to poll every device individually. In addition to the list of state changes, the returned data contains an <code>updateTime</code> field, that will be used during next refresh call. <br /></p>
 
-<p>The service then parses this returned data, and checks for each displayed device if a change happened. If it did, there will be an entry of the form <code>devices.xx.instances.yy.commandClasses.zz.data.level</code> in the data, where xx is the device Id, yy is the instance id within this device, and zz is the command class number (e.g. “38” for SwitchMultiLevel change)<br /><br /></p>
+<p>The service then parses this returned data, and checks for each displayed device if a change happened. If it did, there will be an entry of the form <code>devices.xx.instances.yy.commandClasses.zz.data.level</code> in the data, where xx is the device Id, yy is the instance id within this device, and zz is the command class number (e.g. “38” for SwitchMultiLevel change)<br /></p>
 
 <p>For example, update data received after device 27 is switched on looks like this:</p>
 
@@ -141,7 +141,7 @@
 }
 </code></pre>
 
-<p><strong>Note</strong>: for some weird reason, ONE of my Fibaro dimmers has its state changes sometimes notified to the server under a different/generic set of id/instance/cmdclass than its own. More precisely, state changes happening after explicit calls to the API are notified normally, while state changes happening when manually pushing this switch get notified with these other values. So I implemented a set of “alternate” values to look for, as a hackish workaround to cover both remotely-triggered and locally/physically-triggered changes in this wallswitch.<br /><br /></p>
+<p><strong>Note</strong>: for some weird reason, ONE of my Fibaro dimmers has its state changes sometimes notified to the server under a different/generic set of id/instance/cmdclass than its own. More precisely, state changes happening after explicit calls to the API are notified normally, while state changes happening when manually pushing this switch get notified with these other values. So I implemented a set of “alternate” values to look for, as a hackish workaround to cover both remotely-triggered and locally/physically-triggered changes in this wallswitch.<br /></p>
 
 <p>Since Z-way protocol is largely asynchronous, an important trick is to check the time ordering of <code>updateTime</code> and <code>invalidateTime</code> fields within the received notification: this allows to discard notification for state changes that are not valid anymore, because an update of the device state is in progress.</p>
 
@@ -162,7 +162,7 @@
 
 <h3 id="final-integration">Final integration</h3>
 
-<p>Here is a screenshot of the widget running, installed on my <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHub</a> tablet (that happens to have a black blackground)</p>
+<p>Here is a screenshot of the widget running, installed on my <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">HomeHub</a> tablet (that happens to have a black background)</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/ZWaveWidget/screenshot.png" alt="screenshot" /></p>
 

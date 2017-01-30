@@ -6,7 +6,14 @@ tags: radio, raspberry pi, I2C, voice
 ---
 {% include JB/setup %}
 
-This project aimed at experimenting with voice control on Raspberry Pi, to command an FM radio module. Required components are:
+This project aimed at experimenting with voice control on Raspberry Pi, to command an FM radio module.
+
+* TOC
+{:toc}
+
+### Hardware components
+
+Required components are:
 
 * a Raspberry pi
 * a USB sound card for the raspberry pi (3$ at [DealExtreme](http://dx.com/p/5-1-channel-usb-sound-card-adapter-blue-59037#.Uyx0enX5PZg))
@@ -72,7 +79,7 @@ The voice commands will use the google voice online API. This command will recor
 
     arecord -D plughw:0,0 -f cd -t wav -d 3 -r 16000 | flac - -f --best --sample-rate 16000 -o out.flac; wget -O - -o /dev/null --post-file out.flac --header="Content-Type: audio/x-flac; rate=16000" http://www.google.com/speech-api/v1/recognize?lang=fr | sed -e 's/[{}]/''/g'| awk -v k="text" '{n=split($0,a,","); for (i=1; i<=n; i++) print a[i]; exit }' | awk -F: 'NR==3 { print $3; exit }'
 
-NOTES:
+**NOTES**:
 
 * I borrowed this command line somewhere on the raspberry pi forums, can't remember where exactly.
 * this command line is configured for french voice, the language can be changed with the `lang=xxx` option
@@ -102,7 +109,7 @@ The TEA5767 FM radio module itself is very small, and does not have connectors. 
 
 ### Setting up I2C on the Raspberry
 
-Instructions for enabling I2C on the raspi are available on [this page]({{ site.baseurl }}/pages/RaspberryPiTipsAndTricks).<br><br>
+Instructions for enabling I2C on the raspi are available on [this page]({{ site.baseurl }}/pages/RaspberryPiTipsAndTricks).<br>
 
 The command `ls /dev/i2c*` should then show two I2C devices (one is high speed, the other is low speed)
 

@@ -6,14 +6,19 @@ tags: Z-Wave,razberry,raspberry pi
 ---
 {% include JB/setup %}
 
+I had been considering using some kind of home automation system for a while, and decided to give it a go.
+
+* TOC
+{:toc}
+
 ### Usecase 
-I had been considering using some kind of home automation system for a while, and decided to give it a go based on very simple usecase: not having to go upstairs to check if the lights were actually turned off, before leaving the house. In other words: lazyness.<br><br>
+The first usecase is quite simple: not having to go upstairs to check if the lights were actually turned off, before leaving the house. In other words: lazyness.<br>
 
-The secondary usecase was to be a little eco-friendly and turn off all unnecessary electrical devices when leaving the house (e.g. TV/TV box, that still consume significant power even in standby mode).<br><br>
+The secondary usecase was to be a little eco-friendly and turn off all unnecessary electrical devices when leaving the house (e.g. TV/TV box, that still consume significant power even in standby mode).<br>
 
-Several technologies exist for home automation (e.g. the old X10 wired communication over power lines, or wireless Zigbee communication), I chose Z-Wave because it seemed to be becoming the standard (but time will tell if this will be the case) and seemed to have interesting capabilities/flexibility in the home network management. This is NOT a cheap technology though, so be ready to invest a few hundred dollars in your home automation, or go another way (e.g. simpler 433 MHz RF devices)<br><br>
+Several technologies exist for home automation (e.g. the old X10 wired communication over power lines, or wireless Zigbee communication), I chose Z-Wave because it seemed to be becoming the standard (but time will tell if this will be the case) and seemed to have interesting capabilities/flexibility in the home network management. This is NOT a cheap technology though, so be ready to invest a few hundred dollars in your home automation, or go another way (e.g. simpler 433 MHz RF devices)<br>
 
-Z-Wave operates at 868.42 Mhz in Europe (908.4MHz in the US). A Z-wave network is composed of one or several controllers, and one or several slave devices.<br><br>
+Z-Wave operates at 868.42 Mhz in Europe (908.4MHz in the US). A Z-wave network is composed of one or several controllers, and one or several slave devices.<br>
 
 Here is an example setup with one primary controller, one secondary controller running on batteries, several slave devices plugged on main power to manage lights, power outlets, or other things:
 
@@ -36,11 +41,13 @@ Since I was already using a raspberry pi as a home server for other purposes, ad
 #### Razberry Z-Way software setup
 
 To control the razberry module, the basic option is to install the Z-Way framework (from Razberry manufacturer) on the raspberry pi:
+
 `wget -q -O - http://razberry.z-wave.me/install | sudo bash`
-<br><br>
+
 Then, a control interface is available on the raspberry pi at this URL:
-`http://<ÌP address of the Raspi>:8083`
-<br><br>
+
+`http://<IP address of the Raspi>:8083`
+
 Usage is quite straightforward, and the interface is more than enough for manual management/control of any device in the Z-wave network. More on this later.
 
 ### Z-Wave slaves
@@ -48,9 +55,9 @@ Usage is quite straightforward, and the interface is more than enough for manual
 There are many types of slave Z-wave devices, for my specific usecase I bought the modules mentionned hereafter.
 
 #### Lighting control
-This is my #1 usecase (remotely turning any light on or off), and my primary concern was to make the automation of lighting control completely transparent and "100% backward compatible" with manual use of the switches. As it turns out, the most convenient solution to retrofit an existing installation is to install small z-wave micro-modules directly inside the existing switches cavities in the walls.<br><br> 
+This is my #1 usecase (remotely turning any light on or off), and my primary concern was to make the automation of lighting control completely transparent and "100% backward compatible" with manual use of the switches. As it turns out, the most convenient solution to retrofit an existing installation is to install small z-wave micro-modules directly inside the existing switches cavities in the walls.<br> 
 
-I chose micro-modules from [Fibaro](http://www.fibaro.com), since they seemed to be quite small and of good quality. As a side note: as these things will be embedded within the walls of my house, I did not even *consider* searching for cheaper modules. Cutting budget on such critical devices is probably a very very bad idea.<br><br> 
+I chose micro-modules from [Fibaro](http://www.fibaro.com), since they seemed to be quite small and of good quality. As a side note: as these things will be embedded within the walls of my house, I did not even *consider* searching for cheaper modules. Cutting budget on such critical devices is probably a very very bad idea.<br> 
 
 Several versions of micromodule exist, and in particular, you have to choose between relays (on/off) and dimmers (allowing continuous variation of the voltage between completely-off and completely-on). On/Off functionality was all I needed, but I bought dimmers anyway for all lights, for the following reasons:
 * only the dimmer modules can be installed with no Neutral lead available, which is often the case of old installations, and is the case in my house. 
@@ -66,9 +73,11 @@ Here is a Fibaro dimmer micro-module, with the small antenna sticking out:
 For controlling power outlets, I used a different approach: while it is quite possible to use micro-modules integrated inside the power outlet cavities just as for wall switches, one major drawback with this solution is that one cannot control the state of the micro-module manually (since there is no button on a power outlet...). This means that if the outlet is turned off remotely, there is no way to turn it back on manually, which can turn out to be quite inconvenient. A more practical solution for me was to use external Z-wave power plugs, plugged externally in the existing outlets. The difference is that those devices do have a button on their casing, allowing manual override of the device state. 
 
 The drawback is of course that such external devices are quite noticeable, and most of them are bulky:
+
 ![popp plug]({{ site.baseurl }}/assets/images/ZwaveHomeAutomation/popp_plug.png)
 
 But it turns out that Fibaro sells Z-wave power plugs (FGWPE/F-101) that are much much smaller, so the visual impact is quite limited, and they still have an override button on the casing to operate the plug manually if needed:
+
 ![fibaro plug]({{ site.baseurl }}/assets/images/ZwaveHomeAutomation/fibaro_plug.png)
 
 Hats off to Fibaro for optimizing the device volume to that extent. Finding out about this product is the main reason why I went ahead with equipping several of my outlets with Z-wave capability. 
@@ -79,10 +88,11 @@ While I retrofitted all existing wall switches in the house with micro-modules, 
 Since all existing wall switches had their own purpose already, I wanted a new dedicated button to control this new usecase. Installing a new (wired) wall-switch is not convenient, so I chose to buy a standalone Z-wave battery-powered wall controller (Z-Wave.Me 06443), that looks like a regular wall-switch, but can be attached anywhere on a flat surface.  
 
 Here's how it looks without the cover:
+
 ![wall switch no cover]({{ site.baseurl }}/assets/images/ZwaveHomeAutomation/wallswitch_nocover.png)
 
 Notice two main buttons (UP and DOWN), plus three buttons for managing the device: Include, Exclude, and Association
-<br><br>
+
 Once the cover is installed, there is no way to tell this is a Z-wave device and not a regular wall-switch.
 
 ![wall switch cover]({{ site.baseurl }}/assets/images/ZwaveHomeAutomation/wallswitch_cover.png)
@@ -92,7 +102,7 @@ More later on how I used this wall controller.
 #### Color LED controller
 
 Controlling the intensity and color of lighting is a typical home automation usecase, and while I did not really have any actual use in mind for this, I bought an RGB LED strip controller (Fibaro FGRGBWM-441) because of...reasons. The Fibaro module I chose also happens to be usable for many other purposes, like general purpose voltage inputs/outputs, so it was really not a waste of money.
-<br><br>
+
 Here is the RGBW module with glued-on hackish interface for input power and output wires to LED strip:
 
 ![RGB LED controller]({{ site.baseurl }}/assets/images/ZwaveHomeAutomation/fibaro_rgbw.png)
@@ -126,17 +136,18 @@ Below is a picture of the installation in progress (the tricky part is then to a
 ![dimmer install]({{ site.baseurl }}/assets/images/ZwaveHomeAutomation/dimmer_install.png)
 
 Once the micro-module is installed with the original switch mounted back where it used to be, the switch can be controlled remotely (that's the whole point...) but can also be operated manually as before, making this module integration completely transparent to the user.
-<br><br>
+<br>
 I configured all dimmers with a fade time of zero, so they behave exactly like pure on/off switches: this is achieved by setting **parameter #10** to **0** ("Disable the smooth change in light intensity")
-<br><br>Also, if using a two-positions switch, **parameter #14** must be adjusted to **"Bistable switch"**
-<br><br>Finally, for 3-way switches, **parameter #17** must be adjusted to **"enabled"**
+<br>Also, if using a two-positions switch, **parameter #14** must be adjusted to **"Bistable switch"**
+<br>Finally, for 3-way switches, **parameter #17** must be adjusted to **"enabled"**
 
 #### Battery-operated wall controller
 
 I wanted to use the battery-operated wall controller as a source of events to trig various actions. There are two main ways to achieve this:
 - add other devices in the controller's built-in association groups. This has the advantage to not involve any external software or hardware, but this is somehow inconvenient to setup (i.e. need to manually associate each target device using a complex sequence of button pushes), and is only good for "switch on / switch off" actions. 
-- the more flexible option I chose is to use this switch as a scene trigger (it is then entirely up to the main controller software to decide what to do when such a scene is triggered). To achieve this, set **parameter 13** and **parameter 14** to **3**. This way, various scenes can be triggered by activating the UP or DOWN buttons. I only used the two main ones: single click on UP (trigs scene 1) and single click on DOWN (trigs scene 2)<br><br>
-Note: battery-powered z-wave devices are a bit difficult to configure, since they are designed to go back to sleep mode immediately after having been activated, to save power. There is usually a specific action allowing to keep the device awake for a few seconds, so that the configuration commands from the controller can be taken into account. On this Z-Wave.Me wall controller, a triple click on UP or DOWN will keep the device awake for 2 seconds.
+- the more flexible option I chose is to use this switch as a scene trigger (it is then entirely up to the main controller software to decide what to do when such a scene is triggered). To achieve this, set **parameter 13** and **parameter 14** to **3**. This way, various scenes can be triggered by activating the UP or DOWN buttons. I only used the two main ones: single click on UP (trigs scene 1) and single click on DOWN (trigs scene 2)<br>
+
+**Note**: battery-powered z-wave devices are a bit difficult to configure, since they are designed to go back to sleep mode immediately after having been activated, to save power. There is usually a specific action allowing to keep the device awake for a few seconds, so that the configuration commands from the controller can be taken into account. On this Z-Wave.Me wall controller, a triple click on UP or DOWN will keep the device awake for 2 seconds.
 
 
 #### power-plugs
@@ -154,7 +165,7 @@ I setup the Fibaro RGBW module in "MODE1" (**parameter 6** set to **1**), and ad
 Beyond just configuring/managing the modules, the real software added value comes with the capability to implement custom rules to activate devices upon specific conditions. Indeed, while it is perfectly possible to only rely on the Z-wave HW mechanisms (associations, scenes, alarms messages) between modules, it will not allow to implement very specific scenarii. This is where the software automation frameworks come in. I experimented with two of these, there are many more to choose from:
 
 * **Z-Way** itself. Indeed, Z-Way not only provides the management interface for the RaZberry, it also provides several programming APIs to develop automation scripts.
-* **Open Home Automation Bus**, [http://www.openhab.org/](http://www.openhab.org/)). This is a general purpose home automation framework, supporting Z-wave devices as well as many other communication protocols, which makes it a good opportunity for future extensions.<br><br>
+* **Open Home Automation Bus**, [http://www.openhab.org/](http://www.openhab.org/)). This is a general purpose home automation framework, supporting Z-wave devices as well as many other communication protocols, which makes it a good opportunity for future extensions.<br>
 
 **Spoiler alert**: I really liked the OpenHAB framework, but it turns out that it (currently) has a major known bug affecting the RaZberry (see "known limitations" on the Z-wave binding page of the openHAB project), and the impact is so bad that I had the give up using it. I switched back to using the Z-Way server automation capabilities, which fit my needs just fine after all, and are not so Z-wave-dependent as I initially thought. Anyway, details about both setups are provided below.
 
@@ -215,7 +226,7 @@ Number FibaroPlug_1_Energy     "Fibaro plug #1 consumption  [%.2f KWh]" (zPower)
 ##### Installing HABmin
 
 HABmin is an administration interface for openHAB, and is available here: [https://github.com/cdjackson/HABmin](https://github.com/cdjackson/HABmin)
-<br><br>
+<br>
 Installing HABmin boils down to unzipping HABmin.zip in the openHAB folder, and relaunching openHAB. The HABmin interface is then available at `http://localhost:8080/habmin/index.html`
 
 In particular, Z-way devices information and parameters can be accessed and modified (via Bingings / Z-Wave / Devices), making HABmin a useful replacement for the Z-way management interface
@@ -298,7 +309,6 @@ So provided Z-way server is already installed, the only required actions to impl
 
 * **index.js** : this is the javascript code for the module, implementing the custom rules.
 
-<br><br>
 The module I implemented so far is very basic, but is enough to fit my primary usecase: turning off a set of selected devices upon pushing the wall controller DOWN button, and turning another set of devices back on upon pushing the wall controller UP button. In addition, to provide a visual feedback that button pushes have actually been taken into account, I temporarily turn on a nearby RGB LED strip, with a different color for UP and DOWN actions. The javascript code looks like this:
 
 <pre><code>

@@ -6,7 +6,7 @@ tags: arduino, meter, automation, water, wireless
 ---
 {% include JB/setup %}
 
-The purpose of this project was to have a way to monitor our water consumption at home, with minimal modifications to the existing installation.<br><br>
+The purpose of this project was to have a way to monitor our water consumption at home, with minimal modifications to the existing installation.<br>
 
 * TOC
 {:toc}
@@ -15,11 +15,11 @@ The purpose of this project was to have a way to monitor our water consumption a
 
 ### Introduction
 
-There were several options to consider:<br><br>
+There were several options to consider:<br>
 
-* **replacing the existing meter** with a new one equipped with data transmission capability: such meters are expensive, and must generally be associated to even more expensive data acquisition/transmission systems. Also, it requires replacing the original water meter, which I am pretty sure my water company would not allow.<br><br>
-* **buying the sensor add-on** specifically designed to go with my model of water meter ("HRI pulse unit" for Sensus 620): not intrusive, it plugs on top of the original meter, it is however expensive and requires a specific proprietary data acquisition system to read the data.<br><br>
-* **building a custom readout device**, attached where the proprietary add-on is supposed to go: I used this project as an opportunity to experiment with wireless sensors, especially after discovering a ton of interesting usecases on the [mysensors.org](http://mysensors.org) site. Results are detailed below.<br><br>
+* **replacing the existing meter** with a new one equipped with data transmission capability: such meters are expensive, and must generally be associated to even more expensive data acquisition/transmission systems. Also, it requires replacing the original water meter, which I am pretty sure my water company would not allow.<br>
+* **buying the sensor add-on** specifically designed to go with my model of water meter ("HRI pulse unit" for Sensus 620): not intrusive, it plugs on top of the original meter, it is however expensive and requires a specific proprietary data acquisition system to read the data.<br>
+* **building a custom readout device**, attached where the proprietary add-on is supposed to go: I used this project as an opportunity to experiment with wireless sensors, especially after discovering a ton of interesting usecases on the [mysensors.org](http://mysensors.org) site. Results are detailed below.<br>
 
 ### Existing installation
 
@@ -39,7 +39,7 @@ The following parts are involved:
 * **Arduino board**, in my case I selected a Funduino pro mini, but any version will do:
 ![funduino]({{ site.baseurl }}/assets/images/WirelessWaterMeter/funduino.png)
 
-* a **power supply** for the arduino and sensor module: during tests I just supplied the arduino through a USB-FTDI cable (see [here]({{ site.baseurl }}/pages/ArduinoFTDICable)), which was also used to program the arduino. For the final setup, I used a separate 5V power supply. A battery pack could probably do the trick too, but since this device will be located in my garage, I did not want to bother changing batteries every now and then, nor did I want to optimize the setup for lowest possible power consumption (which would require a smarter arduino code, waking up from sleep upon an external event when the watermeter activates)<br><br>
+* a **power supply** for the arduino and sensor module: during tests I just supplied the arduino through a USB-FTDI cable (see [here]({{ site.baseurl }}/pages/ArduinoFTDICable)), which was also used to program the arduino. For the final setup, I used a separate 5V power supply. A battery pack could probably do the trick too, but since this device will be located in my garage, I did not want to bother changing batteries every now and then, nor did I want to optimize the setup for lowest possible power consumption (which would require a smarter arduino code, waking up from sleep upon an external event when the watermeter activates)<br>
 
 * **Light emitter & sensor**: I chose to use a TCRT5000 module (less than 4$ at [DealExtreme](http://www.dx.com/p/tcrt5000-infrared-tracking-sensor-module-blue-171350#.VKFBOuAANA)), it includes an IR LED with associated IR photodiode. The module I bought integrates the TCRT5000 along with an integrated voltage comparator (that I will not use) and a couple of LEDs and resistors. So the interface if quite simple: supply VCC (5V) and GND, and the analog value of how much light is getting received on the photodiode is available on pin A0:
 ![sensor]({{ site.baseurl }}/assets/images/WirelessWaterMeter/sensor.png)
@@ -74,10 +74,10 @@ The sunked surfaces are there to accomodate the few solder pins that are present
 
 ![3D model mounting plate back]({{ site.baseurl }}/assets/images/WirelessWaterMeter/sensor_holder_v2_3Dback.png)
 
-The square and circular sunked surfaces are there to accomodate the bumps present on the sensus 620's front plate, so that the holder can stick perfectly.<br><br>
+The square and circular sunked surfaces are there to accomodate the bumps present on the sensus 620's front plate, so that the holder can stick perfectly.<br>
 
-I then  used a Sketchup [extension](https://extensions.sketchup.com/fr/content/sketchup-stl) to export the Sketchup model to a 3D-printing-friendly STL file, uploaded it on an online printing service (Sculpteo.com), and got it printed for about 10 dollars.<br><br>
-Both the Sketchup model and the exported STL file are available [here](https://github.com/jheyman/wirelesswatermeter).<br><br>
+I then  used a Sketchup [extension](https://extensions.sketchup.com/fr/content/sketchup-stl) to export the Sketchup model to a 3D-printing-friendly STL file, uploaded it on an online printing service (Sculpteo.com), and got it printed for about 10 dollars.<br>
+Both the Sketchup model and the exported STL file are available [here](https://github.com/jheyman/wirelesswatermeter).<br>
 
 I was actually pleasantly surprised by the result: the surface finish is decent, and the plastic is quite stiff.
 
@@ -91,10 +91,10 @@ Here it is, mounted on the watermeter with TCRT5000 sensor
 
 ### Arduino code
 
-The analog output from the photodiode is inversely proportional to the amount of reflected light:<br><br> 
+The analog output from the photodiode is inversely proportional to the amount of reflected light:<br> 
 
-* if no light from the IR LED is reflected onto the photodiode at all, the diode is blocking, hence A0~=VCC<br><br>
-* if all light from the IR LED is reffected onto the photodiode, the diode is passing, hence A0~=GND<br><br>
+* if no light from the IR LED is reflected onto the photodiode at all, the diode is blocking, hence A0~=VCC<br>
+* if all light from the IR LED is reffected onto the photodiode, the diode is passing, hence A0~=GND<br>
 
 The initial test code below allowed to visualize readouts from the photodiode directly on a oscilloscope: the analog value from the photodiode is read on pin A0, which provides a value between 0 and 1023. The value is then divided by 4 to fit in the 0-254 range, it is the written to the output pin 11 which happens to work as a PWM output: the duty cycle of the signal on pin 11 will vary depending on the input analog value:
 
@@ -168,7 +168,7 @@ At this point, the shell should display:
 
 and the led on the bluetooth module should not blink anymore.
 
-* finally, to get the data from the bluetooth device, open a serial terminal (e.g. minicom) on port `/dev/rfcomm0` at speed 9600 Bauds.<br><br>
+* finally, to get the data from the bluetooth device, open a serial terminal (e.g. minicom) on port `/dev/rfcomm0` at speed 9600 Bauds.<br>
 
 Measured values should be displayed regularly. 
 
@@ -197,7 +197,7 @@ Other interesting cases happen depending on where the wheel was when the water f
 
 ![graph 6]({{ site.baseurl }}/assets/images/WirelessWaterMeter/graph6.png)
 
-(successive short bursts of water flow)<br><br>
+(successive short bursts of water flow)<br>
 
 With this data available I set two thresholds for the counting logic:
 
@@ -206,7 +206,7 @@ With this data available I set two thresholds for the counting logic:
 
 ![Graph thresholds]({{ site.baseurl }}/assets/images/WirelessWaterMeter/graph_thresholds.png)
 
-Both thresholds are separated to have an hysteresis effect, to prevent counting possible oscillations around one of the thresholds as multiple turns.<br><br>
+Both thresholds are separated to have an hysteresis effect, to prevent counting possible oscillations around one of the thresholds as multiple turns.<br>
 
 Once the counting of wheel turns is in place, the only remaining thing is to convert the number of turns into a volume of water: in the case of my sensor, one turn = one liter.
 
@@ -220,7 +220,7 @@ The overall cabling, both on the emitter side (Funduino & TCRT5000) and on the r
 
 ![Cabling]({{ site.baseurl }}/assets/images/WirelessWaterMeter/cabling_raspi_funduino_5V.png)
 
-**Note**: on the raspberry side, even though 3.3V is available on the GPIO connector, I also used a 5V/3.3V adapter like on the Arduino side. I initially connected the 3.3V directly, but found out that the range of the wireless link was largely degraded. The nRF24L01 appears to be quite sensitive to the quality of the input 3.3V supply, and the adapter's regulator allows to have a cleaner 3.3V supply.<br><br>
+**Note**: on the raspberry side, even though 3.3V is available on the GPIO connector, I also used a 5V/3.3V adapter like on the Arduino side. I initially connected the 3.3V directly, but found out that the range of the wireless link was largely degraded. The nRF24L01 appears to be quite sensitive to the quality of the input 3.3V supply, and the adapter's regulator allows to have a cleaner 3.3V supply.<br>
 
 Below is a view of the arduino part, integrated inside a small box that is then mounted near the water meter (the USB connector/cable goes to the TCRT5000 module, I just used the 4 available wires in the cable, and happened to have a spare female USB connector lying around. The cable on the left is the 5V power supply)
 
@@ -237,13 +237,13 @@ As usual, everything begins with installing a default Raspbian distribution from
 
     sudo dd bs=1M if=XXX-raspbian.img of=/dev/xxx
 
-2) plug-in a mouse/keyboard/HDMI display and boot-up<br><br>
+2) plug-in a mouse/keyboard/HDMI display and boot-up<br>
 
-3) Use `raspi-config` to configure the raspberry as required (e.g. keyboard layout) / Select the correct time zone (In `Internationalization options` => select appropriate area and city) and **enable SPI** from the `Advanced` options menu<br><br>
+3) Use `raspi-config` to configure the raspberry as required (e.g. keyboard layout) / Select the correct time zone (In `Internationalization options` => select appropriate area and city) and **enable SPI** from the `Advanced` options menu<br>
 
-4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.<br><br>
+4) Plug wi-fi dongle, boot to graphical environment, configure wifi settings.<br>
 
-Once this is done, a few additional actions are required for our setup:<br><br>
+Once this is done, a few additional actions are required for our setup:<br>
 
 - (OBSOLETE) on older raspbian distributions, **SPI** should be enabled it by editing the file `/etc/modprobe.d/raspi-blacklist.conf`:
 
@@ -266,7 +266,7 @@ cd py-spidev/
 sudo python setup.py install
 </code></pre>
 
-Finally, and as I usually do, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from [here](https://github.com/riyas-org/nrf24pihub), I archived it [here](https://github.com/jheyman/wirelesswatermeter). I just put this `nrf24.py` file alongside my python script, for the sake of simplicity.<br><br>
+Finally, and as I usually do, I chose python for the raspberry side of the code. I reused a python library for the RF24 modules from [here](https://github.com/riyas-org/nrf24pihub), I archived it [here](https://github.com/jheyman/wirelesswatermeter). I just put this `nrf24.py` file alongside my python script, for the sake of simplicity.<br>
 
 The `apscheduler` python library is also required:
 
@@ -280,20 +280,20 @@ As well as the `requests` library for remote logging
 ### Logging scripts
 
 This great [page](http://blog.riyas.org/2014/08/raspberry-pi-as-nrf24l01-base-station-internet-connected-wireless.html) conveniently provided both an Arduino sketch and a corresponding python script for the raspberry side.
-After experimenting a bit I settled on the following:<br><br>
+After experimenting a bit I settled on the following:<br>
 
-* on the ***Arduino*** side, the `watermeter.ino` sketch boils down to a loop continuously monitoring the light level from the sensor, implementing the hysteresis thresholding described in the data analysis section above, and writing a string over the wireless link when a threshold crossing has been detected.<br><br>
+* on the ***Arduino*** side, the `watermeter.ino` sketch boils down to a loop continuously monitoring the light level from the sensor, implementing the hysteresis thresholding described in the data analysis section above, and writing a string over the wireless link when a threshold crossing has been detected.<br>
 * on the ***Raspberry*** side, the `watermeter_logger.py` script continuously listens for incoming messages over the wireless link, and increments a local counter when a message is received. A background task triggered at a specific frequency, logs the accumulated value over the corresponding time period. This script is associated to the `watermeter_logger.ini` config file, storing the log file path and logging period. Finally, the `watermeter_logger_sh` is the startup script allowing to make the waterlogger a background daemon:
 
 <pre><code>sudo cp watermeter_logger.sh /etc/init.d/watermeter_logger.sh
 sudo chmod a+x /etc/init.d/watermeter_logger.sh
 sudo update-rc.d watermeter_logger.sh defaults</code></pre>
 
-In addition to logging the value locally in a file, the script also logs the value remotely on a [data logging server]({{ site.baseurl }}/pages/HomeDataLoggingServer) using an HTTP POST request, which payload is of the followinf format<br><br>
+In addition to logging the value locally in a file, the script also logs the value remotely on a [data logging server]({{ site.baseurl }}/pages/HomeDataLoggingServer) using an HTTP POST request, which payload is of the followinf format<br>
 
 	homelogdata,graph=waterMeter value=1.23456
 
-`homelogdata` is the name of the measurement/data series into which the value is to be inserted, while `graph` tag is set to `waterMeter` to allow to later filter on these specific water-meter related values if necessary.<br><br>
+`homelogdata` is the name of the measurement/data series into which the value is to be inserted, while `graph` tag is set to `waterMeter` to allow to later filter on these specific water-meter related values if necessary.<br>
 
 All files are available [here](https://github.com/jheyman/wirelesswatermeter).
 

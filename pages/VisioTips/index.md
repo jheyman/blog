@@ -6,7 +6,7 @@ tags: Microsoft, Visio, VBA, diagrams
 ---
 {% include JB/setup %}
 
-This is my personal memo of miscellaneous tips to improve (my) day to day use of Microsoft Visio.<br><br>
+This is my personal memo of miscellaneous tips to improve (my) day to day use of Microsoft Visio.<br>
 
 * TOC
 {:toc}
@@ -37,15 +37,15 @@ By default, dropping a shape in the middle of a connector results in the connect
 
 ### In-diagram layer visibility toggle
 
-Layers are a cornerstone of Visio, and make my life so much easier when I have to come up with a complex diagram with lots of information of different nature. I like to have all the relevant information on a single diagram, and then just be able to switch between different views of the same underlying data: layers are a great way to do this.<br><br>
+Layers are a cornerstone of Visio, and make my life so much easier when I have to come up with a complex diagram with lots of information of different nature. I like to have all the relevant information on a single diagram, and then just be able to switch between different views of the same underlying data: layers are a great way to do this.<br>
 
-However, when using layers quite often, the repeated action of multiple clicks (clicking on Layers menu => then clicking on Layer properties => then clicking on checkboxes...) required to adjust which layers are visible gets a little tedious.<br><br>
+However, when using layers quite often, the repeated action of multiple clicks (clicking on Layers menu => then clicking on Layer properties => then clicking on checkboxes...) required to adjust which layers are visible gets a little tedious.<br>
 
 Once layer definition is stable, an easy and more efficient alternative is to insert visio Controls inside the diagram itself, to enable or disable each layer in one click. The two candidate controls for this are the checkbox and the toggle button, available from the Developer tab:
 
 ![visio controls]({{ site.baseurl }}/assets/images/VisioTips/visio_controls.png)
 
-The checkbox control would be perfect IF it did not have an annoying property: even though the checkbox text font/size can be modified, the size of the box itself cannot be resized. This means that on diagrams requiring to zoom out a lot, the checkbox can become ridiculously small, and not usable in practice anymore. I went for a toggle button instead, which can be resized arbitrarily.<br><br>
+The checkbox control would be perfect IF it did not have an annoying property: even though the checkbox text font/size can be modified, the size of the box itself cannot be resized. This means that on diagrams requiring to zoom out a lot, the checkbox can become ridiculously small, and not usable in practice anymore. I went for a toggle button instead, which can be resized arbitrarily.<br>
 
 Once the toggle button is placed on the diagram, to add some code to handle the button push action, switch to `Design Mode` in the `Developer tab`, right-click the button, select `Toggle button object` and `View Code`, then insert the VBA code as required:
 
@@ -73,7 +73,7 @@ As an example, I use this code snippet to activate/dea-activate a specific layer
         Next
     End Sub
 
-Et voila, now the button on the diagram can be used to hide/show the associated layer very quickly. I usually create one such toggle button per useful layer on the diagram, this has the added benefit to show at all times which layers are currently activated and which are not, without having to go into the Layers menu.<br><br>
+Et voila, now the button on the diagram can be used to hide/show the associated layer very quickly. I usually create one such toggle button per useful layer on the diagram, this has the added benefit to show at all times which layers are currently activated and which are not, without having to go into the Layers menu.<br>
 
 Here is a dummy example with all layers activated:
 

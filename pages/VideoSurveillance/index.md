@@ -6,7 +6,10 @@ tags: video, surveillance, raspberry pi, audio, python
 ---
 {% include JB/setup %}
 
-The aim of this project was to implement a low-power homemade video surveillance system using a cheap IP camera and a raspberry pi. There are several available frameworks/examples to achieve this, but...it is so much more interesting to build one from scratch, right ?. This has already been done numerous times, there is plenty of information over the internet and no real difficulty is involved. That is, if one chooses a decent IP camera, that can be accessed over HTTP as is the case for 99% of them. Unfortunately, I picked a cheap camera that uses a *proprietary* protocol, for which only a Windows client is available. Sigh...so I ended up spending most of the project time reverse engineering the camera protocol.<br><br>
+The aim of this project was to implement a low-power homemade video surveillance system using a cheap IP camera and a raspberry pi. There are several available frameworks/examples to achieve this, but...it is so much more interesting to build one from scratch, right ?. This has already been done numerous times, there is plenty of information over the internet and no real difficulty is involved. That is, if one chooses a decent IP camera, that can be accessed over HTTP as is the case for 99% of them. Unfortunately, I picked a cheap camera that uses a *proprietary* protocol, for which only a Windows client is available. Sigh...so I ended up spending most of the project time reverse engineering the camera protocol.<br>
+
+* TOC
+{:toc}
 
 ### Hardware parts
 Anyway, here are the involved components:
@@ -175,7 +178,7 @@ User config files happen to be stored in `/mnt/spinand/sif`, and specifically:
  
 ### IP camera protocol
 
-The IP camera model I chose unfortunately does not support standard (e.g. HTTP) communication to retrieve images, but uses a proprietary protocol based on UDP, implemented by a Windows client. So I ended up reverse engineering just enough of the protocol to be able to start the image acquisition and get the image data. Using the Windows client with Wireshark running in the background, and after countless hours of head scratching and trial&error tests, I isolated a packet sequence fulfilling my need (though most of the details of the protocol remain obscure, at least I got the d***** thing to work). The sequence goes as follows:<br><br>
+The IP camera model I chose unfortunately does not support standard (e.g. HTTP) communication to retrieve images, but uses a proprietary protocol based on UDP, implemented by a Windows client. So I ended up reverse engineering just enough of the protocol to be able to start the image acquisition and get the image data. Using the Windows client with Wireshark running in the background, and after countless hours of head scratching and trial&error tests, I isolated a packet sequence fulfilling my need (though most of the details of the protocol remain obscure, at least I got the d***** thing to work). The sequence goes as follows:<br>
 
 <pre><code>* Initialization sequence:
   * initialize an UDP socket, bind it to any available port on the local pc
@@ -201,14 +204,14 @@ The IP camera model I chose unfortunately does not support standard (e.g. HTTP) 
 * to sustain the image flow, every few packets received, a control packet needs to be sent, with most of the data taken from wireshark capture, and the last bytes updated dynamically, based on a predefined sequence (0xd9,0xd8,0xdb,0xda,0xdd,0xdc,0xdf,0xde,0xd1,0xd0) and subtle variations over time. Check the code for details, this part was tricky)
 </code></pre>
 
-***Side note***:<br><br>
-Rik Bobbaers pointed out an interesting lead to go further in this reverse engineering exercise: the [MrSafe HD Indoor camera](http://www.mrsafe.be/?portfolio=wireless-hd-ip-camera) is apparently similar to the Bluestork model I own, and comes with an Android app (get it [here](http://www.mrsafe.be/wp-content/uploads/2015/01/mrsafe-0522.apk)) that could maybe be reverse-engineered, more easily than the Bluestork windows app:<br><br>
+***Side note***:<br>
+Rik Bobbaers pointed out an interesting lead to go further in this reverse engineering exercise: the [MrSafe HD Indoor camera](http://www.mrsafe.be/?portfolio=wireless-hd-ip-camera) is apparently similar to the Bluestork model I own, and comes with an Android app (get it [here](http://www.mrsafe.be/wp-content/uploads/2015/01/mrsafe-0522.apk)) that could maybe be reverse-engineered, more easily than the Bluestork windows app:<br>
 
 * unzip the apk and get the `classes.dex` file, which can be unpacked with [dex2jar](https://code.google.com/p/dex2jar/):
 
 <pre><code>./d2j-dex2jar classes.dex</code></pre>
 
-* a Java decompiler like [this one](http://jd.benow.ca/) could then be used to help figuring out the protocol: launch `JD-GUI`, open the `classes.dex` file, and there you go, the java classes source code.<br><br>
+* a Java decompiler like [this one](http://jd.benow.ca/) could then be used to help figuring out the protocol: launch `JD-GUI`, open the `classes.dex` file, and there you go, the java classes source code.<br>
 
 * In addition, [apktool](http://code.google.com/p/android-apktool/) can be used to extract info from the original apk file, especially to get the unencrypted content of all XML files  
 
@@ -297,7 +300,7 @@ The final installation in its weather-proof box is show below. The top cover of 
 
 ![system internal view cover]({{ site.baseurl }}/assets/images/VideoSurveillance/assembly_cover.png)
 
-Note : the small PCB with screw connectors contains a chip that is unused in this project, I just happened to reuse this PCB from another project for convenience purposes (see [here]({{ site.baseurl }}/pages/VoiceControlledRadio))<br><br>
+Note : the small PCB with screw connectors contains a chip that is unused in this project, I just happened to reuse this PCB from another project for convenience purposes (see [here]({{ site.baseurl }}/pages/VoiceControlledRadio))<br>
 The other side of the box contains the Raspberry pi and the main power supply:
 
 ![system internal view box]({{ site.baseurl }}/assets/images/VideoSurveillance/assembly_box.png)
@@ -319,7 +322,7 @@ The IP camera I bought has a limited viewing angle. Since it is mounted quite ne
 
 There is no security management whatsoever. The reason is simple: the camera only captures images of my front door, which is visible from the street anyway. I just don't care about the camera being hacked. I would NEVER deploy such an unprotected system for an indoor camera, where very strong privacy/security concerns apply.
 
-#### Remote image storage
+#### Remote image storage
 
 After a while, I decided to store images remotely (on a NAS) instead of locally on the USB stick, for two reasons:
 

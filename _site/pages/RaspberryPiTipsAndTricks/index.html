@@ -42,7 +42,7 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br /><br /></p>
+<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br /></p>
 
 <ul id="markdown-toc">
   <li><a href="#disable-onboard-sound-raspbian-wheezy" id="markdown-toc-disable-onboard-sound-raspbian-wheezy">Disable onboard sound (Raspbian Wheezy)</a></li>
@@ -104,7 +104,7 @@ defaults.pcm.card 1
 
 <h3 id="enabling-i2c-bus">Enabling I2C bus</h3>
 
-<p>The Raspberry Pi’s I2C bus capability is not enabled by default. Below are instructions to configure it.<br /><br /></p>
+<p>The Raspberry Pi’s I2C bus capability is not enabled by default. Below are instructions to configure it.<br /></p>
 
 <p><strong>For older Raspbian versions (pre-2014)</strong>:</p>
 
@@ -121,9 +121,9 @@ defaults.pcm.card 1
 <pre><code>sudo raspi-config
 </code></pre>
 
-<p>and select <code>Advanced Options</code> and <code>I2C</code> menu.<br /><br /></p>
+<p>and select <code>Advanced Options</code> and <code>I2C</code> menu.<br /></p>
 
-<p><strong>Then for all raspbian versions</strong>:<br /><br /></p>
+<p><strong>Then for all raspbian versions</strong>:<br /></p>
 
 <p>Edit <code>/etc/modules</code>:</p>
 
@@ -170,7 +170,7 @@ i2c-dev
 
 <h3 id="using-an-external-rtc">Using an external RTC</h3>
 
-<p>One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the “fake hw clock” and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br /><br /></p>
+<p>One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the “fake hw clock” and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br /></p>
 
 <p>One solution is to use an actual, battery-backed real time clock module, and let the pi get its system time from there. I bought such a module (DS3231) for a few bucks:</p>
 
@@ -207,7 +207,7 @@ echo ds1307 0x68 &gt; /sys/class/i2c-adapter/i2c-1/new_device
 exit
 </code></pre>
 
-<p><strong>Note</strong>: DS3231 is just a better version of DS1307 module, so using the ds1307 driver is fine.<br /><br /></p>
+<p><strong>Note</strong>: DS3231 is just a better version of DS1307 module, so using the ds1307 driver is fine.<br /></p>
 
 <p>It should now be possible to read time from the RTC using:</p>
 

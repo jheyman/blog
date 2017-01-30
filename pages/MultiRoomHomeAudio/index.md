@@ -6,7 +6,7 @@ tags: raspberry pi, I2C, audio, squeezelite
 ---
 {% include JB/setup %}
 
-The purpose of this project was to have music available in several rooms at home, while being able to control everything either centrally or locally. The convenient (and extremely expensive) way is to go for a Sonos system. The cheap and fun way is, as usual, to use raspberry pi boards.<br><br>
+The purpose of this project was to have music available in several rooms at home, while being able to control everything either centrally or locally. The convenient (and extremely expensive) way is to go for a Sonos system. The cheap and fun way is, as usual, to use raspberry pi boards.
 
 
 * TOC
@@ -22,12 +22,12 @@ Three main elements are involved:
 * one audio player/client per room to be equipped
 * a user interface
 
-<br>For the **audio server**, my home's main raspberry pi sounded like the default choice. There are plenty of SW options to choose from, I chose to use the well-known (if somewhat ageing) `Logitech Media Server` open source music server. An alternative could have been to use `minidlna` + `BubbleUPnP`. For media content storage, anything from a simple USB thumbdrive to a full-fledged NAS will do the job, depending on your needs. I chose to use a 500GB HDD USB external drive.<br><br>
+For the **audio server**, my home's main raspberry pi sounded like the default choice. There are plenty of SW options to choose from, I chose to use the well-known (if somewhat ageing) `Logitech Media Server` open source music server. An alternative could have been to use `minidlna` + `BubbleUPnP`. For media content storage, anything from a simple USB thumbdrive to a full-fledged NAS will do the job, depending on your needs. I chose to use a 500GB HDD USB external drive.
 
 For the **audio player/client** part, given the choice of LMS as the server, the `squeezelite` client was a logical choice. On the HW side, since the embedded audio output on the pi is pretty low-end, a simple USB DAC will provide a decent sound quality, which I consider to be OK. Audiophiles may prefer to go for a higher-end sound card for the Pi, e.g. HifiBerry or Wolfson. I am not too fond of custom raspberry pi add-ons like these for a specific reason: their connector typically take up most if not all of the pi's GPIO pins, making them unavailable for other purposes. Finally, since I wanted to use large external speakers beyond what a USB DAC can drive, I added an audio amplification board from Adafruit. There are cheaper options but the adafruit module is quite convenient with its 20W amplification, 3.5mm jack input, terminal blocks for speaker outputs, and has digital volume control available through I2C.
-<br><br>
 
-For the **system control/user interface**, the usual way is to rely on LMS web interface, or the corresponding phone app. I do have a logical place to access this from ([HomeHub]({{ site.baseurl }}/pages/HomeHubTablet)), but somehow it did not feel very convenient to have to go to the wall-mounted tablet to control the music, and since I do not carry my smartphone at all times it was not a convenient choice either. So I went for the old-style option : a remote control. A small & thin IR remote control costs a few bucks only, same goes for an IR receiver diode. On the SW side, the `LIRC` library is perfect to decode commands from the remote, and the `pyLIRC` python wrapper for LIRC provides a convenient API (a C program would be fine too, but I'm lazy)<br><br>
+
+For the **system control/user interface**, the usual way is to rely on LMS web interface, or the corresponding phone app. I do have a logical place to access this from ([HomeHub]({{ site.baseurl }}/pages/HomeHubTablet)), but somehow it did not feel very convenient to have to go to the wall-mounted tablet to control the music, and since I do not carry my smartphone at all times it was not a convenient choice either. So I went for the old-style option : a remote control. A small & thin IR remote control costs a few bucks only, same goes for an IR receiver diode. On the SW side, the `LIRC` library is perfect to decode commands from the remote, and the `pyLIRC` python wrapper for LIRC provides a convenient API (a C program would be fine too, but I'm lazy)
 
 Here's an overview of the system:
 
@@ -167,9 +167,9 @@ List the available audio devices, using the command `squeezelite-armv6hf -l`:
 	  default:CARD=ALSA              - bcm2835 ALSA, bcm2835 ALSA - Default Audio Device
 	  sysdefault:CARD=ALSA           - bcm2835 ALSA, bcm2835 ALSA - Default Audio Device
 
-The `bcm2835` entries correspond to the raspberry pi internal audio. In my case, the audio output from the USB sound card corresponds to `front:CARD=Set,DEV=0`<br><br>
+The `bcm2835` entries correspond to the raspberry pi internal audio. In my case, the audio output from the USB sound card corresponds to `front:CARD=Set,DEV=0`
 
-Let's now make squeezelite start automatically at boot as a daemon. [Gerrelt's script](http://www.gerrelt.nl/RaspberryPi/squeezelitehf.sh) will do fine.<br><br>
+Let's now make squeezelite start automatically at boot as a daemon. [Gerrelt's script](http://www.gerrelt.nl/RaspberryPi/squeezelitehf.sh) will do fine.
 
 Edit the file:
 
@@ -179,7 +179,7 @@ and adjust the following parameter to select the USB audio output:
 
 	SL_SOUNDCARD="front:CARD=Set,DEV=0"
  
-I stored my custom version [here](https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/squeezelite).<br><br>
+I stored my custom version [here](https://github.com/jheyman/multiroomhomeaudio/blob/master/client_side/squeezelite).
 
 Finally, move it to the proper location and request it to be added as a daemon 
 
@@ -191,7 +191,7 @@ At the next reboot, squeezelite client will be running in the background, ready 
 
 #### Sharing the USB card audio output (optional)
 
-One problem I encountered is that once squeezelite is configured this way, it will prevent any other service from using the same USB audio output. This has nothing to do with squeezelite itself, but with the ALSA sound library configuration. It may or may not be a limitation depending on the intended usage, and for this particular project alone this is not a problem, but since I wanted to host other services using audio on the same raspberry pi (e.g. [GoogleCalendarAudioNotifier]({{ site.baseurl }}/pages/GoogleCalendarAudioNotifier)), I had to address this. To solve this issue, it is necessary to configure ALSA for sharing the sound output device, and this is achieved by activating the `dmix` plugin that will then combine the audio channels from different services/programs into a single audio output.<br><br>
+One problem I encountered is that once squeezelite is configured this way, it will prevent any other service from using the same USB audio output. This has nothing to do with squeezelite itself, but with the ALSA sound library configuration. It may or may not be a limitation depending on the intended usage, and for this particular project alone this is not a problem, but since I wanted to host other services using audio on the same raspberry pi (e.g. [GoogleCalendarAudioNotifier]({{ site.baseurl }}/pages/GoogleCalendarAudioNotifier)), I had to address this. To solve this issue, it is necessary to configure ALSA for sharing the sound output device, and this is achieved by activating the `dmix` plugin that will then combine the audio channels from different services/programs into a single audio output.
 
 The configuration is two-fold, the first part consists in a custom ALSA configuration file, to be put in file `/etc/asound.conf`:
 
@@ -312,7 +312,7 @@ Let's now add audio amplification and remote control. The different elements wil
 ![Cabling overview]({{ site.baseurl }}/assets/images/MultiRoomHomeAudio/cabling.png)
 
 * To amplifier: GND, VI2C, SDA and SCL are the required connections for I2C communication with the amplifier to digitally adjust gain/volume. In addition, the SHDN (Shutdown) pin of the amplifier is connected to one of the pi's GPIO, so as to be able to disable the amplifier when not used.
-* To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi's GPIO #18, as configured in LIRC). I also successfully tested this setup using TSOP4838, taking into account its specific pinout.<br><br> 
+* To TSOP IR receiver: GND, VCC, and SIGNAL (connected to the pi's GPIO #18, as configured in LIRC). I also successfully tested this setup using TSOP4838, taking into account its specific pinout. 
 
 Here is a work-in-progress view:
 
@@ -363,14 +363,14 @@ To check that cabling is correct and TSOP is working properly:
 
     mode2 -d /dev/lirc0
     
-When pressing buttons on the remote, you should see messages ("pulse xxx space yyy") being displayed.<br><br>
+When pressing buttons on the remote, you should see messages ("pulse xxx space yyy") being displayed.
 Next, we need to generate the config file associated to our remote:
 
     irrecord -d /dev/lirc0 -f lircd.conf
 
-**Note**: the `-f` option is normally not necessary. It worked fine without this option with one kind of remote I had, but I had to add it for the specific model of remote I finally used, otherwise I was getting an error "Something went wrong" during the irrecord setup process. <br><br>
+**Note**: the `-f` option is normally not necessary. It worked fine without this option with one kind of remote I had, but I had to add it for the specific model of remote I finally used, otherwise I was getting an error "Something went wrong" during the irrecord setup process. 
 
-This will guide you through a sequence of actions with the remote. First, a detection is performed by just pressing various buttons on the remote repeatedly. In the end, you will be requested to map the key codes (which names are available by executing:	`irrecord --list-namespace`), and to press the corresponding button on the remote.<br><br>
+This will guide you through a sequence of actions with the remote. First, a detection is performed by just pressing various buttons on the remote repeatedly. In the end, you will be requested to map the key codes (which names are available by executing:	`irrecord --list-namespace`), and to press the corresponding button on the remote.
 
 In my case, I mapped the following names/buttons:
 
@@ -403,7 +403,7 @@ To test that key presses are properly taken into account, you can execute `irw` 
 
 #### Controlling the audio playback
 
-The LMS has a command line interface that can be leveraged to remotely control audio playback: just telnet into the server pi on port 9090, and use the LMS CLI format. Here are a few one-liner examples:<br><br>
+The LMS has a command line interface that can be leveraged to remotely control audio playback: just telnet into the server pi on port 9090, and use the LMS CLI format. Here are a few one-liner examples:
 	
 Play:
 
@@ -492,7 +492,7 @@ Below is an example content I experimented with at some point:
 
 #### Installing PyLIRC
 
-Even though the `lircrc` config allows to define actions to be executed for each button, I needed a bit more flexibility: for example to implement a stateful audio controller that keeps track of current volume, or that I could turn on / turn off using a single button. Luckily, there is a Python binding for LIRC available: PyLIRC2. Installation goes like this:<br><br>
+Even though the `lircrc` config allows to define actions to be executed for each button, I needed a bit more flexibility: for example to implement a stateful audio controller that keeps track of current volume, or that I could turn on / turn off using a single button. Luckily, there is a Python binding for LIRC available: PyLIRC2. Installation goes like this:
 
 1) get PyLIRC2 from `https://pypi.python.org/pypi/pylirc2`
 
@@ -514,7 +514,7 @@ Even though the `lircrc` config allows to define actions to be executed for each
 5) create a python controller script and associated config file:
 
 * the config file reuses the `lircrc` format
-* the controller script is homemade and very basic: it just polls pylirc for incoming commands received from the IR receiver (using the blocking mode to avoid spinning CPU for nothing), and launches a telnet command on the LMS accordingly.<br><br>
+* the controller script is homemade and very basic: it just polls pylirc for incoming commands received from the IR receiver (using the blocking mode to avoid spinning CPU for nothing), and launches a telnet command on the LMS accordingly.
 
 On the server side, 9 playlists named `playlist_xx.m3u` are stored in the media folder, and pressing buttons 1 to 9 on the remote trigs one of these playlists. I mapped a few albums to some of the 9 buttons, and web radios to the others. The playlist format (m3u) is very basic, it boils down to one entry per line with the path to a song. A convenient way to generate a playlist corresponding to a full album is:
 
@@ -535,9 +535,9 @@ Once everything worked as expected, I proceeded with automating the execution of
 	sudo chmod a+x /etc/init.d/audiocontroller.sh
 	sudo update-rc.d audiocontroller.sh defaults
 
-Reboot the pi: traces of the successful execution of the audio controller script should be visible in `/tmp/audiocontroller.log` file.<br><br>
+Reboot the pi: traces of the successful execution of the audio controller script should be visible in `/tmp/audiocontroller.log` file.
 
-NOTE: in my case, it's a good thing I inserted a check & retry loop on pinging the LMS server at the beginning of the script, since the wifi connection does not come up immediately at startup, and the script would otherwise exit in error.<br><br>
+NOTE: in my case, it's a good thing I inserted a check & retry loop on pinging the LMS server at the beginning of the script, since the wifi connection does not come up immediately at startup, and the script would otherwise exit in error.
 
 Final touch: since at least one of the client pi is installed in my attic, I wanted to be able to power-cycle it in case of errors. To achieve this, I just plugged the pi power supply on a Z-Wave relay, that can be turned off/on remotely. See [ZwaveHomeAutomation]({{ site.baseurl }}/pages/ZwaveHomeAutomation) project for details.
 
@@ -573,7 +573,7 @@ I added these two entries in `/etc/lirc/lircd.conf`, in the codes section:
 	KEY_START_ANNOUNCE              0x1234
 	KEY_END_ANNOUNCE                0x5678
 
-(note: this format only works if the lird.conf file does not use raw code format, i.e. if `-f` option was not used. I have not found an easy way to create dummy raw_codes AND be able to simulate them, but there's probably a way to do it...) <br><br>
+(note: this format only works if the lird.conf file does not use raw code format, i.e. if `-f` option was not used. I have not found an easy way to create dummy raw_codes AND be able to simulate them, but there's probably a way to do it...) 
 They are dummy entries not corresponding to any physical button on the remote, but will be used to simulate IR events from the command line, allowing gcalnotifier daemon to send requests to the audiocontroller as if they came from the remote control like the others. Consequently, I updated the pylirc `conf` file with these two entries:
 
 	begin
@@ -596,14 +596,14 @@ To simulate the reception of the two corresponding IR commands, use:
 	irsend simulate "0000000000004660 0 KEY_START_ANNOUNCE piremote"
 	irsend simulate "0000000000022136 0 KEY_END_ANNOUNCE piremote"
 
-(the key code must have exactly 16 digits and be written in decimal format)<br><br>
+(the key code must have exactly 16 digits and be written in decimal format)
 
 Finally, I modified the audio controller script to react to these two events:
 - when receiving "start_announce", mute the music (if required) and activate amplifier (if required e.g. if audio controller was "off") 
 - when receiving "end_announce", unmute the music (if required), and desactivate amplifier again (unless audio controller is still "on")
 
 ### Squeezelite robustness workaround
-I encountered an issue where the audio controller would stop working correctly after a few hours. The problem turned out to be in squeezelite, since the rest of the controller was still responding correctly, and just restarting the squeezelite daemon was fixing the issue. It might be related to [this](http://code.google.com/p/squeezelite/issues/detail?id=17), especially since I only encountered this issue in the setup where audio output is shared (my other setups based on the same squeezelite with exclusive access to the sound output do not show this problem). But anyway since there was no clue in squeezelite logs as to what the problem might be, I gave up and first implemented a simple workaround: restarting the local squeezelite client every time the audio controller is turned on. <br><br>
+I encountered an issue where the audio controller would stop working correctly after a few hours. The problem turned out to be in squeezelite, since the rest of the controller was still responding correctly, and just restarting the squeezelite daemon was fixing the issue. It might be related to [this](http://code.google.com/p/squeezelite/issues/detail?id=17), especially since I only encountered this issue in the setup where audio output is shared (my other setups based on the same squeezelite with exclusive access to the sound output do not show this problem). But anyway since there was no clue in squeezelite logs as to what the problem might be, I gave up and first implemented a simple workaround: restarting the local squeezelite client every time the audio controller is turned on. 
 
 However, additional investigation showed that this robustness issue was apparently due to the use of the shared sound output through alsa's dmix. If I turned off this sharing configuration, with the DAC being exclusively allocated to squeezelite, the setup would run A-OK for days. Since I really wanted to keep the ability to host both this music player and the calendar audio notifier on the same raspberry, I finally chose a brutal workaround: using two DACs and mixing their outputs in HW.
 
@@ -611,7 +611,7 @@ However, additional investigation showed that this robustness issue was apparent
 
 Such a simple passive HW mixing obviously has one downside: volume loss at the output. However, since in this particular setup the output of the DACs goes to an amplifier, in the end their is more than enough gain in the amplifier to compensate for that loss, so all is good.
 
-***Note***: you will probably want to set the output volume of both DACs to the same volume, for proper consistent sound mixing. This is done through `alsamixer` as usual, just press `F6` to select each DAC in turn.<br><br>
+***Note***: you will probably want to set the output volume of both DACs to the same volume, for proper consistent sound mixing. This is done through `alsamixer` as usual, just press `F6` to select each DAC in turn.
 
 Here is my finished setup:
 
@@ -655,7 +655,7 @@ I stumbled upon an intermittent robustness issue, where at random times the IR r
 
 So, something was causing background noise on the IR signal. I quickly found out that turning off the room lights made the problem disappear, and thought of ambient light interference on the IR sensor. However, this was quite unlikely since the IR receiver is designed with built-in ambient light filtering, and the IR signal modulation at 38 kHZ is also supposed to prevent such issues. 
 
-<br>In fact, it so happens that in the room where this setup is installed, the (LED) lights are controlled by a z-wave dimmer (see my [home automation project]({{ site.baseurl }}/pages/ZwaveHomeAutomation) for details), and that the dimmer module works by modulating the output power at a varying rate. With dimming level anywhere between 50% and 100%, the IR receiver picked up IR noise from this modulation, while setting the dimmer level below 50% made the interference disappear. Long story short, I finally just modified the configuration of the z-wave dimmer to set the max dimming level to below 50%, to avoid this weird interference phenomenon (note: this is done by adjusting parameter #12 *Maximum dimmer level control* in the configuration menu of the z-wave device). This also meant a lower max luminosity in the room, but in this specific case it was not a problem.
+In fact, it so happens that in the room where this setup is installed, the (LED) lights are controlled by a z-wave dimmer (see my [home automation project]({{ site.baseurl }}/pages/ZwaveHomeAutomation) for details), and that the dimmer module works by modulating the output power at a varying rate. With dimming level anywhere between 50% and 100%, the IR receiver picked up IR noise from this modulation, while setting the dimmer level below 50% made the interference disappear. Long story short, I finally just modified the configuration of the z-wave dimmer to set the max dimming level to below 50%, to avoid this weird interference phenomenon (note: this is done by adjusting parameter #12 *Maximum dimmer level control* in the configuration menu of the z-wave device). This also meant a lower max luminosity in the room, but in this specific case it was not a problem.
 
 
 ### Misc  
@@ -713,15 +713,8 @@ I'd like to leverage the newly added audio capabilty in each equipped room for:
 
 * for once, everything initially went very smoothly: IR remote control with LIRC is a breeze to setup and use, the pi is easy as ever to setup, and controlling the audio amplifier through I2C and GPIOs worked the first time.
 * there were however a few hiccups after a while:
-
 	1. The squeezelite robustness issue & Z-wave module interference mentionned above.
 	2. I did struggle to get a (very) stable wifi configuration. Refer to [this page]({{ site.baseurl }}/pages/RaspberryPiTipsAndTricks) for various wifi-related tips on the raspi.
 	3. On one of the raspi, I got random short blank gaps during music playback, with no obvious error in squeezelite logs. I finally fixed those by using the `plughw` format in the selection of the audio output in suqeezelite startup script.
-	
 * I realized that sometimes, just pushing a button on a (physical) remote is way more convenient than grabbing you phone, unlocking it, navigating to a specific app, opening it, and finally clicking somewhere.
 * 2x20W amplification is plenty enough for small rooms, I never had to turn the volume all the way up, by far. A different approach with be required for the living room audio though.
-
-
-
-
-

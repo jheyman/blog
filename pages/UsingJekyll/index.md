@@ -66,7 +66,8 @@ Unfortunately, when these tags are inserted in <i>pages</i> (i.e. not blog posts
 
 I just modified a few of the plugin files to achieve my purpose:
 
-####site.rb
+#### site.rb
+
 In this file, posts tags AND pages tags are concatenated into a single list
 		
 	module Jekyll
@@ -88,7 +89,8 @@ In this file, posts tags AND pages tags are concatenated into a single list
 	  end
 	end
 
-####page.rb	
+#### page.rb	
+
 This hack just lets jekyll understand that for BOTH pages and posts, tags are to be read from a comma-separated list and converted to our custom `Jekyll::Tag` objects
 
 	module Jekyll
@@ -105,7 +107,8 @@ This hack just lets jekyll understand that for BOTH pages and posts, tags are to
 		end
 	end
 
-####tags.rb
+#### tags.rb
+
 The actual work of generating the tag index HTML page is done here. 
 
 	module Jekyll
@@ -150,3 +153,8 @@ In my specific context, there is one catch however: since Jekyll Bootstrap is ai
 Custom themes should be placed inside `_theme_packages` folder, then installed via:
 
 	rake theme:install name="THEME-NAME"
+
+### Editing a custom theme
+
+A cool multi-platform tool to compile LESS stylesheets I have been using is [**Koala**](http://koala-app.com/)
+

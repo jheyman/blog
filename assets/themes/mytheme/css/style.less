@@ -7,7 +7,8 @@
 @main-bg: #ffffff;
 @subtle-bg: @base01;
 @main-font-color: @base03;
-@accent-color: @green;
+@links-color: #2d2d2d;
+@footer-link-color: #77bb77;
 
 /* GLOBAL
 --------------------------------------------------------------------------------- */
@@ -19,17 +20,27 @@ html {
 /* LINK */
 a {
 	&:link {
-		color: @main-font-color;
+		color: @links-color;
 		text-decoration: none;
 	}
 	&:visited {
-		color: darken(@main-font-color, 10%);
+		color: @links-color;
 		text-decoration: none;
 	}
 	&:hover {
-		color: lighten(@main-font-color, 10%);
+		color: lighten(@links-color, 30%);
 		text-decoration: none;
 	}
+}
+
+li ul, li ol {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+img {
+	margin-top: @line-height / @em;
+	margin-bottom: @line-height / @em;
 }
 
 /* HIGHLIGHTER */
@@ -46,6 +57,12 @@ pre {
 	-webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.6);
 	-moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.6);
 	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+img.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 /* meta */
@@ -77,7 +94,7 @@ pre {
 			background: url('@{noise-100-90-5}');
 			background-repeat: repeat;
 			background-position: 0 0;
-			background-color: #BADA55;
+			background-color: #bcc9b7;
 			margin-bottom: @line-height / @em;
 			padding-top: (@line-height / @em);
 			padding-bottom: (@line-height / @em) ;
@@ -115,9 +132,9 @@ pre {
 		.entry-content:first-child h6 { margin-top: 0; } // Canceling header margin since there is margin on header
 
 		a {
-			&:link { border-bottom: 1px dotted @accent-color; }
-			&:visited { border-bottom: 1px dotted darken(@accent-color, 10%); }
-			&:hover { border-bottom: 1px dotted lighten(@accent-color, 10%); }
+			&:link { border-bottom: 1px dotted @links-color; }
+			&:visited { border-bottom: 1px dotted darken(@links-color, 10%); }
+			&:hover { border-bottom: 1px dotted lighten(@links-color, 10%); }
 		}
 
 		blockquote {
@@ -151,6 +168,7 @@ pre {
 			margin-left: auto;
 			margin-right: auto;
 		}
+
 		img.left { margin-right: 16px; }
 		img.right { margin-left: 16px; }
 
@@ -293,15 +311,15 @@ pre {
 	padding-bottom: @line-height / @em;
 	a {
 		&:link {
-			color: @accent-color;
+			color: @footer-link-color;
 			border: 0;
 		}
 		&:visited {
-			color: darken(@accent-color, 10%);
+			color: darken(@footer-link-color, 10%);
 			border: 0;
 		}
 		&:hover {
-			color: lighten(@accent-color, 10%);
+			color: lighten(@footer-link-color, 10%);
 			border: 0;
 		}
 	}

@@ -6,7 +6,7 @@ tags: android, widget, photo
 ---
 {% include JB/setup %}
 
-I wanted to have a very simple homescreen widget for displaying pictures, and soon came to the conclusion that every single such app on the Android store was either a huge overkill for this simple need, or looked suspicious, or buggy, or all of that at the same time. So I rolled my own.<br><br>
+I wanted to have a very simple homescreen widget for displaying pictures, and soon came to the conclusion that every single such app on the Android store was either a huge overkill for this simple need, or looked suspicious, or buggy, or all of that at the same time. So I rolled my own.<br>
 
 * TOC
 {:toc}
@@ -31,7 +31,7 @@ I happen to have a web server already running on a raspberry pi for oher purpose
 
 ##### getRandomImagePath
 
-The purpose of this script is to randomly pick one image present somewhere under a specified base directory, and return its full path, its size, and the image orientation from the EXIF data.<br><br>
+The purpose of this script is to randomly pick one image present somewhere under a specified base directory, and return its full path, its size, and the image orientation from the EXIF data.<br>
 
 **Notes**: 
 
@@ -65,7 +65,7 @@ The widget graphical layout consists of:
 	* a `RelativeLayout` containing a `TextView` to display the image path & name, and an `ImageView` for the email icon.
 	* one `ImageView` to receive the bitmap 
 * around this, a `RelativeLayout` containing the above layout and a `ProgressBar`, that will be invisible by default, and made visible when loading is in progress. This way, the progress bar is layered on top of the rest of the widget
-<br><br>
+<br>
 
 The `AndroidManifest.xml` contains the minimal setup required for a homescreen widget, and refers to the two main classes:
 
@@ -75,7 +75,7 @@ PhotoFrameWidgetProvider class handles the APP_UPDATE events that are triggered 
 
 ##### PhotoFrameWidgetService
 
-This service performs a first HTTP GET request on a remote server to get the name and size of an image picked randomly by the server, and then performs a second GET request to receive the image data itself. The received data (from a remote image file e.g. PNG, JPG, ...) is decoded into a Bitmap, which is then set to fill the layout's `ImageView`. <br><br>
+This service performs a first HTTP GET request on a remote server to get the name and size of an image picked randomly by the server, and then performs a second GET request to receive the image data itself. The received data (from a remote image file e.g. PNG, JPG, ...) is decoded into a Bitmap, which is then set to fill the layout's `ImageView`. <br>
 
 **Notes**: 
 
@@ -84,13 +84,13 @@ This service performs a first HTTP GET request on a remote server to get the nam
 * since even downsampled images might still be too big, we first check for available memory before decoding resampled image.
 * the **progress bar** is initially invisible: whenever onUpdate is called, is becomes visible, and is made invisible again upon completion of the image reloading service execution. 
 * the **orientation** of the image (gathered from its EXIF data by the server) is taken into account to rotate it before display, so that it always shows heads-up.
-* I also experimented with doing subsampling and rotation on server side to spare network bandwidth, but it turns out that in my case it was much slower than doing it on the client side (the server running on a raspberry pi model B).<br><br>
+* I also experimented with doing subsampling and rotation on server side to spare network bandwidth, but it turns out that in my case it was much slower than doing it on the client side (the server running on a raspberry pi model B).<br>
 
 Sending the photo as an email attachment boils down to sending an ACTION_SEND intent, with the content of the photo filled into the EXTRA_STREAM field. Whatever email client happens to be installed on the device	will receive this intent and handle it.
 
 ### Result
 
-Here is a screenshot of the widget running, installed on my [HomeHub]({{ site.baseurl }}/pages/HomeHubTablet) tablet (that happens to have a black blackground)
+Here is a screenshot of the widget running, installed on my [HomeHub]({{ site.baseurl }}/pages/HomeHubTablet) tablet (that happens to have a black background)
 
 ![screenshot]({{ site.baseurl }}/assets/images/PhotoFrameWidget/screenshot.png)
 

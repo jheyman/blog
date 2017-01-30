@@ -6,7 +6,7 @@ tags: raspberry pi, SIP, PBX, Asterisk
 ---
 {% include JB/setup %}
 
-After deploying a multi-room audio system at home (see [here]({{ site.baseurl }}/pages/MultiRoomHomeAudio)), I figured it would be interesting to leverage the installed raspberry pis as a way to stream voice from room to room ("diner's ready", without having to shout). <br><br>
+After deploying a multi-room audio system at home (see [here]({{ site.baseurl }}/pages/MultiRoomHomeAudio)), I figured it would be interesting to leverage the installed raspberry pis as a way to stream voice from room to room ("diner's ready", without having to shout). <br>
 
 * TOC
 {:toc}
@@ -112,6 +112,3 @@ A dialplan must be configured in `extensions.conf`. Here is the one I used:
 ### Python intercom management script 
  TODO
 
-### Notes & Lessons learned
-
-* xxx

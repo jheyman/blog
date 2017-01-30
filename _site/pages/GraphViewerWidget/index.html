@@ -42,12 +42,13 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>After developing the <a href="http://jheyman.github.io/blog/pages/WirelessWaterMeter">wireless water meter</a>, I wanted to have an associated graphical front-end to visualize the water usage history. The obvious choice for my context was to develop an Android-based application so as to be able to integrate this graphical viewer in our <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">home hub tablet</a>. As for other applications already hosted on this tablet (e.g. <a href="http://jheyman.github.io/blog/pages/PostitListWidget">PostitListWidget</a> or <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">ShoppingListWidget</a>), I decided to implement this viewer as a widget, not a regular android app. This makes things significantly more complex to develop, but this is balanced by the convenience to have all information available at all times on a unique screen (no need to explicitly launch/exit an application manually), which I think makes more sense for a screen on the wall.<br /><br /></p>
+<p>After developing the <a href="http://jheyman.github.io/blog/pages/WirelessWaterMeter">wireless water meter</a>, I wanted to have an associated graphical front-end to visualize the water usage history. The obvious choice for my context was to develop an Android-based application so as to be able to integrate this graphical viewer in our <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">home hub tablet</a>. As for other applications already hosted on this tablet (e.g. <a href="http://jheyman.github.io/blog/pages/PostitListWidget">PostitListWidget</a> or <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">ShoppingListWidget</a>), I decided to implement this viewer as a widget, not a regular android app. This makes things significantly more complex to develop, but this is balanced by the convenience to have all information available at all times on a unique screen (no need to explicitly launch/exit an application manually), which I think makes more sense for a screen on the wall.<br /></p>
 
 <ul id="markdown-toc">
   <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
   <li><a href="#data-server" id="markdown-toc-data-server">Data server</a></li>
-  <li><a href="#data-logger" id="markdown-toc-data-logger">Data logger</a>    <ul>
+  <li><a href="#data-logger" id="markdown-toc-data-logger">Data logger</a></li>
+  <li><a href="#android-widget" id="markdown-toc-android-widget">Android widget</a>    <ul>
       <li><a href="#android-manifest" id="markdown-toc-android-manifest">Android manifest</a></li>
       <li><a href="#widget-layout" id="markdown-toc-widget-layout">Widget layout</a></li>
       <li><a href="#graphviewerwidgetprovider" id="markdown-toc-graphviewerwidgetprovider">GraphViewerWidgetProvider</a></li>
@@ -56,6 +57,7 @@
       <li><a href="#settingsactivity" id="markdown-toc-settingsactivity">SettingsActivity</a></li>
     </ul>
   </li>
+  <li><a href="#results" id="markdown-toc-results">Results</a></li>
   <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
 </ul>
 
@@ -68,7 +70,7 @@
 <ul>
   <li>a <strong>data logger</strong> (the wireless water meter from <a href="http://jheyman.github.io/blog/pages/WirelessWaterMeter">this project</a>), modified to send its data to a remote data server.</li>
   <li>a <strong>data server</strong> to store this incoming data from the logger.</li>
-  <li>the <strong>android widget</strong> to get a requested subset of data from the server, and display it on screen.<br /><br /></li>
+  <li>the <strong>android widget</strong> to get a requested subset of data from the server, and display it on screen.<br /></li>
 </ul>
 
 <p>I chose to host these three functions in three separate devices, that were already part of my home setup:</p>
@@ -76,7 +78,7 @@
 <ul>
   <li>the data logger runs on a dedicated raspberry Pi, within radio range of the watermeter.</li>
   <li>the data server runs on my main raspberry Pi.</li>
-  <li>the data viewer widget runs on the android wall tablet.<br /><br /></li>
+  <li>the data viewer widget runs on the android wall tablet.<br /></li>
 </ul>
 
 <p>Below is the overall implementation logic (don’t freak out):</p>
@@ -115,7 +117,7 @@ def remoteLog(valueToLog):
 
 <p>Another source of data is a python script performing a basic monitoring of my LAN devices ping status (nothing noteworthy, it just pings a predefined list of devices and logs the result in the data server, logging 1.0 for a successful ping and 0.0 for a failed ping (the source code is <a href="https://github.com/jheyman/HealthMonitor">here</a>)</p>
 
-<p>### Android widget</p>
+<h3 id="android-widget">Android widget</h3>
 
 <p>Preliminary notes:</p>
 
@@ -223,7 +225,7 @@ def remoteLog(valueToLog):
 <pre><code>SELECT * FROM homelogdata WHERE time &gt; now - [delay]h
 </code></pre>
 
-<p>effectively returning all entries between [delay] hours ago and the current time.<br /><br /></p>
+<p>effectively returning all entries between [delay] hours ago and the current time.<br /></p>
 
 <p>The URL for a request of the last 3 days, would for example look like this:</p>
 
@@ -272,10 +274,11 @@ def remoteLog(valueToLog):
 &lt;/preference-headers&gt;
 </code></pre>
 
-<p>which references a single preference header, implemented by the <code>GraphSettingsFragment</code> in the code. <br /><br />
-Finally, the retrieved settings values are managed in a <code>GraphSettings</code> class used in the rest of the code.</p>
+<p>which references a single preference header, implemented by the <code>GraphSettingsFragment</code> in the code.</p>
 
-<p>### Results</p>
+<p>Finally, the retrieved settings values are managed in a <code>GraphSettings</code> class used in the rest of the code.</p>
+
+<h3 id="results">Results</h3>
 
 <p>Below is a capture of the android widget, showing the daily water consumption (in blue), the specific water consumption in predefined time slots (in purple), and the view of ping statuses of the various raspberry pi around the house:</p>
 

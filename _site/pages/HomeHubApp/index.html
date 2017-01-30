@@ -1,0 +1,586 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Home automation hub Android app</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Home automation hub Android app" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Home automation hub Android app</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#structure" id="markdown-toc-structure">Structure</a></li>
+  <li><a href="#implementation" id="markdown-toc-implementation">Implementation</a>    <ul>
+      <li><a href="#top-level-layout" id="markdown-toc-top-level-layout">Top level layout</a></li>
+      <li><a href="#common-fragment-implementation" id="markdown-toc-common-fragment-implementation">Common Fragment implementation</a>        <ul>
+          <li><a href="#main-class" id="markdown-toc-main-class">Main class</a></li>
+          <li><a href="#service-class" id="markdown-toc-service-class">Service class</a></li>
+          <li><a href="#item-class" id="markdown-toc-item-class">Item class</a></li>
+        </ul>
+      </li>
+      <li><a href="#graph-viewer-fragment" id="markdown-toc-graph-viewer-fragment">Graph Viewer Fragment</a></li>
+      <li><a href="#photo-frame-fragment" id="markdown-toc-photo-frame-fragment">Photo Frame Fragment</a></li>
+      <li><a href="#z-wave-devices-control-fragment" id="markdown-toc-z-wave-devices-control-fragment">Z-Wave devices control Fragment</a></li>
+      <li><a href="#network-devices-monitor-fragment" id="markdown-toc-network-devices-monitor-fragment">Network devices monitor Fragment</a></li>
+      <li><a href="#weather--agenda-fragment" id="markdown-toc-weather--agenda-fragment">Weather &amp; Agenda Fragment</a>        <ul>
+          <li><a href="#weather-information" id="markdown-toc-weather-information">Weather information</a></li>
+          <li><a href="#calendar-events" id="markdown-toc-calendar-events">Calendar events</a></li>
+        </ul>
+      </li>
+      <li><a href="#music-player-fragment" id="markdown-toc-music-player-fragment">Music player Fragment</a>        <ul>
+          <li><a href="#album-database-query" id="markdown-toc-album-database-query">Album database query</a></li>
+          <li><a href="#info--controls" id="markdown-toc-info--controls">Info &amp; Controls</a></li>
+        </ul>
+      </li>
+      <li><a href="#shopping-list-fragment" id="markdown-toc-shopping-list-fragment">Shopping List Fragment</a></li>
+      <li><a href="#todo-list-fragment" id="markdown-toc-todo-list-fragment">Todo List Fragment</a></li>
+      <li><a href="#various-implementation-tips" id="markdown-toc-various-implementation-tips">Various implementation tips</a>        <ul>
+          <li><a href="#custom-text-font" id="markdown-toc-custom-text-font">Custom text font</a></li>
+          <li><a href="#exception-logger" id="markdown-toc-exception-logger">Exception logger</a></li>
+          <li><a href="#rounder-corners" id="markdown-toc-rounder-corners">Rounder corners</a></li>
+          <li><a href="#dynamically-measuring-view-dimensions" id="markdown-toc-dynamically-measuring-view-dimensions">Dynamically measuring View dimensions</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#source-code" id="markdown-toc-source-code">Source Code</a></li>
+  <li><a href="#todo-list" id="markdown-toc-todo-list">Todo list</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
+
+<h3 id="overview">Overview</h3>
+
+<p>A few years ago I installed a large touchscreen in the main entrance of our house, to centralize various information and provide access to some home automation features.
+The hardware setup has been quite stable so far:</p>
+
+<ul>
+  <li>a VSD220 <strong>display with touchscreen</strong>, running Android (described <a href="http://jheyman.github.io/blog/pages/HomeHubTablet">here</a>)</li>
+  <li>an <strong>IR sensor</strong> used to detect when someone walks by the display, and wake it up from sleep mode (described <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake">here</a>)</li>
+</ul>
+
+<p>But the software application side has changed a lot over time, based on experience from actual day-to-day usefulness of the various features. The one requirement that never changed so far is to have all information &amp; controls available on a single page/screen, with no need to navigate anywhere else. The content shown and implementation is what changed most over time. I initially went for the approach to implement individual homescreen widgets, and place them all on one page. Links to the implementations of these individual widgets is included in (<a href="http://jheyman.github.io/blog/pages/HomeHubTablet">here</a>)</p>
+
+<p>But over time I encountered two issues with this approach:</p>
+
+<ul>
+  <li>
+    <p>the (OLD!) Android version installed on the VSD220 is 4.0.5, and on this device at least, happens to leave quite a lot of screen real estate inaccessible (yellow areas below) to homescreen widgets:
+<img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/screenshot_spacelost.png" alt="Space lost" /></p>
+  </li>
+  <li>
+    <p>the use of many individual homescreen widgets puts a heavy load on the memory and the processor, which may be fine on a decent smartphone, but makes my 2013 VSD220 display struggle to keep up.</p>
+  </li>
+</ul>
+
+<p>Overall, the result was no as robust as I needed it to be. So I decided to reuse most of the code from these individual widgets, and integrate them into a single fullscreen application.</p>
+
+<p>Here is a screenshot of the resulting app:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/screenshot.png" alt="Screenshot" /></p>
+
+<h3 id="structure">Structure</h3>
+
+<p>The app currently includes the following features:</p>
+
+<ul>
+  <li>a <strong>graph viewer</strong>, showing water consumption and ping history from home network devices</li>
+  <li>a <strong>photo frame</strong>, that displays a randomly picked image from our NAS</li>
+  <li>a <strong>weather information &amp; agenda</strong> for the next few days</li>
+  <li>a <strong>music player</strong>, that controls music streaming in the living room</li>
+  <li>a <strong>shopping list</strong> (which content is also accessible remotely)</li>
+  <li>a prioritized <strong>TODO list</strong></li>
+  <li>a <strong>Z-wave devices status &amp; control</strong></li>
+  <li>a <strong>network devices status</strong> monitor</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/overallstructure.png" alt="Structure" /></p>
+
+<hr />
+
+<h3 id="implementation">Implementation</h3>
+
+<p>The app is mostly a front-end to many external resources, accessed over Wifi from the VSD220:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/homehubapp_context.png" alt="Context" /></p>
+
+<ul>
+  <li>the <strong>HomeDataLogging database</strong> stored on the NAS is documented <a href="http://jheyman.github.io/blog/pages/HomeDataLoggingServer">here</a>, and used by both the <a href="http://jheyman.github.io/blog/pages/WirelessWaterMeter">wireless water meter</a> and the <a href="https://github.com/jheyman/HealthMonitor">Ping monitor</a></li>
+  <li>the web interface (PHP) to the <strong>Photo database</strong> is described in the <a href="http://jheyman.github.io/blog/pages/PhotoFrameWidget">original photo frame widget</a> page</li>
+  <li>the web interface to the <strong>Z-wave server</strong> is described in the <a href="http://jheyman.github.io/blog/pages/ZWaveWidget">original z-wave widget</a> page, though the code was refactored in the process.</li>
+  <li>the web interface (PHP) to the <strong>Shopping list database</strong> is described in the <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">original shopping list widget</a> page, and the 
+access to the <strong>Todo list database</strong> is very similar.</li>
+  <li>the music player interfaces with an external <strong>Logitech Media Server</strong>, that accesses music files on the NAS</li>
+  <li>the <strong>weather info</strong> is retrieved through the OpenWeatherMap web API, and the <strong>agenda events</strong> are retrieved through the Google Calendar API</li>
+</ul>
+
+<h4 id="top-level-layout">Top level layout</h4>
+
+<p>Each individual feature is package as an Android <code>Fragment</code>, that has its own internal layout definition. All fragments are assembled into the overall application layout with the following structure:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/homehubapp_detailedlayout.png" alt="DetailedLayout" /></p>
+
+<p>Even though <code>Fragments</code> are mostly useful when dealing with responsive/dynamically reconfigurable layouts, I find them useful to manage a complex layout hierarchy.</p>
+
+<p>Relative <strong>sizing</strong> of the areas is adjusted mostly through the <code>layout_weight</code> attributes of each layout level.</p>
+
+<hr />
+
+<h4 id="common-fragment-implementation">Common Fragment implementation</h4>
+
+<p>Each Fragment is implemented around a common baseline:</p>
+
+<h5 id="main-class">Main class</h5>
+
+<p>Deriving from <code>Fragment</code> base class, it inflates the specific fragment layout inside the view:</p>
+
+<pre><code>@Override
+public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+    super.onCreateView(inflater, container, savedInstanceState);
+    return inflater.inflate(R.layout.[fragment_name]_layout, container, false);
+}</code></pre>
+
+<p>The class embeds a self-refresh mechanism for the Fragment, based on a <code>Handler</code> relaunching a <code>Runnable</code> function at regular time intervals:</p>
+
+<pre><code>public Handler handler = new Handler();
+private static int REFRESH_DELAY = 60000;
+
+Runnable refreshView = new Runnable()
+{
+    @Override
+    public void run() {
+        refresh();
+        handler.postDelayed(this, REFRESH_DELAY);
+    }
+};
+
+@Override
+public void onActivityCreated(Bundle savedInstanceState) {
+
+    [...]
+    handler.post(refreshView);
+    [...]
+}</code></pre>
+
+<p>It also implements a <code>BroadcastReceiver</code>, and its <code>onReceive</code> function, that will manage all incoming <code>Intents</code></p>
+
+<h5 id="service-class">Service class</h5>
+
+<p>All long-running actions of the Fragment (e.g. HTTP requests to remote servers) are executed in the context of a specific <code>IntentService</code>, i.e. as a background action to avoid blocking the UI thread. Upon completion of the background action, the service class sends a specific <code>Intent</code> back to the main class to notify of action completion.</p>
+
+<h5 id="item-class">Item class</h5>
+
+<p>In several of the Fragments, <code>ListView</code> objects are used, and specific classes implemented the items that will populate these lists.</p>
+
+<hr />
+
+<h4 id="graph-viewer-fragment">Graph Viewer Fragment</h4>
+
+<p>The graph viewer fragment is a direct adaptation of my <a href="http://jheyman.github.io/blog/pages/GraphViewerWidget">original graph viewer homescreen widget</a>, with some clean-up of the code that was specific to homescreen widget mechanics. It gets  data by querying my HomeData <strong>InfluxDB</strong> database, for the last XX hours.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/graphviewer.png" alt="GraphViewer" /></p>
+
+<hr />
+
+<h4 id="photo-frame-fragment">Photo Frame Fragment</h4>
+
+<p>The photo frame fragment is a direct adaptation of my <a href="http://jheyman.github.io/blog/pages/PhotoFrameWidget">original photo frame homescreen widget</a>, with some clean-up of the code that was specific to homescreen widget mechanics. It accesses the NAS shared photo folder, randomly picks a photo file, and displays it. The photo is automatically refreshed every minute.</p>
+
+<p>The envelope icon allows to send the current photo as an attachment in an email.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/photoframe.png" alt="Photoframe" /></p>
+
+<hr />
+
+<h4 id="z-wave-devices-control-fragment">Z-Wave devices control Fragment</h4>
+
+<p>The z-wave status &amp; control fragment is a direct adaptation of my <a href="http://jheyman.github.io/blog/pages/ZWaveWidget">original z-wave homescreen widget</a>, with some clean-up of the code that was specific to homescreen widget mechanics. It queries the remote Z-way server, gets the state of the each device, and updates the corresponding bitmap accordingly (active or inactive). Also, a click action is registered on each bitmap: when the user clicks on the bulb/plug icon, it sends a corresponding toggle command to the Z-way server to turn it on or off.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/zwavedevices.png" alt="ZWaveDevices" /></p>
+
+<hr />
+
+<h4 id="network-devices-monitor-fragment">Network devices monitor Fragment</h4>
+
+<p>The Network devices monitor fragment was created specifically for this app, it basically just shows the latest ping status of each predefined device, from the data already gathered by the Graph Viewer fragment from the Home database. Depending on the status retrieved, it updates the bitmap image accordingly to the green or red version.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/pingmonitor.png" alt="PingMonitor" /></p>
+
+<hr />
+
+<h4 id="weather--agenda-fragment">Weather &amp; Agenda Fragment</h4>
+
+<p>This fragment implements two features:</p>
+
+<ul>
+  <li>querying and showing the weather forecast for the next 5 days</li>
+  <li>querying and showing the calendar events for the next 5 days</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/weatheragenda.png" alt="Weather" /></p>
+
+<h5 id="weather-information">Weather information</h5>
+
+<p>The weather information is retrieved using the <a href="https://openweathermap.org/">Open Weather Map</a> API, with a free account.</p>
+
+<p>A simple POST request to the url <code>http://api.openweathermap.org/data/2.5/weather?q=[location]&amp;APPID=[accountAPI ID]</code> allows to get the 5-day forecast, in 3h steps. The returned JSON-formatted data is then parsed to create a <code>WeatherItem</code> for each 3h time step, which includes an ID corresponding to the OpenWeatherMap code for the forecasted weather, a temperature forecast, and a humidity forecast.</p>
+
+<p>The excellent Weather Icons set from <a href="https://github.com/erikflowers/weather-icons">https://github.com/erikflowers/weather-icons</a> is used, to get a bitmap corresponding to the weather ID.</p>
+
+<h5 id="calendar-events">Calendar events</h5>
+
+<p>The calendar events are retrieved from the device’s local calendar (which happens to be sync’ed to one of my gmail accounts) through a query to the Android <code>CalendarContract</code>:</p>
+
+<pre><code>String[] EVENT_PROJECTION = new String[]{
+        CalendarContract.Events.TITLE,
+        CalendarContract.Events.EVENT_LOCATION,
+        CalendarContract.Instances.BEGIN,
+        CalendarContract.Instances.END,
+        CalendarContract.Events.ALL_DAY};
+
+ContentResolver resolver = getContentResolver();
+Uri.Builder eventsUriBuilder = CalendarContract.Instances.CONTENT_URI.buildUpon();
+
+// get the next 5 days worth of events
+long timestamp_start = Utilities.getCurrentTimeStamp();
+long timestamp_end = timestamp_start + 5*24*60*60*1000;
+
+ContentUris.appendId(eventsUriBuilder, timestamp_start);
+ContentUris.appendId(eventsUriBuilder, timestamp_end);
+
+Uri eventUri = eventsUriBuilder.build();
+
+mDataCursor = resolver.query(eventUri, EVENT_PROJECTION, null, null, CalendarContract.Instances.BEGIN + " ASC");</code></pre>
+
+<p>The list of events for the day is then shown below the corresponding day of the weather forecast.</p>
+
+<hr />
+
+<h4 id="music-player-fragment">Music player Fragment</h4>
+
+<p>The music player is only just a front-end to a remote Logitech Media Server running in my main raspberry Pi, and to a Squeezelite client driving the audio in our living room.</p>
+
+<p>The app interacts with LMS using its command line interface (CLI) available over <strong>Telnet</strong>. LMS echoes back any incoming command, then providing result data (if any), and finally sending a newline character. The only catch is that potential parameters need to be URL-encoded, and returned data URL-decoded.</p>
+
+<p>A typical Telnet command to a LMS client includes the MAC address of the client followed by the command:</p>
+
+<pre><code>b8:27:eb:d4:00:99 title ?
+</code></pre>
+
+<p>which returns the echoed command and title of the song currently at the top of the playlist:</p>
+
+<pre><code>b8%3A27%3Aeb%3Ad4%3A00%3A99 title Sweet%20Home%20Chicago
+</code></pre>
+
+<h5 id="album-database-query">Album database query</h5>
+
+<p>Upon startup, the music player fragment queries LMS to get the full list of available albums:</p>
+
+<pre><code>b8:27:eb:d4:00:99 albums 0 999 tags:jla sort:artflow
+</code></pre>
+
+<p>the “tags:jla” option specifies to return artwork_track_id (j) and album_name (l) and artist name (a), and sorts returned list by artist.</p>
+
+<p>The album cover art can be retrieved from the server using the <code>artwork_track_id</code> value also returned (when available), through a request at the following address:</p>
+
+<pre><code>http://[LMS IP address]:[LMS port]/music/[artwork_track_id]/cover_[size]x[size].jpg?player=[MAC address]
+</code></pre>
+
+<p>The music player fragment stores the list of returned album info &amp; artwork, and randomly loads one of them.
+Later, when user clicks on the album cover image, a specific fullscreen Activity is started to display in a <code>GridView</code> the full list of available albums, and let the user select one:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/albumlist.png" alt="Album list" /></p>
+
+<h5 id="info--controls">Info &amp; Controls</h5>
+
+<p>The interface shows the currently selected album cover, artist name, album name, and current song, and has control icons that will send corresponding actions to the LMS.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/musicplayer.png" alt="Music player" /></p>
+
+<p>A click on the second icon pops-up the song list of the current album:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/songlist.png" alt="Song list" /></p>
+
+<hr />
+
+<h4 id="shopping-list-fragment">Shopping List Fragment</h4>
+
+<p>The shopping list fragment is a direct adaptation of my <a href="http://jheyman.github.io/blog/pages/ShoppingListWidget">original shopping list widget</a>, with some clean-up of the code that was specific to homescreen widget mechanics. The look &amp; feel of this fragment is not really consistent with other fragments on the page, but I kinda like it this way.</p>
+
+<p>Nothing fancy, this is a simple ListView populated with data from a remote SQLite database, with simple layout tricks to make it look like a paperpad.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/shoppinglist.png" alt="Shopping list" /></p>
+
+<hr />
+
+<h4 id="todo-list-fragment">Todo List Fragment</h4>
+
+<p>The Todo list fragment is a new take on my <a href="http://jheyman.github.io/blog/pages/PostitListWidget">original post-it list widget</a>, with a simpler ListView style display of the todo notes gathered from a remote SQLite database.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/todolist.png" alt="Todo list" /></p>
+
+<hr />
+
+<h4 id="various-implementation-tips">Various implementation tips</h4>
+
+<h5 id="custom-text-font">Custom text font</h5>
+
+<p>In my previous widget implementations, I took the hard path to using custom text fonts: rendering them manually at specific coordinates inside a bitmap. Silly me, it turns out there is a MUCH simpler way:</p>
+
+<ul>
+  <li>put a font file (e.g. TTF file) in the <code>assets\font</code> directory of the app project</li>
+  <li>then define a custom class derived from TextView using this font file:</li>
+</ul>
+
+<pre><code>public class CustomTextView extends TextView {
+
+	[...]
+
+    @Override
+    public void setTypeface(Typeface tf, int style) {
+        Typeface normalTypeface = Typeface.createFromAsset(getContext().getAssets(), [path to REGULAR font]);
+        Typeface boldTypeface = Typeface.createFromAsset(getContext().getAssets(), [path to BOLD font]);
+        Typeface italicTypeface = Typeface.createFromAsset(getContext().getAssets(), [path to ITALIC font]);
+
+        if (style == Typeface.BOLD) {
+            super.setTypeface(boldTypeface);
+        }
+        else if (style == Typeface.ITALIC) {
+            super.setTypeface(italicTypeface);
+        } else {
+            super.setTypeface(normalTypeface);
+        }
+    }
+
+}</code></pre>
+
+<p>The <code>CustomTextView</code> type can then be used in the app’s XML layout files, just like a regular <code>TextView</code>, e.g.:</p>
+
+<pre><code class="language-xml">&lt;com.gbbtbb.homehub.CustomTextView
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="custom font !"
+    android:textColor="#000000"
+/&gt;
+</code></pre>
+
+<h5 id="exception-logger">Exception logger</h5>
+
+<p>When the app is running on the VSD220, if something bad happens it may be difficult to figure out what went wrong, since android logs have a limited size and traces of the problem will likely be gone when the problem is detected. For lack of a good permanent logging system (someday, maybe) as a minimum measure I added a handler at application level that catches any unhandled exception, and logs the stack trace to a timestamped file for later analysis.</p>
+
+<pre><code>public class HomeHubApplication extends Application
+{
+    [...]
+
+    public void onCreate ()
+    {
+        loggingPath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString();
+        Log.i(TAG, "App crashes will be logged into " + loggingPath);
+
+        // All crash log code adapted from here: http://stackoverflow.com/questions/19897628/need-to-handle-uncaught-exception-and-send-log-file
+        Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
+        {
+            @Override
+            public void uncaughtException (Thread thread, Throwable e)
+            {
+                handleUncaughtException (thread, e);
+            }
+        });
+    }
+
+    [implementation of handleUncaughtException...]
+}</code></pre>
+
+<h5 id="rounder-corners">Rounder corners</h5>
+
+<p>All fragments in the app have round corners. This is achieved by creating a custom shape, stored under <code>res/drawable/[name].XML</code>, with content similar to this:</p>
+
+<pre><code class="language-xml">&lt;shape xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+    &lt;solid android:color="#FFFFFF"/&gt;
+    &lt;stroke android:width="2dip" android:color="#000000" /&gt;
+    &lt;corners android:radius="10dip"/&gt;
+    &lt;padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" /&gt;
+&lt;/shape&gt;
+</code></pre>
+
+<p>and then declaring the fragment’s layout background as being this shape:</p>
+
+<pre><code>android:background="@drawable/[name of the XML file]"
+</code></pre>
+
+<h5 id="dynamically-measuring-view-dimensions">Dynamically measuring View dimensions</h5>
+
+<p>In a few parts of the code, there is a need to determine the actual dimensions in pixels of a given View on the screen. Since layouts are rendered dynamically at startup, a safe way to read a View’s dimensions is to register a callback on the layout engine, that will be executed only once everything has been rendered:</p>
+
+<pre><code>ViewGroup parentLayout = ((ViewGroup) getView().getParent());
+parentLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onGlobalLayout() {
+
+        //dimensions could be measured here
+
+        // remove observer now
+        hsv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+        // It is now also safe to refresh the agenda itself, with correct dimensions
+        handler.post(refreshView);
+    }
+});</code></pre>
+
+<h3 id="source-code">Source Code</h3>
+
+<p>The whole source code for this app is available <a href="https://github.com/jheyman/HomeHub">here</a>, as an Android Studio project.</p>
+
+<h3 id="todo-list">Todo list</h3>
+
+<ul>
+  <li>robustify the heck out of the app, to gracefully handle any possible wrong inputs, network errors, low memory, so that it can run for months. Not quite the case yet.</li>
+  <li>improve the music player with features we’ll feel are most useful to us after using this version for a while</li>
+</ul>
+
+<h3 id="lessons-learned">Lessons learned</h3>
+
+<ul>
+  <li>Code for a regular Android app is SO much more straightforward than the nightmare of developing robust homescreen widgets on a low-end android device. This is refreshing…</li>
+  <li>OpenWeatherMap free API was quite simple to use, let’s hope it won’t break or turn into a paid scheme anytime soon.</li>
+  <li>Projects that I begin thinking “hey, I could maybe JUST repackage this existing code into a slightly better version” often turn out to become multi-weeks refactoring parties.</li>
+  <li>but mostly, so far I am quite pleased with the actual day to day value of the app.</li>
+</ul>
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/HomeHubApp/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

@@ -7,7 +7,7 @@ tags: android, widget, Z-Wave
 {% include JB/setup %}
 
 My home automation setup is based on Z-wave devices controlled by a Z-way server (see [here]({{ site.baseurl }}/pages/ZwaveHomeAutomation)). Even though there are nice UIs provided with Z-way, I wanted to have something minimalistic that would visible at all times, without the need to launch a specific app/URL. So I thought a little Android homescreen widget running on my [HomeHub]({{ site.baseurl }}/pages/HomeHubTablet) tablet would be nice.
-<br><br>
+<br>
  
 * TOC
 {:toc}
@@ -28,9 +28,9 @@ This allows me to have a visual status of 16 z-wave devices at once, and toggle 
 
 #### ZWaveWidgetProvider
 
-The first specificity is that the usual APP_UPDATE mechanism that serves to refresh homescreen widgets is not used in this project. The reason is that many Android versions put a lower limit to the possible refresh rate, mainly to save battery on mobile Android devices. I want my z-wave devices statuses to be refreshed very often, and my target usecase is a wall-mounted Android tablet, so I really don't care about battery-related constraints. So, I set `android:updatePeriodMillis` to 0 in the widget's definition file, and instead used a custom `Handler` with a `Runnable` function called every 2 seconds to refresh the widget.<br><br>
+The first specificity is that the usual APP_UPDATE mechanism that serves to refresh homescreen widgets is not used in this project. The reason is that many Android versions put a lower limit to the possible refresh rate, mainly to save battery on mobile Android devices. I want my z-wave devices statuses to be refreshed very often, and my target usecase is a wall-mounted Android tablet, so I really don't care about battery-related constraints. So, I set `android:updatePeriodMillis` to 0 in the widget's definition file, and instead used a custom `Handler` with a `Runnable` function called every 2 seconds to refresh the widget.<br>
 
-Only the very first `onUpdate` call is useful, to register the click callbacks on each device icon, and kick-off the background auto-refresh Runnable.<br><br>
+Only the very first `onUpdate` call is useful, to register the click callbacks on each device icon, and kick-off the background auto-refresh Runnable.<br>
 
 Since refreshing the widget involves performing HTTP requests (that could take an arbitrarily long time to complete), it gets done in a separate asynchronous `Service`. Also, when a user touch/click on a device is detected, a service is started to perform the device state toggle, for the same reasons.
 
@@ -57,9 +57,9 @@ This is the part that gets called every 2 seconds, to refresh the state of each 
 
 	http://[IP address of Z-way server]:[Z-way port]/ZWaveAPI/Data/[timestamp]
 
-The timestamp is provided in unix time format (seconds elasped since Jan 1st 1970). So, when refresh is called, it passes the (server-side) timestamp of the previous refresh call, and gets in return the list of all device states that have changed in the meantime. Sweet! And much more efficient than having to poll every device individually. In addition to the list of state changes, the returned data contains an `updateTime` field, that will be used during next refresh call. <br><br>
+The timestamp is provided in unix time format (seconds elasped since Jan 1st 1970). So, when refresh is called, it passes the (server-side) timestamp of the previous refresh call, and gets in return the list of all device states that have changed in the meantime. Sweet! And much more efficient than having to poll every device individually. In addition to the list of state changes, the returned data contains an `updateTime` field, that will be used during next refresh call. <br>
 
-The service then parses this returned data, and checks for each displayed device if a change happened. If it did, there will be an entry of the form `devices.xx.instances.yy.commandClasses.zz.data.level` in the data, where xx is the device Id, yy is the instance id within this device, and zz is the command class number (e.g. "38" for SwitchMultiLevel change)<br><br>
+The service then parses this returned data, and checks for each displayed device if a change happened. If it did, there will be an entry of the form `devices.xx.instances.yy.commandClasses.zz.data.level` in the data, where xx is the device Id, yy is the instance id within this device, and zz is the command class number (e.g. "38" for SwitchMultiLevel change)<br>
 
 For example, update data received after device 27 is switched on looks like this:
 
@@ -88,7 +88,7 @@ For example, update data received after device 27 is switched on looks like this
 	  "updateTime": 1471199878
 	}
 
-**Note**: for some weird reason, ONE of my Fibaro dimmers has its state changes sometimes notified to the server under a different/generic set of id/instance/cmdclass than its own. More precisely, state changes happening after explicit calls to the API are notified normally, while state changes happening when manually pushing this switch get notified with these other values. So I implemented a set of "alternate" values to look for, as a hackish workaround to cover both remotely-triggered and locally/physically-triggered changes in this wallswitch.<br><br>
+**Note**: for some weird reason, ONE of my Fibaro dimmers has its state changes sometimes notified to the server under a different/generic set of id/instance/cmdclass than its own. More precisely, state changes happening after explicit calls to the API are notified normally, while state changes happening when manually pushing this switch get notified with these other values. So I implemented a set of "alternate" values to look for, as a hackish workaround to cover both remotely-triggered and locally/physically-triggered changes in this wallswitch.<br>
 
 Since Z-way protocol is largely asynchronous, an important trick is to check the time ordering of `updateTime` and `invalidateTime` fields within the received notification: this allows to discard notification for state changes that are not valid anymore, because an update of the device state is in progress.
 
@@ -107,7 +107,7 @@ The Android widget source code is available [here](https://github.com/jheyman/zw
 
 ### Final integration
 
-Here is a screenshot of the widget running, installed on my [HomeHub]({{ site.baseurl }}/pages/HomeHubTablet) tablet (that happens to have a black blackground)
+Here is a screenshot of the widget running, installed on my [HomeHub]({{ site.baseurl }}/pages/HomeHubTablet) tablet (that happens to have a black background)
 
 ![screenshot]({{ site.baseurl }}/assets/images/ZWaveWidget/screenshot.png)
 

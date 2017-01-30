@@ -74,6 +74,14 @@
                 
                         
                         <item>
+                                <title>Home automation hub Android app</title>
+                                <description>An Android app as a comman center for home automation</description>
+                                <link>http://jheyman.github.io/blog/pages/HomeHubApp/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>ShoppingList android widget</title>
                                 <description>A custom shopping list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/ShoppingListWidget/</link>
@@ -269,6 +277,14 @@
                                 <title>Giant wall-mounted home tablet</title>
                                 <description>How to customize a smart display to use as a wall-mounted home tablet</description>
                                 <link>http://jheyman.github.io/blog/pages/HomeHubTablet/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Arduino tips and tricks</title>
+                                <description>Various arduino tips I keep forgetting about</description>
+                                <link>http://jheyman.github.io/blog/pages/ArduinoTipsAndTricks/</link>
                         </item>
                         
                 

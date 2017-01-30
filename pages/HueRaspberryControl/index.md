@@ -6,7 +6,7 @@ tags: raspberry pi, hue, lights
 ---
 {% include JB/setup %}
 
-This mini-project started when we got a Philips Hue Go light: I wanted to experiment with the associated developer API mostly out of curiosity, and quickly thought of a very simple application: turning on the Hue gradually in the morning at wake up time.<br><br>
+This mini-project started when we got a Philips Hue Go light: I wanted to experiment with the associated developer API mostly out of curiosity, and quickly thought of a very simple application: turning on the Hue gradually in the morning at wake up time.<br>
 
 * TOC
 {:toc}
@@ -18,9 +18,9 @@ This mini-project started when we got a Philips Hue Go light: I wanted to experi
 ![Overview]({{ site.baseurl }}/assets/images/HueRaspberryControl/overview.png)
 
 The Hue lighting system is based on a central control point (the Hue bridge) communicating with light devices over Zigbee. There is then an official iPhone/Android application to control lighting (via access to this bridge), which I do not care about in this context.
-I considered doing without the bridge and controlling the lights directly from the raspberry pi with a zigbee module, but I did not want to invest a lot of time hacking around with an undocumented protocol, and the cost of the official Hue bridge (~50 euros) is reasonable (unlike the price of the bulbs...) so I went the easy way, bought the official bridge, and therefore only had to learn about the official (and very well documented) Hue API.<br><br>
+I considered doing without the bridge and controlling the lights directly from the raspberry pi with a zigbee module, but I did not want to invest a lot of time hacking around with an undocumented protocol, and the cost of the official Hue bridge (~50 euros) is reasonable (unlike the price of the bulbs...) so I went the easy way, bought the official bridge, and therefore only had to learn about the official (and very well documented) Hue API.<br>
 
-The bridge is connected by Ethernet (only) to the home router/LAN, and implements a nice REST API over port 80.<br><br>
+The bridge is connected by Ethernet (only) to the home router/LAN, and implements a nice REST API over port 80.<br>
 
 The Hue Go (small portable Hue light with embedded battery) and Hue bridge 2.0 are shown below:
 
@@ -30,7 +30,7 @@ The Hue Go (small portable Hue light with embedded battery) and Hue bridge 2.0 a
 
 ### Setup
 
-The only thing I configured specifically is the IP address of the bridge. It gets its IP dynamically over DHCP, and there is then a UPnP discovery mechanism to find it. To simplify things, I assigned it a static IP address in my LAN, in my router's DHCP configuration. It can also be configured with a static IP address from the parameters section of the official control application, if needed.<br><br>
+The only thing I configured specifically is the IP address of the bridge. It gets its IP dynamically over DHCP, and there is then a UPnP discovery mechanism to find it. To simplify things, I assigned it a static IP address in my LAN, in my router's DHCP configuration. It can also be configured with a static IP address from the parameters section of the official control application, if needed.<br>
 
 On the raspberry pi, the `requests` library must be installed, it will enable very straightforward GET/PUT/POST HTTP requests to the bridge:
 
@@ -95,7 +95,7 @@ a GET request on :
 
 	http://[bridge IP address]/api/[username]/lights
 
-returns info on all connected lights.<br><br>
+returns info on all connected lights.<br>
 
 The state of a specific light can be accessed by performing a GET on :
 
@@ -118,7 +118,7 @@ The light color can be specified in a variety of ways, I selected the Hue/Satura
 * the **Hue** parameter is set using key `hue`, with a value....determined experimentally playing with the official app.
 * the **Saturation** parameter is set using key `sat` with a value from 0 to 254
 * the **Brightness** parameter is set using key `bri` with a value from 0 to 254
-* turning the light on or off is done using the `on` boolean parameter<br><br>
+* turning the light on or off is done using the `on` boolean parameter<br>
 
 Orange/Yellow example: 
 
@@ -153,6 +153,6 @@ I chose to implement a simple script performing a ramp-up of light brightness at
 
 	37 6 * * 1-5 cd /home/pi/hueraspberrycontrol && ./wakeup.py && cd -
 
-(trigs the scripts every day except saturday and sunday at 6:37am)<br><br>
+(trigs the scripts every day except saturday and sunday at 6:37am)<br>
 
 The code is available [here](https://github.com/jheyman/hueraspberrycontrol).

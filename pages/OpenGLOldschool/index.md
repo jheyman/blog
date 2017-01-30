@@ -6,7 +6,7 @@ tags: OpenGL, demo, C++
 ---
 {% include JB/setup %}
 
-While I was looking through my archives, I stumbled upon this old piece of code I did back in 2004, when I was experimenting with openGL programming. It renders a few simple effects that have an oldschool-PC-demo feel, and it brought back fond memories so I figured I would archive it properly, and make a video capture of it before it was too late (i.e. SW environments tend to change a lot over the course of a decade, so I may not be able to execute this piece of code a few years from now...)<br><br>
+While I was looking through my archives, I stumbled upon this old piece of code I did back in 2004, when I was experimenting with openGL programming. It renders a few simple effects that have an oldschool-PC-demo feel, and it brought back fond memories so I figured I would archive it properly, and make a video capture of it before it was too late (i.e. SW environments tend to change a lot over the course of a decade, so I may not be able to execute this piece of code a few years from now...)<br>
 
 * TOC
 {:toc}
@@ -38,11 +38,11 @@ And finally rising water with bubbles, as a (remote) tribute to the legendary [f
 
 ## Reviving the source code
 
-The implementation is in C++, using OpenGL for graphical rendering, and the BASS library for playing a soundtrack.<br><br>
+The implementation is in C++, using OpenGL for graphical rendering, and the BASS library for playing a soundtrack.<br>
 
-The source code is very poorly written, it has all sorts of "wow, I would never do it this way nowadays" parts, but it did put a smile on my face after 12 years (nostalgia!), so it deserves to end up in my github repo if only for that reason.<br><br>
+The source code is very poorly written, it has all sorts of "wow, I would never do it this way nowadays" parts, but it did put a smile on my face after 12 years (nostalgia!), so it deserves to end up in my github repo if only for that reason.<br>
 
-The code was originally developed in 2004 with whatever version of Visual Studio I had at that time. To rebuild it, I downloaded the latest free version of Visual Studio, i.e. Visual Studio Community 2015, and was pleasantly surprised that the automatic project migration worked just fine !<br><br>
+The code was originally developed in 2004 with whatever version of Visual Studio I had at that time. To rebuild it, I downloaded the latest free version of Visual Studio, i.e. Visual Studio Community 2015, and was pleasantly surprised that the automatic project migration worked just fine !<br>
 
 Only two settings were modified to get the code to build & run:
 

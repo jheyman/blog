@@ -27,7 +27,8 @@ Below is a set of notes to myself regarding various Linux tips and tricks, mainl
 
 --- 
 
-### Networking
+### Networking
+
 * To check which UDP and TCP ports are currently in use: `netstat -atun` and/or `(sudo) lsof -i`
 * To search for all IP addresses used in the local 192.168.0.xxx subnet: `nmap -sP 192.168.0.0/24`
 * To check the open ports on a specific IP address: `nmap 192.168.0.xxx`

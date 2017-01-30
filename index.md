@@ -23,6 +23,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
+  <td><div id="container"  style="height:300px;"><img src="{{ site.baseurl }}/assets/images/HomeHubApp/screenshot.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/HomeHubApp">HomeHub Android App</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
   <td><div id="container" style="height:200px;"><img src="{{ site.baseurl }}/assets/images/AndroidBackup/logo.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/AndroidBackup">Android charging & autobackup dock</a></td>
 </tr>
@@ -190,6 +197,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 <tr>
   <td><div id="container"><img src="{{ site.baseurl }}/assets/images/RaspberryPiTipsAndTricks/Raspilogo.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/RaspberryPiTipsAndTricks">Raspberry Pi Tips And Tricks</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container" style="height:100px;"><img src="{{ site.baseurl }}/assets/images/ArduinoTipsAndTricks/arduinologo.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/ArduinoTipsAndTricks">Arduino Tips And Tricks</a></td>
 </tr>
 </table>
 

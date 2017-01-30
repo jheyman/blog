@@ -6,7 +6,7 @@ tags: raspberry pi, influxdb, database
 ---
 {% include JB/setup %}
 
-For various projects I had the need of a centralized repository for logging data from multiple sensors at home. I initially cooked up a small SQLite database and associated PHP scripts to access it, but this turned out to be impractical and not scaling well to a large amount of logging data. I stumbled upon **InfluxDB**, which is a Time Series Database, i.e. a database optimized for storing and retrieving timestamped data. It is implemented in Go language (which does not matter much except during installation)<br><br>
+For various projects I had the need of a centralized repository for logging data from multiple sensors at home. I initially cooked up a small SQLite database and associated PHP scripts to access it, but this turned out to be impractical and not scaling well to a large amount of logging data. I stumbled upon **InfluxDB**, which is a Time Series Database, i.e. a database optimized for storing and retrieving timestamped data. It is implemented in Go language (which does not matter much except during installation)<br>
 
 InfluxDB is used to store values captured from various sensors and pushed to the database via HTTP POST requests. It also serves the HTTP GET requests from the display application(s).
 
@@ -116,7 +116,7 @@ By default, entries added to the database are kept forever. There is however an 
 ### Performance tests
 
 To verify influxDB performance for my target usecase, I created a database with artificially created entries, covering a period of 5 years with timestamps 5 minutes apart (i.e. more than 500.000 entries in the database)
-On my raspberry pi (model B), the query to retrieve the last 4 days worth of data returns in approximately **300ms**, which is fine with me.<br><br>
+On my raspberry pi (model B), the query to retrieve the last 4 days worth of data returns in approximately **300ms**, which is fine with me.<br>
 The test files for creating this test database and for measuring query time are available [here](https://github.com/jheyman/influxdb).
 
 ### Configuration
@@ -125,7 +125,7 @@ For my specific setup I modified a few configuration parameters:
 
 * the network port on which the Web user interface is available, changed from 8083 to 8085 (since 8083 conflicted with my Z-way-server installed on the same rasperry pi). 
 * the data storage location and WAL (Write-Ahead Logging) storage locations, modified to point to an external USB disk plugged on the pi (since relying on the Pi's internal flash to store the database would sooner or later have become a problem, both due to the growing size of the database and to the induced wearout on the flash memory).
-* Note that I had to add the option `umask=0000` in `etc/fstab` on the line mounting the USB disk, otherwise influxDB would report a permission denied error at startup (due to influxdb user not having the appropriate write permissions to this USB mount point).<br><br> 
+* Note that I had to add the option `umask=0000` in `etc/fstab` on the line mounting the USB disk, otherwise influxDB would report a permission denied error at startup (due to influxdb user not having the appropriate write permissions to this USB mount point).<br> 
 
 I archived my configuration file [here](https://github.com/jheyman/influxdb/blob/master/influxdb.conf).
 

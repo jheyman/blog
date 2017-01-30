@@ -6,7 +6,7 @@ tags: Microsoft, Visio, VBA, diagrams
 ---
 {% include JB/setup %}
 
-After a first experience with Visio automation (see [here]({{ site.baseurl }}/pages/VisioAutoCompute)) and some external motivation (thanks Kevin for the inspiration!), it was time to dig further down the rabbit hole of what VBA (among other languages) can bring to Visio to implement dynamic diagrams, and have fun along the way.<br><br>
+After a first experience with Visio automation (see [here]({{ site.baseurl }}/pages/VisioAutoCompute)) and some external motivation (thanks Kevin for the inspiration!), it was time to dig further down the rabbit hole of what VBA (among other languages) can bring to Visio to implement dynamic diagrams, and have fun along the way.<br>
 
 * TOC
 {:toc}
@@ -27,7 +27,7 @@ This little prototype simulates a process flow:
 
 ### User fields
 
-Object data are internally stored as Visio **shape data**, but I wanted a more direct way to modify configurable values than having to open the shape data menu, and edit the appropriate line. Also, while some shape data are intended to be modified by user, others are computation results intended to be displayed but not modified, and others still are shape data supporting the implementation itself that should not be modified manually.<br><br>
+Object data are internally stored as Visio **shape data**, but I wanted a more direct way to modify configurable values than having to open the shape data menu, and edit the appropriate line. Also, while some shape data are intended to be modified by user, others are computation results intended to be displayed but not modified, and others still are shape data supporting the implementation itself that should not be modified manually.<br>
 
 So two dedicated objects are available: one for user inputs:
 
@@ -56,7 +56,7 @@ Each flow has a name, and carries a given quantity of items between nodes.
 
 ![node]({{ site.baseurl }}/assets/images/VisioAutoFlow/node.png)
 
-Node are steps in the data flow, that process incoming flows to generate corresponding outgoing flows. For the sake of simplicity, this prototype only includes two trivial processing functions: summing and multiplying. <br><br>
+Node are steps in the data flow, that process incoming flows to generate corresponding outgoing flows. For the sake of simplicity, this prototype only includes two trivial processing functions: summing and multiplying. <br>
 
 In this example, two properties are summable along the flows (`cost` and `time`) and one property is multipliable along the path (`yield`). Also, the Node applies the `yield` factor to the incoming quantity of items, and propapates only the resulting number of items towards the outgoing flow.
 
@@ -90,9 +90,9 @@ Here is a more realistic example with chained nodes, multiple flows, and automat
 
 ### Dynamic diagram update
 
-Since all objects in the graph have associated data that can potentially impact the results, the difficulty is to make sure that everytime one data is modified (either by the user or automatically), adequate recomputations occur. The hard way to do this is to identify individual dependencies of each object's data and recompute dependent data upon modification, and the lazy way (which I chose, obviously) is just to recompute everything each time something changes. The performance is not as good, but I did not care too much about it in the context of this experimentation, and it simplifies the code a lot and the debugging a WHOLE lot. <br><br>
+Since all objects in the graph have associated data that can potentially impact the results, the difficulty is to make sure that everytime one data is modified (either by the user or automatically), adequate recomputations occur. The hard way to do this is to identify individual dependencies of each object's data and recompute dependent data upon modification, and the lazy way (which I chose, obviously) is just to recompute everything each time something changes. The performance is not as good, but I did not care too much about it in the context of this experimentation, and it simplifies the code a lot and the debugging a WHOLE lot. <br>
 
-So basically, everytime an object is added/deleted, a flow connected/disconnected from a shape, or a user data modified manually, a two-step recompute happens:<br><br>
+So basically, everytime an object is added/deleted, a flow connected/disconnected from a shape, or a user data modified manually, a two-step recompute happens:<br>
 
 - **Backtrace each endpoint**, looking for a valid/complete path back toward the associated flow's start point.
 - Now that valid data paths have been recomputed, **propagate items/data from each startpoint to its endpoint**, through the graph, applying the effects of Nodes included in the path. Updates are propagated along the flow, up to the final update which is the endpoint result data.
@@ -110,13 +110,13 @@ Also,
 
 ## VBA implementation
 
-I reused the baseline implementation from [this]({{ site.baseurl }}/pages/VisioAutoCompute) other project, so this is still using Visual Basic for Applications (VBA). All Visio-specific base principles (shape types, shape data, and how to programmatically use shape relationships to parse diagrams) are described there, so the information below is the part specific to this project.<br><br>
+I reused the baseline implementation from [this]({{ site.baseurl }}/pages/VisioAutoCompute) other project, so this is still using Visual Basic for Applications (VBA). All Visio-specific base principles (shape types, shape data, and how to programmatically use shape relationships to parse diagrams) are described there, so the information below is the part specific to this project.<br>
 
 I did a major refactoring of the code at the same time, to make it a little more structured, though it is still hobbyist-grade code and would probably make a seasoned VBA developer have a heart attack just by looking at it.
 
 ### Walking through connected shapes
 
-Even though Visio provides a `ConnectedShapes` functions that returns shapes connected to a given shape, but in my case to enumerate the connectors (flows) on a node, I used the `GluedShapes` function instead, filtering for 1D-shapes. <br><br>
+Even though Visio provides a `ConnectedShapes` functions that returns shapes connected to a given shape, but in my case to enumerate the connectors (flows) on a node, I used the `GluedShapes` function instead, filtering for 1D-shapes. <br>
 
 The next difficulty is to figure out the **direction** of the flow. Each visio connector has a "start" point and an "end" point, however the style of each end of the connector can be either nothing or an arrow (or some other style), so there could very well be an arrow on the "start" side and nothing on the end side. The code looks for other internal Visio properties to determine the direction of a connector with respect to a shape it is connected to.
 

@@ -6,9 +6,9 @@ tags: android, adb, rsync, backup
 ---
 {% include JB/setup %}
 
-One day I got tired of the mess of plugs and cables required to charge the three android devices we have at home. I also realized that I had no regular-enough backup routine, which would turn out to be a big problem one day. The common solution is to buy a multi-devices charger dock, and install some fancy backup App on the devices themselves, that could perform regular backups over Wifi.<br><br>
+One day I got tired of the mess of plugs and cables required to charge the three android devices we have at home. I also realized that I had no regular-enough backup routine, which would turn out to be a big problem one day. The common solution is to buy a multi-devices charger dock, and install some fancy backup App on the devices themselves, that could perform regular backups over Wifi.
 
-But I thought it would be fun to try and come up with a custom solution to plug all three devices on a single dock for nightly charging, and have it perform automatic backup of critical data behind the scenes, and not requiring wifi to be turned on or any specific app to be installed.<br><br>
+But I thought it would be fun to try and come up with a custom solution to plug all three devices on a single dock for nightly charging, and have it perform automatic backup of critical data behind the scenes, and not requiring wifi to be turned on or any specific app to be installed.
 
 * TOC
 {:toc}
@@ -25,6 +25,7 @@ So my target usecase dictates:
 * ability to perform incremental backup
 * ability to transfer backup data to NAS on local network
 * a casing that looks good enough to stay at all times on the kitchen bar countertop where we usually plug our devices
+
 
 ### Overview
 
@@ -69,7 +70,7 @@ I mounted a shared directory from my local NAS by editing `etc/fstab` and adding
 
 #### USB Charger/Hub
 
-Regular powered USB hubs only provide 500mA max per USB port, as per the USB specification. At this rate, it takes a long time to fully charge up a device, so I went for a powered USB hub that specifically provides charging capability, by providing ports compliant with the `Battery Charging (BC)` specification. <br><br>
+Regular powered USB hubs only provide 500mA max per USB port, as per the USB specification. At this rate, it takes a long time to fully charge up a device, so I went for a powered USB hub that specifically provides charging capability, by providing ports compliant with the `Battery Charging (BC)` specification. <br>
 Also, since I want this hub to stay on permanently, I stayed away from cheapest models and bought a decent 4-port USB 2.0 model from Plugable. Here it is, providing power to the Pi through the USB cable on the right, and connected to one android device through the USB cable on the left.  
 
 ![Hub]({{ site.baseurl }}/assets/images/AndroidBackup/hub_and_pi.png)
@@ -80,7 +81,7 @@ This 4-ports version will be just right to sync 3 devices + power the Pi.
 
 #### Using ADB with multiple devices
 
-`Android Debug Bridge` (adb) comes with the Android sdk, and is the cornerstone of command line debugging of a device connected over USB. I captured the instructions to compile it for Raspberry it [here]({{ site.baseurl }}/pages/AndroidAutoWake/#compile-adb).<br><br>
+`Android Debug Bridge` (adb) comes with the Android sdk, and is the cornerstone of command line debugging of a device connected over USB. I captured the instructions to compile it for Raspberry it [here]({{ site.baseurl }}/pages/AndroidAutoWake/#compile-adb).<br>
 
 When working with multiple android devices plugged to the same USB host, the `-s <deviceId>` option needs to be added to specify which device the adb command is addressed to.
 
@@ -91,7 +92,7 @@ Since I want to perform an incremental backup only, I use `rsync` to only get ne
 * push android rsync binary to the device: `adb -s <deviceId> push rsync.bin /data/local/tmp/rsync`
 * push rsync daemon config file to the device: `adb -s <deviceId> push rsyncd.conf /data/local/tmp`
 * make the binary executable on the device: `adb -s <deviceId> shell chmod 755 /data/local/tmp/rsync`
-* start the rsync daemon: `adb -s <deviceId> shell '/data/local/tmp/rsync --daemon --config=/data/local/tmp/rsyncd.conf --log-file=/data/local/tmp/rsync.log; sleep 1'`<br><br>
+* start the rsync daemon: `adb -s <deviceId> shell '/data/local/tmp/rsync --daemon --config=/data/local/tmp/rsyncd.conf --log-file=/data/local/tmp/rsync.log; sleep 1'`<br>
 
 Credits go to [this](http://ptspts.blogspot.fr/2015/03/how-to-use-rsync-over-adb-on-android.html) guy for these steps.
 
@@ -105,9 +106,9 @@ Note: if the device was locked with a pattern, one could use
 
 	adb shell input swipe <...>
 
-instead.<br><br>
+instead.<br>
 
-**Note**: I was not able to find a robust way to determine through adb if device is locked and requires unlocking or not....<br><br>
+**Note**: I was not able to find a robust way to determine through adb if device is locked and requires unlocking or not....<br>
 
 Also, all of this works only if screen responds to user interaction, i.e. is turned on. I determine screen status with :
 
@@ -125,7 +126,7 @@ and then turn it on if needed by simulating the POWER button:
 
 #### Backup Contacts
 
-For Contacts, things get much more difficult. Different Android versions use different locations for the Contacts database, which is not accessible externally on a non-rooted device anyway. I also happen to use multiple Google accounts on the same device, which makes things more complex. The most simple and robust way I found to get ALL contact information is to use the Contacts app itself to export the contacts to a single file on the SD card, and then get this file through adb. This is quite straightforward to do manually, but much harder to automate. But not to worry, adb provides the ability to simulate user taps on the screen, so we just have to note the coordinates of the appropriate touch points and replay them later.<br><br>
+For Contacts, things get much more difficult. Different Android versions use different locations for the Contacts database, which is not accessible externally on a non-rooted device anyway. I also happen to use multiple Google accounts on the same device, which makes things more complex. The most simple and robust way I found to get ALL contact information is to use the Contacts app itself to export the contacts to a single file on the SD card, and then get this file through adb. This is quite straightforward to do manually, but much harder to automate. But not to worry, adb provides the ability to simulate user taps on the screen, so we just have to note the coordinates of the appropriate touch points and replay them later.<br>
 
 To figure out what the touch coordinates should be, there is a nice option in the Developer options menu to display an overlay with X and Y coordinates whenever user touches the screen:
 
@@ -153,7 +154,7 @@ Once this remote operation is complete, a `Contacts.vcf` has been created on the
 
 #### Scripting it all
 
-The python script that sequences everything, reads params from a config file, and provides logging capability is archived [here](https://github.com/jheyman/androidbackup), along with the associated rsync binary and config file.<br><br>
+The python script that sequences everything, reads params from a config file, and provides logging capability is archived [here](https://github.com/jheyman/androidbackup), along with the associated rsync binary and config file.<br>
 
 The script is called every night at 3am by adding the following line to the Pi's crontab:
 
@@ -169,7 +170,7 @@ It is still a big mess of USB cables in there, so I ordered shorter USB cables w
 
 ![Case_out]({{ site.baseurl }}/assets/images/AndroidBackup/case_out.png)
 
-There you go, no more dangling cables, and under its inconpiscuous look it wakes up at 3am every night to take care of my precious photos & contacts.
+There you go, no more dangling cables, and under its inconspicuous look it wakes up at 3am every night to take care of my precious photos & contacts.
 
 ### Notes & Lessons learned
 

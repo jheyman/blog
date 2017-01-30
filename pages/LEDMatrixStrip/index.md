@@ -9,7 +9,7 @@ tags: LED, electronics, SPI, PCB, homemade, bluetooth
 This project started when I stumbled upon [these](http://www.ebay.fr/itm/1PCS-MAX7219-Dot-matrix-module-MCU-control-Display-module-DIY-kit-for-Arduino-/400552064450?pt=LH_DefaultDomain_0&hash=item5d42c375c2) dirt-cheap LED matrix modules on eBay. I had no real need for them, but the fact 
 that each module/kit came with its own MAX7219 chip made it more than worth the purchase anyway, since buying standalone MAX7219 is usually (much)
 more expensive than that. 3$ shipping cost included, hard to beat. So I bought 20 of those, and decided to combine them into a single display driven by 
-an Arduino board.<br><br>
+an Arduino board.<br>
 
 * TOC
 {:toc}
@@ -187,9 +187,9 @@ Since I needed a way to attach this bluetooth module to the rest of the LED stri
 On the Arduino software side, communication with the BT module is quite easy, since it is standard serial communication. Using the `Serial` built-in library allows to write/read characters to/from the module. In practive, the `serialEvent` callback function was implemented to handle data reception, and notify the main loop when new data is available. This serialEvent callback gets called (behind the scenes) after each the main loop execution. 
 
 I (arbitrarily) chose a string format `@<cmd>@<data>@` as the pattern that the arduino will try to decode while receiving individual bytes
-of data over this serial connection. A quick way to test that communication is ok and that the Arduino decodes the commands properly is to use the "BlueTerm" android application from a smartphone, and type in a string of this format.<br><br>
+of data over this serial connection. A quick way to test that communication is ok and that the Arduino decodes the commands properly is to use the "BlueTerm" android application from a smartphone, and type in a string of this format.<br>
 
-The full source code is available [here](https://github.com/jheyman/LEDmatrixstrip/blob/master/LEDMatrixStrip.ino).<br><br>
+The full source code is available [here](https://github.com/jheyman/LEDmatrixstrip/blob/master/LEDMatrixStrip.ino).<br>
 
 On the host side: 
 

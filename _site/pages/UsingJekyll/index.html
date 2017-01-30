@@ -106,8 +106,9 @@ Unfortunately, when these tags are inserted in <i>pages</i> (i.e. not blog posts
 
 <p>I just modified a few of the plugin files to achieve my purpose:</p>
 
-<p>####site.rb
-In this file, posts tags AND pages tags are concatenated into a single list</p>
+<h4 id="siterb">site.rb</h4>
+
+<p>In this file, posts tags AND pages tags are concatenated into a single list</p>
 
 <pre><code>module Jekyll
   class Site
@@ -129,8 +130,9 @@ In this file, posts tags AND pages tags are concatenated into a single list</p>
 end
 </code></pre>
 
-<p>####page.rb	
-This hack just lets jekyll understand that for BOTH pages and posts, tags are to be read from a comma-separated list and converted to our custom <code>Jekyll::Tag</code> objects</p>
+<h4 id="pagerb">page.rb</h4>
+
+<p>This hack just lets jekyll understand that for BOTH pages and posts, tags are to be read from a comma-separated list and converted to our custom <code>Jekyll::Tag</code> objects</p>
 
 <pre><code>module Jekyll
 	class Page
@@ -147,8 +149,9 @@ This hack just lets jekyll understand that for BOTH pages and posts, tags are to
 end
 </code></pre>
 
-<p>####tags.rb
-The actual work of generating the tag index HTML page is done here.</p>
+<h4 id="tagsrb">tags.rb</h4>
+
+<p>The actual work of generating the tag index HTML page is done here.</p>
 
 <pre><code>module Jekyll
   class MyTagIndex &lt; Page
@@ -194,6 +197,11 @@ end
 
 <pre><code>rake theme:install name="THEME-NAME"
 </code></pre>
+
+<h3 id="editing-a-custom-theme">Editing a custom theme</h3>
+
+<p>A cool multi-platform tool to compile LESS stylesheets I have been using is <a href="http://koala-app.com/"><strong>Koala</strong></a></p>
+
 
 				</div><!-- entry-content -->
 

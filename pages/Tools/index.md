@@ -6,7 +6,7 @@ tags: tools
 ---
 {% include JB/setup %}
 
-Below is a list of tools I use most frequently for DIY projects, with some feedback on their usefulness from my standpoint. First some basics that should probably be part of a starter's set, and then some nice to have stuff to make your DIY life easier.<br><br>
+Below is a list of tools I use most frequently for DIY projects, with some feedback on their usefulness from my standpoint. First some basics that should probably be part of a starter's set, and then some nice to have stuff to make your DIY life easier.<br>
 
 * TOC
 {:toc}

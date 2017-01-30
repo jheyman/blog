@@ -6,15 +6,15 @@ tags: Microsoft, Visio, VBA, diagrams
 ---
 {% include JB/setup %}
 
-I'm using Microsoft Visio quite often at work, and came to realize that it can do so much more than drawing nice diagrams. I was not aware of the very large developer community around Visio either.<br><br>
+I'm using Microsoft Visio quite often at work, and came to realize that it can do so much more than drawing nice diagrams. I was not aware of the very large developer community around Visio either.<br>
 
  Anyway, I had a need for:
 
 * **associating data to shapes** in my diagrams
 * performing **automatic data computation** within Visio, without having to export/import to/from an external tool
-* **displaying resulting data** directly on the diagram<br><br>
+* **displaying resulting data** directly on the diagram<br>
 
-My specific intent was to apply this to electronics/mechanical block diagrams to provide instant visual feedback about cost, power consumption, volume, and mass, as a function of what components were added/removed from the diagram, and how they where interconnected.<br><br>
+My specific intent was to apply this to electronics/mechanical block diagrams to provide instant visual feedback about cost, power consumption, volume, and mass, as a function of what components were added/removed from the diagram, and how they where interconnected.<br>
 
 * TOC
 {:toc}
@@ -25,7 +25,7 @@ My specific intent was to apply this to electronics/mechanical block diagrams to
 
 #### Overview
 
-The resulting sandbox I experimented with, as well as VBA implementation notes (in excruciating details, mostly as a memo to myself) are provided below.<br><br>
+The resulting sandbox I experimented with, as well as VBA implementation notes (in excruciating details, mostly as a memo to myself) are provided below.<br>
 
 ![Overview]({{ site.baseurl }}/assets/images/VisioAutoCompute/overview.png)
 
@@ -33,9 +33,9 @@ The resulting sandbox I experimented with, as well as VBA implementation notes (
 ![shape data]({{ site.baseurl }}/assets/images/VisioAutoCompute/component_shape_data.png)
 * **Connectors** link components with each other, and they each have one associated data: the number of physical signals carried by this link (think "number of individual wires") 
 ![custom field]({{ site.baseurl }}/assets/images/VisioAutoCompute/connector_shape_data.png)
-* **Containers** allow to group Components, e.g. to represent the electronics components being part of the same PCB.<br><br>
-* **Interfaces** are used to structure incoming/outgoing connectors to/from a container. They automatically count (and display) the number of connectors that are inside the container (think "PCB traces") and the number of connectors that are external (think "external cables/wires").<br><br>
-* **Local (container) totals** are boxes that automatically compute the sum of values of contained shapes, for the criteria that they track (i.e. cost,  mass, power, or volume).<br><br>
+* **Containers** allow to group Components, e.g. to represent the electronics components being part of the same PCB.<br>
+* **Interfaces** are used to structure incoming/outgoing connectors to/from a container. They automatically count (and display) the number of connectors that are inside the container (think "PCB traces") and the number of connectors that are external (think "external cables/wires").<br>
+* **Local (container) totals** are boxes that automatically compute the sum of values of contained shapes, for the criteria that they track (i.e. cost,  mass, power, or volume).<br>
 **Note**: I positioned these text boxes on the **edge** of the container, not inside (the container's perimeter is highlighted when a shape is about to be dropped on its edge). This way, the boxes are still part of the container, but it also ensures that they stay attached to the container's edge whenever it gets resized, which I think makes more sense for something showing data linked to the container's content.
 
 ![interface_drop_on_edge ]({{ site.baseurl }}/assets/images/VisioAutoCompute/interface_drop_on_edge.png)
@@ -54,13 +54,13 @@ The resulting sandbox I experimented with, as well as VBA implementation notes (
 
 #### Associating data to shapes
 
-The Professional version of Visio has a specific feature to simplify this usecase ("data graphics"), but I usually only have access to the Standard version, so I had to find a workaround. Fortunately, all versions of Visio provide a basic feature for associating user data to shapes. To access a specific shape's date, right-click on it => "Data" => **"Shape Data"**. Data of various types (integer, float, string, ...) can be created from there. <br><br>
+The Professional version of Visio has a specific feature to simplify this usecase ("data graphics"), but I usually only have access to the Standard version, so I had to find a workaround. Fortunately, all versions of Visio provide a basic feature for associating user data to shapes. To access a specific shape's date, right-click on it => "Data" => **"Shape Data"**. Data of various types (integer, float, string, ...) can be created from there. <br>
 
 ![shape data]({{ site.baseurl }}/assets/images/VisioAutoCompute/component_shape_data.png)
 
-In this example I manually added some cost/mass/power/volume shape data to a basic "component" shape.<br><br>
+In this example I manually added some cost/mass/power/volume shape data to a basic "component" shape.<br>
 
-Better yet, to apply a consistent set of data to multiple shapes, it is possible to create a shape data set: right-click on Shape Data window => **"Shape Data Sets"**.<br><br>
+Better yet, to apply a consistent set of data to multiple shapes, it is possible to create a shape data set: right-click on Shape Data window => **"Shape Data Sets"**.<br>
 
 In fact, these user-created data are only a small subset of the data associated to a shape: each shape also has by default a lot of built-in data that Visio uses to store information about the shape (geometry, content, format, ...). This whole set of  data is available in the **Shapesheet**, accessible from the `Developer` tab of the UI (you may need to customize the Ribbon to make this Developer tab visible):
 
@@ -70,12 +70,12 @@ My specific need was creating summary data for a set of shapes, based on the com
 
 #### Computing shape data
 
-The remaining part was then to find a way to compute container data, from the individual data of the shapes it contains. There are several ways to manipulate data programmatically in Visio:<br><br>
+The remaining part was then to find a way to compute container data, from the individual data of the shapes it contains. There are several ways to manipulate data programmatically in Visio:<br>
 
 * writing formulas directly within the **ShapeSheet**
 * **VBA** macros/procedures (Visual Basic for Applications)
 * **C#** code
-* and more...<br><br>
+* and more...<br>
 
 ShapeSheet formulas can be just fine for simple computations, but I chose VBA to have a bit more flexibility / readability.
 
@@ -84,7 +84,7 @@ ShapeSheet formulas can be just fine for simple computations, but I chose VBA to
 Sooner or later, it will be interesting to compute data for a shape based on what other/shapes are linked to it via Connectors. Visio has two important concepts:
 
 * A shape is **connected** to another shape when at least one connector exists between them
-* A connector endpoint can be **glued** to a shape<br><br>
+* A connector endpoint can be **glued** to a shape<br>
 
 For example:
 
@@ -101,7 +101,7 @@ The trick is to associate one shape data to these boxes, and then to insert a **
 
 ![custom field]({{ site.baseurl }}/assets/images/VisioAutoCompute/customfield.png)
 
-As a result, the box's text will now reflect its shape data value whenever if changes. <br><br>
+As a result, the box's text will now reflect its shape data value whenever if changes. <br>
 
 Another possible alternative would be to use **custom callouts**, also available in visio standard, and allowing to display shape data values.
 
@@ -128,16 +128,16 @@ They are leveraged as follows:
 * **EventList** is used to register customized event notifications
 * **Documents** collection is not accessed directly, but **Document** object is used to add an event hook executed when our document is opened to perform some initializations
 * **Pages** collection is not accessed directly, but the (current) **Page** object is used to declare event hooks on many events related to modifications of the shapes contained on the page
-* **Shapes** collection is used to lookup a particular shape based on its ID, and then **Shape** objects are used throughout the code to manipulate shape parameters and data<br><br>
+* **Shapes** collection is used to lookup a particular shape based on its ID, and then **Shape** objects are used throughout the code to manipulate shape parameters and data<br>
 
 Each Shape has, among other things:
 
 * **Cells**, arranged in **Rows** themselves arranged in **Sections**, they are the basic entities carrying shape information
 * **Connects** collection that is used to examine incoming/outgoing links to/from a specific shape
 * a **Name** (modifiable by the developer)
-* a unique **ID** set by the internal Visio engine<br><br>
+* a unique **ID** set by the internal Visio engine<br>
 
-**Note**: for historical reasons, shape are referred to as "Sheets", therefore shape names are created with the name `Sheet.xx`, with `xx` being their ID.<br><br>
+**Note**: for historical reasons, shape are referred to as "Sheets", therefore shape names are created with the name `Sheet.xx`, with `xx` being their ID.<br>
 
 So, in our example:
 
@@ -155,7 +155,7 @@ When manipulating shapes programmatically, it is important to note that their ar
 * Pages/Masters (`visTypePage`)
 
 I filter out everything else (like **Guides**, Visio's vertical/horizontal visual hints, or Bitmap images, or one othe many other types of shapes) from event callbacks to prevent unwanted effects. The complete list of Visio Shape types is available [here](https://msdn.microsoft.com/en-us/library/office/ff767768.aspx).
-<br><br>
+<br>
 Also, among regular Shapes, some are Containers, they are the ones with a non-null `ContainerProperties` object 
 
 #### Reading & writing shape data
@@ -170,11 +170,11 @@ Reading and writing from/to Cells therefore boils down to accessing these two pr
 	myShape.Cells("Prop.myPropName").Result
 	myShape.Cells("Prop.myPropName").Formula = "xyz"
 
-**Note**: the `Cells` accessor takes a string parameter (the name of the target cell), while the `CellSRC` accessor takes the section/row number of the target cell as input.<br><br>
+**Note**: the `Cells` accessor takes a string parameter (the name of the target cell), while the `CellSRC` accessor takes the section/row number of the target cell as input.<br>
 
-**Note**: for several properties in the Visio object model, two accessors are accessible: `<PropertyName>` and `<PropertyName>U`. The version with the appended "U" allows to access the property via the Universal name, that is localization-independent, while the version without the U uses the localized name.<br><br>
+**Note**: for several properties in the Visio object model, two accessors are accessible: `<PropertyName>` and `<PropertyName>U`. The version with the appended "U" allows to access the property via the Universal name, that is localization-independent, while the version without the U uses the localized name.<br>
 
-**Note**: a Cell's result value is stored as a string in parameter ResultStr, and its last parameter allows to specify how to cast this string into a specific unit/type of value. Available Visio **Units** are defined [here](https://msdn.microsoft.com/en-us/library/office/ff769148.aspx).<br><br>
+**Note**: a Cell's result value is stored as a string in parameter ResultStr, and its last parameter allows to specify how to cast this string into a specific unit/type of value. Available Visio **Units** are defined [here](https://msdn.microsoft.com/en-us/library/office/ff769148.aspx).<br>
 
 **Note**: Since Formula property is a string, sometime the syntax can get weird to actually use a string inside a formula. To avoid having to use confusing triple quotes, and easier way is to use `CHR(34)`, as in e.g.: 
 
@@ -186,7 +186,7 @@ Reading and writing from/to Cells therefore boils down to accessing these two pr
 
 #### Basic Event notification
 
-The internal Visio engine emits many different **Events** when manipulating a diagram. It is then possible from VBA code to register to some of these events, by declaring a hook/callback to be executed when the event occurs. Three steps are required:<br><br>
+The internal Visio engine emits many different **Events** when manipulating a diagram. It is then possible from VBA code to register to some of these events, by declaring a hook/callback to be executed when the event occurs. Three steps are required:<br>
 1) Use the `WithEvents` keyword to declare an object which events we want to be notified of. In this case, we want to track events occuring to the **Windows** object, and to the **Page** object
 
 	Dim WithEvents win As Visio.Windows
@@ -211,15 +211,15 @@ In practice I used the following event hooks:
 * **pg_ConnectionsAdded** is used to update Interface data when links are being made
 * **pg_ConnectionsDeleted** is used to update Interface data when links are being removed
 * **pg_ContainerRelationshipAdded** is used to detect when a shape is created in / moved in a container
-* **pg_ContainerRelationshipDeleted** is used to detect when a shape is removed / moved out of a container<br><br>
+* **pg_ContainerRelationshipDeleted** is used to detect when a shape is removed / moved out of a container<br>
 
-**Note**: Pro versions of Visio include a very useful *Event Monitor* tool, tracing all events occurring in realtime, so you can figure out which event to capture for a specific action. Since this tool is not available in the Standard version, I downloaded an evaluation version of Visio Professional, ran a few tests, identified the relevant events, then went back to developing in my Standard version. Browsing the reference documentation works too, but I'm lazy.<br><br>
+**Note**: Pro versions of Visio include a very useful *Event Monitor* tool, tracing all events occurring in realtime, so you can figure out which event to capture for a specific action. Since this tool is not available in the Standard version, I downloaded an evaluation version of Visio Professional, ran a few tests, identified the relevant events, then went back to developing in my Standard version. Browsing the reference documentation works too, but I'm lazy.<br>
 
 **Note**: the `BeforeSelectionDelete` event might have been useful to me, except it gets called *before* the selected shape gets deleted, and is therefore not a good place to trig recomputation of data: since the shape is not deleted yet, everything is still unchanged data-wise...therefore, the need for custom events.
 
 #### Custom Event notification
 
-For performance reasons, not all possible events are being managed by default by the Visio engine. For my example, I needed to have access to two of these special events: **onShapeDeleted** and **onBeforeShapeTextEdit**. It is a bit more complex than just the `WithEvents` declaration approach used for regular/default events. The required steps are:<br><br>
+For performance reasons, not all possible events are being managed by default by the Visio engine. For my example, I needed to have access to two of these special events: **onShapeDeleted** and **onBeforeShapeTextEdit**. It is a bit more complex than just the `WithEvents` declaration approach used for regular/default events. The required steps are:<br>
 
 1) Create a custom Event sink class, implementing the `IVisEventProc_VisEventProc`. Hence the presence of the **clsEventSink** VBA class in my project.
 
@@ -280,7 +280,7 @@ The displayed text on each connector is dynamically computed, based on the name 
 
 * we also capture the `CellChanged` event, and recompute the text in case the number of carried signals was changed by the user (from the shape data window)
 
-#### Automated coloring & counting
+#### Automated coloring & counting
 
 The color of Connectors and Interfaces in a given container are dynamically adjusted to the color of the container:
 
@@ -329,14 +329,14 @@ CellsSRC(visSectionCharacter, 0, visCharacterColor).FormulaU = ExternalConnector
 
 #### Navigating connectors
 
-As mentioned earlier, shapes can be **connected** to other shapes via connectors, and connectors can be **glued** to shapes' connection points. From a code standpoint,<br><br>
+As mentioned earlier, shapes can be **connected** to other shapes via connectors, and connectors can be **glued** to shapes' connection points. From a code standpoint,<br>
 
 * An array of IDs of shapes glued to a given shape is accessible through the `GluedShapes` function. Since I am mostly interested in counting connectors glued to an Interface shape, I used the `visGluedShapesIncoming1D` and `visGluedShapesOutgoing1D` filter codes to only look for these, and then merged both ID lists.
 
 <pre><code>arySourceIDs = shp.GluedShapes(visGluedShapesIncoming1D, "")
 aryTargetIDs = shp.GluedShapes(visGluedShapesOutgoing1D, "")</code></pre>
 
-* Similarly, the `ConnectedShapes` function returns an array of ID a shapes connected to the target shape.<br><br>
+* Similarly, the `ConnectedShapes` function returns an array of ID a shapes connected to the target shape.<br>
 
 For this example:
 
@@ -379,10 +379,10 @@ All Visio Shapes have predefined connection points for connectors:
 
 ![glue_to_connection_point]({{ site.baseurl }}/assets/images/VisioAutoCompute/glue_to_connection_point.png)
 
-However, quite often for complex diagrams more connection points are required for a visually pleasing result. There are two ways to address this need:<br><br>
+However, quite often for complex diagrams more connection points are required for a visually pleasing result. There are two ways to address this need:<br>
 
 * Creating additional connection points, by selecting the shape, selecting the connection point tool, and clicking somewhere on the shape's perimeter. This approach gets tiresome pretty quickly though...
-<br><br>
+<br>
 
 * A much simpler way is to enable the `Glue to Shape Geometry` option. For some reason, not only is this not enabled by default, but the associated button/icon to activate it is not available anywhere in the Ribbon either. To add it in the Ribbon, right-click on it, select `Customize the Ribbon`, then display select "All Commands" on the left, look for the `Glue to Shape Geometry` entry and insert it somewhere in a custom group.
 
@@ -396,7 +396,7 @@ When `Glue to Shape Geometry` is active, connectors can now be glued anywhere on
 
 ![glue_to_geometry]({{ site.baseurl }}/assets/images/VisioAutoCompute/glue_to_geometry.png)
 
-Major productivity boost when dealing with tens of connections !<br><br>
+Major productivity boost when dealing with tens of connections !<br>
 
 The `Glue to Vertex` option is not as interesting, but still good to know:
 

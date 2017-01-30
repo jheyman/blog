@@ -42,7 +42,7 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>This mini-project started when we got a Philips Hue Go light: I wanted to experiment with the associated developer API mostly out of curiosity, and quickly thought of a very simple application: turning on the Hue gradually in the morning at wake up time.<br /><br /></p>
+<p>This mini-project started when we got a Philips Hue Go light: I wanted to experiment with the associated developer API mostly out of curiosity, and quickly thought of a very simple application: turning on the Hue gradually in the morning at wake up time.<br /></p>
 
 <ul id="markdown-toc">
   <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
@@ -66,9 +66,9 @@
 <p><img src="http://jheyman.github.io/blog/assets/images/HueRaspberryControl/overview.png" alt="Overview" /></p>
 
 <p>The Hue lighting system is based on a central control point (the Hue bridge) communicating with light devices over Zigbee. There is then an official iPhone/Android application to control lighting (via access to this bridge), which I do not care about in this context.
-I considered doing without the bridge and controlling the lights directly from the raspberry pi with a zigbee module, but I did not want to invest a lot of time hacking around with an undocumented protocol, and the cost of the official Hue bridge (~50 euros) is reasonable (unlike the price of the bulbs…) so I went the easy way, bought the official bridge, and therefore only had to learn about the official (and very well documented) Hue API.<br /><br /></p>
+I considered doing without the bridge and controlling the lights directly from the raspberry pi with a zigbee module, but I did not want to invest a lot of time hacking around with an undocumented protocol, and the cost of the official Hue bridge (~50 euros) is reasonable (unlike the price of the bulbs…) so I went the easy way, bought the official bridge, and therefore only had to learn about the official (and very well documented) Hue API.<br /></p>
 
-<p>The bridge is connected by Ethernet (only) to the home router/LAN, and implements a nice REST API over port 80.<br /><br /></p>
+<p>The bridge is connected by Ethernet (only) to the home router/LAN, and implements a nice REST API over port 80.<br /></p>
 
 <p>The Hue Go (small portable Hue light with embedded battery) and Hue bridge 2.0 are shown below:</p>
 
@@ -78,7 +78,7 @@ I considered doing without the bridge and controlling the lights directly from t
 
 <h3 id="setup">Setup</h3>
 
-<p>The only thing I configured specifically is the IP address of the bridge. It gets its IP dynamically over DHCP, and there is then a UPnP discovery mechanism to find it. To simplify things, I assigned it a static IP address in my LAN, in my router’s DHCP configuration. It can also be configured with a static IP address from the parameters section of the official control application, if needed.<br /><br /></p>
+<p>The only thing I configured specifically is the IP address of the bridge. It gets its IP dynamically over DHCP, and there is then a UPnP discovery mechanism to find it. To simplify things, I assigned it a static IP address in my LAN, in my router’s DHCP configuration. It can also be configured with a static IP address from the parameters section of the official control application, if needed.<br /></p>
 
 <p>On the raspberry pi, the <code>requests</code> library must be installed, it will enable very straightforward GET/PUT/POST HTTP requests to the bridge:</p>
 
@@ -150,7 +150,7 @@ sudo pip install requests
 <pre><code>http://[bridge IP address]/api/[username]/lights
 </code></pre>
 
-<p>returns info on all connected lights.<br /><br /></p>
+<p>returns info on all connected lights.<br /></p>
 
 <p>The state of a specific light can be accessed by performing a GET on :</p>
 
@@ -176,7 +176,7 @@ sudo pip install requests
   <li>the <strong>Hue</strong> parameter is set using key <code>hue</code>, with a value….determined experimentally playing with the official app.</li>
   <li>the <strong>Saturation</strong> parameter is set using key <code>sat</code> with a value from 0 to 254</li>
   <li>the <strong>Brightness</strong> parameter is set using key <code>bri</code> with a value from 0 to 254</li>
-  <li>turning the light on or off is done using the <code>on</code> boolean parameter<br /><br /></li>
+  <li>turning the light on or off is done using the <code>on</code> boolean parameter<br /></li>
 </ul>
 
 <p>Orange/Yellow example:</p>
@@ -215,7 +215,7 @@ r = requests.put(url, json.dumps(data_on), timeout=5)
 <pre><code>37 6 * * 1-5 cd /home/pi/hueraspberrycontrol &amp;&amp; ./wakeup.py &amp;&amp; cd -
 </code></pre>
 
-<p>(trigs the scripts every day except saturday and sunday at 6:37am)<br /><br /></p>
+<p>(trigs the scripts every day except saturday and sunday at 6:37am)<br /></p>
 
 <p>The code is available <a href="https://github.com/jheyman/hueraspberrycontrol">here</a>.</p>
 

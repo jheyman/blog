@@ -7,7 +7,7 @@ tags: raspberry pi, tips
 {% include JB/setup %}
 
 
-Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br><br>
+Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br>
 
 * TOC
 {:toc}
@@ -54,7 +54,7 @@ To check which linux distribution is installed on a pi:
 
 ### Enabling I2C bus
 
-The Raspberry Pi's I2C bus capability is not enabled by default. Below are instructions to configure it.<br><br>
+The Raspberry Pi's I2C bus capability is not enabled by default. Below are instructions to configure it.<br>
 
 **For older Raspbian versions (pre-2014)**:
 
@@ -68,9 +68,9 @@ then comment out the following line (with a `#`)
 
 	sudo raspi-config
 
-and select `Advanced Options` and `I2C` menu.<br><br>
+and select `Advanced Options` and `I2C` menu.<br>
 
-**Then for all raspbian versions**:<br><br>
+**Then for all raspbian versions**:<br>
 
 Edit `/etc/modules`:
 
@@ -109,7 +109,7 @@ or
 
 ### Using an external RTC
 
-One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the "fake hw clock" and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br><br>
+One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the "fake hw clock" and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br>
 
 One solution is to use an actual, battery-backed real time clock module, and let the pi get its system time from there. I bought such a module (DS3231) for a few bucks:
 
@@ -143,7 +143,7 @@ Then, load the RTC driver for this module and configure it:
 	echo ds1307 0x68 > /sys/class/i2c-adapter/i2c-1/new_device
 	exit
 
-**Note**: DS3231 is just a better version of DS1307 module, so using the ds1307 driver is fine.<br><br>
+**Note**: DS3231 is just a better version of DS1307 module, so using the ds1307 driver is fine.<br>
 
 It should now be possible to read time from the RTC using:
 

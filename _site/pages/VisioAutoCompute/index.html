@@ -42,17 +42,17 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<p>I’m using Microsoft Visio quite often at work, and came to realize that it can do so much more than drawing nice diagrams. I was not aware of the very large developer community around Visio either.<br /><br /></p>
+<p>I’m using Microsoft Visio quite often at work, and came to realize that it can do so much more than drawing nice diagrams. I was not aware of the very large developer community around Visio either.<br /></p>
 
 <p>Anyway, I had a need for:</p>
 
 <ul>
   <li><strong>associating data to shapes</strong> in my diagrams</li>
   <li>performing <strong>automatic data computation</strong> within Visio, without having to export/import to/from an external tool</li>
-  <li><strong>displaying resulting data</strong> directly on the diagram<br /><br /></li>
+  <li><strong>displaying resulting data</strong> directly on the diagram<br /></li>
 </ul>
 
-<p>My specific intent was to apply this to electronics/mechanical block diagrams to provide instant visual feedback about cost, power consumption, volume, and mass, as a function of what components were added/removed from the diagram, and how they where interconnected.<br /><br /></p>
+<p>My specific intent was to apply this to electronics/mechanical block diagrams to provide instant visual feedback about cost, power consumption, volume, and mass, as a function of what components were added/removed from the diagram, and how they where interconnected.<br /></p>
 
 <ul id="markdown-toc">
   <li><a href="#application" id="markdown-toc-application">Application</a>    <ul>
@@ -75,7 +75,8 @@
       <li><a href="#basic-event-notification" id="markdown-toc-basic-event-notification">Basic Event notification</a></li>
       <li><a href="#custom-event-notification" id="markdown-toc-custom-event-notification">Custom Event notification</a></li>
       <li><a href="#custom-shape-data" id="markdown-toc-custom-shape-data">Custom shape data</a></li>
-      <li><a href="#custom-dynamic-connector-text" id="markdown-toc-custom-dynamic-connector-text">Custom dynamic connector text</a>        <ul>
+      <li><a href="#custom-dynamic-connector-text" id="markdown-toc-custom-dynamic-connector-text">Custom dynamic connector text</a></li>
+      <li><a href="#automated-coloring--counting" id="markdown-toc-automated-coloring--counting">Automated coloring &amp; counting</a>        <ul>
           <li><a href="#interface-coloring--counting-implementation" id="markdown-toc-interface-coloring--counting-implementation">Interface coloring &amp; counting implementation</a></li>
           <li><a href="#connector-coloring-implementation" id="markdown-toc-connector-coloring-implementation">Connector coloring implementation</a></li>
         </ul>
@@ -100,7 +101,7 @@
 
 <h4 id="overview">Overview</h4>
 
-<p>The resulting sandbox I experimented with, as well as VBA implementation notes (in excruciating details, mostly as a memo to myself) are provided below.<br /><br /></p>
+<p>The resulting sandbox I experimented with, as well as VBA implementation notes (in excruciating details, mostly as a memo to myself) are provided below.<br /></p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/overview.png" alt="Overview" /></p>
 
@@ -109,9 +110,9 @@
 <img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/component_shape_data.png" alt="shape data" /></li>
   <li><strong>Connectors</strong> link components with each other, and they each have one associated data: the number of physical signals carried by this link (think “number of individual wires”) 
 <img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/connector_shape_data.png" alt="custom field" /></li>
-  <li><strong>Containers</strong> allow to group Components, e.g. to represent the electronics components being part of the same PCB.<br /><br /></li>
-  <li><strong>Interfaces</strong> are used to structure incoming/outgoing connectors to/from a container. They automatically count (and display) the number of connectors that are inside the container (think “PCB traces”) and the number of connectors that are external (think “external cables/wires”).<br /><br /></li>
-  <li><strong>Local (container) totals</strong> are boxes that automatically compute the sum of values of contained shapes, for the criteria that they track (i.e. cost,  mass, power, or volume).<br /><br />
+  <li><strong>Containers</strong> allow to group Components, e.g. to represent the electronics components being part of the same PCB.<br /></li>
+  <li><strong>Interfaces</strong> are used to structure incoming/outgoing connectors to/from a container. They automatically count (and display) the number of connectors that are inside the container (think “PCB traces”) and the number of connectors that are external (think “external cables/wires”).<br /></li>
+  <li><strong>Local (container) totals</strong> are boxes that automatically compute the sum of values of contained shapes, for the criteria that they track (i.e. cost,  mass, power, or volume).<br />
 <strong>Note</strong>: I positioned these text boxes on the <strong>edge</strong> of the container, not inside (the container’s perimeter is highlighted when a shape is about to be dropped on its edge). This way, the boxes are still part of the container, but it also ensures that they stay attached to the container’s edge whenever it gets resized, which I think makes more sense for something showing data linked to the container’s content.</li>
 </ul>
 
@@ -135,13 +136,13 @@
 
 <h4 id="associating-data-to-shapes">Associating data to shapes</h4>
 
-<p>The Professional version of Visio has a specific feature to simplify this usecase (“data graphics”), but I usually only have access to the Standard version, so I had to find a workaround. Fortunately, all versions of Visio provide a basic feature for associating user data to shapes. To access a specific shape’s date, right-click on it =&gt; “Data” =&gt; <strong>“Shape Data”</strong>. Data of various types (integer, float, string, …) can be created from there. <br /><br /></p>
+<p>The Professional version of Visio has a specific feature to simplify this usecase (“data graphics”), but I usually only have access to the Standard version, so I had to find a workaround. Fortunately, all versions of Visio provide a basic feature for associating user data to shapes. To access a specific shape’s date, right-click on it =&gt; “Data” =&gt; <strong>“Shape Data”</strong>. Data of various types (integer, float, string, …) can be created from there. <br /></p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/component_shape_data.png" alt="shape data" /></p>
 
-<p>In this example I manually added some cost/mass/power/volume shape data to a basic “component” shape.<br /><br /></p>
+<p>In this example I manually added some cost/mass/power/volume shape data to a basic “component” shape.<br /></p>
 
-<p>Better yet, to apply a consistent set of data to multiple shapes, it is possible to create a shape data set: right-click on Shape Data window =&gt; <strong>“Shape Data Sets”</strong>.<br /><br /></p>
+<p>Better yet, to apply a consistent set of data to multiple shapes, it is possible to create a shape data set: right-click on Shape Data window =&gt; <strong>“Shape Data Sets”</strong>.<br /></p>
 
 <p>In fact, these user-created data are only a small subset of the data associated to a shape: each shape also has by default a lot of built-in data that Visio uses to store information about the shape (geometry, content, format, …). This whole set of  data is available in the <strong>Shapesheet</strong>, accessible from the <code>Developer</code> tab of the UI (you may need to customize the Ribbon to make this Developer tab visible):</p>
 
@@ -151,13 +152,13 @@
 
 <h4 id="computing-shape-data">Computing shape data</h4>
 
-<p>The remaining part was then to find a way to compute container data, from the individual data of the shapes it contains. There are several ways to manipulate data programmatically in Visio:<br /><br /></p>
+<p>The remaining part was then to find a way to compute container data, from the individual data of the shapes it contains. There are several ways to manipulate data programmatically in Visio:<br /></p>
 
 <ul>
   <li>writing formulas directly within the <strong>ShapeSheet</strong></li>
   <li><strong>VBA</strong> macros/procedures (Visual Basic for Applications)</li>
   <li><strong>C#</strong> code</li>
-  <li>and more…<br /><br /></li>
+  <li>and more…<br /></li>
 </ul>
 
 <p>ShapeSheet formulas can be just fine for simple computations, but I chose VBA to have a bit more flexibility / readability.</p>
@@ -168,7 +169,7 @@
 
 <ul>
   <li>A shape is <strong>connected</strong> to another shape when at least one connector exists between them</li>
-  <li>A connector endpoint can be <strong>glued</strong> to a shape<br /><br /></li>
+  <li>A connector endpoint can be <strong>glued</strong> to a shape<br /></li>
 </ul>
 
 <p>For example:</p>
@@ -188,7 +189,7 @@ The trick is to associate one shape data to these boxes, and then to insert a <s
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/customfield.png" alt="custom field" /></p>
 
-<p>As a result, the box’s text will now reflect its shape data value whenever if changes. <br /><br /></p>
+<p>As a result, the box’s text will now reflect its shape data value whenever if changes. <br /></p>
 
 <p>Another possible alternative would be to use <strong>custom callouts</strong>, also available in visio standard, and allowing to display shape data values.</p>
 
@@ -216,7 +217,7 @@ The trick is to associate one shape data to these boxes, and then to insert a <s
   <li><strong>EventList</strong> is used to register customized event notifications</li>
   <li><strong>Documents</strong> collection is not accessed directly, but <strong>Document</strong> object is used to add an event hook executed when our document is opened to perform some initializations</li>
   <li><strong>Pages</strong> collection is not accessed directly, but the (current) <strong>Page</strong> object is used to declare event hooks on many events related to modifications of the shapes contained on the page</li>
-  <li><strong>Shapes</strong> collection is used to lookup a particular shape based on its ID, and then <strong>Shape</strong> objects are used throughout the code to manipulate shape parameters and data<br /><br /></li>
+  <li><strong>Shapes</strong> collection is used to lookup a particular shape based on its ID, and then <strong>Shape</strong> objects are used throughout the code to manipulate shape parameters and data<br /></li>
 </ul>
 
 <p>Each Shape has, among other things:</p>
@@ -225,10 +226,10 @@ The trick is to associate one shape data to these boxes, and then to insert a <s
   <li><strong>Cells</strong>, arranged in <strong>Rows</strong> themselves arranged in <strong>Sections</strong>, they are the basic entities carrying shape information</li>
   <li><strong>Connects</strong> collection that is used to examine incoming/outgoing links to/from a specific shape</li>
   <li>a <strong>Name</strong> (modifiable by the developer)</li>
-  <li>a unique <strong>ID</strong> set by the internal Visio engine<br /><br /></li>
+  <li>a unique <strong>ID</strong> set by the internal Visio engine<br /></li>
 </ul>
 
-<p><strong>Note</strong>: for historical reasons, shape are referred to as “Sheets”, therefore shape names are created with the name <code>Sheet.xx</code>, with <code>xx</code> being their ID.<br /><br /></p>
+<p><strong>Note</strong>: for historical reasons, shape are referred to as “Sheets”, therefore shape names are created with the name <code>Sheet.xx</code>, with <code>xx</code> being their ID.<br /></p>
 
 <p>So, in our example:</p>
 
@@ -250,7 +251,7 @@ The trick is to associate one shape data to these boxes, and then to insert a <s
 </ul>
 
 <p>I filter out everything else (like <strong>Guides</strong>, Visio’s vertical/horizontal visual hints, or Bitmap images, or one othe many other types of shapes) from event callbacks to prevent unwanted effects. The complete list of Visio Shape types is available <a href="https://msdn.microsoft.com/en-us/library/office/ff767768.aspx">here</a>.
-<br /><br />
+<br />
 Also, among regular Shapes, some are Containers, they are the ones with a non-null <code>ContainerProperties</code> object</p>
 
 <h4 id="reading--writing-shape-data">Reading &amp; writing shape data</h4>
@@ -268,11 +269,11 @@ Also, among regular Shapes, some are Containers, they are the ones with a non-nu
 myShape.Cells("Prop.myPropName").Formula = "xyz"
 </code></pre>
 
-<p><strong>Note</strong>: the <code>Cells</code> accessor takes a string parameter (the name of the target cell), while the <code>CellSRC</code> accessor takes the section/row number of the target cell as input.<br /><br /></p>
+<p><strong>Note</strong>: the <code>Cells</code> accessor takes a string parameter (the name of the target cell), while the <code>CellSRC</code> accessor takes the section/row number of the target cell as input.<br /></p>
 
-<p><strong>Note</strong>: for several properties in the Visio object model, two accessors are accessible: <code>&lt;PropertyName&gt;</code> and <code>&lt;PropertyName&gt;U</code>. The version with the appended “U” allows to access the property via the Universal name, that is localization-independent, while the version without the U uses the localized name.<br /><br /></p>
+<p><strong>Note</strong>: for several properties in the Visio object model, two accessors are accessible: <code>&lt;PropertyName&gt;</code> and <code>&lt;PropertyName&gt;U</code>. The version with the appended “U” allows to access the property via the Universal name, that is localization-independent, while the version without the U uses the localized name.<br /></p>
 
-<p><strong>Note</strong>: a Cell’s result value is stored as a string in parameter ResultStr, and its last parameter allows to specify how to cast this string into a specific unit/type of value. Available Visio <strong>Units</strong> are defined <a href="https://msdn.microsoft.com/en-us/library/office/ff769148.aspx">here</a>.<br /><br /></p>
+<p><strong>Note</strong>: a Cell’s result value is stored as a string in parameter ResultStr, and its last parameter allows to specify how to cast this string into a specific unit/type of value. Available Visio <strong>Units</strong> are defined <a href="https://msdn.microsoft.com/en-us/library/office/ff769148.aspx">here</a>.<br /></p>
 
 <p><strong>Note</strong>: Since Formula property is a string, sometime the syntax can get weird to actually use a string inside a formula. To avoid having to use confusing triple quotes, and easier way is to use <code>CHR(34)</code>, as in e.g.:</p>
 
@@ -286,7 +287,7 @@ myShape.Cells("Prop.myPropName").Formula = "xyz"
 
 <h4 id="basic-event-notification">Basic Event notification</h4>
 
-<p>The internal Visio engine emits many different <strong>Events</strong> when manipulating a diagram. It is then possible from VBA code to register to some of these events, by declaring a hook/callback to be executed when the event occurs. Three steps are required:<br /><br />
+<p>The internal Visio engine emits many different <strong>Events</strong> when manipulating a diagram. It is then possible from VBA code to register to some of these events, by declaring a hook/callback to be executed when the event occurs. Three steps are required:<br />
 1) Use the <code>WithEvents</code> keyword to declare an object which events we want to be notified of. In this case, we want to track events occuring to the <strong>Windows</strong> object, and to the <strong>Page</strong> object</p>
 
 <pre><code>Dim WithEvents win As Visio.Windows
@@ -315,16 +316,16 @@ Set pg = ActivePage
   <li><strong>pg_ConnectionsAdded</strong> is used to update Interface data when links are being made</li>
   <li><strong>pg_ConnectionsDeleted</strong> is used to update Interface data when links are being removed</li>
   <li><strong>pg_ContainerRelationshipAdded</strong> is used to detect when a shape is created in / moved in a container</li>
-  <li><strong>pg_ContainerRelationshipDeleted</strong> is used to detect when a shape is removed / moved out of a container<br /><br /></li>
+  <li><strong>pg_ContainerRelationshipDeleted</strong> is used to detect when a shape is removed / moved out of a container<br /></li>
 </ul>
 
-<p><strong>Note</strong>: Pro versions of Visio include a very useful <em>Event Monitor</em> tool, tracing all events occurring in realtime, so you can figure out which event to capture for a specific action. Since this tool is not available in the Standard version, I downloaded an evaluation version of Visio Professional, ran a few tests, identified the relevant events, then went back to developing in my Standard version. Browsing the reference documentation works too, but I’m lazy.<br /><br /></p>
+<p><strong>Note</strong>: Pro versions of Visio include a very useful <em>Event Monitor</em> tool, tracing all events occurring in realtime, so you can figure out which event to capture for a specific action. Since this tool is not available in the Standard version, I downloaded an evaluation version of Visio Professional, ran a few tests, identified the relevant events, then went back to developing in my Standard version. Browsing the reference documentation works too, but I’m lazy.<br /></p>
 
 <p><strong>Note</strong>: the <code>BeforeSelectionDelete</code> event might have been useful to me, except it gets called <em>before</em> the selected shape gets deleted, and is therefore not a good place to trig recomputation of data: since the shape is not deleted yet, everything is still unchanged data-wise…therefore, the need for custom events.</p>
 
 <h4 id="custom-event-notification">Custom Event notification</h4>
 
-<p>For performance reasons, not all possible events are being managed by default by the Visio engine. For my example, I needed to have access to two of these special events: <strong>onShapeDeleted</strong> and <strong>onBeforeShapeTextEdit</strong>. It is a bit more complex than just the <code>WithEvents</code> declaration approach used for regular/default events. The required steps are:<br /><br /></p>
+<p>For performance reasons, not all possible events are being managed by default by the Visio engine. For my example, I needed to have access to two of these special events: <strong>onShapeDeleted</strong> and <strong>onBeforeShapeTextEdit</strong>. It is a bit more complex than just the <code>WithEvents</code> declaration approach used for regular/default events. The required steps are:<br /></p>
 
 <p>1) Create a custom Event sink class, implementing the <code>IVisEventProc_VisEventProc</code>. Hence the presence of the <strong>clsEventSink</strong> VBA class in my project.</p>
 
@@ -393,7 +394,7 @@ ThisDocument.EventList.AddAdvise visEvtCodeShapeBeforeTextEdit, eventHandler, ""
   <li>we also capture the <code>CellChanged</code> event, and recompute the text in case the number of carried signals was changed by the user (from the shape data window)</li>
 </ul>
 
-<p>#### Automated coloring &amp; counting</p>
+<h4 id="automated-coloring--counting">Automated coloring &amp; counting</h4>
 
 <p>The color of Connectors and Interfaces in a given container are dynamically adjusted to the color of the container:</p>
 
@@ -454,7 +455,7 @@ CellsSRC(visSectionCharacter, 0, visCharacterColor).FormulaU = ExternalConnector
 
 <h4 id="navigating-connectors">Navigating connectors</h4>
 
-<p>As mentioned earlier, shapes can be <strong>connected</strong> to other shapes via connectors, and connectors can be <strong>glued</strong> to shapes’ connection points. From a code standpoint,<br /><br /></p>
+<p>As mentioned earlier, shapes can be <strong>connected</strong> to other shapes via connectors, and connectors can be <strong>glued</strong> to shapes’ connection points. From a code standpoint,<br /></p>
 
 <ul>
   <li>An array of IDs of shapes glued to a given shape is accessible through the <code>GluedShapes</code> function. Since I am mostly interested in counting connectors glued to an Interface shape, I used the <code>visGluedShapesIncoming1D</code> and <code>visGluedShapesOutgoing1D</code> filter codes to only look for these, and then merged both ID lists.</li>
@@ -464,7 +465,7 @@ CellsSRC(visSectionCharacter, 0, visCharacterColor).FormulaU = ExternalConnector
 aryTargetIDs = shp.GluedShapes(visGluedShapesOutgoing1D, "")</code></pre>
 
 <ul>
-  <li>Similarly, the <code>ConnectedShapes</code> function returns an array of ID a shapes connected to the target shape.<br /><br /></li>
+  <li>Similarly, the <code>ConnectedShapes</code> function returns an array of ID a shapes connected to the target shape.<br /></li>
 </ul>
 
 <p>For this example:</p>
@@ -508,12 +509,12 @@ Shapes connected to shape Sheet.3:
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/glue_to_connection_point.png" alt="glue_to_connection_point" /></p>
 
-<p>However, quite often for complex diagrams more connection points are required for a visually pleasing result. There are two ways to address this need:<br /><br /></p>
+<p>However, quite often for complex diagrams more connection points are required for a visually pleasing result. There are two ways to address this need:<br /></p>
 
 <ul>
   <li>
     <p>Creating additional connection points, by selecting the shape, selecting the connection point tool, and clicking somewhere on the shape’s perimeter. This approach gets tiresome pretty quickly though…
-<br /><br /></p>
+<br /></p>
   </li>
   <li>
     <p>A much simpler way is to enable the <code>Glue to Shape Geometry</code> option. For some reason, not only is this not enabled by default, but the associated button/icon to activate it is not available anywhere in the Ribbon either. To add it in the Ribbon, right-click on it, select <code>Customize the Ribbon</code>, then display select “All Commands” on the left, look for the <code>Glue to Shape Geometry</code> entry and insert it somewhere in a custom group.</p>
@@ -530,7 +531,7 @@ Shapes connected to shape Sheet.3:
 
 <p><img src="http://jheyman.github.io/blog/assets/images/VisioAutoCompute/glue_to_geometry.png" alt="glue_to_geometry" /></p>
 
-<p>Major productivity boost when dealing with tens of connections !<br /><br /></p>
+<p>Major productivity boost when dealing with tens of connections !<br /></p>
 
 <p>The <code>Glue to Vertex</code> option is not as interesting, but still good to know:</p>
 

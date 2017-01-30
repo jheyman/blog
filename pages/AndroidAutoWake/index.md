@@ -17,9 +17,9 @@ The purpose of this project was to have the ability to turn on an Android device
 
 ### Introduction
 
-I happen to have a ViewSonic VSD220 Android wall-mounted tablet (see [here]({{ site.baseurl }}/pages/HomeHubTablet)) in the hall, centralizing various home automation applications. To save power, the screen turns off after 2 minutes. So to check the application statuses or do anything on the tablet, I had to push the power button to wake it, and wait for a second or so. After a while I realized that this (very) minor inconvenience was actually limiting the added value of the tablet: when passing by, I would not bother turning it on for a quick glance at the info on the screen. So I looked for a way to always have the screen turned on anytime I came nearby, and still let it go to sleep mode when I was away.<br><br>
+I happen to have a ViewSonic VSD220 Android wall-mounted tablet (see [here]({{ site.baseurl }}/pages/HomeHubTablet)) in the hall, centralizing various home automation applications. To save power, the screen turns off after 2 minutes. So to check the application statuses or do anything on the tablet, I had to push the power button to wake it, and wait for a second or so. After a while I realized that this (very) minor inconvenience was actually limiting the added value of the tablet: when passing by, I would not bother turning it on for a quick glance at the info on the screen. So I looked for a way to always have the screen turned on anytime I came nearby, and still let it go to sleep mode when I was away.<br>
 
-Any mechanism using HW/SW on the tablet itself (camera, microphone) would be pointless, since by definition it would be sleeping when the presence detection is required. So I used an external presence sensor, driven by a Raspberry pi (that was already there for other purposes), and leveraged the USB debug connection to the device to turn it on:<br><br>
+Any mechanism using HW/SW on the tablet itself (camera, microphone) would be pointless, since by definition it would be sleeping when the presence detection is required. So I used an external presence sensor, driven by a Raspberry pi (that was already there for other purposes), and leveraged the USB debug connection to the device to turn it on:<br>
 
 * a **PIR** (Passive Infra Red) **sensor** is used to detect presence in a large area in front of the tablet. The discrete output from the sensor notifying of a detection is read by one GPIO pin of the raspberry pi.
 * a **Python script** monitors this GPIO, and sequences actions upon presence detection.
@@ -38,13 +38,13 @@ Any cheapo PIR sensor will do, I got this one for 2$ from China. It has:
 
 ![PIR sensor]({{ site.baseurl }}/assets/images/AndroidAutoWake/PIR_sensor.png)
 
-Whenever it detects something in its field of view, the output pin goes HIGH, and stays high for some time (depending on the potentiometer setting), and returns to low state.<br><br>
+Whenever it detects something in its field of view, the output pin goes HIGH, and stays high for some time (depending on the potentiometer setting), and returns to low state.<br>
 
 Since the sensor will be mounted on the wall above the display, I designed a small holder and had it 3D-printed (at [Sculpteo](http://www.sculpteo.com), this is the third object I have printed there, and I am quite pleased with the quality vs. price):
 
 ![3Dprinted_holder]({{ site.baseurl }}/assets/images/AndroidAutoWake/3Dprinted_holder.png)
 
-The Sketchup 3D model and exported STL file are available [here](https://github.com/jheyman/androidautowake).<br><br>
+The Sketchup 3D model and exported STL file are available [here](https://github.com/jheyman/androidautowake).<br>
 
 The PIR sensor fits nicely in there:
 
@@ -71,9 +71,9 @@ This part should not be required, BUT it turns out that when the VSD220 tablet d
 The board has two inputs:
 
 * a mini-USB port for communication
-* a 5V power input, that can be supplied either through a dedicated connector or more simply through a micro-USB connector<br><br>
+* a 5V power input, that can be supplied either through a dedicated connector or more simply through a micro-USB connector<br>
 
-Just like any powered USB hub, the 5V input power should ideally come from a dedicated external power supply. However, in my usecase I am not going to plug anything else than the USB cable to the tablet on this board, so the power draw will be very small, nothing that the Raspberry's USB ports cannot provide. So I just plugged two USB cables, one mini-USB and one micro-USB, between the YKush and the raspberry.<br><br>
+Just like any powered USB hub, the 5V input power should ideally come from a dedicated external power supply. However, in my usecase I am not going to plug anything else than the USB cable to the tablet on this board, so the power draw will be very small, nothing that the Raspberry's USB ports cannot provide. So I just plugged two USB cables, one mini-USB and one micro-USB, between the YKush and the raspberry.<br>
 
 Ideally, a much simpler solution would be to use a simple transistor to switch the 5V of the USB cable on and off, commanded directly by a raspberry GPIO.
 
@@ -101,7 +101,7 @@ A simple command line utility is available from Yepkit's website to manage the Y
 	wget https://www.yepkit.com/uploads/documents/fd484_ykush_v1.4.1.tar.gz
 	make
 
-The resulting `ykush` executable then provides a few very simple commands to control the USB ports, and I only used two:<br><br>
+The resulting `ykush` executable then provides a few very simple commands to control the USB ports, and I only used two:<br>
 
 To turn one of the three ports:
 	
@@ -208,7 +208,7 @@ And finally compile `adb`:
 
 	make adb
 
-the resulting `adb` binary should be put in the same directory as the script.<br><br>
+the resulting `adb` binary should be put in the same directory as the script.<br>
  I archived the resulting binary (for raspberry 1 & 2) [here](https://github.com/jheyman/androidautowake).
 
 #### Setup USB device access rights
@@ -241,9 +241,9 @@ Turn on the USB port towards the device, using `ykush`utility:
 	
 	./ykush -u 1
 
-And then wait until USB communication becomes available. Indeed, after powering the USB port, there is a delay before the device on the other end detects it (on my device, it is about 4 seconds). This active wait is done by continuously executing the `adb devices` command, until the deviceID of our device shows up in the output.<br><br>
+And then wait until USB communication becomes available. Indeed, after powering the USB port, there is a delay before the device on the other end detects it (on my device, it is about 4 seconds). This active wait is done by continuously executing the `adb devices` command, until the deviceID of our device shows up in the output.<br>
 
-**Note**: the expected deviceID is specified in the `.ini`config file.<br><br>
+**Note**: the expected deviceID is specified in the `.ini`config file.<br>
  
 Then use`adb` to send a simulated user input corresponding to the action of waking up the device:
 	
@@ -257,7 +257,7 @@ After whatever timeout value is configured inside the device, it will try to go 
 
 	./adb shell dumpsys power
 
-and check whether `mPowerState=0` is present as part of the output. On the (ancient) android version that runs on the VSD220, this is a sign that screen is being turned off after the timeout. Other keys on the dumpsys output might be used for other versions of Android.<br><br>
+and check whether `mPowerState=0` is present as part of the output. On the (ancient) android version that runs on the VSD220, this is a sign that screen is being turned off after the timeout. Other keys on the dumpsys output might be used for other versions of Android.<br>
 
 **Note**: if during that wait time a new detection is made, we resend a wake command: this will have the effect of restarting the wake timer inside the device, so that it stays on as long as someone is nearby. 
 

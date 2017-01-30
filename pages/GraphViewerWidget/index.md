@@ -6,7 +6,7 @@ tags: android, logging, graph, widget
 ---
 {% include JB/setup %}
 
-After developing the [wireless water meter]({{ site.baseurl }}/pages/WirelessWaterMeter), I wanted to have an associated graphical front-end to visualize the water usage history. The obvious choice for my context was to develop an Android-based application so as to be able to integrate this graphical viewer in our [home hub tablet]({{ site.baseurl }}/pages/HomeHubTablet). As for other applications already hosted on this tablet (e.g. [PostitListWidget]({{ site.baseurl }}/pages/PostitListWidget) or [ShoppingListWidget]({{ site.baseurl }}/pages/ShoppingListWidget)), I decided to implement this viewer as a widget, not a regular android app. This makes things significantly more complex to develop, but this is balanced by the convenience to have all information available at all times on a unique screen (no need to explicitly launch/exit an application manually), which I think makes more sense for a screen on the wall.<br><br>
+After developing the [wireless water meter]({{ site.baseurl }}/pages/WirelessWaterMeter), I wanted to have an associated graphical front-end to visualize the water usage history. The obvious choice for my context was to develop an Android-based application so as to be able to integrate this graphical viewer in our [home hub tablet]({{ site.baseurl }}/pages/HomeHubTablet). As for other applications already hosted on this tablet (e.g. [PostitListWidget]({{ site.baseurl }}/pages/PostitListWidget) or [ShoppingListWidget]({{ site.baseurl }}/pages/ShoppingListWidget)), I decided to implement this viewer as a widget, not a regular android app. This makes things significantly more complex to develop, but this is balanced by the convenience to have all information available at all times on a unique screen (no need to explicitly launch/exit an application manually), which I think makes more sense for a screen on the wall.<br>
 
 * TOC
 {:toc}
@@ -19,13 +19,13 @@ The overall setup involves:
 
 * a **data logger** (the wireless water meter from [this project]({{ site.baseurl }}/pages/WirelessWaterMeter)), modified to send its data to a remote data server.
 * a **data server** to store this incoming data from the logger.
-* the **android widget** to get a requested subset of data from the server, and display it on screen.<br><br>
+* the **android widget** to get a requested subset of data from the server, and display it on screen.<br>
 
 I chose to host these three functions in three separate devices, that were already part of my home setup:
 
 * the data logger runs on a dedicated raspberry Pi, within radio range of the watermeter.
 * the data server runs on my main raspberry Pi.
-* the data viewer widget runs on the android wall tablet.<br><br>
+* the data viewer widget runs on the android wall tablet.<br>
 
 Below is the overall implementation logic (don't freak out):
 
@@ -63,7 +63,7 @@ One source of incoming data is a slightly updated version of the watermeter logg
 
 Another source of data is a python script performing a basic monitoring of my LAN devices ping status (nothing noteworthy, it just pings a predefined list of devices and logs the result in the data server, logging 1.0 for a successful ping and 0.0 for a failed ping (the source code is [here](https://github.com/jheyman/HealthMonitor))
 
-### Android widget 
+### Android widget
 
 Preliminary notes: 
 
@@ -136,7 +136,7 @@ This class encapsulates the remote/network access to get the actual data for the
 
 	SELECT * FROM homelogdata WHERE time > now - [delay]h
 
-effectively returning all entries between [delay] hours ago and the current time.<br><br>
+effectively returning all entries between [delay] hours ago and the current time.<br>
 
 The URL for a request of the last 3 days, would for example look like this:  
 	
@@ -181,10 +181,11 @@ In addition, the `onBuildHeaders` function is overridden to reference the `setti
 	  <header/>
 	</preference-headers>
 
-which references a single preference header, implemented by the `GraphSettingsFragment` in the code. <br><br>
+which references a single preference header, implemented by the `GraphSettingsFragment` in the code.
+
 Finally, the retrieved settings values are managed in a `GraphSettings` class used in the rest of the code.
 
-### Results
+### Results
 
 Below is a capture of the android widget, showing the daily water consumption (in blue), the specific water consumption in predefined time slots (in purple), and the view of ping statuses of the various raspberry pi around the house:
 
