@@ -1,0 +1,754 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>BlueKey, a bluetooth hardware password manager</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="BlueKey, a bluetooth hardware password manager" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">BlueKey, a bluetooth hardware password manager</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#breadboard-prototype-1" id="markdown-toc-breadboard-prototype-1">Breadboard prototype #1</a>    <ul>
+      <li><a href="#hardware" id="markdown-toc-hardware">Hardware</a>        <ul>
+          <li><a href="#arduino-board" id="markdown-toc-arduino-board">Arduino board</a></li>
+          <li><a href="#keypad" id="markdown-toc-keypad">Keypad</a></li>
+          <li><a href="#bluetooth-module" id="markdown-toc-bluetooth-module">Bluetooth module</a></li>
+          <li><a href="#eeprom" id="markdown-toc-eeprom">EEPROM</a></li>
+          <li><a href="#oled-display" id="markdown-toc-oled-display">OLED display</a></li>
+          <li><a href="#rotary-encoder" id="markdown-toc-rotary-encoder">Rotary encoder</a></li>
+          <li><a href="#other-stuff" id="markdown-toc-other-stuff">Other stuff</a></li>
+        </ul>
+      </li>
+      <li><a href="#breadboard-assembly" id="markdown-toc-breadboard-assembly">Breadboard assembly</a></li>
+      <li><a href="#software" id="markdown-toc-software">Software</a>        <ul>
+          <li><a href="#rn42-bluetooth-module" id="markdown-toc-rn42-bluetooth-module">RN42 bluetooth module</a></li>
+          <li><a href="#keypad-management" id="markdown-toc-keypad-management">Keypad management</a></li>
+          <li><a href="#display-management" id="markdown-toc-display-management">Display management</a></li>
+          <li><a href="#eeprom-access" id="markdown-toc-eeprom-access">EEPROM access</a></li>
+          <li><a href="#rotary-encoder-management" id="markdown-toc-rotary-encoder-management">Rotary encoder management</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#breadboard-prototype-2" id="markdown-toc-breadboard-prototype-2">Breadboard prototype #2</a>    <ul>
+      <li><a href="#knob-based-user-input" id="markdown-toc-knob-based-user-input">Knob-based user input</a></li>
+      <li><a href="#better-rotary-encoder-management" id="markdown-toc-better-rotary-encoder-management">Better rotary encoder management</a></li>
+      <li><a href="#updated-breadboard-assembly" id="markdown-toc-updated-breadboard-assembly">Updated breadboard assembly</a></li>
+    </ul>
+  </li>
+  <li><a href="#an-unexpected-detour-in-low-memory-land" id="markdown-toc-an-unexpected-detour-in-low-memory-land">An unexpected detour in low-memory land</a></li>
+  <li><a href="#packaged-prototype" id="markdown-toc-packaged-prototype">Packaged prototype</a></li>
+  <li><a href="#source-code" id="markdown-toc-source-code">Source Code</a></li>
+  <li><a href="#todo-list" id="markdown-toc-todo-list">Todo list</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
+
+<h2 id="overview">Overview</h2>
+
+<p>I have been thinking about improving my password management routine, and looking at existing password managers. My main requirements were that it should:</p>
+
+<ul>
+  <li>be usable from all platforms I use (Windows, Linux, Android)</li>
+  <li>be reasonably secure (for moderately critical login/passwords, since I will still memorize my most critical passwords and/or use SMS-based two-factor authentication when available)</li>
+  <li>NOT involve cloud-base storage, or any internet connection for that matter</li>
+  <li>be low-cost</li>
+</ul>
+
+<p>As far as I can tell there are basically two main approaches:</p>
+
+<ul>
+  <li><strong>Software-based</strong> password vaults: many free and paid versions exist, but call me paranoid, I won’t blindly trust a huge pile of closed-source SW connecting to the internet (as most commercial password managers do to support synchronization over supported platforms) with my passwords.</li>
+  <li><strong>Hardware devices</strong> (e.g. USB key/dongles), mostly used for supporting two-factor authentication. These are great, but until every single site/service I need to log into supports 2FA and whatever keyfob I would buy, then this is not practical enough.</li>
+</ul>
+
+<p>I was leaning on the hardware side when I stumbled on this project: <a href="http://finalkey.net">The FinalKey</a></p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/finalkey.png" alt="FinalKey" /></p>
+
+<p>This little DIY hardware password manager is an arduino in a 3D-printed case that pretends to be a USB keyboard, and it will type in passwords for you after selecting the service to be accessed from a neat little SW client on the computer, and pushing the button on the device (as a security measure).</p>
+
+<p>This thing is absolutely AWESOME, super low cost, and open source, and matches pretty much all of my requirements. Hats off to <a href="http://dk.linkedin.com/in/jichr">Jimmy</a> for creating this. I immediately felt a DIY itch that needed scratching. So I decided to roll my custom version of a FinalKey, with some modifications to better suit my needs. Mostly, the one usecase that is not covered by the original FinalKey is usability with a smartphone: plugging a USB cable to use the FinalKey is not very convenient on a phone, and I would have had to develop an Android version of the FinalKey software too.</p>
+
+<p>So I took a slightly different approach:</p>
+
+<ul>
+  <li>I wanted the master key to be input on the device itself, not from the computer/phone connected to it (call it paranoia again), so I included a <strong>keypad</strong>.</li>
+  <li>to remove the need for connecting a USB cable, I added a <strong>Bluetooth module</strong> supporting <strong>HID profile</strong>, which means the device presents itself to any nearby Bluetooth-enabled computer/phone as a <strong>bluetooth keyboard</strong></li>
+  <li>I wanted to be able to use the device with zero specific software installed on the target computer/phone:
+    <ul>
+      <li>as the device emulates a standard Bluetooth keyboard, no specific SW is required to receive characters over the wireless link</li>
+      <li>I intentionnally gave up the functionality of being able to update the internal password database from the host computer, and instead only kept the original FinalKey’s capability to <strong>generate new passwords</strong>, store them internally and send them out.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Hence the <strong>BlueKey</strong> concept:
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/bluekey_concept.png" alt="concept" /></p>
+
+<h2 id="breadboard-prototype-1">Breadboard prototype #1</h2>
+
+<h3 id="hardware">Hardware</h3>
+
+<p>Below is a description of the parts I used for the first prototype.</p>
+
+<h4 id="arduino-board">Arduino board</h4>
+<p>I used a Funduino Pro Mini 5V/16MHz (but pretty much any arduino could be used) =&gt; about 5$
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/funduino.jpg" alt="funduino" />
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/funduino-pro-mini-pinout.png" alt="funduino pro mini pinout" /></p>
+
+<ul>
+  <li><strong>GND/5V/RX/TX/DTR</strong> at the bottom can be connected to a USB programmer to upload sketches in the arduino</li>
+  <li><strong>RX</strong> and <strong>TX</strong> are connected to the bluetooth module’s UART</li>
+  <li><strong>pin2</strong> and <strong>pin3</strong> are used for interrupts</li>
+  <li><strong>A4</strong> and <strong>A5</strong> are used for I2C communication with the display and EEPROM</li>
+  <li>GPIOs <strong>4,5,6,7,8,9,10,11</strong> are used to scan the keypad matrix</li>
+  <li>GPIO <strong>12</strong> is used for reading direction of the rotary encoder</li>
+  <li>GPIO <strong>A0</strong> is used for reading switch status of the rotary encoder</li>
+</ul>
+
+<h4 id="keypad">Keypad</h4>
+<p>4x4 matrix keypad, 4$ on ebay. The keypad is HUGE compared to the other parts, but I could not find any smaller (while equally cheap) ones
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/keypad.png" alt="keypad" /></p>
+
+<h4 id="bluetooth-module">Bluetooth module</h4>
+<p>I bought this RN42 module with HID profile (this is important) for about 25$. This is by far the most costly part of the list. There are a lot of much cheaper (HC-05/06) bluetooth modules, but they usually do not come with a firmware supporting HID profile. Yes, there are ways to get the firmware from an RN42 and install it on a cheapo HC-0x module, but this is not legal and the time I spared buying an actual RN42 module is well worth the 25 bucks anyway. Be aware that this thing is SMALL, soldering leads to it was not a piece of cake.
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/RN42.png" alt="RN42" /></p>
+
+<p>The module has the following pinout:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/RN42_pinout.png" alt="RN42 pinout" /></p>
+
+<ul>
+  <li><strong>pin1</strong> is connected to GND</li>
+  <li><strong>pin11</strong> is connected to the regulated 3.3V power supply</li>
+  <li><strong>pin12</strong> is connected to GND</li>
+  <li><strong>pin13 (UART_RX)</strong> is connected to a the TX pin of the funduino through a simple voltage divider (to drop the arduino’s 5V TX level to around 3V)</li>
+  <li><strong>pin14 (UART_TX)</strong> is connected to the RX pin of the funduino</li>
+  <li><strong>pin15 (UART_RTS)</strong> and <strong>pin16 (UART_CTS)</strong> are connected together since no HW flow control is required</li>
+  <li><strong>pin 19 (GPIO2)</strong> is connected to an LED (with 2k ohm resistor in series) to show the status of connection (LED OFF when connected)</li>
+  <li><strong>pin 21 (GPIO5)</strong> is connected to an LED (with 2k ohm resistor in series) to show the status of connection (blinking when waiting for connection)</li>
+</ul>
+
+<h4 id="eeprom">EEPROM</h4>
+<p>24LC512 with I2C interface, got 4 for 10$
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/eeprom.png" alt="eeprom" /></p>
+
+<p>The pinout is as follows:
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/24LC512_pinout.png" alt="24LC512 pînout" /></p>
+
+<ul>
+  <li><strong>A0/A1/A2</strong> are connected to GND (this sets the I2C address)</li>
+  <li><strong>VSS</strong> (GND) is connected to the GND</li>
+  <li><strong>VCC</strong> is connected to the Funduino’s 5V rail which is ok since the component can take anywhere between 2.5V and 5.5V</li>
+  <li><strong>WP</strong> (Write Protect) is connected to GND, I don’t need this feature for now.</li>
+  <li><strong>SDA</strong> and <strong>SCL</strong> (the I2C interface) are connected to the funduino’s I2C bus.</li>
+</ul>
+
+<h4 id="oled-display">OLED display</h4>
+<p>I picked the cheapest module I found, a 128x32pixels display with I2C interface, for about 10$. It is quite tiny, but suits my usecase, I only need a few lines of text to be displayed and read at arms’ length.
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/oled.png" alt="oled" /></p>
+
+<ul>
+  <li><strong>VCC</strong> is connected to the funduino’s 5V rail, which is ok since the component accepts a Vcc range of 2.8V to 5.5V</li>
+  <li><strong>GND</strong> is connected to the circuit’s GND</li>
+  <li><strong>SDA</strong> and <strong>SCL</strong> are connected to the funduino’s I2C bus (this is the beauty of I2C, there is no issue to have both the EEPROM and display on the same I2C interface, their specific address will be used to speak to one of the other)</li>
+</ul>
+
+<h4 id="rotary-encoder">Rotary encoder</h4>
+<p>I happened to use a KY-040 module, bought for 2$ on ebay. This is used as the main user interface to scroll through text lines. It includes a switch (activated by pushing on the shaft itself). 
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/rotaryencoder.png" alt="encoder" /></p>
+
+<ul>
+  <li><strong>CLK</strong> is the main signal that will be pulsed when the shaft is turned</li>
+  <li><strong>DATA</strong> is the secondary signal that will be used to determine rotation direction</li>
+  <li><strong>SW</strong> is the signal for the switch embedded in the encoder shaft</li>
+  <li><strong>+</strong> is connected to the funduino’s 5V</li>
+  <li><strong>GND</strong> is connected to the circuit’s GND</li>
+</ul>
+
+<h4 id="other-stuff">Other stuff</h4>
+<ul>
+  <li><strong>5V to 3.3V converter</strong> (about 2$). This is only necessary because I used a 5V arduino model, while the RN42 module requires 3.3V power supply.</li>
+  <li>4 x <strong>1N4148 diodes</strong> (~0$). These are used in the keypad readout mechanism.</li>
+  <li>two <strong>LEDs</strong> (~0$). They are used to show the current state of the RN42 module (connecting/connected status)</li>
+  <li>a few <strong>resistors</strong> (~0$)</li>
+</ul>
+
+<h3 id="breadboard-assembly">Breadboard assembly</h3>
+
+<p>The setup is as follows:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/fritzing_proto1.png" alt="fritzing_proto1" /></p>
+
+<p>And here is the messy breadboard result:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/breadboard_setup.png" alt="breadboard" /></p>
+
+<hr />
+
+<h3 id="software">Software</h3>
+
+<h4 id="rn42-bluetooth-module">RN42 bluetooth module</h4>
+
+<p>By default, the module is configured for <strong>SPP</strong> (Serial Port Profile) and for communicating over its UART interface at 115200 bauds. Once wired as described above and powered, it should show up as an available bluetooth device in any nearby bluetooth-enabled phone (or computer).</p>
+
+<p>To verify proper operation of the module, I:</p>
+
+<ul>
+  <li>set the Serial bitrate to 115200 in the arduino code (instead of the typical 9600 value)</li>
+  <li>used the <code>BlueTerm</code> application for Android</li>
+  <li>sent a message from the arduino to the module, using a simple <code>Serial.print</code></li>
+  <li>and saw the message showing up in the BlueTerm window. So far so good.</li>
+</ul>
+
+<p>Now, what I really needed was to use the <strong>HID</strong> (Human Interface Device) profile of the module, so that the module presents itself as a wireless keyboard.
+To do this, from either the local serial link or over the wireless serial terminal (e.g. BlueTerm), type in the following commands</p>
+
+<pre><code>S~,6
+</code></pre>
+
+<p>then hit enter: this enables HID profile, and the device answers with <code>AOK</code></p>
+
+<p>Then type</p>
+
+<pre><code>R,1
+</code></pre>
+
+<p>and hit enter: the device answers <code>Reboot!</code> and… reboots.</p>
+
+<p>I then un-paired the device, relaunched a bluetooth scan, re-associated the device, and sure enough it now showed as a keyboard/input device on the phone:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/bluetooth_pairing.png" alt="pairing" /></p>
+
+<p><strong>Note</strong>: the whole User Guide of the RN42 module is available <a href="http://ww1.microchip.com/downloads/en/DeviceDoc/bluetooth_cr_UG-v1.0r.pdf">here</a>, see chapter 5 about support for the HID profile.</p>
+
+<h4 id="keypad-management">Keypad management</h4>
+
+<p>The matrix keypad if basically just a set of wires organized in 4 rows and 4 columns, which come in electrical contact under the key that is pushed. The 8 wires are connected to 8 GPIOs on the arduino, and then some code is required to scan the continuity between the rows and columns and figure out if a key was pushed (and which one).</p>
+
+<p>There are existing arduino libraries to manage keypads, but most of those I found rely on polling of row/column lines at regular intervals from the main loop, and I wanted to avoid this (since there is then a strong dependency between the reactivity of the keypad and the main loop execution time, which tends to change over time as code is added). A much better option in my opinion is to use interrupts to only execute code when a key is pushed.</p>
+
+<p>Based on the example from this <a href="http://www.atmel.com/Images/doc1232.pdf">Atmel keypad application note</a>, I therefore wired the keypad as follows:
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/keypad_concept.png" alt="keypad" /></p>
+
+<ul>
+  <li>Row lines are connected to arduino GPIOs that are configured as <strong>inputs with pull-ups</strong>.</li>
+  <li>Column lines are connected to arduino GPIOs that are configured as <strong>outputs initially set to LOW/GND state</strong></li>
+  <li>each rows is connected to one arduino GPIO that is configured as an <strong>interrupt pin</strong> (on the arduino model I use, only pins 2 &amp; 3 have this capability), configured as with a pull-up, and triggered upon FALLING edges of the signal.
+    <ul>
+      <li>the diodes are there to avoid conflicts between multiple rows, they implement a kind of <strong>OR operation</strong> into the interrupt pin.</li>
+    </ul>
+  </li>
+  <li>when any key is pushed, the corresponding row is then connected to GND via the column that the key belongs to.</li>
+  <li>this pulls the interrupt line LOW, which triggers an interrupt</li>
+  <li>the <strong>interrupt service routine</strong> then scans the rows &amp; columns to determine the pushed key:
+    <ul>
+      <li>it resets all columns lines to HIGH state</li>
+      <li>it then loops through columns, setting them to LOW/GND one by one, and loops through reading all row values for each column : only the column/row combination corresponding to the pushed key will read a “LOW” state.</li>
+      <li>it then resets all columns lines to LOW/GND state for next time</li>
+    </ul>
+  </li>
+</ul>
+
+<p>This does not take care of multiple simultaneous key push, but for my usecase this is no big deal.</p>
+
+<p><strong>Note</strong>: playing with the columns output states within the interrupt service routine could theoretically trig a nested interrupt, and things would get ugly quickly. Fortunately, the arduino (this model at least) implicitly disables interrupts when entering an ISR, and re-enables them automatically upon exiting the ISR.</p>
+
+<h4 id="display-management">Display management</h4>
+
+<p>The OLED display I used is based on the SSD1306 component, and is interfaced over IC2. Executing the <a href="http://playground.arduino.cc/Main/I2cScanner">I2C scanner</a> sketch revealed that its address happens to be <code>0x3c</code>.
+I downloaded and installed two great libraries from Adafruit that happen to support this display:</p>
+
+<p><a href="https://github.com/adafruit/Adafruit_SSD1306">Adafruit_SSD1306</a> and <a href="https://github.com/adafruit/Adafruit-GFX-Library">Adafruit-GFX-Library</a></p>
+
+<p>(modern arduino IDE can import libraries, for older ones just copy &amp; paste the library folder into the <code>/libraries</code> folder of the arduino IDE, and restart. The only catch is that the library folder name MUST match the library sketch file name)</p>
+
+<p>An example sketch <code>ssd1306_128x32_i2c.ino</code> is available in <code>AdafruitSSD1306</code> library, and I did not even have to adjust the I2C address of the display, it worked out of the box.
+I don’t need all the fancy graphics routine, the <code>print</code> function is all I needed to start with.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/oled_debug.png" alt="oled_debug" /></p>
+
+<h4 id="eeprom-access">EEPROM access</h4>
+
+<p>I reused the EEPROM read/write code from the <code>I2Ceep</code> of the FinalKey project, which is available <a href="https://github.com/DusteDdk/FinalKey">here</a>.
+It boils down to the following sequence:</p>
+
+<ul>
+  <li>For each chunk of 32 bytes:
+    <ul>
+      <li>initialize I2C communication to address 0x50</li>
+      <li>write MSB and LSB of target address to be read (or written)
+        <ul>
+          <li>for write, send the data to be written byte by byte, and end I2C communication</li>
+          <li>for read, end I2C communication, request and read incoming data</li>
+        </ul>
+      </li>
+      <li>wait a few ms before looping to read/write next chunk</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>Note</strong>: the original FinalKey code I used at the time contained a value of 4ms for the delay, which turned out to produce write errors for consecutive writes with the EEPROM I was using. I increased the delay to 8ms and it works fine.</p>
+
+<h4 id="rotary-encoder-management">Rotary encoder management</h4>
+
+<p>The <strong>CLK</strong> signal of the rotary encoder is connected to interrupt pin #3 of the arduino, which is configured to trig an interrupt whenever it sees a FALLING edge of the signal.</p>
+
+<p>The <strong>DATA</strong> pulse will begin either before of after CLK pulse, depending on the direction of the shaft rotation.</p>
+
+<p>So the interrupt service routine checks the current state of the <strong>DATA</strong> signal at the time it is called, and increments or decrements a counter accordingly.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/encoder_nocaps.png" alt="encoder_nocaps" /></p>
+
+<h2 id="breadboard-prototype-2">Breadboard prototype #2</h2>
+
+<p>On further thought, the keypad did not look practical enough, so I got rid of it and decided to use the knob as the single way to manage user input.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/Bluekey2.png" alt="concept2" /></p>
+
+<h3 id="knob-based-user-input">Knob-based user input</h3>
+
+<p>TODO</p>
+
+<h3 id="better-rotary-encoder-management">Better rotary encoder management</h3>
+
+<p>While turning the knob, sometimes the counter registered two increments, while only turning by one step. Zooming way in on the CLK signal falling edge reveals multiple short glitches:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/encoder_nocaps_zoomed.png" alt="encoder_nocaps_zoomed" /></p>
+
+<p>This results in the interrupt routine being called multiple times, and therefore wrongly incrementing the count multiple times on a single step turn.</p>
+
+<p>Just plugging a 100nF capacitor be between CLK and GND, and another one between DATA and GND allows to filter out the glitches, and get a nice and clean timeline:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/encoder_100nF_caps.png" alt="encoder_100nF_caps" /></p>
+
+<p>Finally, a basic timing check is included in the ISR to reject calls that happen less than 10ms after the previous one (as inspired by <a href="https://bigdanzblog.wordpress.com/2014/08/16/using-a-ky040-rotary-encoder-with-arduino/">this guy’s page</a>).</p>
+
+<h3 id="updated-breadboard-assembly">Updated breadboard assembly</h3>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/fritzing_proto2.png" alt="fritzing_proto2" /></p>
+
+<h2 id="an-unexpected-detour-in-low-memory-land">An unexpected detour in low-memory land</h2>
+
+<p>Everything was going fine until I started adding significant amounts of code, when after a while the arduino started misbehaving seemingly randomly. It smelled like memory-related issues, yet the memory status reported by the compiler was nowhere near the limits:</p>
+
+<pre><code>Sketch uses 21650 bytes (70%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1576 bytes (76%) of dynamic memory, leaving 472 bytes for local variables. Maximum is 2048 bytes.
+</code></pre>
+
+<p>How could I encounter problems with 472 bytes of free SRAM left ?</p>
+
+<p>SRAM is mapped as follows:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SRAMMap.png" alt="SRAMMap" /></p>
+
+<p>Quick check of the executable with <code>avr-size</code> tool:</p>
+
+<pre><code>etabli@bids-etabli:~/arduino-1.8.1/hardware/tools/avr/bin$ ./avr-size /tmp/arduino_build_525269/BlueKeyFat.ino.elf
+   text    data     bss     dec     hex filename
+  20834     816     760   22410    578a /tmp/arduino_build_525269/BlueKeyFat.ino.elf
+</code></pre>
+
+<p>So, 816 bytes of initialized data, and 760 bytes of uninitialized data. I used the <code>avr-nm</code> to check the list of these data:</p>
+
+<pre><code>./avr-nm -Crtd --size-sort /tmp/arduino_build_807388/BlueKey.ino.elf  | grep -i ' [dbv] '
+</code></pre>
+
+<p>Which returned:</p>
+
+<pre><code>00000512 D _ZL6buffer.lto_priv.70
+00000242 B ES
+00000157 B Serial
+00000046 B display
+00000034 B TwoWire::txBuffer
+00000034 B TwoWire::rxBuffer
+00000034 b twi_txBuffer
+00000034 b twi_rxBuffer
+00000034 B twi_masterBuffer.lto_priv.65
+00000032 B gWDT_entropy_pool
+00000032 b gWDT_buffer
+00000024 d vtable for Adafruit_SSD1306
+00000016 d vtable for TwoWire
+00000016 d vtable for HardwareSerial
+00000012 B Wire
+00000008 d Adafruit_SSD1306::drawFastVLineInternal(int, int, int, unsigned int)::postmask
+00000008 d Adafruit_SSD1306::drawFastVLineInternal(int, int, int, unsigned int)::premask
+00000008 B Entropy
+[...and many others of smaller size]
+</code></pre>
+
+<ul>
+  <li>512 bytes is the <code>buffer</code> in the <strong>LCD library</strong>: 128 cols * 32 lines * 1 bit  = 512 bytes</li>
+  <li>242 bytes for <strong>EncryptedStorage object</strong>
+    <ul>
+      <li>makes sense since EncryptedStorage object contains an AES object, that itself contains a 240 bytes <code>key_sched</code> work buffer</li>
+    </ul>
+  </li>
+  <li><strong>Serial</strong> has two 64 bytes RX/TX buffers, as well as others variables, justifiying the 157 used bytes</li>
+  <li><strong>displayobject</strong> is an instance of Adafruit_SSD1306, derived from Adafruit_GFX, which has a bunch of internal variables, the 46 bytes make sense.</li>
+  <li><strong>I2C</strong> (TwoWire) library uses TX/RX buffers too.</li>
+  <li><strong>vtable</strong> entries are the price to pay for the convenience of using C++</li>
+</ul>
+
+<p>So, nothing suspicious and nothing I could really spare. This should indeed theoretically leave 472 free bytes (2048 - 816  - 760) for dynamic allocations (mallocs, which I don’t use) and for the stack.</p>
+
+<p>To verify this at runtime, I implemented the following debug function, and called it at the very beginning of <code>setup()</code> to figure out memory limits at the beginning of execution:</p>
+
+<pre><code>void printSRAMMap() {
+    int dummy;
+    int free_ram; 
+    extern int __heap_end;
+    extern int __heap_start;
+    extern int __stack;
+    extern int __bss_start;  
+
+    extern int __data_end;
+    extern int __data_start; 
+    extern int * __brkval; 
+    extern int __bss_end; 
+
+    int stack=&amp;__stack; 
+    free_ram =  (int) &amp;dummy - (__brkval == 0 ? (int) &amp;__heap_start : (int) __brkval); 
+  
+    Serial.print("\nMemory map:");
+
+    Serial.print("\n,  __data_start=");
+    Serial.print((int)&amp;__data_start); 
+        
+    Serial.print("\n,  __data_end=");
+    Serial.print((int)&amp;__data_end);   
+
+    Serial.print("\n, __bss_start=");
+    Serial.print((int)&amp;__bss_start);   
+        
+    Serial.print("\n, __bss_end=");
+    Serial.print((int)&amp;__bss_end);  
+
+    Serial.print("\n, __heap_start=");
+    Serial.print((int)&amp;__heap_start);
+
+    Serial.print("\n, __brkval=");
+    Serial.print((int)__brkval);   
+    
+    Serial.print("\n, __heap_end=");
+    Serial.print((int)&amp;__heap_end);   
+
+    Serial.print("\n, free=");
+    Serial.print(free_ram);
+    
+    Serial.print("\n, stack bottom=");
+    Serial.print((int)&amp;dummy);
+         
+    Serial.print("\n, __stack top=");
+    Serial.print((int)&amp;__stack);  
+        
+    Serial.print("\n, RAMEND=");
+    Serial.print(RAMEND);
+}
+</code></pre>
+
+<p>This returned:</p>
+
+<pre><code>Memory map:
+,  __data_start=256
+,  __data_end=1072
+, __bss_start=1072
+, __bss_end=1832
+, __heap_start=1832
+, __brkval=0
+, __heap_end=0
+, free=105
+, stack bottom=1937
+, __stack top=2303
+, RAMEND=2303
+</code></pre>
+
+<ul>
+  <li>data segment starts at address 256, which is normal (addresses 0 to 255 is where the processor registers live)</li>
+  <li>data segment ends at 1072, consistent with 816 bytes of data</li>
+  <li>BSS segment is next, 760 bytes from 1072 to 1832</li>
+  <li>Heap lives on top of that, but is unused (as indicated by brkval=0, i.e. no malloc was performed)</li>
+  <li>Wait, what ? only 105 bytes of free RAM before stack space ? Way too low for comfort, and no wonder the later execution misbehaved, most probably due to running out of stack space.</li>
+  <li>at the top of memory, stack uses bytes 1937 to 2303, which means…366 bytes of used stack, before program loop execution starts!</li>
+</ul>
+
+<p>So among the 472 precious bytes of available SRAM, 366 directly went into the stack, before a single instruction of the main loop was called.</p>
+
+<p>Time for a little code disassembly, for example on this snippet of the code:</p>
+
+<pre><code>//  knobIncrementChanged=false;
+knobIndexIncreased=false;
+knobIndexDecreased=false;
+knobSwitchPushed=false;
+
+if(!ES.readHeader(devName)) {
+[...]
+}
+</code></pre>
+
+<p>which is supposed to call this function:</p>
+
+<pre><code>bool EncryptedStorage::readHeader(char* deviceName)
+{
+  byte buf[HEADER_EEPROM_IDENTIFIER_LEN];
+  uint16_t offset = I2E_Read(0, buf, HEADER_EEPROM_IDENTIFIER_LEN);
+  
+  [...]
+}
+</code></pre>
+
+<p>The following command will disassemble the executable, showing assembly instructions with the original C code lines inserted for reference</p>
+
+<pre><code>./avr-objdump -m avr -C -S /tmp/arduino_build_583982/BlueKey.ino.elf &gt; ~/Desktop/dump.asm
+</code></pre>
+
+<p>The relevant part of the output is:</p>
+
+<pre><code>//  knobIncrementChanged=false;
+knobIndexIncreased=false;
+1716:   10 92 b2 04     sts 0x04B2, r1  ; 0x8004b2 &lt;knobIndexIncreased&gt;
+knobIndexDecreased=false;
+171a:   10 92 b1 04     sts 0x04B1, r1  ; 0x8004b1 &lt;knobIndexDecreased&gt;
+knobSwitchPushed=false;
+171e:   10 92 3f 04     sts 0x043F, r1  ; 0x80043f &lt;knobSwitchPushed&gt;
+
+bool EncryptedStorage::readHeader(char* deviceName)
+{
+  byte buf[HEADER_EEPROM_IDENTIFIER_LEN];
+  uint16_t offset = I2E_Read(0, buf, HEADER_EEPROM_IDENTIFIER_LEN);
+    
+    1722:   20 e0           ldi r18, 0x00   ; 0
+    1724:   4c e0           ldi r20, 0x0C   ; 12
+    1726:   b7 01           movw    r22, r14
+    1728:   80 e0           ldi r24, 0x00   ; 0
+    172a:   90 e0           ldi r25, 0x00   ; 0
+    172c:   0e 94 6d 17     call    0x2eda  ; 0x2eda &lt;EEPROM::dataOp(unsigned int, unsigned char*, unsigned char, unsigned char) [clone .constprop.24]&gt;
+    1730:   28 e6           ldi r18, 0x68   ; 104
+    1732:   30 e0           ldi r19, 0x00   ; 0
+    1734:   cd 5d           subi    r28, 0xDD   ; 221
+    1736:   de 4f           sbci    r29, 0xFE   ; 254
+    1738:   39 83           std Y+1, r19    ; 0x01
+    173a:   28 83           st  Y, r18
+    173c:   c3 52           subi    r28, 0x23   ; 35
+    173e:   d1 40           sbci    r29, 0x01   ; 1
+    1740:   f9 01           movw    r30, r18
+    1742:   d7 01           movw    r26, r14
+    1744:   2c e0           ldi r18, 0x0C   ; 12
+    1746:   2e 0d           add r18, r14
+</code></pre>
+
+<p>I would have expected a <code>call</code> instruction to the <code>readHeader</code> function somewhere, but it turns out there is none because the function has been automatically <strong>inlined</strong> by the compiler.
+This is generally a good optimisation for performance (spares the overhead of a function call) BUT in my specific case the unexpected effect was that since all this inlined code ended up inside the main function, the compiler allocated
+all local variables corresponding to all inlined functions on the stack AT THE SAME TIME, i.e. at the beginning of execution, resulting in significant stack use, and the miserable free memory margin I noticed.</p>
+
+<p>So I grabbed my anti-inlining axe, in the form of the <code>__attribute__ ((noinline))</code> compilation directive added in the prototype of the function implementation:</p>
+
+<pre><code>bool __attribute__ ((noinline)) EncryptedStorage::readHeader(char* deviceName)
+</code></pre>
+
+<p>The generated assembly became:</p>
+
+<pre><code>//  knobIncrementChanged=false;
+knobIndexIncreased=false;
+47a4:   10 92 7f 04     sts 0x047F, r1  ; 0x80047f &lt;knobIndexIncreased&gt;
+knobIndexDecreased=false;
+47a8:   10 92 7e 04     sts 0x047E, r1  ; 0x80047e &lt;knobIndexDecreased&gt;
+knobSwitchPushed=false;
+47ac:   10 92 1e 07     sts 0x071E, r1  ; 0x80071e &lt;knobSwitchPushed&gt;
+
+if(!ES.readHeader(devName)) {
+47b0:   c8 01           movw    r24, r16
+47b2:   0e 94 50 20     call    0x40a0  ; 0x40a0 &lt;EncryptedStorage::readHeader(char*) [clone .constprop.16]&gt;
+</code></pre>
+
+<p>Now the function is properly CALL’ed. Now let’s disable inlining for all relevant functions in the code, recompile, and see what happens on the overall memory usage:</p>
+
+<pre><code>Sketch uses 21544 bytes (70%) of program storage space. Maximum is 30720 bytes.
+Global variables use 1576 bytes (76%) of dynamic memory, leaving 472 bytes for local variables. Maximum is 2048 bytes.
+</code></pre>
+
+<p>Code size is slightly smaller (a good side effect of disabling inlining), and DATA+BSS size is still identical to the original values. However at runtime the situation has changed:</p>
+
+<pre><code>Memory map:
+  __data_start=256
+  __data_end=1072
+, __bss_start=1072
+, __bss_end=1832
+, __heap_start=1832
+, __brkval=0
+, __heap_end=0
+, free=388
+, stack bottom=2220
+, __stack top=2303
+, RAMEND=2303
+</code></pre>
+
+<p>There you go, the stack now starts with only 83 bytes used, leaving 388 bytes free for later use. Much better than the original 105 bytes!
+Even though this margin is still relatively small, it was enough to come back to a situation where the program was executing reliably again.</p>
+
+<h2 id="packaged-prototype">Packaged prototype</h2>
+
+<p>Coming soon…</p>
+
+<h2 id="source-code">Source Code</h2>
+
+<p>The source code is available <a href="https://github.com/jheyman/BlueKey">here</a>.</p>
+
+<h2 id="todo-list">Todo list</h2>
+
+<ul>
+  <li>invert RN42 LED status logic (should be ON when connected)</li>
+  <li>password management SW</li>
+  <li>random password generation</li>
+  <li>integrate in a proper packaging</li>
+  <li>put arduino to sleep and wake-up on knob turn</li>
+  <li>support local USB connection for emulating a leyboard (as the original FinalKey does)</li>
+  <li>optionnally get rid of external EEPROM memory (64kB) and use arduino’s internal EEPROM (1KB only, could store 16 entries of 2x32 bytes)</li>
+  <li>deactivate inlining globally at makefile level</li>
+</ul>
+
+<h2 id="lessons-learned">Lessons learned</h2>
+
+<ul>
+  <li>The initial prototype was assembled very quickly, with cheapo components from ebay that worked out of the box: I just love the arduino ecosystem</li>
+  <li>I need to improve my soldering skills</li>
+  <li>I never thought implementing an emulated Bluetooth keyboard would require close to zero effort with the right BT module.</li>
+  <li>The arduino IDE is such that it only compiles/links the library functions that are <em>actually</em> called in the main sketch. This is extremely cool when using a single function of a large library.</li>
+</ul>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/BlueKey/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

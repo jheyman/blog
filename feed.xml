@@ -82,6 +82,14 @@
                 
                         
                         <item>
+                                <title>Shopping Tracker Android app</title>
+                                <description>And Android app to keep track of shopping budget</description>
+                                <link>http://jheyman.github.io/blog/pages/ShoppingTracker/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>ShoppingList android widget</title>
                                 <description>A custom shopping list widget for Android devices</description>
                                 <link>http://jheyman.github.io/blog/pages/ShoppingListWidget/</link>
@@ -317,6 +325,14 @@
                                 <title>LED Matrix Strip</title>
                                 <description>A display based on 8x8 LED matrices</description>
                                 <link>http://jheyman.github.io/blog/pages/LEDMatrixStrip/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>BlueKey, a bluetooth hardware password manager</title>
+                                <description>BlueKey, a bluetooth hardware password manager</description>
+                                <link>http://jheyman.github.io/blog/pages/BlueKey/</link>
                         </item>
                         
                 
