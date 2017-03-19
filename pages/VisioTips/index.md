@@ -85,6 +85,16 @@ And the same example after clicking LayerA and LayerB buttons:
 
 An obvious flaw is that if you then change a layer visibility manually from the layer menu icon, the button state might temporarily become inconsistent with the layer activation state. One could write some hook code triggered on layer visibility changes, to solve this (minor) inconvenience.
 
+### Export part of diagram as an image
+
+I never quite manage to get what I want when using the regular "save as image" function, so this is my routine to export part of a diagram into an image **of the size I want**:
+
+* Select the elements to be exported (e.g. to have an image that covers exaclty the selection, no more no less)
+* `File` => `Export` => `Change File Type`, and select `SVG Scalable Vector Graphics`
+* import saved SVG in Gimp (or other image processing tool): one can then set the specific width/height of the image to be rendered from the SVG
+* flatten image and save.
+
+
 
 
 

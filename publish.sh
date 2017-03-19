@@ -1,5 +1,9 @@
 #! /bin/bash
 
+# generate site
+
+jekyll build
+
 # Check for generation errors that might have left MarkDown title characters un-processed
 
 SUSPICIOUS="##"
@@ -17,9 +21,8 @@ else
    echo "Check for suspicious characters in generated HMTL: OK"
 fi
 
-# build site, commit and push generated files to github blog page
+# commit and push generated files to github blog page
 
-jekyll build
 cd publish/blog/
 rsync -arv ../../_site/ .
 git add . --all

@@ -52,10 +52,13 @@
 
 <h3 id="memory-model">Memory model</h3>
 
-<p>Most arduino boards have three kinds of memory on board:
-- <strong>EEPROM</strong> (non-volatile) to store e.g. configuration info; 1KB on the Arduino Uno
-- <strong>Flash</strong> (non-volatile) to store program binary; 32 KB on the Arduino Uno
-- <strong>SRAM</strong> (volatile) to store variables during program execution; 2KB on the Arduino Uno</p>
+<p>Most arduino boards have three kinds of memory on board:</p>
+
+<ul>
+  <li><strong>EEPROM</strong> (non-volatile) to store e.g. configuration info; 1KB on the Arduino Uno</li>
+  <li><strong>Flash</strong> (non-volatile) to store program binary; 32 KB on the Arduino Uno</li>
+  <li><strong>SRAM</strong> (volatile) to store variables during program execution; 2KB on the Arduino Uno</li>
+</ul>
 
 <p>These are relatively small, but a good fit for the typical usage scenarios of an Arduino. I did face a few cases where I ran out of SRAM, and it bites real hard since the behavior of the chip then becomes quite weird. You would expect it to just crash/freeze, but sometimes it doesn’t and just produces unexpected behaviors.
 Since then, I have made an habit of specifically checking how much SRAM I am currently using, to figure out what kind of margin I have left at any time during development.</p>

@@ -17,6 +17,7 @@ A simplified view of the build and load process is as follows:
 ### Memory model
 
 Most arduino boards have three kinds of memory on board:
+
 - **EEPROM** (non-volatile) to store e.g. configuration info; 1KB on the Arduino Uno
 - **Flash** (non-volatile) to store program binary; 32 KB on the Arduino Uno
 - **SRAM** (volatile) to store variables during program execution; 2KB on the Arduino Uno

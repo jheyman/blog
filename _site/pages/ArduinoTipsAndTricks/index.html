@@ -46,6 +46,18 @@
 
 <ul id="markdown-toc">
   <li><a href="#enable-non-root-access-to-serial-ports-in-arduino-ide" id="markdown-toc-enable-non-root-access-to-serial-ports-in-arduino-ide">Enable non-root access to serial port(s) in Arduino IDE</a></li>
+  <li><a href="#enable-full-compilation-traces" id="markdown-toc-enable-full-compilation-traces">Enable full compilation traces</a></li>
+  <li><a href="#memory-optimisation" id="markdown-toc-memory-optimisation">Memory optimisation</a>    <ul>
+      <li><a href="#figuring-out-where-memory-went" id="markdown-toc-figuring-out-where-memory-went">Figuring out where memory went</a></li>
+      <li><a href="#measuring-free-sram-at-execution-time" id="markdown-toc-measuring-free-sram-at-execution-time">Measuring free SRAM at execution time</a></li>
+      <li><a href="#checking-symbols-and-their-sizes" id="markdown-toc-checking-symbols-and-their-sizes">Checking symbols and their sizes</a></li>
+      <li><a href="#progmem-directive" id="markdown-toc-progmem-directive">PROGMEM directive</a></li>
+      <li><a href="#using-the-f-macro" id="markdown-toc-using-the-f-macro">Using the F() macro</a></li>
+      <li><a href="#checking-the-linkers-memory-map" id="markdown-toc-checking-the-linkers-memory-map">Checking the linker’s memory map</a></li>
+      <li><a href="#un-inlining-functions" id="markdown-toc-un-inlining-functions">Un-inlining functions</a></li>
+    </ul>
+  </li>
+  <li><a href="#dumping-assembly-code" id="markdown-toc-dumping-assembly-code">Dumping assembly code</a></li>
 </ul>
 
 <hr />
@@ -58,6 +70,163 @@
 </code></pre>
 
 <p>Then logout, log back in, launch arduino IDE normally, and access should be possible.</p>
+
+<hr />
+
+<h3 id="enable-full-compilation-traces">Enable full compilation traces</h3>
+
+<p>Whenever detailed compilation traces are required in the arduino IDE, just head to</p>
+
+<pre><code>"File" =&gt; "Preferences" =&gt; "Show verbose output during compilation"
+</code></pre>
+
+<hr />
+
+<h3 id="memory-optimisation">Memory optimisation</h3>
+
+<p>A wonderful summary of Arduino memory management and related issues is available <a href="https://learn.adafruit.com/memories-of-an-arduino/you-know-you-have-a-memory-problem-when-dot-dot-dot">here</a>.</p>
+
+<p>TLDR:</p>
+
+<ul>
+  <li>arduinos have three types of memory
+    <ul>
+      <li>program memory (<strong>Flash</strong>, non volatile)</li>
+      <li>dynamic memory (<strong>SRAM</strong>, volatile)</li>
+      <li><strong>EEPROM</strong> (non-volatile)</li>
+    </ul>
+  </li>
+  <li>amount of used <strong>program memory</strong> shows up in the compiler output, so it clear enough when reaching the limit, and optimizing is obvious (reducing amount of generated code one way or the other)</li>
+  <li>amount used <strong>dynamic memory</strong> is trickier to figure out, as it always is, since it depends on execution flow and what the code does and how.
+    <ul>
+      <li>at the bottom of SRAM, global static variables are stored (therefore using a fixed amount of it)</li>
+      <li>on top of that lives the heap, used by dynamic memory allocations/deallocations (hint: don’t use those at all)</li>
+      <li>then starting from the other end of the SRAM (the top), lives the stack, where all local variables live as well as parameters passed by functions and function/interrupts callstack itself.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Weird behavior of an Arduino program appearing right after modifying something apparently unrelated in the program is (very) likely to be the result of running out of SRAM (i.e. stack space and heap space colliding)</p>
+
+<h4 id="figuring-out-where-memory-went">Figuring out where memory went</h4>
+
+<p>First of all, it is useful to check the executable file itself and see what memory space it will occupy once loaded. Enter the <code>avr-size</code> command, usually located  under <code>arduino-x.y.z/hardware/tools/avr/bin</code></p>
+
+<pre><code>./avr-size /tmp/arduino_build_xxxxxx/sketch.ino.elf
+
+text    data   bss   dec     hex filename
+17038   640    750   18428   47fc /tmp/arduino_build_xxxxxx/sketch.ino.elf
+</code></pre>
+
+<ul>
+  <li><strong>text</strong> is code, stored in Flash</li>
+  <li><strong>data</strong> and <em>bss</em> live at the bottom of the SRAM: in this example, on an ATMega328 with 2048 bytes of SRAM, only 2048-640-750= 658 bytes are left for dynamic memory allocations (malloc) AND execution stack.</li>
+</ul>
+
+<h4 id="measuring-free-sram-at-execution-time">Measuring free SRAM at execution time</h4>
+
+<p>The function below returns the delta between top of the heap and bottom of the stack, i.e. the remaining amount of free SRAM:</p>
+
+<pre><code>int freeRam () 
+{
+  extern int __heap_start, *__brkval; 
+  int v; 
+  return (int) &amp;v - (__brkval == 0 ? (int) &amp;__heap_start : (int) __brkval); 
+}
+</code></pre>
+
+<h4 id="checking-symbols-and-their-sizes">Checking symbols and their sizes</h4>
+
+<p>The following command (executed from <code>arduino-x.y.z/hardware/tools/avr/bin</code>) will return the list of symbols (code &amp; data) in the executable:</p>
+
+<pre><code>./avr-nm /tmp/arduino_build_xxxxxx/sketch.ino.elf | sort
+</code></pre>
+
+<p>More interestingly, the following command will list data symbols, by decreasing size:</p>
+
+<pre><code>./avr-nm -Crtd --size-sort /tmp/arduino_build_xxxxxx/sketch.ino.elf  | grep -i ' [dbv] '
+</code></pre>
+
+<p>e.g.:</p>
+
+<pre><code>00000512 D _ZL6buffer.lto_priv.58
+00000242 B ES
+00000157 B Serial
+00000046 B display
+00000034 B TwoWire::txBuffer
+00000034 B TwoWire::rxBuffer
+00000034 b twi_txBuffer
+00000034 b twi_rxBuffer
+00000034 B twi_masterBuffer.lto_priv.62
+00000032 b gWDT_entropy_pool
+00000032 b gWDT_buffer
+00000024 d vtable for Adafruit_SSD1306
+00000016 d vtable for TwoWire
+00000016 d vtable for HardwareSerial
+00000012 b Wire
+</code></pre>
+
+<p>In this example, 512 bytes of memory is being taken by the “buffer” object on the code, and e.g. 157 bytes are taken by the <code>Serial</code> object.</p>
+
+<h4 id="progmem-directive">PROGMEM directive</h4>
+
+<p>The PROGMEM keyword tells the compiler to store the data structure it is associated to, into program memory (flash), freeing the corresponding SRAM where they would otherwise end up living.</p>
+
+<pre><code>const char mydata[] PROGMEM  = {"looooooooooong string of data in here"};
+char myChar;
+int len = strlen_P(mydata);
+ 
+for (k = 0; k &lt; len; k++)
+{
+  myChar =  pgm_read_byte_near(mydata + k);
+  // do whatever
+}
+</code></pre>
+
+<h4 id="using-the-f-macro">Using the F() macro</h4>
+
+<p>Wrapping initialised strings in the <code>F()</code> macro will reap the PROGMEM benefits (i.e. free-up corresponding SRAM)</p>
+
+<pre><code>Serial.println(F("hardcoded string");
+</code></pre>
+
+<h4 id="checking-the-linkers-memory-map">Checking the linker’s memory map</h4>
+
+<p>Linker memory map file are not generated by default. To tell the linker to generate it, the linker flags need to be modified. When using the arduino IDE, there is a <code>platform.txt</code> file somewhere in the arduino folder that contains compiler and linker flags, e.g.</p>
+
+<pre><code>/arduino-1.x.y/hardware/arduino/avr/platform.txt
+</code></pre>
+
+<p>To generate memory map, just add</p>
+
+<pre><code>-Wl,-Map,{build.path}/linker.map 
+</code></pre>
+
+<p>at the end of the</p>
+
+<pre><code>compiler.c.elf.flags
+</code></pre>
+
+<p>line, then save the file, re-launch IDE and recompile. A <code>linker.map</code> text file should have been generated in the project’s temp build directory (on linux, usually <code>/tmp/arduino_build_xxxxxx</code>)</p>
+
+<p>A very helpful viewer tool for windows and linux is available <a href="http://www.sikorskiy.net/prj/amap/">here</a>.</p>
+
+<h4 id="un-inlining-functions">Un-inlining functions</h4>
+
+<p>Most of the time function inlining is fine to optimize performance, however in the case of a lot of small functions using local buffers, inlining results in a huge cumulative stack size when main loop is called, which may be a problem if free memory is low. To force the compiler to NOT inline functions, just add the <code>__attribute__ ((noinline))</code> in the function prototype:</p>
+
+<pre><code>void __attribute__ ((noinline)) foo() 
+{
+
+}
+</code></pre>
+
+<h3 id="dumping-assembly-code">Dumping assembly code</h3>
+
+<p>For the rare case where compiled assembly code would need to be visualized, the <code>avr-objdump</code> in the directory <code>arduino-x.y.z/hardware/tools/avr/bin</code> can be used:</p>
+
+<pre><code>./avr-objdump -m avr -C -S /tmp/arduino_build_xxxxxx/BlueKey.ino.elf &gt; /tmp/dump.asm
+</code></pre>
 
 
 				</div><!-- entry-content -->
