@@ -44,7 +44,8 @@
 					
 <ul id="markdown-toc">
   <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
-  <li><a href="#breadboard-prototype-1" id="markdown-toc-breadboard-prototype-1">Breadboard prototype #1</a>    <ul>
+  <li><a href="#security-disclaimer" id="markdown-toc-security-disclaimer">Security Disclaimer</a></li>
+  <li><a href="#prototype-1-breadboard" id="markdown-toc-prototype-1-breadboard">PROTOTYPE #1 (Breadboard)</a>    <ul>
       <li><a href="#hardware" id="markdown-toc-hardware">Hardware</a>        <ul>
           <li><a href="#arduino-board" id="markdown-toc-arduino-board">Arduino board</a></li>
           <li><a href="#keypad" id="markdown-toc-keypad">Keypad</a></li>
@@ -57,7 +58,7 @@
       </li>
       <li><a href="#breadboard-assembly" id="markdown-toc-breadboard-assembly">Breadboard assembly</a></li>
       <li><a href="#software" id="markdown-toc-software">Software</a>        <ul>
-          <li><a href="#rn42-bluetooth-module" id="markdown-toc-rn42-bluetooth-module">RN42 bluetooth module</a></li>
+          <li><a href="#rn42-bluetooth-module-configuration" id="markdown-toc-rn42-bluetooth-module-configuration">RN42 bluetooth module configuration</a></li>
           <li><a href="#keypad-management" id="markdown-toc-keypad-management">Keypad management</a></li>
           <li><a href="#display-management" id="markdown-toc-display-management">Display management</a></li>
           <li><a href="#eeprom-access" id="markdown-toc-eeprom-access">EEPROM access</a></li>
@@ -66,20 +67,39 @@
       </li>
     </ul>
   </li>
-  <li><a href="#breadboard-prototype-2" id="markdown-toc-breadboard-prototype-2">Breadboard prototype #2</a>    <ul>
-      <li><a href="#knob-based-user-input" id="markdown-toc-knob-based-user-input">Knob-based user input</a></li>
+  <li><a href="#prototype-2-breadboard" id="markdown-toc-prototype-2-breadboard">PROTOTYPE #2 (Breadboard)</a>    <ul>
       <li><a href="#better-rotary-encoder-management" id="markdown-toc-better-rotary-encoder-management">Better rotary encoder management</a></li>
       <li><a href="#updated-breadboard-assembly" id="markdown-toc-updated-breadboard-assembly">Updated breadboard assembly</a></li>
     </ul>
   </li>
-  <li><a href="#an-unexpected-detour-in-low-memory-land" id="markdown-toc-an-unexpected-detour-in-low-memory-land">An unexpected detour in low-memory land</a></li>
-  <li><a href="#packaged-prototype" id="markdown-toc-packaged-prototype">Packaged prototype</a></li>
-  <li><a href="#source-code" id="markdown-toc-source-code">Source Code</a></li>
+  <li><a href="#an-unexpected-detour-in-low-memory-land" id="markdown-toc-an-unexpected-detour-in-low-memory-land">An unexpected detour in low-memory land</a>    <ul>
+      <li><a href="#where-did-my-sram-go-" id="markdown-toc-where-did-my-sram-go-">Where did my SRAM go ?</a></li>
+      <li><a href="#freeing-up-more-sram" id="markdown-toc-freeing-up-more-sram">Freeing up more SRAM</a></li>
+      <li><a href="#watching-the-stack-margin" id="markdown-toc-watching-the-stack-margin">Watching the stack margin</a></li>
+    </ul>
+  </li>
+  <li><a href="#prototype-3-the-snes-variant" id="markdown-toc-prototype-3-the-snes-variant">PROTOTYPE #3: the SNES variant</a>    <ul>
+      <li><a href="#enclosure" id="markdown-toc-enclosure">Enclosure</a></li>
+      <li><a href="#full-33v-setup" id="markdown-toc-full-33v-setup">Full 3.3V setup</a></li>
+      <li><a href="#battery" id="markdown-toc-battery">Battery</a></li>
+      <li><a href="#updated-assembly-diagram" id="markdown-toc-updated-assembly-diagram">Updated assembly diagram</a></li>
+      <li><a href="#integration" id="markdown-toc-integration">Integration</a></li>
+      <li><a href="#using-the-device" id="markdown-toc-using-the-device">Using the device</a>        <ul>
+          <li><a href="#power-on--unlock-device" id="markdown-toc-power-on--unlock-device">Power-on &amp; unlock device</a></li>
+          <li><a href="#main-menu" id="markdown-toc-main-menu">Main menu</a></li>
+          <li><a href="#password-list" id="markdown-toc-password-list">Password list</a></li>
+          <li><a href="#passwords-management" id="markdown-toc-passwords-management">Passwords management</a></li>
+          <li><a href="#display-orientation" id="markdown-toc-display-orientation">Display orientation</a></li>
+          <li><a href="#display-performance" id="markdown-toc-display-performance">Display performance</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
   <li><a href="#todo-list" id="markdown-toc-todo-list">Todo list</a></li>
+  <li><a href="#source-code" id="markdown-toc-source-code">Source Code</a></li>
+  <li><a href="#afterthoughts" id="markdown-toc-afterthoughts">Afterthoughts</a></li>
   <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
 </ul>
-
-<hr />
 
 <h2 id="overview">Overview</h2>
 
@@ -88,7 +108,7 @@
 <ul>
   <li>be usable from all platforms I use (Windows, Linux, Android)</li>
   <li>be reasonably secure (for moderately critical login/passwords, since I will still memorize my most critical passwords and/or use SMS-based two-factor authentication when available)</li>
-  <li>NOT involve cloud-base storage, or any internet connection for that matter</li>
+  <li>NOT involve cloud-based key storage, or any internet connection for that matter</li>
   <li>be low-cost</li>
 </ul>
 
@@ -103,16 +123,21 @@
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/finalkey.png" alt="FinalKey" /></p>
 
-<p>This little DIY hardware password manager is an arduino in a 3D-printed case that pretends to be a USB keyboard, and it will type in passwords for you after selecting the service to be accessed from a neat little SW client on the computer, and pushing the button on the device (as a security measure).</p>
+<p>This little DIY hardware password manager is an arduino with an EEPROM, in a 3D-printed case, that allows to store encrypted passwords, and then pretends to be a USB keyboard to type in passwords for you, after selecting the account to be accessed from a neat little SW client on the computer, and pushing the button on the device (as a security measure).</p>
 
-<p>This thing is absolutely AWESOME, super low cost, and open source, and matches pretty much all of my requirements. Hats off to <a href="http://dk.linkedin.com/in/jichr">Jimmy</a> for creating this. I immediately felt a DIY itch that needed scratching. So I decided to roll my custom version of a FinalKey, with some modifications to better suit my needs. Mostly, the one usecase that is not covered by the original FinalKey is usability with a smartphone: plugging a USB cable to use the FinalKey is not very convenient on a phone, and I would have had to develop an Android version of the FinalKey software too.</p>
+<p>This thing is absolutely AWESOME, super low cost, and open source, and matches pretty much all of my requirements. Hats off to <a href="http://dk.linkedin.com/in/jichr">Jimmy</a> for creating this. I immediately felt a DIY itch that needed scratching. So I decided to roll my custom version of a FinalKey, with some modifications to better suit my needs. Mostly, the one usecase that is not covered by the original FinalKey is usability with a smartphone: plugging a USB cable to use the FinalKey is not very convenient on a phone, and I would have had to develop an Android version of the FinalKey client software too.</p>
 
 <p>So I took a slightly different approach:</p>
 
 <ul>
-  <li>I wanted the master key to be input on the device itself, not from the computer/phone connected to it (call it paranoia again), so I included a <strong>keypad</strong>.</li>
+  <li>I wanted the master key to be input on the device itself, not from the computer/phone connected to it (call it paranoia again), so this meant:
+    <ul>
+      <li>adding <strong>controls</strong> on the device for the user to type in the master key/code</li>
+      <li>and therefore adding a <strong>display</strong> on the device</li>
+    </ul>
+  </li>
   <li>to remove the need for connecting a USB cable, I added a <strong>Bluetooth module</strong> supporting <strong>HID profile</strong>, which means the device presents itself to any nearby Bluetooth-enabled computer/phone as a <strong>bluetooth keyboard</strong></li>
-  <li>I wanted to be able to use the device with zero specific software installed on the target computer/phone:
+  <li>I wanted to be able to use the device with no specific software installed on the target computer/phone:
     <ul>
       <li>as the device emulates a standard Bluetooth keyboard, no specific SW is required to receive characters over the wireless link</li>
       <li>I intentionnally gave up the functionality of being able to update the internal password database from the host computer, and instead only kept the original FinalKey’s capability to <strong>generate new passwords</strong>, store them internally and send them out.</li>
@@ -123,7 +148,13 @@
 <p>Hence the <strong>BlueKey</strong> concept:
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/bluekey_concept.png" alt="concept" /></p>
 
-<h2 id="breadboard-prototype-1">Breadboard prototype #1</h2>
+<hr />
+
+<h2 id="security-disclaimer">Security Disclaimer</h2>
+
+<p>The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my “serious” passwords, so you shouldn’t either.</p>
+
+<h2 id="prototype-1-breadboard">PROTOTYPE #1 (Breadboard)</h2>
 
 <h3 id="hardware">Hardware</h3>
 
@@ -183,17 +214,17 @@
 </ul>
 
 <h4 id="oled-display">OLED display</h4>
-<p>I picked the cheapest module I found, a 128x32pixels display with I2C interface, for about 10$. It is quite tiny, but suits my usecase, I only need a few lines of text to be displayed and read at arms’ length.
+<p>I picked the cheapest module I found, a 128x32 pixels display with I2C interface, for about 10$. It is quite tiny, but suits my usecase, I only need a few lines of text to be displayed and read at arms’ length.
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/oled.png" alt="oled" /></p>
 
 <ul>
   <li><strong>VCC</strong> is connected to the funduino’s 5V rail, which is ok since the component accepts a Vcc range of 2.8V to 5.5V</li>
   <li><strong>GND</strong> is connected to the circuit’s GND</li>
-  <li><strong>SDA</strong> and <strong>SCL</strong> are connected to the funduino’s I2C bus (this is the beauty of I2C, there is no issue to have both the EEPROM and display on the same I2C interface, their specific address will be used to speak to one of the other)</li>
+  <li><strong>SDA</strong> and <strong>SCL</strong> are connected to the funduino’s I2C bus (this is the beauty of I2C, there is no issue to have both the EEPROM and display on the same I2C interface, their specific address will be used to speak to one or the other)</li>
 </ul>
 
 <h4 id="rotary-encoder">Rotary encoder</h4>
-<p>I happened to use a KY-040 module, bought for 2$ on ebay. This is used as the main user interface to scroll through text lines. It includes a switch (activated by pushing on the shaft itself). 
+<p>I happened to use a KY-040 module, bought for 2$ on ebay. This is used as the main user interface to scroll through text lines in this prototype. It includes a switch (activated by pushing on the shaft itself). 
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/rotaryencoder.png" alt="encoder" /></p>
 
 <ul>
@@ -226,7 +257,7 @@
 
 <h3 id="software">Software</h3>
 
-<h4 id="rn42-bluetooth-module">RN42 bluetooth module</h4>
+<h4 id="rn42-bluetooth-module-configuration">RN42 bluetooth module configuration</h4>
 
 <p>By default, the module is configured for <strong>SPP</strong> (Serial Port Profile) and for communicating over its UART interface at 115200 bauds. Once wired as described above and powered, it should show up as an available bluetooth device in any nearby bluetooth-enabled phone (or computer).</p>
 
@@ -242,10 +273,15 @@
 <p>Now, what I really needed was to use the <strong>HID</strong> (Human Interface Device) profile of the module, so that the module presents itself as a wireless keyboard.
 To do this, from either the local serial link or over the wireless serial terminal (e.g. BlueTerm), type in the following commands</p>
 
+<pre><code>$$$
+</code></pre>
+
+<p>This switches the module in COMMAND mode, and the device answers <code>CMD</code>. Then type:</p>
+
 <pre><code>S~,6
 </code></pre>
 
-<p>then hit enter: this enables HID profile, and the device answers with <code>AOK</code></p>
+<p>and hit enter: this enables HID profile, and the device answers with <code>AOK</code></p>
 
 <p>Then type</p>
 
@@ -260,11 +296,13 @@ To do this, from either the local serial link or over the wireless serial termin
 
 <p><strong>Note</strong>: the whole User Guide of the RN42 module is available <a href="http://ww1.microchip.com/downloads/en/DeviceDoc/bluetooth_cr_UG-v1.0r.pdf">here</a>, see chapter 5 about support for the HID profile.</p>
 
+<p>Once the device is paired like that, it will receive any string sent from the code over the serial line (e.g. <code>Serial.print</code> statement).</p>
+
 <h4 id="keypad-management">Keypad management</h4>
 
 <p>The matrix keypad if basically just a set of wires organized in 4 rows and 4 columns, which come in electrical contact under the key that is pushed. The 8 wires are connected to 8 GPIOs on the arduino, and then some code is required to scan the continuity between the rows and columns and figure out if a key was pushed (and which one).</p>
 
-<p>There are existing arduino libraries to manage keypads, but most of those I found rely on polling of row/column lines at regular intervals from the main loop, and I wanted to avoid this (since there is then a strong dependency between the reactivity of the keypad and the main loop execution time, which tends to change over time as code is added). A much better option in my opinion is to use interrupts to only execute code when a key is pushed.</p>
+<p>There are existing arduino libraries to manage keypads, but most of those I found rely on polling of row/column lines at regular intervals from the main loop, and I wanted to avoid this (since there is then a strong dependency between the reactivity of the keypad and the main loop execution time, which tends to change over time as code is added). A better option in my opinion is to use interrupts to only execute code when a key is pushed.</p>
 
 <p>Based on the example from this <a href="http://www.atmel.com/Images/doc1232.pdf">Atmel keypad application note</a>, I therefore wired the keypad as follows:
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/keypad_concept.png" alt="keypad" /></p>
@@ -272,7 +310,7 @@ To do this, from either the local serial link or over the wireless serial termin
 <ul>
   <li>Row lines are connected to arduino GPIOs that are configured as <strong>inputs with pull-ups</strong>.</li>
   <li>Column lines are connected to arduino GPIOs that are configured as <strong>outputs initially set to LOW/GND state</strong></li>
-  <li>each rows is connected to one arduino GPIO that is configured as an <strong>interrupt pin</strong> (on the arduino model I use, only pins 2 &amp; 3 have this capability), configured as with a pull-up, and triggered upon FALLING edges of the signal.
+  <li>All rows are connected to one arduino GPIO that is configured as an <strong>interrupt pin</strong> (on the arduino model I use, only pins 2 &amp; 3 have this capability), configured as with a pull-up, and triggered upon FALLING edges of the signal.
     <ul>
       <li>the diodes are there to avoid conflicts between multiple rows, they implement a kind of <strong>OR operation</strong> into the interrupt pin.</li>
     </ul>
@@ -294,7 +332,7 @@ To do this, from either the local serial link or over the wireless serial termin
 
 <h4 id="display-management">Display management</h4>
 
-<p>The OLED display I used is based on the SSD1306 component, and is interfaced over IC2. Executing the <a href="http://playground.arduino.cc/Main/I2cScanner">I2C scanner</a> sketch revealed that its address happens to be <code>0x3c</code>.
+<p>The OLED display I used is based on the SSD1306 component, and is interfaced over I2C. Executing the <a href="http://playground.arduino.cc/Main/I2cScanner">I2C scanner</a> sketch revealed that its address happens to be <code>0x3c</code>.
 I downloaded and installed two great libraries from Adafruit that happen to support this display:</p>
 
 <p><a href="https://github.com/adafruit/Adafruit_SSD1306">Adafruit_SSD1306</a> and <a href="https://github.com/adafruit/Adafruit-GFX-Library">Adafruit-GFX-Library</a></p>
@@ -326,7 +364,7 @@ It boils down to the following sequence:</p>
   </li>
 </ul>
 
-<p><strong>Note</strong>: the original FinalKey code I used at the time contained a value of 4ms for the delay, which turned out to produce write errors for consecutive writes with the EEPROM I was using. I increased the delay to 8ms and it works fine.</p>
+<p><strong>Note</strong>: the original FinalKey code I used at the time contained a value of 4ms for the delay, which turned out to produce write errors for consecutive writes with the EEPROM I was using. I increased the delay to 8ms and it works fine. Newer FinalKey versions of the code have this increased delay too.</p>
 
 <h4 id="rotary-encoder-management">Rotary encoder management</h4>
 
@@ -338,15 +376,13 @@ It boils down to the following sequence:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/encoder_nocaps.png" alt="encoder_nocaps" /></p>
 
-<h2 id="breadboard-prototype-2">Breadboard prototype #2</h2>
+<hr />
+
+<h2 id="prototype-2-breadboard">PROTOTYPE #2 (Breadboard)</h2>
 
 <p>On further thought, the keypad did not look practical enough, so I got rid of it and decided to use the knob as the single way to manage user input.</p>
 
-<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/Bluekey2.png" alt="concept2" /></p>
-
-<h3 id="knob-based-user-input">Knob-based user input</h3>
-
-<p>TODO</p>
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/BlueKey2.png" alt="concept2" /></p>
 
 <h3 id="better-rotary-encoder-management">Better rotary encoder management</h3>
 
@@ -366,6 +402,8 @@ It boils down to the following sequence:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/fritzing_proto2.png" alt="fritzing_proto2" /></p>
 
+<hr />
+
 <h2 id="an-unexpected-detour-in-low-memory-land">An unexpected detour in low-memory land</h2>
 
 <p>Everything was going fine until I started adding significant amounts of code, when after a while the arduino started misbehaving seemingly randomly. It smelled like memory-related issues, yet the memory status reported by the compiler was nowhere near the limits:</p>
@@ -376,7 +414,9 @@ Global variables use 1576 bytes (76%) of dynamic memory, leaving 472 bytes for l
 
 <p>How could I encounter problems with 472 bytes of free SRAM left ?</p>
 
-<p>SRAM is mapped as follows:</p>
+<h3 id="where-did-my-sram-go-">Where did my SRAM go ?</h3>
+
+<p>SRAM is mapped as follows on this arduino model:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SRAMMap.png" alt="SRAMMap" /></p>
 
@@ -387,7 +427,7 @@ Global variables use 1576 bytes (76%) of dynamic memory, leaving 472 bytes for l
   20834     816     760   22410    578a /tmp/arduino_build_525269/BlueKeyFat.ino.elf
 </code></pre>
 
-<p>So, 816 bytes of initialized data, and 760 bytes of uninitialized data. I used the <code>avr-nm</code> to check the list of these data:</p>
+<p>So, 816 bytes of initialized data, and 760 bytes of uninitialized data. I used the <code>avr-nm</code> to check the detailed list of these data:</p>
 
 <pre><code>./avr-nm -Crtd --size-sort /tmp/arduino_build_807388/BlueKey.ino.elf  | grep -i ' [dbv] '
 </code></pre>
@@ -622,36 +662,250 @@ Global variables use 1576 bytes (76%) of dynamic memory, leaving 472 bytes for l
 </code></pre>
 
 <p>There you go, the stack now starts with only 83 bytes used, leaving 388 bytes free for later use. Much better than the original 105 bytes!
-Even though this margin is still relatively small, it was enough to come back to a situation where the program was executing reliably again.</p>
+Even though this margin is still relatively small, it was enough to come back to a situation where the program was executing reliably again…until it didn’t.</p>
 
-<h2 id="packaged-prototype">Packaged prototype</h2>
+<h3 id="freeing-up-more-sram">Freeing up more SRAM</h3>
 
-<p>Coming soon…</p>
+<p>After a few days of working with very little SRAM margin left and running into various crashes whenever I shifted code around, I decided to take a step back and do something about it.</p>
+
+<p>Looking again at the list of uninitialized data buffers, it appeared some of the largest contributors were RX/TX buffers for the Serial link and the I2C link.</p>
+
+<p>I reduced the Serial RX and TX buffers from 64 to 16 bytes in <code>arduino-x.y.z/hardware/arduino/avr/cores/arduino/HardwareSerial.h</code>:</p>
+
+<pre><code>#define SERIAL_TX_BUFFER_SIZE 16
+#define SERIAL_RX_BUFFER_SIZE 16
+</code></pre>
+
+<p>I reduced the 5 RX/TX buffers involved in I2C communications from 34 to 18 bytes (and verified that I2C communication with the EEPROM and the Display were still fine) by modifying <code>arduino-x.y.z/hardware/arduino/avr/libraries/Wire/src/Wire.h</code>:</p>
+
+<pre><code>#define BUFFER_LENGTH 18
+</code></pre>
+
+<p>and also <code>arduino-x.y.z/hardware/arduino/avr/libraries/Wire/src/Utility/twi.h</code>:</p>
+
+<pre><code>#define TWI_BUFFER_LENGTH 18
+</code></pre>
+
+<p>Overall, that represents 176 bytes of precious SRAM spared !</p>
+
+<h3 id="watching-the-stack-margin">Watching the stack margin</h3>
+
+<p>To make sure I would not AGAIN run out of memory without realizing it, I implemented a stack canary function to figure out the minimum free memory margin reached during program execution. The details are described <a href="http://jheyman.github.io/blog/pages/ArduinoTipsAndTricks/#checking-stack-usage">here</a>.</p>
+
+<p>At this point, the watermark was reported at 165 bytes of margin…so sparing the 176 bytes of RX/TX buffers turned out to be vital !</p>
+
+<hr />
+
+<h2 id="prototype-3-the-snes-variant">PROTOTYPE #3: the SNES variant</h2>
+
+<p>The next step was to package the prototype into something usable. That meant:</p>
+
+<ul>
+  <li>integrating components into an enclosure</li>
+  <li>running the setup off a battery</li>
+  <li>and rationalizing the setup to a full 3.3V design, to get rid of the 5V/3.3V converter</li>
+</ul>
+
+<h3 id="enclosure">Enclosure</h3>
+
+<p>I could have tried to design a custom 3D-printed enclosure, but this time I felt lazy and started browsing the web looking for ideas of devices that I could reuse to integrate my setup. I needed something with some space to fit the small OLED screen on the front, had a few buttons/wheels, and enough internal space to fit the arduino, EEPROM, RN42 module, and battery.</p>
+
+<p>Something that would feel right to hold in my hands…I realized a gamepad would be perfect. So I bought this USB SNES controller clone on eBay:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_original.png" alt="SNES controller" /></p>
+
+<p><strong>Note</strong>: I used <code>jstest-gtk</code> on Linux to check the controller was working fine, before hacking it.</p>
+
+<p>Choosing this controller also meant replacing the rotary knob logic in the code with a simpler handling of the controller buttons state.</p>
+
+<h3 id="full-33v-setup">Full 3.3V setup</h3>
+
+<p>To simplify the design, I moved everything to 3.3V, to get rid of the 5V/3.3V converter</p>
+
+<ul>
+  <li>I switched to a 3.3V version of Arduino Pro Micro</li>
+  <li>the EEPROM is compatible with 3.3V (operating range is 2.5V-5.5V)</li>
+  <li>the OLED display is compatible with 3.3V (operating range is 2.8V-5.5V)</li>
+  <li>the RN42 requires 3.3V anyway</li>
+</ul>
+
+<p><strong>Important note</strong> when using 3.3V arduino: the onboard regulator producing the 3.3V supply only takes the RAW/VIN pin as input. The VCC pin that is on the programming header is connected to the internal VCC directly, so it is VITAL to use a 3.3V FTDI programmer, not a 5V one.</p>
+
+<h3 id="battery">Battery</h3>
+
+<p>I wanted the battery to be small enough to fit in a small enclosure, and be rechargeable: a small LiPo battery was the obvious choice.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/lipobattery.png" alt="lipobattery" /></p>
+
+<p>The charging part is managed through a small micro-USB LiPo charger from Adafruit (many others exist):</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/microLipoCharger.png" alt="microLipoCharger" /></p>
+
+<p>I used a 3-position switch to swap between battery-to-charger and battery-to-circuit connections, it also serves as on on-off switch when no USB cable is connected on the charger.
+The overall circuit draws around 10-15mA, so a very small LiPo e.g. 150mAh is good enough to last for many many uses before recharge.</p>
+
+<h3 id="updated-assembly-diagram">Updated assembly diagram</h3>
+
+<p>The 3.3V setup with battery and charger is as follows:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/fritzing_SNES.png" alt="fritzing_SNES" /></p>
+
+<h3 id="integration">Integration</h3>
+
+<p>Opening the controller, I was reassured that there was plenty of space to fit the components:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_opened.png" alt="SNES opened" /></p>
+
+<p>The rubber parts under each button guide the black conductive thingies onto the contact surfaces on the PCB. The black blob is the epoxy covering the USB chip:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_unmounted.png" alt="SNES_unmounted" /></p>
+
+<p>Since I wanted to reuse the PCB and contact surfaces only, I removed the active part (the electronics under the epoxy blob):</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_barepcb.png" alt="SNES_barepcb" /></p>
+
+<p>And soldered one wire per button, plus one wire for the gnd common to all signals:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_buttonsoldering.png" alt="SNES_buttonsoldering" /></p>
+
+<p>I tested the setup by connecting the buttons to GPIOs of the arduino: so far so good.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_joypadtest.png" alt="SNES_joypadtest" /></p>
+
+<p>I identified some of the plastic pegs to be removed to be able to fit the display:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_packagingrework.png" alt="SNES_packagingrework" /></p>
+
+<p>Then cut a square opening in the controller front face, and double-side-taped the display in front of the opening:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_OLEDinteg.png" alt="SNES_OLEDinteg" /></p>
+
+<p>I checked the intended placement for the battery (a phone battery at the time of the photo, later replaced with a cheaper LiPo), RN42 module, LiPo charger, EEPROM, OnOff switch, and arduino: they nicely fit on the back of the original PCB:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_preinteg.png" alt="SNES_preinteg" /></p>
+
+<p>The finished assembly is a visual mess, but works just fine. I later added some hot glue to secure the exposed/weak wire solders.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_assembled.png" alt="SNES_assembled" /></p>
+
+<p>Finished device, with display and on-off switch at the bottom:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_finishedfront.png" alt="SNES_finishedfront" /></p>
+
+<p>micro-USB charging port on the back, where the USB cable used to be:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_finished_back.png" alt="SNES_finished_back" /></p>
+
+<p>The Adafruit microLiPo charger module has two LEDs on it: a red one that is lit during charge, and a green one that lits up when charge is completed. I cut an opening in the back of the controller, just on top of where these two LEDs are located, and used a small piece of transparent plastic to conduct light. This way I can check the charging status when a USB cable is connected:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/SNES_batterychargestatus.png" alt="SNES_batterychargestatus" /></p>
+
+<hr />
+
+<h3 id="using-the-device">Using the device</h3>
+
+<h4 id="power-on--unlock-device">Power-on &amp; unlock device</h4>
+
+<p>Once switched on, the login/unlock screen appears, prompting for the usercode to unlock the device.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_login.png" alt="display_login" /></p>
+
+<p>Note: I arbitrarily used a 6-figure number format, but a longer alphanumeric unlock code could be used for the extra paranoid.</p>
+
+<h4 id="main-menu">Main menu</h4>
+
+<p>I updated the code to use discrete buttons to navigate the user interface.
+While using menus:</p>
+
+<ul>
+  <li><code>Up</code> and <code>Down</code> arrows are used to navigate vertically through screen entries</li>
+  <li><code>Y</code> (green) button is used to confirm</li>
+  <li><code>A</code> (red) button is used to cancel / go back to previous menu</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_mainmenu.png" alt="display_mainmenu" /></p>
+
+<h4 id="password-list">Password list</h4>
+
+<p>The account for which a login/password should be sent can be selected from the list of stored accounts:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_pwdlist.png" alt="display_pwdlist" /></p>
+
+<p>Once an entry is selected, the user can choose to send the login only, the password only, or a sequence of login + tab character + password (to fill most usual login/pwd fields)</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_sendpwd.png" alt="display_sendpwd" /></p>
+
+<h4 id="passwords-management">Passwords management</h4>
+
+<p>The password management submenu allows to create/store a new password, to delete a password, to format the whole device, and to check the current number of passwords stored on the device:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_pwd_mgmt.png" alt="display_pwd_mgmt" /></p>
+
+<p>The master key/code is entered during the formatting procedure.</p>
+
+<p>New entries can be created/stored either by letting the device generate a random password value of a specified length, and by entering the password manually</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_generate_manually.png" alt="display_generate_manually" /></p>
+
+<p>While entering text:</p>
+
+<ul>
+  <li><code>Left</code> and <code>Right</code> arrows are used to navigate horizontally through letter selection</li>
+  <li><code>Y</code> (green) button is used to confirm currently selected letter</li>
+  <li><code>Up</code> and <code>Down</code> arrows are used to navigate through available charsets: Uppercase letters, Lowercase letters, Numbers, Special characters.</li>
+  <li><code>Start</code> button is used to finish entry</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account.png" alt="display_create_account" />
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt1.png" alt="display_create_account1" />
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt2.png" alt="display_create_account2" />
+<img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt3.png" alt="display_create_account3" /></p>
+
+<h4 id="display-orientation">Display orientation</h4>
+
+<p>Due to the way I mounted the display in the controller, the text ended up showing upside down. No worries, the SSD1306 has a control command allowing to change the orientation of the display. Just call:</p>
+
+<pre><code>display.ssd1306_command(SSD1306_SEGREMAP ); //A0h
+display.ssd1306_command(SSD1306_COMSCANINC); //C0h
+</code></pre>
+
+<p>instead of the original</p>
+
+<pre><code>ssd1306_command(SSD1306_SEGREMAP | 0x1); //A1h
+ssd1306_command(SSD1306_COMSCANDEC); //C8h
+</code></pre>
+
+<p>present in the library by default</p>
+
+<h4 id="display-performance">Display performance</h4>
+
+<p>I was initially concerned about performance of the OLED display refresh, since the Adafruit GFX library sends the full image buffer over I2C every time the “display.display” function is called.
+There is an opportunity to optimize this by only sending the updated sections of the screen  to the device, but in fact updating the full 128x32 display over I2C only take about 20ms, so it is not a true limiting factor in my case.
+The only obvious precaution I took it to make sure to minimize the number of calls to <code>display.display</code>.</p>
+
+<h2 id="todo-list">Todo list</h2>
+
+<ul>
+  <li>Export/Backup function (dump encrypted EEPROM content over bluetooth, for storage/backup on external device)</li>
+  <li>custom sticker to replace the original A/B/X/Y sticker on the SNES variant, to show the use of each button</li>
+</ul>
 
 <h2 id="source-code">Source Code</h2>
 
 <p>The source code is available <a href="https://github.com/jheyman/BlueKey">here</a>.</p>
 
-<h2 id="todo-list">Todo list</h2>
+<h2 id="afterthoughts">Afterthoughts</h2>
 
-<ul>
-  <li>invert RN42 LED status logic (should be ON when connected)</li>
-  <li>password management SW</li>
-  <li>random password generation</li>
-  <li>integrate in a proper packaging</li>
-  <li>put arduino to sleep and wake-up on knob turn</li>
-  <li>support local USB connection for emulating a leyboard (as the original FinalKey does)</li>
-  <li>optionnally get rid of external EEPROM memory (64kB) and use arduino’s internal EEPROM (1KB only, could store 16 entries of 2x32 bytes)</li>
-  <li>deactivate inlining globally at makefile level</li>
-</ul>
+<p>I learned about the existence of the <a href="https://hackaday.io/project/86-mooltipass-offline-password-keeper">Mooltipass</a> only after completing this project. It looks like an excellent pro-quality device, but is a wired device like the FinalKey (and is not cheap either).</p>
 
 <h2 id="lessons-learned">Lessons learned</h2>
 
 <ul>
-  <li>The initial prototype was assembled very quickly, with cheapo components from ebay that worked out of the box: I just love the arduino ecosystem</li>
-  <li>I need to improve my soldering skills</li>
-  <li>I never thought implementing an emulated Bluetooth keyboard would require close to zero effort with the right BT module.</li>
+  <li>The initial prototype was assembled very quickly, with cheapo components from ebay that worked out of the box: I just love the arduino ecosystem.</li>
+  <li>I need to improve my soldering skills…I almost killed the tiny RN42 module while soldering it.</li>
+  <li>I never thought that implementing an emulated Bluetooth keyboard would require close to zero effort when choosing the right BT module: RN42 is worth every penny.</li>
   <li>The arduino IDE is such that it only compiles/links the library functions that are <em>actually</em> called in the main sketch. This is extremely cool when using a single function of a large library.</li>
+  <li>The 2048 bytes of Arduino mini SRAM are precious and should be watched closely, otherwise evil things happen and countless debugging hours ensue.</li>
 </ul>
 
 
