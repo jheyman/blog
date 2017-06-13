@@ -6,10 +6,9 @@ tags: arduino, bluetooth, security, password, eeprom, OLED
 ---
 {% include JB/setup %}
 
+
 * TOC
 {:toc}
-
----
 
 ## Overview
 
@@ -17,7 +16,7 @@ I have been thinking about improving my password management routine, and looking
 
 * be usable from all platforms I use (Windows, Linux, Android)
 * be reasonably secure (for moderately critical login/passwords, since I will still memorize my most critical passwords and/or use SMS-based two-factor authentication when available)
-* NOT involve cloud-base storage, or any internet connection for that matter
+* NOT involve cloud-based key storage, or any internet connection for that matter
 * be low-cost
 
 As far as I can tell there are basically two main approaches:
@@ -29,22 +28,30 @@ I was leaning on the hardware side when I stumbled on this project: [The FinalKe
 
 ![FinalKey]({{ site.baseurl }}/assets/images/BlueKey/finalkey.png)
 
-This little DIY hardware password manager is an arduino in a 3D-printed case that pretends to be a USB keyboard, and it will type in passwords for you after selecting the service to be accessed from a neat little SW client on the computer, and pushing the button on the device (as a security measure).
+This little DIY hardware password manager is an arduino with an EEPROM, in a 3D-printed case, that allows to store encrypted passwords, and then pretends to be a USB keyboard to type in passwords for you, after selecting the account to be accessed from a neat little SW client on the computer, and pushing the button on the device (as a security measure).
 
-This thing is absolutely AWESOME, super low cost, and open source, and matches pretty much all of my requirements. Hats off to [Jimmy](http://dk.linkedin.com/in/jichr) for creating this. I immediately felt a DIY itch that needed scratching. So I decided to roll my custom version of a FinalKey, with some modifications to better suit my needs. Mostly, the one usecase that is not covered by the original FinalKey is usability with a smartphone: plugging a USB cable to use the FinalKey is not very convenient on a phone, and I would have had to develop an Android version of the FinalKey software too.
+This thing is absolutely AWESOME, super low cost, and open source, and matches pretty much all of my requirements. Hats off to [Jimmy](http://dk.linkedin.com/in/jichr) for creating this. I immediately felt a DIY itch that needed scratching. So I decided to roll my custom version of a FinalKey, with some modifications to better suit my needs. Mostly, the one usecase that is not covered by the original FinalKey is usability with a smartphone: plugging a USB cable to use the FinalKey is not very convenient on a phone, and I would have had to develop an Android version of the FinalKey client software too.
 
 So I took a slightly different approach:
 
-* I wanted the master key to be input on the device itself, not from the computer/phone connected to it (call it paranoia again), so I included a **keypad**.
+* I wanted the master key to be input on the device itself, not from the computer/phone connected to it (call it paranoia again), so this meant:
+    * adding **controls** on the device for the user to type in the master key/code
+    * and therefore adding a **display** on the device
 * to remove the need for connecting a USB cable, I added a **Bluetooth module** supporting **HID profile**, which means the device presents itself to any nearby Bluetooth-enabled computer/phone as a **bluetooth keyboard**
-* I wanted to be able to use the device with zero specific software installed on the target computer/phone:
+* I wanted to be able to use the device with no specific software installed on the target computer/phone:
     * as the device emulates a standard Bluetooth keyboard, no specific SW is required to receive characters over the wireless link
     * I intentionnally gave up the functionality of being able to update the internal password database from the host computer, and instead only kept the original FinalKey's capability to **generate new passwords**, store them internally and send them out.
 
 Hence the **BlueKey** concept:
 ![concept]({{ site.baseurl }}/assets/images/BlueKey/bluekey_concept.png)
 
-## Breadboard prototype #1
+---
+
+## Security Disclaimer
+
+The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my "serious" passwords, so you shouldn't either.
+
+## PROTOTYPE #1 (Breadboard)
 
 ### Hardware 
 
@@ -98,15 +105,15 @@ The pinout is as follows:
 * **SDA** and **SCL** (the I2C interface) are connected to the funduino's I2C bus.
 
 #### OLED display
-I picked the cheapest module I found, a 128x32pixels display with I2C interface, for about 10$. It is quite tiny, but suits my usecase, I only need a few lines of text to be displayed and read at arms' length.
+I picked the cheapest module I found, a 128x32 pixels display with I2C interface, for about 10$. It is quite tiny, but suits my usecase, I only need a few lines of text to be displayed and read at arms' length.
 ![oled]({{ site.baseurl }}/assets/images/BlueKey/oled.png)
 
 * **VCC** is connected to the funduino's 5V rail, which is ok since the component accepts a Vcc range of 2.8V to 5.5V
 * **GND** is connected to the circuit's GND
-* **SDA** and **SCL** are connected to the funduino's I2C bus (this is the beauty of I2C, there is no issue to have both the EEPROM and display on the same I2C interface, their specific address will be used to speak to one of the other) 
+* **SDA** and **SCL** are connected to the funduino's I2C bus (this is the beauty of I2C, there is no issue to have both the EEPROM and display on the same I2C interface, their specific address will be used to speak to one or the other) 
 
 #### Rotary encoder
-I happened to use a KY-040 module, bought for 2$ on ebay. This is used as the main user interface to scroll through text lines. It includes a switch (activated by pushing on the shaft itself). 
+I happened to use a KY-040 module, bought for 2$ on ebay. This is used as the main user interface to scroll through text lines in this prototype. It includes a switch (activated by pushing on the shaft itself). 
 ![encoder]({{ site.baseurl }}/assets/images/BlueKey/rotaryencoder.png)
 
 * **CLK** is the main signal that will be pulsed when the shaft is turned
@@ -135,7 +142,7 @@ And here is the messy breadboard result:
 
 ### Software
 
-#### RN42 bluetooth module
+#### RN42 bluetooth module configuration
 
 By default, the module is configured for **SPP** (Serial Port Profile) and for communicating over its UART interface at 115200 bauds. Once wired as described above and powered, it should show up as an available bluetooth device in any nearby bluetooth-enabled phone (or computer). 
 
@@ -149,9 +156,13 @@ To verify proper operation of the module, I:
 Now, what I really needed was to use the **HID** (Human Interface Device) profile of the module, so that the module presents itself as a wireless keyboard.
 To do this, from either the local serial link or over the wireless serial terminal (e.g. BlueTerm), type in the following commands
 
+	$$$
+
+This switches the module in COMMAND mode, and the device answers `CMD`. Then type:
+
     S~,6
 
-then hit enter: this enables HID profile, and the device answers with `AOK`
+and hit enter: this enables HID profile, and the device answers with `AOK`
 
 Then type
 
@@ -165,18 +176,20 @@ I then un-paired the device, relaunched a bluetooth scan, re-associated the devi
 
 **Note**: the whole User Guide of the RN42 module is available [here](http://ww1.microchip.com/downloads/en/DeviceDoc/bluetooth_cr_UG-v1.0r.pdf), see chapter 5 about support for the HID profile. 
 
+Once the device is paired like that, it will receive any string sent from the code over the serial line (e.g. `Serial.print` statement).
+
 #### Keypad management
 
 The matrix keypad if basically just a set of wires organized in 4 rows and 4 columns, which come in electrical contact under the key that is pushed. The 8 wires are connected to 8 GPIOs on the arduino, and then some code is required to scan the continuity between the rows and columns and figure out if a key was pushed (and which one).
 
-There are existing arduino libraries to manage keypads, but most of those I found rely on polling of row/column lines at regular intervals from the main loop, and I wanted to avoid this (since there is then a strong dependency between the reactivity of the keypad and the main loop execution time, which tends to change over time as code is added). A much better option in my opinion is to use interrupts to only execute code when a key is pushed. 
+There are existing arduino libraries to manage keypads, but most of those I found rely on polling of row/column lines at regular intervals from the main loop, and I wanted to avoid this (since there is then a strong dependency between the reactivity of the keypad and the main loop execution time, which tends to change over time as code is added). A better option in my opinion is to use interrupts to only execute code when a key is pushed. 
 
 Based on the example from this [Atmel keypad application note](http://www.atmel.com/Images/doc1232.pdf), I therefore wired the keypad as follows:
 ![keypad]({{ site.baseurl }}/assets/images/BlueKey/keypad_concept.png)
 
 * Row lines are connected to arduino GPIOs that are configured as **inputs with pull-ups**.
 * Column lines are connected to arduino GPIOs that are configured as **outputs initially set to LOW/GND state**
-* each rows is connected to one arduino GPIO that is configured as an **interrupt pin** (on the arduino model I use, only pins 2 & 3 have this capability), configured as with a pull-up, and triggered upon FALLING edges of the signal.
+* All rows are connected to one arduino GPIO that is configured as an **interrupt pin** (on the arduino model I use, only pins 2 & 3 have this capability), configured as with a pull-up, and triggered upon FALLING edges of the signal.
     * the diodes are there to avoid conflicts between multiple rows, they implement a kind of **OR operation** into the interrupt pin.
 * when any key is pushed, the corresponding row is then connected to GND via the column that the key belongs to.
 * this pulls the interrupt line LOW, which triggers an interrupt
@@ -191,7 +204,7 @@ This does not take care of multiple simultaneous key push, but for my usecase th
 
 #### Display management
 
-The OLED display I used is based on the SSD1306 component, and is interfaced over IC2. Executing the [I2C scanner](http://playground.arduino.cc/Main/I2cScanner) sketch revealed that its address happens to be `0x3c`.
+The OLED display I used is based on the SSD1306 component, and is interfaced over I2C. Executing the [I2C scanner](http://playground.arduino.cc/Main/I2cScanner) sketch revealed that its address happens to be `0x3c`.
 I downloaded and installed two great libraries from Adafruit that happen to support this display:
 
 [Adafruit_SSD1306](https://github.com/adafruit/Adafruit_SSD1306) and [Adafruit-GFX-Library](https://github.com/adafruit/Adafruit-GFX-Library)
@@ -215,7 +228,7 @@ It boils down to the following sequence:
         * for read, end I2C communication, request and read incoming data
     * wait a few ms before looping to read/write next chunk
 
-**Note**: the original FinalKey code I used at the time contained a value of 4ms for the delay, which turned out to produce write errors for consecutive writes with the EEPROM I was using. I increased the delay to 8ms and it works fine.
+**Note**: the original FinalKey code I used at the time contained a value of 4ms for the delay, which turned out to produce write errors for consecutive writes with the EEPROM I was using. I increased the delay to 8ms and it works fine. Newer FinalKey versions of the code have this increased delay too.
 
 #### Rotary encoder management
 
@@ -227,17 +240,13 @@ So the interrupt service routine checks the current state of the **DATA** signal
 
 ![encoder_nocaps]({{ site.baseurl }}/assets/images/BlueKey/encoder_nocaps.png)
 
+---
 
-## Breadboard prototype #2
+## PROTOTYPE #2 (Breadboard)
 
 On further thought, the keypad did not look practical enough, so I got rid of it and decided to use the knob as the single way to manage user input.
 
-![concept2]({{ site.baseurl }}/assets/images/BlueKey/Bluekey2.png)
-
-### Knob-based user input
-
-TODO
-
+![concept2]({{ site.baseurl }}/assets/images/BlueKey/BlueKey2.png)
 
 ### Better rotary encoder management
 
@@ -253,11 +262,11 @@ Just plugging a 100nF capacitor be between CLK and GND, and another one between 
 
 Finally, a basic timing check is included in the ISR to reject calls that happen less than 10ms after the previous one (as inspired by [this guy's page](https://bigdanzblog.wordpress.com/2014/08/16/using-a-ky040-rotary-encoder-with-arduino/)).
 
-
 ### Updated breadboard assembly
 
 ![fritzing_proto2]({{ site.baseurl }}/assets/images/BlueKey/fritzing_proto2.png)
 
+---
 
 ## An unexpected detour in low-memory land
 
@@ -268,7 +277,9 @@ Everything was going fine until I started adding significant amounts of code, wh
 
 How could I encounter problems with 472 bytes of free SRAM left ?
 
-SRAM is mapped as follows:
+### Where did my SRAM go ?
+
+SRAM is mapped as follows on this arduino model:
 
 ![SRAMMap]({{ site.baseurl }}/assets/images/BlueKey/SRAMMap.png)
 
@@ -278,7 +289,7 @@ Quick check of the executable with `avr-size` tool:
        text    data     bss     dec     hex filename
       20834     816     760   22410    578a /tmp/arduino_build_525269/BlueKeyFat.ino.elf
 
-So, 816 bytes of initialized data, and 760 bytes of uninitialized data. I used the `avr-nm` to check the list of these data:
+So, 816 bytes of initialized data, and 760 bytes of uninitialized data. I used the `avr-nm` to check the detailed list of these data:
 
     ./avr-nm -Crtd --size-sort /tmp/arduino_build_807388/BlueKey.ino.elf  | grep -i ' [dbv] '
 
@@ -495,33 +506,235 @@ Code size is slightly smaller (a good side effect of disabling inlining), and DA
     , RAMEND=2303
 
 There you go, the stack now starts with only 83 bytes used, leaving 388 bytes free for later use. Much better than the original 105 bytes!
-Even though this margin is still relatively small, it was enough to come back to a situation where the program was executing reliably again.
+Even though this margin is still relatively small, it was enough to come back to a situation where the program was executing reliably again...until it didn't.
 
-## Packaged prototype
+### Freeing up more SRAM
 
-Coming soon...
+After a few days of working with very little SRAM margin left and running into various crashes whenever I shifted code around, I decided to take a step back and do something about it.
 
+Looking again at the list of uninitialized data buffers, it appeared some of the largest contributors were RX/TX buffers for the Serial link and the I2C link. 
+
+I reduced the Serial RX and TX buffers from 64 to 16 bytes in `arduino-x.y.z/hardware/arduino/avr/cores/arduino/HardwareSerial.h`:
+
+	#define SERIAL_TX_BUFFER_SIZE 16
+	#define SERIAL_RX_BUFFER_SIZE 16
+
+I reduced the 5 RX/TX buffers involved in I2C communications from 34 to 18 bytes (and verified that I2C communication with the EEPROM and the Display were still fine) by modifying `arduino-x.y.z/hardware/arduino/avr/libraries/Wire/src/Wire.h`:
+
+	#define BUFFER_LENGTH 18
+
+and also `arduino-x.y.z/hardware/arduino/avr/libraries/Wire/src/Utility/twi.h`:
+	
+	#define TWI_BUFFER_LENGTH 18
+
+Overall, that represents 176 bytes of precious SRAM spared !
+
+### Watching the stack margin
+
+To make sure I would not AGAIN run out of memory without realizing it, I implemented a stack canary function to figure out the minimum free memory margin reached during program execution. The details are described [here]({{ site.baseurl }}/pages/ArduinoTipsAndTricks/#checking-stack-usage).
+
+At this point, the watermark was reported at 165 bytes of margin...so sparing the 176 bytes of RX/TX buffers turned out to be vital !
+
+---
+
+## PROTOTYPE #3: the SNES variant
+
+The next step was to package the prototype into something usable. That meant:
+
+- integrating components into an enclosure
+- running the setup off a battery 
+- and rationalizing the setup to a full 3.3V design, to get rid of the 5V/3.3V converter
+
+### Enclosure
+
+I could have tried to design a custom 3D-printed enclosure, but this time I felt lazy and started browsing the web looking for ideas of devices that I could reuse to integrate my setup. I needed something with some space to fit the small OLED screen on the front, had a few buttons/wheels, and enough internal space to fit the arduino, EEPROM, RN42 module, and battery.
+
+Something that would feel right to hold in my hands...I realized a gamepad would be perfect. So I bought this USB SNES controller clone on eBay:
+
+![SNES controller]({{ site.baseurl }}/assets/images/BlueKey/SNES_original.png)
+
+**Note**: I used `jstest-gtk` on Linux to check the controller was working fine, before hacking it.
+
+Choosing this controller also meant replacing the rotary knob logic in the code with a simpler handling of the controller buttons state. 
+
+### Full 3.3V setup
+
+To simplify the design, I moved everything to 3.3V, to get rid of the 5V/3.3V converter
+
+- I switched to a 3.3V version of Arduino Pro Micro
+- the EEPROM is compatible with 3.3V (operating range is 2.5V-5.5V)
+- the OLED display is compatible with 3.3V (operating range is 2.8V-5.5V)
+- the RN42 requires 3.3V anyway
+
+**Important note** when using 3.3V arduino: the onboard regulator producing the 3.3V supply only takes the RAW/VIN pin as input. The VCC pin that is on the programming header is connected to the internal VCC directly, so it is VITAL to use a 3.3V FTDI programmer, not a 5V one.
+
+### Battery
+
+I wanted the battery to be small enough to fit in a small enclosure, and be rechargeable: a small LiPo battery was the obvious choice.
+
+![lipobattery]({{ site.baseurl }}/assets/images/BlueKey/lipobattery.png)
+
+The charging part is managed through a small micro-USB LiPo charger from Adafruit (many others exist):
+
+![microLipoCharger]({{ site.baseurl }}/assets/images/BlueKey/microLipoCharger.png)
+
+I used a 3-position switch to swap between battery-to-charger and battery-to-circuit connections, it also serves as on on-off switch when no USB cable is connected on the charger.
+The overall circuit draws around 10-15mA, so a very small LiPo e.g. 150mAh is good enough to last for many many uses before recharge.
+
+### Updated assembly diagram
+
+The 3.3V setup with battery and charger is as follows:
+
+![fritzing_SNES]({{ site.baseurl }}/assets/images/BlueKey/fritzing_SNES.png)
+
+### Integration
+
+Opening the controller, I was reassured that there was plenty of space to fit the components:
+
+![SNES opened]({{ site.baseurl }}/assets/images/BlueKey/SNES_opened.png)
+
+The rubber parts under each button guide the black conductive thingies onto the contact surfaces on the PCB. The black blob is the epoxy covering the USB chip:
+
+![SNES_unmounted]({{ site.baseurl }}/assets/images/BlueKey/SNES_unmounted.png)
+
+Since I wanted to reuse the PCB and contact surfaces only, I removed the active part (the electronics under the epoxy blob):
+
+![SNES_barepcb]({{ site.baseurl }}/assets/images/BlueKey/SNES_barepcb.png)
+
+And soldered one wire per button, plus one wire for the gnd common to all signals:
+
+![SNES_buttonsoldering]({{ site.baseurl }}/assets/images/BlueKey/SNES_buttonsoldering.png)
+
+I tested the setup by connecting the buttons to GPIOs of the arduino: so far so good.
+
+![SNES_joypadtest]({{ site.baseurl }}/assets/images/BlueKey/SNES_joypadtest.png)
+
+I identified some of the plastic pegs to be removed to be able to fit the display:
+
+![SNES_packagingrework]({{ site.baseurl }}/assets/images/BlueKey/SNES_packagingrework.png)
+
+Then cut a square opening in the controller front face, and double-side-taped the display in front of the opening:
+
+![SNES_OLEDinteg]({{ site.baseurl }}/assets/images/BlueKey/SNES_OLEDinteg.png)
+
+I checked the intended placement for the battery (a phone battery at the time of the photo, later replaced with a cheaper LiPo), RN42 module, LiPo charger, EEPROM, OnOff switch, and arduino: they nicely fit on the back of the original PCB:
+
+![SNES_preinteg]({{ site.baseurl }}/assets/images/BlueKey/SNES_preinteg.png)
+
+The finished assembly is a visual mess, but works just fine. I later added some hot glue to secure the exposed/weak wire solders.
+
+![SNES_assembled]({{ site.baseurl }}/assets/images/BlueKey/SNES_assembled.png)
+
+Finished device, with display and on-off switch at the bottom:
+
+![SNES_finishedfront]({{ site.baseurl }}/assets/images/BlueKey/SNES_finishedfront.png)
+
+micro-USB charging port on the back, where the USB cable used to be: 
+
+![SNES_finished_back]({{ site.baseurl }}/assets/images/BlueKey/SNES_finished_back.png)
+
+The Adafruit microLiPo charger module has two LEDs on it: a red one that is lit during charge, and a green one that lits up when charge is completed. I cut an opening in the back of the controller, just on top of where these two LEDs are located, and used a small piece of transparent plastic to conduct light. This way I can check the charging status when a USB cable is connected:
+
+![SNES_batterychargestatus]({{ site.baseurl }}/assets/images/BlueKey/SNES_batterychargestatus.png)
+
+---
+
+### Using the device
+
+#### Power-on & unlock device
+
+Once switched on, the login/unlock screen appears, prompting for the usercode to unlock the device.
+
+![display_login]({{ site.baseurl }}/assets/images/BlueKey/display_login.png)
+
+Note: I arbitrarily used a 6-figure number format, but a longer alphanumeric unlock code could be used for the extra paranoid.
+
+#### Main menu
+
+I updated the code to use discrete buttons to navigate the user interface.
+While using menus:
+
+* `Up` and `Down` arrows are used to navigate vertically through screen entries
+* `Y` (green) button is used to confirm
+* `A` (red) button is used to cancel / go back to previous menu
+
+![display_mainmenu]({{ site.baseurl }}/assets/images/BlueKey/display_mainmenu.png)
+
+#### Password list
+
+The account for which a login/password should be sent can be selected from the list of stored accounts:
+
+![display_pwdlist]({{ site.baseurl }}/assets/images/BlueKey/display_pwdlist.png)
+
+Once an entry is selected, the user can choose to send the login only, the password only, or a sequence of login + tab character + password (to fill most usual login/pwd fields)
+
+![display_sendpwd]({{ site.baseurl }}/assets/images/BlueKey/display_sendpwd.png)
+
+#### Passwords management
+
+The password management submenu allows to create/store a new password, to delete a password, to format the whole device, and to check the current number of passwords stored on the device:
+
+![display_pwd_mgmt]({{ site.baseurl }}/assets/images/BlueKey/display_pwd_mgmt.png)
+
+The master key/code is entered during the formatting procedure.
+
+New entries can be created/stored either by letting the device generate a random password value of a specified length, and by entering the password manually
+
+![display_generate_manually]({{ site.baseurl }}/assets/images/BlueKey/display_generate_manually.png)
+
+While entering text:
+
+* `Left` and `Right` arrows are used to navigate horizontally through letter selection
+* `Y` (green) button is used to confirm currently selected letter
+* `Up` and `Down` arrows are used to navigate through available charsets: Uppercase letters, Lowercase letters, Numbers, Special characters.
+* `Start` button is used to finish entry 
+
+![display_create_account]({{ site.baseurl }}/assets/images/BlueKey/display_create_account.png)
+![display_create_account1]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt1.png)
+![display_create_account2]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt2.png)
+![display_create_account3]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt3.png)
+
+
+#### Display orientation 
+
+Due to the way I mounted the display in the controller, the text ended up showing upside down. No worries, the SSD1306 has a control command allowing to change the orientation of the display. Just call:
+
+	display.ssd1306_command(SSD1306_SEGREMAP ); //A0h
+	display.ssd1306_command(SSD1306_COMSCANINC); //C0h
+
+instead of the original
+
+    ssd1306_command(SSD1306_SEGREMAP | 0x1); //A1h
+    ssd1306_command(SSD1306_COMSCANDEC); //C8h
+
+present in the library by default
+
+#### Display performance 
+
+I was initially concerned about performance of the OLED display refresh, since the Adafruit GFX library sends the full image buffer over I2C every time the "display.display" function is called.
+There is an opportunity to optimize this by only sending the updated sections of the screen  to the device, but in fact updating the full 128x32 display over I2C only take about 20ms, so it is not a true limiting factor in my case.
+The only obvious precaution I took it to make sure to minimize the number of calls to `display.display`.
+
+## Todo list
+
+* Export/Backup function (dump encrypted EEPROM content over bluetooth, for storage/backup on external device)
+* custom sticker to replace the original A/B/X/Y sticker on the SNES variant, to show the use of each button
 
 ## Source Code
 
 The source code is available [here](https://github.com/jheyman/BlueKey).
 
-## Todo list
+## Afterthoughts
 
-* invert RN42 LED status logic (should be ON when connected)
-* password management SW
-* random password generation 
-* integrate in a proper packaging
-* put arduino to sleep and wake-up on knob turn
-* support local USB connection for emulating a leyboard (as the original FinalKey does)
-* optionnally get rid of external EEPROM memory (64kB) and use arduino's internal EEPROM (1KB only, could store 16 entries of 2x32 bytes)
-* deactivate inlining globally at makefile level
+I learned about the existence of the [Mooltipass](https://hackaday.io/project/86-mooltipass-offline-password-keeper
+) only after completing this project. It looks like an excellent pro-quality device, but is a wired device like the FinalKey (and is not cheap either).
 
 ## Lessons learned
 
-* The initial prototype was assembled very quickly, with cheapo components from ebay that worked out of the box: I just love the arduino ecosystem
-* I need to improve my soldering skills
-* I never thought implementing an emulated Bluetooth keyboard would require close to zero effort with the right BT module.
+* The initial prototype was assembled very quickly, with cheapo components from ebay that worked out of the box: I just love the arduino ecosystem.
+* I need to improve my soldering skills...I almost killed the tiny RN42 module while soldering it.
+* I never thought that implementing an emulated Bluetooth keyboard would require close to zero effort when choosing the right BT module: RN42 is worth every penny.
 * The arduino IDE is such that it only compiles/links the library functions that are *actually* called in the main sketch. This is extremely cool when using a single function of a large library.
+* The 2048 bytes of Arduino mini SRAM are precious and should be watched closely, otherwise evil things happen and countless debugging hours ensue.
 
 

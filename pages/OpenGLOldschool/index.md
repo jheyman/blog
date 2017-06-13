@@ -49,7 +49,7 @@ Only two settings were modified to get the code to build & run:
 * remove `glaux.lib` from the kiner dependencies (this library is obsolete and does not exist  / is not necessary anymore)
 * disable the `SAFESEH` option (in Linker advanced options), since the old BASS.dll library I am using is not compatible with this option.
 
-<br>There is an additional compilation option issue while building in Debug mode, which I did not care investigating.
+There is an additional compilation option issue while building in Debug mode, which I did not care investigating.
 
 ## Video
 

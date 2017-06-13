@@ -31,6 +31,32 @@ Whenever detailed compilation traces are required in the arduino IDE, just head 
 
 --- 
 
+### Measure execution time
+
+Very classical way to profile arduino execution time:
+
+	unsigned long StartTime = millis();
+
+	[code to be measured]
+
+	unsigned long CurrentTime = millis();	
+	unsigned long ElapsedTime = CurrentTime - StartTime;
+	Serial.print("Time:"); Serial.println(ElapsedTime);    
+
+(obviously the `Serial.print` statements slow down the overall execution)
+
+---
+
+### Debugger
+
+For the non-trivial arduino projects, there comes a time when having a serious debugging tool is in order. I checked the [Visual Micro](http://www.visualmicro.com/) plugin for Visual Studio and Atmel Studio, it is definitely worlds apart from the native Arduino IDE, and very reasonably priced. However, I happen to use 8-bit AVR-based arduinos mostly, which do not include HW debugging support (JTAG) anyway, so the "debugger" function in this case is a glorified logging system. There is still the very nice integration in Visual Studio, but I also happen to work from Linux mostly. 
+
+There is also the possibility to roll out a flavor of `gdb` on the arduino, but with the memory limitations of 8-bit AVRs, there is a high chance that the memory footprint would be unacceptable. 
+
+So in the end I realized I had no other choice than debugging the old-fashioned way (Serial traces & using my brains)
+
+--- 
+
 ### Memory optimisation
 
 A wonderful summary of Arduino memory management and related issues is available [here](https://learn.adafruit.com/memories-of-an-arduino/you-know-you-have-a-memory-problem-when-dot-dot-dot).
@@ -41,11 +67,16 @@ TLDR:
 	* program memory (**Flash**, non volatile)
 	* dynamic memory (**SRAM**, volatile)
 	* **EEPROM** (non-volatile)
-* amount of used **program memory** shows up in the compiler output, so it clear enough when reaching the limit, and optimizing is obvious (reducing amount of generated code one way or the other)
+* amount of used **program memory** shows up in the compiler output, so it is clear enough when reaching the limit, and optimizing is obvious (reducing amount of generated code one way or the other)
 * amount used **dynamic memory** is trickier to figure out, as it always is, since it depends on execution flow and what the code does and how.
-	* at the bottom of SRAM, global static variables are stored (therefore using a fixed amount of it)
+	* at the bottom of SRAM, registers are mapped
+	* on top of that, global static variables are stored (initialized variables in **data** segment, and uninitialized variables in **bss** segment)
 	* on top of that lives the heap, used by dynamic memory allocations/deallocations (hint: don't use those at all)
-	* then starting from the other end of the SRAM (the top), lives the stack, where all local variables live as well as parameters passed by functions and function/interrupts callstack itself.
+	* then starting from the other end of the SRAM (the top), lives the **stack**, where all local variables live as well as parameters passed by functions and function/interrupts callstack itself. The stack grows dynamically downward, i.e. in the free memory area and in the direction of the heap end/start.
+
+Here is an example for an ATmega328-based arduino, with 2048 bytes of SRAM:
+
+![SRAMMap]({{ site.baseurl }}/assets/images/ArduinoTipsAndTricks/SRAMMap.png)
 
 Weird behavior of an Arduino program appearing right after modifying something apparently unrelated in the program is (very) likely to be the result of running out of SRAM (i.e. stack space and heap space colliding)
 
@@ -102,7 +133,7 @@ e.g.:
 
 In this example, 512 bytes of memory is being taken by the "buffer" object on the code, and e.g. 157 bytes are taken by the `Serial` object.
 
-#### PROGMEM directive
+#### SRAM optimization: the PROGMEM directive
 
 The PROGMEM keyword tells the compiler to store the data structure it is associated to, into program memory (flash), freeing the corresponding SRAM where they would otherwise end up living.
 
@@ -116,7 +147,7 @@ The PROGMEM keyword tells the compiler to store the data structure it is associa
 	  // do whatever
 	}
 
-#### Using the F() macro
+#### SRAM optimization: using the F() macro
 
 Wrapping initialised strings in the `F()` macro will reap the PROGMEM benefits (i.e. free-up corresponding SRAM)
 
@@ -140,7 +171,48 @@ line, then save the file, re-launch IDE and recompile. A `linker.map` text file 
 
 A very helpful viewer tool for windows and linux is available [here](http://www.sikorskiy.net/prj/amap/).
 
-#### Un-inlining functions
+#### Checking stack usage at runtime
+
+The current stack size at a given point during execution can be determined using the SP (stack pointer) value, and comparing it to the end of SRAM (where the stack begins):
+
+	Serial.print("Stack size: ");  Serial.println(RAMEND - SP);
+
+Also, it is often interesting to determine the **maximum** size that the stack has previously reached, and this can be done using the good old "stack canary" trick.
+At the very beginning of execution (ideally in bootloader, but doing it as the first step when entering `setup()` works just fine), fill the free memory (i.e. memory adresses starting after the BSS segment, and up to the stack pointer) with a known value:
+
+	#define STACK_CANARY_VAL 0xfd
+
+	extern char *__bss_end;
+	extern uint8_t  __stack;
+
+	uint8_t *p = (uint8_t *)&__bss_end;  
+	while(p <= SP)
+		*p++ = STACK_CANARY_VAL;
+
+Later, the following function can be used to walk the same memory addresses, and stop at the first address that does not contain the canary value (because it was overwritten by the bottom of the stack): this provides the margin between the highest stack size (so far) and the original amount of free SRAM. The smaller the value, the highest the likelyhood of a (future) collision between the stack and the BSS (i.e. horrible unexplained crashes)
+    
+    uint16_t StackMarginWaterMark(void) {
+	    const uint8_t *p = (uint8_t *)&__bss_end;
+	    uint16_t c = 0;
+	     
+	    while(*p == STACK_CANARY_VAL && p <= (uint8_t *)&__stack) {
+	        p++;
+	        c++;
+    	}
+    	return c;
+	}
+
+All of this only works if no `malloc()` are used in the code.
+
+#### Stack size optimisation: buffer sizes
+
+An obvious way to reduce the stack size is just to reduce that amount and size of local variables in functions. It is often worth going over all local arrays used inside functions, and make them the smallest size compatible with what the code is doing. This of course requires to have a perfect control over the max amount of data (e.g. string lengths...) that will go in these arrays, or dreaded buffer overflows will follow.
+
+#### Stack size optimisation: reduce function nesting
+
+This is also obvious, but since the max level of function call nesting often determines the worst case stack size, flattening the functions call tree wherever possible helps minimizing the max stack size, therefore minizes the likelyhood of stack/heap collision.
+
+#### Stack size optimisation: un-inlining functions
 
 Most of the time function inlining is fine to optimize performance, however in the case of a lot of small functions using local buffers, inlining results in a huge cumulative stack size when main loop is called, which may be a problem if free memory is low. To force the compiler to NOT inline functions, just add the `__attribute__ ((noinline))` in the function prototype:
 
@@ -148,6 +220,8 @@ Most of the time function inlining is fine to optimize performance, however in t
 	{
 
 	}
+
+---
 
 ### Dumping assembly code
 
