@@ -78,21 +78,25 @@
       <li><a href="#watching-the-stack-margin" id="markdown-toc-watching-the-stack-margin">Watching the stack margin</a></li>
     </ul>
   </li>
+  <li><a href="#bluetooth-auto-connect" id="markdown-toc-bluetooth-auto-connect">Bluetooth auto-connect</a></li>
+  <li><a href="#off-topic-receiving-data-from-the-rn42" id="markdown-toc-off-topic-receiving-data-from-the-rn42">Off-topic: receiving data from the RN42</a></li>
   <li><a href="#prototype-3-the-snes-variant" id="markdown-toc-prototype-3-the-snes-variant">PROTOTYPE #3: the SNES variant</a>    <ul>
       <li><a href="#enclosure" id="markdown-toc-enclosure">Enclosure</a></li>
       <li><a href="#full-33v-setup" id="markdown-toc-full-33v-setup">Full 3.3V setup</a></li>
       <li><a href="#battery" id="markdown-toc-battery">Battery</a></li>
       <li><a href="#updated-assembly-diagram" id="markdown-toc-updated-assembly-diagram">Updated assembly diagram</a></li>
       <li><a href="#integration" id="markdown-toc-integration">Integration</a></li>
-      <li><a href="#using-the-device" id="markdown-toc-using-the-device">Using the device</a>        <ul>
+      <li><a href="#using-the-bluekey" id="markdown-toc-using-the-bluekey">Using the BlueKey</a>        <ul>
+          <li><a href="#initial-power-on" id="markdown-toc-initial-power-on">Initial Power-on</a></li>
           <li><a href="#power-on--unlock-device" id="markdown-toc-power-on--unlock-device">Power-on &amp; unlock device</a></li>
           <li><a href="#main-menu" id="markdown-toc-main-menu">Main menu</a></li>
-          <li><a href="#password-list" id="markdown-toc-password-list">Password list</a></li>
-          <li><a href="#passwords-management" id="markdown-toc-passwords-management">Passwords management</a></li>
-          <li><a href="#display-orientation" id="markdown-toc-display-orientation">Display orientation</a></li>
-          <li><a href="#display-performance" id="markdown-toc-display-performance">Display performance</a></li>
+          <li><a href="#initial-bluetooth-setup" id="markdown-toc-initial-bluetooth-setup">Initial Bluetooth setup</a></li>
+          <li><a href="#password-list-menu" id="markdown-toc-password-list-menu">Password list menu</a></li>
+          <li><a href="#passwords-management-menu" id="markdown-toc-passwords-management-menu">Passwords management menu</a></li>
         </ul>
       </li>
+      <li><a href="#display-orientation" id="markdown-toc-display-orientation">Display orientation</a></li>
+      <li><a href="#display-performance" id="markdown-toc-display-performance">Display performance</a></li>
     </ul>
   </li>
   <li><a href="#todo-list" id="markdown-toc-todo-list">Todo list</a></li>
@@ -153,6 +157,8 @@
 <h2 id="security-disclaimer">Security Disclaimer</h2>
 
 <p>The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my “serious” passwords, so you shouldn’t either.</p>
+
+<hr />
 
 <h2 id="prototype-1-breadboard">PROTOTYPE #1 (Breadboard)</h2>
 
@@ -294,9 +300,14 @@ To do this, from either the local serial link or over the wireless serial termin
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/bluetooth_pairing.png" alt="pairing" /></p>
 
-<p><strong>Note</strong>: the whole User Guide of the RN42 module is available <a href="http://ww1.microchip.com/downloads/en/DeviceDoc/bluetooth_cr_UG-v1.0r.pdf">here</a>, see chapter 5 about support for the HID profile.</p>
-
 <p>Once the device is paired like that, it will receive any string sent from the code over the serial line (e.g. <code>Serial.print</code> statement).</p>
+
+<p><strong>Note</strong>:</p>
+
+<ul>
+  <li>I archived the User Guide of the RN42 module <a href="https://github.com/jheyman/BlueKey/blob/master/docs/bluetooth_cr_UG-v1.0r.pdf">here</a>, see chapter 5 about support for the HID profile.</li>
+  <li>Depending on the module configuration, remote configuration over Bluetooth may not be possible. In this case the best way is to using a local serial terminal, the simplest setup I found is using a 3.3V FTDI adapter (e.g. normally used for programming 3.3V arduinos), connect VCC to RN42’s pin 11 (VDD), connect GND to RN42’s pin 12 (GND), connect RX pin to the RN42’s pin 14 (TX), and TX pin to the RN42’s pin 13 (RX), then launch a serial terminal (e.g. minicom/putty) with baudrate 115200, 8N1, no HW flow control.</li>
+</ul>
 
 <h4 id="keypad-management">Keypad management</h4>
 
@@ -696,6 +707,136 @@ Even though this margin is still relatively small, it was enough to come back to
 
 <hr />
 
+<h2 id="bluetooth-auto-connect">Bluetooth auto-connect</h2>
+
+<p>Prototype #2 is ok to use, but still has one major drawback: after turning it on, one has to go in the phone’s Bluetooth settings menu and manually trig the connection. Quite ok during tests, but a big no-no for every day use.
+It turns out, the RN42 module has multiple configuration settings related to bluetooth connection to the device it is paired with, and by default it does not auto-connect.</p>
+
+<p>After checking the RN42 docs and experimenting for a while, I settled on the following mechanism:</p>
+
+<ul>
+  <li>keep the RN42 in Slave mode</li>
+  <li>perform a one-time configuration to store the phone’s bluetooth address in the module settings</li>
+  <li>At power-up, send the command to manually connect to this stored address</li>
+</ul>
+
+<p>The RN42 configuration sequence I implemented is as follows:</p>
+
+<pre><code>// Enter RN42 command mode
+Serial.print("$$$");
+delay(250);
+
+// Restore factory settings, just to be sure of the starting point
+Serial.print("SF,1\n");
+delay(250);
+
+// Setup the HID profile so that device is recognized as a keyboard
+Serial.print("S~,6\n");
+delay(250);
+
+// Setup the name prefix that will appear on the remote device
+Serial.print("S-,bluekey\n");
+delay(250);
+
+// Store the BT address of the remote device, for automatic connection at power-up
+Serial.print("SR,");
+Serial.print(targetBTAddress);
+Serial.print("\n");
+delay(250);
+
+// Reboot
+Serial.print("R,1\n");
+</code></pre>
+
+<ul>
+  <li>the delays are mostly unnecessary, I kept them to be on the safe side.</li>
+  <li>the targetBTAddress field is requested to be entered manually by the user (can also be read on the RN42, but I want to be able to work with TX signal only). On Android phones, it can be found in <code>Settings</code> / <code>About Device</code> / <code>Status</code> / <code>Bluetooth Address</code></li>
+</ul>
+
+<p>Auto-connecting to the paired bluetooth device upon power-on is then a simple matter of adding this in the startup code:</p>
+
+<pre><code>// Enter RN41 command mode
+Serial.print("$$$");
+delay(250);
+
+// Connect using pre-stored BT address (via SR,&lt;...&gt; command)
+Serial.print("C\n"); 
+</code></pre>
+
+<p>I am fully aware that the RN42 implements HW auto-connect modes to spare this code, but I found it more flexible to let the arduino control the moment when the module is allowed to connect, through this command.</p>
+
+<hr />
+
+<h2 id="off-topic-receiving-data-from-the-rn42">Off-topic: receiving data from the RN42</h2>
+
+<p>While the prototype does not need the RN42’s TX pin to be connected to the arduino to operate, I still experimented with it to read responses in command mode. What should have been a 5 minutes test turned out to be trickier than anticipated, so I capture a few notes here just in case.</p>
+
+<p>The RN42 is configured to communicate at 115200 bauds by default, and it turns out that while the Arduino pro micro can send data on its TX pint at 115200bauds, it struggles to receives data at this rate, with results ranging from 
+almost working but corrupting a few characters, to reading garbage.</p>
+
+<p>The solution is to lower the baudrate to something lower (I used 9600 arbitrarily). There is a useful command on the RN42 to temporarily adjust the baudrate, without impacting the baudrate configured at power-up (115200).  As a reference, the full sequence to read and display the RN42 firmware version as the response to the <code>V</code> command is :</p>
+
+<pre><code>// Enter RN42 command mode
+Serial.print("$$$");
+delay(50);
+
+// By default the RN42 uses 115200 bauds in RX and TX
+// But somehow the arduino pro mini cannot handle the 115200 bauds in the RX direction
+// So set RN42 temporary baud rate to 9600
+Serial.print("U,9600,N\n");
+
+// Change baud rate on arduino TX side to 9600 too
+Serial.flush();
+Serial.begin(9600);
+delay(250);
+
+// Flush RX buffer just in case  
+while(Serial.available()) Serial.read();
+
+// Enter command mode again
+Serial.print("$$$");
+
+// wait a bit to make sure response ("CMD") has started arriving
+delay(5);
+
+// read &amp; display incoming response bytes
+while(Serial.available()) {
+display.print((char)Serial.read());
+}
+
+// Send command to get RN42 firmware version
+delay(50);
+Serial.print("V\n");
+
+// wait a bit to make sure response (FW version text) has started arriving
+delay(10);
+
+// read &amp; display incoming response bytes
+while(Serial.available()) {
+display.print((char)Serial.read());
+}
+
+// Exit command mode
+delay(250); 
+Serial.print("---\n");
+
+// wait a bit to make sure response ("END") has started arriving
+delay(10);
+
+// read &amp; display incoming response bytes
+while(Serial.available()) {
+display.print((char)Serial.read());
+}
+
+// Restore arduino baud rate to 115200.
+Serial.flush();
+Serial.begin(115200);
+</code></pre>
+
+<p><strong>Note</strong>: some of the delays are due to the fact that I reduced the UART RX buffer to 16 bytes earlier on, to optimize SRAM memory usage. So to make sure I do not loose any incoming character, I ensure through these delays (calibrated manually based on captured trace on the line) that the arduino start actively reading received bytes right after they start coming in.</p>
+
+<hr />
+
 <h2 id="prototype-3-the-snes-variant">PROTOTYPE #3: the SNES variant</h2>
 
 <p>The next step was to package the prototype into something usable. That meant:</p>
@@ -716,7 +857,7 @@ Even though this margin is still relatively small, it was enough to come back to
 
 <p><strong>Note</strong>: I used <code>jstest-gtk</code> on Linux to check the controller was working fine, before hacking it.</p>
 
-<p>Choosing this controller also meant replacing the rotary knob logic in the code with a simpler handling of the controller buttons state.</p>
+<p>Choosing this controller also meant replacing the rotary knob logic in the code with a simpler handling of the controller buttons state, so I updated the code to use discrete buttons to navigate the user interface.</p>
 
 <h3 id="full-33v-setup">Full 3.3V setup</h3>
 
@@ -802,20 +943,46 @@ The overall circuit draws around 10-15mA, so a very small LiPo e.g. 150mAh is go
 
 <hr />
 
-<h3 id="using-the-device">Using the device</h3>
+<h3 id="using-the-bluekey">Using the BlueKey</h3>
+
+<h4 id="initial-power-on">Initial Power-on</h4>
+
+<p>During the very first power-on, the EEPROM is empty, the device will detect it, format it, and ask for a user code:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_newcode.png" alt="display_newcode" /></p>
+
+<p>While entering the code:</p>
+
+<ul>
+  <li><code>Left</code> and <code>Right</code> arrows are used to navigate horizontally through number selection</li>
+  <li><code>Y</code> (green) button is used to confirm currently selected letter</li>
+  <li><code>Start</code> button is used to confirm</li>
+</ul>
+
+<p>This code will then be used to encrypt all password data in the EEPROM. The user code must be entered a second time as a check:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_repeatcode.png" alt="display_repeatcode" /></p>
+
+<p>Should this user code be lost, there would then be no way to unlock the device or retrieve it, so choose with care.
+A username for the BlueKey must then be selected:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_setname.png" alt="display_setname" /></p>
+
+<p>The EEPROM formatting is then launched:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_formatting.png" alt="display_formatting" /></p>
+
+<p>And the device is then ready to use.</p>
 
 <h4 id="power-on--unlock-device">Power-on &amp; unlock device</h4>
 
-<p>Once switched on, the login/unlock screen appears, prompting for the usercode to unlock the device.</p>
+<p>When switched on, the login screen appears, prompting for the usercode to unlock the device:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_login.png" alt="display_login" /></p>
 
 <p>Note: I arbitrarily used a 6-figure number format, but a longer alphanumeric unlock code could be used for the extra paranoid.</p>
 
 <h4 id="main-menu">Main menu</h4>
-
-<p>I updated the code to use discrete buttons to navigate the user interface.
-While using menus:</p>
 
 <ul>
   <li><code>Up</code> and <code>Down</code> arrows are used to navigate vertically through screen entries</li>
@@ -825,7 +992,28 @@ While using menus:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_mainmenu.png" alt="display_mainmenu" /></p>
 
-<h4 id="password-list">Password list</h4>
+<h4 id="initial-bluetooth-setup">Initial Bluetooth setup</h4>
+
+<p>The bluetooth configuration (mostly entering the bluetooth address of the device to be paired) can be accessed from the setup menu:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_setup.png" alt="display_setup" /></p>
+
+<p>(the menu entry to force bluetooth connection is for test purposes and should not have to be used)</p>
+
+<p><strong>Initial pairing procedure</strong>:</p>
+
+<ul>
+  <li>Get the bluetooth address of the remote device (e.g. phone) to be paired. On Android phones, it can be found in <code>Settings</code> / <code>About Device</code> / <code>Status</code> / <code>Bluetooth Address</code></li>
+  <li>turn on the BlueKey</li>
+  <li>in the <code>Setup</code> menu, select <code>BT configuration</code>, and input the remote device’s bluetooth address when prompted</li>
+  <li>From the remote device, launching the bluetooth pairing: the remote device should detect a bluetooth keyboard, and connect to it.</li>
+  <li>turn off the BlueKey, and wait until it is detected as disconnect on the remote device</li>
+  <li>turn on the BlueKey: it should connect automatically to the remote device.</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/bluetooth_connected.png" alt="display_connected" /></p>
+
+<h4 id="password-list-menu">Password list menu</h4>
 
 <p>The account for which a login/password should be sent can be selected from the list of stored accounts:</p>
 
@@ -835,7 +1023,7 @@ While using menus:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_sendpwd.png" alt="display_sendpwd" /></p>
 
-<h4 id="passwords-management">Passwords management</h4>
+<h4 id="passwords-management-menu">Passwords management menu</h4>
 
 <p>The password management submenu allows to create/store a new password, to delete a password, to format the whole device, and to check the current number of passwords stored on the device:</p>
 
@@ -861,7 +1049,7 @@ While using menus:</p>
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt2.png" alt="display_create_account2" />
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt3.png" alt="display_create_account3" /></p>
 
-<h4 id="display-orientation">Display orientation</h4>
+<h3 id="display-orientation">Display orientation</h3>
 
 <p>Due to the way I mounted the display in the controller, the text ended up showing upside down. No worries, the SSD1306 has a control command allowing to change the orientation of the display. Just call:</p>
 
@@ -877,7 +1065,7 @@ ssd1306_command(SSD1306_COMSCANDEC); //C8h
 
 <p>present in the library by default</p>
 
-<h4 id="display-performance">Display performance</h4>
+<h3 id="display-performance">Display performance</h3>
 
 <p>I was initially concerned about performance of the OLED display refresh, since the Adafruit GFX library sends the full image buffer over I2C every time the “display.display” function is called.
 There is an opportunity to optimize this by only sending the updated sections of the screen  to the device, but in fact updating the full 128x32 display over I2C only take about 20ms, so it is not a true limiting factor in my case.
