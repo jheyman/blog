@@ -23,7 +23,7 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
-  <td><div id="container"  style="height:200px;"><img src="{{ site.baseurl }}/assets/images/BlueKey/logo.png"/></div></td>
+  <td><div id="container"  style="height:200px;"><img src="{{ site.baseurl }}/assets/images/BlueKey/NES_mugshot.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/BlueKey">BlueKey, a bluetooth HW password manager</a></td>
 </tr>
 </table>

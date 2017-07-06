@@ -49,7 +49,7 @@ Hence the **BlueKey** concept:
 
 ## Security Disclaimer
 
-The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my "serious" passwords, so you shouldn't either.
+The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security, especially considering it is wireless. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my "serious" passwords, so you shouldn't either.
 
 ---
 
@@ -247,7 +247,7 @@ So the interrupt service routine checks the current state of the **DATA** signal
 
 ---
 
-## PROTOTYPE #2 (Breadboard)
+## PROTOTYPE #2 (More breadboard)
 
 On further thought, the keypad did not look practical enough, so I got rid of it and decided to use the knob as the single way to manage user input.
 
@@ -600,7 +600,7 @@ I am fully aware that the RN42 implements HW auto-connect modes to spare this co
 
 While the prototype does not need the RN42's TX pin to be connected to the arduino to operate, I still experimented with it to read responses in command mode. What should have been a 5 minutes test turned out to be trickier than anticipated, so I capture a few notes here just in case.
 
-The RN42 is configured to communicate at 115200 bauds by default, and it turns out that while the Arduino pro micro can send data on its TX pint at 115200bauds, it struggles to receives data at this rate, with results ranging from 
+The RN42 is configured to communicate at 115200 bauds by default, and it turns out that while the Arduino pro mini can send data on its TX pint at 115200bauds, it struggles to receives data at this rate, with results ranging from 
 almost working but corrupting a few characters, to reading garbage. 
 
 The solution is to lower the baudrate to something lower (I used 9600 arbitrarily). There is a useful command on the RN42 to temporarily adjust the baudrate, without impacting the baudrate configured at power-up (115200).  As a reference, the full sequence to read and display the RN42 firmware version as the response to the `V` command is :
@@ -690,7 +690,7 @@ Choosing this controller also meant replacing the rotary knob logic in the code 
 
 To simplify the design, I moved everything to 3.3V, to get rid of the 5V/3.3V converter
 
-- I switched to a 3.3V version of Arduino Pro Micro
+- I switched to a 3.3V version of Arduino Pro Mini
 - the EEPROM is compatible with 3.3V (operating range is 2.5V-5.5V)
 - the OLED display is compatible with 3.3V (operating range is 2.8V-5.5V)
 - the RN42 requires 3.3V anyway
@@ -768,9 +768,63 @@ The Adafruit microLiPo charger module has two LEDs on it: a red one that is lit 
 
 ---
 
-### Using the BlueKey
+## PROTOTYPE #4: the NES variant
 
-#### Initial Power-on
+I needed a second BlueKey anyway, so I couldn't resist getting a NES controller clone and having a second go at integrating parts, and improving a few things in the process.
+
+### Enclosure
+
+eBay to the rescue again, I picked the cheapest NES controller clone I could find:
+
+![NES controller]({{ site.baseurl }}/assets/images/BlueKey/NES_original.png)
+
+### Updated assembly diagram
+
+The NES controller has less buttons (which is fine, several buttons of the SNES variant were left unused anyway), so I remapped actions to them.
+Also, I put the charging LED on the front (more convenient) and added an LED showing the bluetooth connection status (blinks during connection, and stays on when connection is successful) 
+
+![fritzing_NES]({{ site.baseurl }}/assets/images/BlueKey/fritzing_NES.png)
+
+### Integration
+
+First step, reuse the PCB and solder the wires:
+
+![NES integration step1]({{ site.baseurl }}/assets/images/BlueKey/NES_integration_step1.png)
+
+Next up, cut the opening for the display, glue it, find a spot for the battery.
+Also, I used a few strips of prototyping board to help (a bit) with the wiring:
+
+![NES integration step2]({{ site.baseurl }}/assets/images/BlueKey/NES_integration_step2.png)
+
+To show the charging status on the front of the controller, I just unsoldered the small SMD LED on the LiPo charger, and soldered a couple of wires to a (remote) 3mm LED:
+
+![NES_chargingLEDwiring]({{ site.baseurl }}/assets/images/BlueKey/NES_chargingLEDwiring.png)
+
+Original PCB still fits, and is cut just enough to fit the shape of the USB LiPo charger (mounted face down):
+
+![NES integration step3]({{ site.baseurl }}/assets/images/BlueKey/NES_integration_step3.png)
+
+The complete version with the Arduino, RN42 module, power/charge switch, and the big mess of wires (the X'es are the places where the opposite plastic cover moldings come in contact with the PCB to hold it in place):
+
+![NES integration final]({{ site.baseurl }}/assets/images/BlueKey/NES_integration_final.png)
+
+Et voilà, all done:
+
+![NES finished]({{ site.baseurl }}/assets/images/BlueKey/NES_finished.png)
+
+View of the microUSB charging port:
+
+![NES_chargingport]({{ site.baseurl }}/assets/images/BlueKey/NES_chargingport.png)
+
+The green LED lits up when the switch is on the charging position and charging is in progress. It turns off when charging is complete.
+
+![NES charging]({{ site.baseurl }}/assets/images/BlueKey/NES_charging.png)
+
+---
+
+## Using the BlueKey
+
+### Initial Power-on
 
 During the very first power-on, the EEPROM is empty, the device will detect it, format it, and ask for a user code:  
 
@@ -797,7 +851,7 @@ The EEPROM formatting is then launched:
 
 And the device is then ready to use.
 
-#### Power-on & unlock device
+### Power-on & unlock device
 
 When switched on, the login screen appears, prompting for the usercode to unlock the device:
 
@@ -805,7 +859,7 @@ When switched on, the login screen appears, prompting for the usercode to unlock
 
 Note: I arbitrarily used a 6-figure number format, but a longer alphanumeric unlock code could be used for the extra paranoid.
 
-#### Main menu
+### Main menu
 
 * `Up` and `Down` arrows are used to navigate vertically through screen entries
 * `Y` (green) button is used to confirm
@@ -813,7 +867,7 @@ Note: I arbitrarily used a 6-figure number format, but a longer alphanumeric unl
 
 ![display_mainmenu]({{ site.baseurl }}/assets/images/BlueKey/display_mainmenu.png)
 
-#### Initial Bluetooth setup
+### Initial Bluetooth setup
 
 The bluetooth configuration (mostly entering the bluetooth address of the device to be paired) can be accessed from the setup menu:
 
@@ -832,7 +886,7 @@ The bluetooth configuration (mostly entering the bluetooth address of the device
 
 ![display_connected]({{ site.baseurl }}/assets/images/BlueKey/bluetooth_connected.png)
 
-#### Password list menu
+### Password list menu
 
 The account for which a login/password should be sent can be selected from the list of stored accounts:
 
@@ -842,7 +896,7 @@ Once an entry is selected, the user can choose to send the login only, the passw
 
 ![display_sendpwd]({{ site.baseurl }}/assets/images/BlueKey/display_sendpwd.png)
 
-#### Passwords management menu
+### Passwords management menu
 
 The password management submenu allows to create/store a new password, to delete a password, to format the whole device, and to check the current number of passwords stored on the device:
 
@@ -866,7 +920,7 @@ While entering text:
 ![display_create_account2]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt2.png)
 ![display_create_account3]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt3.png)
 
-### Display orientation 
+## Display orientation 
 
 Due to the way I mounted the display in the controller, the text ended up showing upside down. No worries, the SSD1306 has a control command allowing to change the orientation of the display. Just call:
 
@@ -880,7 +934,7 @@ instead of the original
 
 present in the library by default
 
-### Display performance 
+## Display performance 
 
 I was initially concerned about performance of the OLED display refresh, since the Adafruit GFX library sends the full image buffer over I2C every time the "display.display" function is called.
 There is an opportunity to optimize this by only sending the updated sections of the screen  to the device, but in fact updating the full 128x32 display over I2C only take about 20ms, so it is not a true limiting factor in my case.

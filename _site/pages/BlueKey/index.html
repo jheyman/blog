@@ -67,7 +67,7 @@
       </li>
     </ul>
   </li>
-  <li><a href="#prototype-2-breadboard" id="markdown-toc-prototype-2-breadboard">PROTOTYPE #2 (Breadboard)</a>    <ul>
+  <li><a href="#prototype-2-more-breadboard" id="markdown-toc-prototype-2-more-breadboard">PROTOTYPE #2 (More breadboard)</a>    <ul>
       <li><a href="#better-rotary-encoder-management" id="markdown-toc-better-rotary-encoder-management">Better rotary encoder management</a></li>
       <li><a href="#updated-breadboard-assembly" id="markdown-toc-updated-breadboard-assembly">Updated breadboard assembly</a></li>
     </ul>
@@ -86,19 +86,25 @@
       <li><a href="#battery" id="markdown-toc-battery">Battery</a></li>
       <li><a href="#updated-assembly-diagram" id="markdown-toc-updated-assembly-diagram">Updated assembly diagram</a></li>
       <li><a href="#integration" id="markdown-toc-integration">Integration</a></li>
-      <li><a href="#using-the-bluekey" id="markdown-toc-using-the-bluekey">Using the BlueKey</a>        <ul>
-          <li><a href="#initial-power-on" id="markdown-toc-initial-power-on">Initial Power-on</a></li>
-          <li><a href="#power-on--unlock-device" id="markdown-toc-power-on--unlock-device">Power-on &amp; unlock device</a></li>
-          <li><a href="#main-menu" id="markdown-toc-main-menu">Main menu</a></li>
-          <li><a href="#initial-bluetooth-setup" id="markdown-toc-initial-bluetooth-setup">Initial Bluetooth setup</a></li>
-          <li><a href="#password-list-menu" id="markdown-toc-password-list-menu">Password list menu</a></li>
-          <li><a href="#passwords-management-menu" id="markdown-toc-passwords-management-menu">Passwords management menu</a></li>
-        </ul>
-      </li>
-      <li><a href="#display-orientation" id="markdown-toc-display-orientation">Display orientation</a></li>
-      <li><a href="#display-performance" id="markdown-toc-display-performance">Display performance</a></li>
     </ul>
   </li>
+  <li><a href="#prototype-4-the-nes-variant" id="markdown-toc-prototype-4-the-nes-variant">PROTOTYPE #4: the NES variant</a>    <ul>
+      <li><a href="#enclosure-1" id="markdown-toc-enclosure-1">Enclosure</a></li>
+      <li><a href="#updated-assembly-diagram-1" id="markdown-toc-updated-assembly-diagram-1">Updated assembly diagram</a></li>
+      <li><a href="#integration-1" id="markdown-toc-integration-1">Integration</a></li>
+    </ul>
+  </li>
+  <li><a href="#using-the-bluekey" id="markdown-toc-using-the-bluekey">Using the BlueKey</a>    <ul>
+      <li><a href="#initial-power-on" id="markdown-toc-initial-power-on">Initial Power-on</a></li>
+      <li><a href="#power-on--unlock-device" id="markdown-toc-power-on--unlock-device">Power-on &amp; unlock device</a></li>
+      <li><a href="#main-menu" id="markdown-toc-main-menu">Main menu</a></li>
+      <li><a href="#initial-bluetooth-setup" id="markdown-toc-initial-bluetooth-setup">Initial Bluetooth setup</a></li>
+      <li><a href="#password-list-menu" id="markdown-toc-password-list-menu">Password list menu</a></li>
+      <li><a href="#passwords-management-menu" id="markdown-toc-passwords-management-menu">Passwords management menu</a></li>
+    </ul>
+  </li>
+  <li><a href="#display-orientation" id="markdown-toc-display-orientation">Display orientation</a></li>
+  <li><a href="#display-performance" id="markdown-toc-display-performance">Display performance</a></li>
   <li><a href="#todo-list" id="markdown-toc-todo-list">Todo list</a></li>
   <li><a href="#source-code" id="markdown-toc-source-code">Source Code</a></li>
   <li><a href="#afterthoughts" id="markdown-toc-afterthoughts">Afterthoughts</a></li>
@@ -156,7 +162,7 @@
 
 <h2 id="security-disclaimer">Security Disclaimer</h2>
 
-<p>The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my “serious” passwords, so you shouldn’t either.</p>
+<p>The original FinalKey code has a very decent security level, effort has been put into securing it, and it documents its few limitations quite openly. My version on the other hand is heavily modified and I am not even trying to claim that it reaches a similar level of security, especially considering it is wireless. It is what it is (mostly a fun experiment) and I am not trusting it enough to handle my “serious” passwords, so you shouldn’t either.</p>
 
 <hr />
 
@@ -389,7 +395,7 @@ It boils down to the following sequence:</p>
 
 <hr />
 
-<h2 id="prototype-2-breadboard">PROTOTYPE #2 (Breadboard)</h2>
+<h2 id="prototype-2-more-breadboard">PROTOTYPE #2 (More breadboard)</h2>
 
 <p>On further thought, the keypad did not look practical enough, so I got rid of it and decided to use the knob as the single way to manage user input.</p>
 
@@ -771,7 +777,7 @@ Serial.print("C\n");
 
 <p>While the prototype does not need the RN42’s TX pin to be connected to the arduino to operate, I still experimented with it to read responses in command mode. What should have been a 5 minutes test turned out to be trickier than anticipated, so I capture a few notes here just in case.</p>
 
-<p>The RN42 is configured to communicate at 115200 bauds by default, and it turns out that while the Arduino pro micro can send data on its TX pint at 115200bauds, it struggles to receives data at this rate, with results ranging from 
+<p>The RN42 is configured to communicate at 115200 bauds by default, and it turns out that while the Arduino pro mini can send data on its TX pint at 115200bauds, it struggles to receives data at this rate, with results ranging from 
 almost working but corrupting a few characters, to reading garbage.</p>
 
 <p>The solution is to lower the baudrate to something lower (I used 9600 arbitrarily). There is a useful command on the RN42 to temporarily adjust the baudrate, without impacting the baudrate configured at power-up (115200).  As a reference, the full sequence to read and display the RN42 firmware version as the response to the <code>V</code> command is :</p>
@@ -864,7 +870,7 @@ Serial.begin(115200);
 <p>To simplify the design, I moved everything to 3.3V, to get rid of the 5V/3.3V converter</p>
 
 <ul>
-  <li>I switched to a 3.3V version of Arduino Pro Micro</li>
+  <li>I switched to a 3.3V version of Arduino Pro Mini</li>
   <li>the EEPROM is compatible with 3.3V (operating range is 2.5V-5.5V)</li>
   <li>the OLED display is compatible with 3.3V (operating range is 2.8V-5.5V)</li>
   <li>the RN42 requires 3.3V anyway</li>
@@ -943,9 +949,63 @@ The overall circuit draws around 10-15mA, so a very small LiPo e.g. 150mAh is go
 
 <hr />
 
-<h3 id="using-the-bluekey">Using the BlueKey</h3>
+<h2 id="prototype-4-the-nes-variant">PROTOTYPE #4: the NES variant</h2>
 
-<h4 id="initial-power-on">Initial Power-on</h4>
+<p>I needed a second BlueKey anyway, so I couldn’t resist getting a NES controller clone and having a second go at integrating parts, and improving a few things in the process.</p>
+
+<h3 id="enclosure-1">Enclosure</h3>
+
+<p>eBay to the rescue again, I picked the cheapest NES controller clone I could find:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_original.png" alt="NES controller" /></p>
+
+<h3 id="updated-assembly-diagram-1">Updated assembly diagram</h3>
+
+<p>The NES controller has less buttons (which is fine, several buttons of the SNES variant were left unused anyway), so I remapped actions to them.
+Also, I put the charging LED on the front (more convenient) and added an LED showing the bluetooth connection status (blinks during connection, and stays on when connection is successful)</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/fritzing_NES.png" alt="fritzing_NES" /></p>
+
+<h3 id="integration-1">Integration</h3>
+
+<p>First step, reuse the PCB and solder the wires:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_integration_step1.png" alt="NES integration step1" /></p>
+
+<p>Next up, cut the opening for the display, glue it, find a spot for the battery.
+Also, I used a few strips of prototyping board to help (a bit) with the wiring:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_integration_step2.png" alt="NES integration step2" /></p>
+
+<p>To show the charging status on the front of the controller, I just unsoldered the small SMD LED on the LiPo charger, and soldered a couple of wires to a (remote) 3mm LED:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_chargingLEDwiring.png" alt="NES_chargingLEDwiring" /></p>
+
+<p>Original PCB still fits, and is cut just enough to fit the shape of the USB LiPo charger (mounted face down):</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_integration_step3.png" alt="NES integration step3" /></p>
+
+<p>The complete version with the Arduino, RN42 module, power/charge switch, and the big mess of wires (the X’es are the places where the opposite plastic cover moldings come in contact with the PCB to hold it in place):</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_integration_final.png" alt="NES integration final" /></p>
+
+<p>Et voilà, all done:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_finished.png" alt="NES finished" /></p>
+
+<p>View of the microUSB charging port:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_chargingport.png" alt="NES_chargingport" /></p>
+
+<p>The green LED lits up when the switch is on the charging position and charging is in progress. It turns off when charging is complete.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/NES_charging.png" alt="NES charging" /></p>
+
+<hr />
+
+<h2 id="using-the-bluekey">Using the BlueKey</h2>
+
+<h3 id="initial-power-on">Initial Power-on</h3>
 
 <p>During the very first power-on, the EEPROM is empty, the device will detect it, format it, and ask for a user code:</p>
 
@@ -974,7 +1034,7 @@ A username for the BlueKey must then be selected:</p>
 
 <p>And the device is then ready to use.</p>
 
-<h4 id="power-on--unlock-device">Power-on &amp; unlock device</h4>
+<h3 id="power-on--unlock-device">Power-on &amp; unlock device</h3>
 
 <p>When switched on, the login screen appears, prompting for the usercode to unlock the device:</p>
 
@@ -982,7 +1042,7 @@ A username for the BlueKey must then be selected:</p>
 
 <p>Note: I arbitrarily used a 6-figure number format, but a longer alphanumeric unlock code could be used for the extra paranoid.</p>
 
-<h4 id="main-menu">Main menu</h4>
+<h3 id="main-menu">Main menu</h3>
 
 <ul>
   <li><code>Up</code> and <code>Down</code> arrows are used to navigate vertically through screen entries</li>
@@ -992,7 +1052,7 @@ A username for the BlueKey must then be selected:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_mainmenu.png" alt="display_mainmenu" /></p>
 
-<h4 id="initial-bluetooth-setup">Initial Bluetooth setup</h4>
+<h3 id="initial-bluetooth-setup">Initial Bluetooth setup</h3>
 
 <p>The bluetooth configuration (mostly entering the bluetooth address of the device to be paired) can be accessed from the setup menu:</p>
 
@@ -1013,7 +1073,7 @@ A username for the BlueKey must then be selected:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/bluetooth_connected.png" alt="display_connected" /></p>
 
-<h4 id="password-list-menu">Password list menu</h4>
+<h3 id="password-list-menu">Password list menu</h3>
 
 <p>The account for which a login/password should be sent can be selected from the list of stored accounts:</p>
 
@@ -1023,7 +1083,7 @@ A username for the BlueKey must then be selected:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_sendpwd.png" alt="display_sendpwd" /></p>
 
-<h4 id="passwords-management-menu">Passwords management menu</h4>
+<h3 id="passwords-management-menu">Passwords management menu</h3>
 
 <p>The password management submenu allows to create/store a new password, to delete a password, to format the whole device, and to check the current number of passwords stored on the device:</p>
 
@@ -1049,7 +1109,7 @@ A username for the BlueKey must then be selected:</p>
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt2.png" alt="display_create_account2" />
 <img src="http://jheyman.github.io/blog/assets/images/BlueKey/display_create_account_alt3.png" alt="display_create_account3" /></p>
 
-<h3 id="display-orientation">Display orientation</h3>
+<h2 id="display-orientation">Display orientation</h2>
 
 <p>Due to the way I mounted the display in the controller, the text ended up showing upside down. No worries, the SSD1306 has a control command allowing to change the orientation of the display. Just call:</p>
 
@@ -1065,7 +1125,7 @@ ssd1306_command(SSD1306_COMSCANDEC); //C8h
 
 <p>present in the library by default</p>
 
-<h3 id="display-performance">Display performance</h3>
+<h2 id="display-performance">Display performance</h2>
 
 <p>I was initially concerned about performance of the OLED display refresh, since the Adafruit GFX library sends the full image buffer over I2C every time the “display.display” function is called.
 There is an opportunity to optimize this by only sending the updated sections of the screen  to the device, but in fact updating the full 128x32 display over I2C only take about 20ms, so it is not a true limiting factor in my case.
