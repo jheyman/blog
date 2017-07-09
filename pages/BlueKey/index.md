@@ -920,6 +920,12 @@ While entering text:
 ![display_create_account2]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt2.png)
 ![display_create_account3]({{ site.baseurl }}/assets/images/BlueKey/display_create_account_alt3.png)
 
+A small video of the NES variant in action, using a dummy password on a random login page on an Android phone:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Vz4GNfX8wqM" frameborder="0" allowfullscreen align="middle"></iframe>
+
+<br>
+
 ## Display orientation 
 
 Due to the way I mounted the display in the controller, the text ended up showing upside down. No worries, the SSD1306 has a control command allowing to change the orientation of the display. Just call:
