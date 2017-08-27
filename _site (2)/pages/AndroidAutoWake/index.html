@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Wake an Android device with a PIR sensor</title>
+	<meta name="author" content="JH">
+	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Wake an Android device with a PIR sensor" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="/index.html"><img src="/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Wake an Android device with a PIR sensor</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>The purpose of this project was to have the ability to turn on an Android device automatically upon detection of human presence nearby.</p>
+
+<p><img src="/assets/images/AndroidAutoWake/overview.png" alt="Overview" /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#hw-setup" id="markdown-toc-hw-setup">HW setup</a>    <ul>
+      <li><a href="#pir-sensor" id="markdown-toc-pir-sensor">PIR Sensor</a></li>
+      <li><a href="#raspberry-pi" id="markdown-toc-raspberry-pi">Raspberry Pi</a></li>
+      <li><a href="#ykush-usb-switch" id="markdown-toc-ykush-usb-switch">YKush USB switch</a></li>
+      <li><a href="#usb-cable" id="markdown-toc-usb-cable">USB cable</a></li>
+    </ul>
+  </li>
+  <li><a href="#sw-setup" id="markdown-toc-sw-setup">SW setup</a>    <ul>
+      <li><a href="#gpio-python-library" id="markdown-toc-gpio-python-library">GPIO python library</a></li>
+      <li><a href="#compile-ykush-utility" id="markdown-toc-compile-ykush-utility">Compile ykush utility</a></li>
+      <li><a href="#compile-adb" id="markdown-toc-compile-adb">Compile adb</a></li>
+      <li><a href="#setup-usb-device-access-rights" id="markdown-toc-setup-usb-device-access-rights">Setup USB device access rights</a></li>
+      <li><a href="#python-script" id="markdown-toc-python-script">Python script</a>        <ul>
+          <li><a href="#initialise-gpio-pins" id="markdown-toc-initialise-gpio-pins">Initialise GPIO pins</a></li>
+          <li><a href="#wait-for-detection" id="markdown-toc-wait-for-detection">Wait for detection</a></li>
+          <li><a href="#wake-device" id="markdown-toc-wake-device">Wake device</a></li>
+          <li><a href="#wait-for-screen-off" id="markdown-toc-wait-for-screen-off">Wait for screen off</a></li>
+          <li><a href="#prepare-for-sleep" id="markdown-toc-prepare-for-sleep">Prepare for sleep</a></li>
+          <li><a href="#prepare-for-next-wake" id="markdown-toc-prepare-for-next-wake">Prepare for next wake</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
+
+<h3 id="introduction">Introduction</h3>
+
+<p>I happen to have a ViewSonic VSD220 Android wall-mounted tablet (see <a href="/pages/HomeHubTablet">here</a>) in the hall, centralizing various home automation applications. To save power, the screen turns off after 2 minutes. So to check the application statuses or do anything on the tablet, I had to push the power button to wake it, and wait for a second or so. After a while I realized that this (very) minor inconvenience was actually limiting the added value of the tablet: when passing by, I would not bother turning it on for a quick glance at the info on the screen. So I looked for a way to always have the screen turned on anytime I came nearby, and still let it go to sleep mode when I was away.<br /></p>
+
+<p>Any mechanism using HW/SW on the tablet itself (camera, microphone) would be pointless, since by definition it would be sleeping when the presence detection is required. So I used an external presence sensor, driven by a Raspberry pi (that was already there for other purposes), and leveraged the USB debug connection to the device to turn it on:<br /></p>
+
+<ul>
+  <li>a <strong>PIR</strong> (Passive Infra Red) <strong>sensor</strong> is used to detect presence in a large area in front of the tablet. The discrete output from the sensor notifying of a detection is read by one GPIO pin of the raspberry pi.</li>
+  <li>a <strong>Python script</strong> monitors this GPIO, and sequences actions upon presence detection.</li>
+  <li>the <strong><code>adb</code></strong> executable from Android SDK is used to communicate with the tablet over USB, to turn it on.</li>
+  <li>a <strong>switchable USB board</strong> is used, to allow powering off USB completely once communication is not required anymore.</li>
+  <li>three <strong>USB cables</strong> are involved.</li>
+</ul>
+
+<h3 id="hw-setup">HW setup</h3>
+
+<h4 id="pir-sensor">PIR Sensor</h4>
+
+<p>Any cheapo PIR sensor will do, I got this one for 2$ from China. It has:</p>
+
+<ul>
+  <li>a three-pin header with 5V, GND, and OUTPUT</li>
+  <li>two potentiometers to adjust sensitivity and cooldown time</li>
+</ul>
+
+<p><img src="/assets/images/AndroidAutoWake/PIR_sensor.png" alt="PIR sensor" /></p>
+
+<p>Whenever it detects something in its field of view, the output pin goes HIGH, and stays high for some time (depending on the potentiometer setting), and returns to low state.<br /></p>
+
+<p>Since the sensor will be mounted on the wall above the display, I designed a small holder and had it 3D-printed (at <a href="http://www.sculpteo.com">Sculpteo</a>, this is the third object I have printed there, and I am quite pleased with the quality vs. price):</p>
+
+<p><img src="/assets/images/AndroidAutoWake/3Dprinted_holder.png" alt="3Dprinted_holder" /></p>
+
+<p>The Sketchup 3D model and exported STL file are available <a href="https://github.com/jheyman/androidautowake">here</a>.<br /></p>
+
+<p>The PIR sensor fits nicely in there:</p>
+
+<p><img src="/assets/images/AndroidAutoWake/3Dprinted_holder_with_sensor.png" alt="3Dprinted_holder_with_sensor" /></p>
+
+<p>And here it is attached to the ceiling above the display:</p>
+
+<p><img src="/assets/images/AndroidAutoWake/PIRsensor_wallmounted.png" alt="PIRsensor_wallmounted" /></p>
+
+<h4 id="raspberry-pi">Raspberry Pi</h4>
+
+<p>Three pins from the GPIO header must be connected to the sensor:</p>
+
+<ul>
+  <li>a 5V pin (I chose pin 2)</li>
+  <li>a GND pin (I chose pin 14)</li>
+  <li>any GPIO pin (I chose GPIO4 / pin 7)</li>
+</ul>
+
+<h4 id="ykush-usb-switch">YKush USB switch</h4>
+
+<p>This part should not be required, BUT it turns out that when the VSD220 tablet detects that a (powered) USB cable is connected, it will never go to complete sleep mode. It will stay with the screen dimmed but not OFF, which I considered unacceptable. Since I did not want to mess with the Android SW in the VSD220 itself, I used a simple (yet slightly expensive) workaround: a USB board that has the capability to switch off power on each of its output ports on command. I happened to have such a board (YKush from Yepkit) that was lying around, and it was the perfect opportunity to put it to good use.</p>
+
+<p><img src="/assets/images/AndroidAutoWake/usb_switch.png" alt="USB switch" /></p>
+
+<p>The board has two inputs:</p>
+
+<ul>
+  <li>a mini-USB port for communication</li>
+  <li>a 5V power input, that can be supplied either through a dedicated connector or more simply through a micro-USB connector<br /></li>
+</ul>
+
+<p>Just like any powered USB hub, the 5V input power should ideally come from a dedicated external power supply. However, in my usecase I am not going to plug anything else than the USB cable to the tablet on this board, so the power draw will be very small, nothing that the Raspberry’s USB ports cannot provide. So I just plugged two USB cables, one mini-USB and one micro-USB, between the YKush and the raspberry.<br /></p>
+
+<p>Ideally, a much simpler solution would be to use a simple transistor to switch the 5V of the USB cable on and off, commanded directly by a raspberry GPIO.</p>
+
+<h4 id="usb-cable">USB cable</h4>
+
+<p>Unfortunately, the micro-USB plug on the VDS220 is not located in the back of the screen, but on the left side. Since I wanted to keep a USB cable plugged permanently in there, I did not want to see a big connector sticking out along with a large loop of cable, so I ordered a cable with a right-angle micro-USB connector. The cable is still visible, but it does not look too bad, and at least there is no chance to inadvertently unplug it:</p>
+
+<p><img src="/assets/images/AndroidAutoWake/right_angle_USB_cable.png" alt="right-angle USB cable" /></p>
+
+<h3 id="sw-setup">SW setup</h3>
+
+<p>The raspberry is installed with a default Raspbian image.</p>
+
+<h4 id="gpio-python-library">GPIO python library</h4>
+
+<p>The <code>RPi.GPIO python</code> library should be available by default in the raspbian distribution. The Pi I used had a quite old version installed, and to solve a bug in the GPIO management I had to update to the latest version of this library:</p>
+
+<pre><code>sudo apt-get install python-rpi.gpio
+</code></pre>
+
+<h4 id="compile-ykush-utility">Compile ykush utility</h4>
+
+<p>A simple command line utility is available from Yepkit’s website to manage the YKush board. I compiled it this way:</p>
+
+<pre><code>sudo apt-get install libusb-1.0-0-dev libusb-1.0-0
+wget https://www.yepkit.com/uploads/documents/fd484_ykush_v1.4.1.tar.gz
+make
+</code></pre>
+
+<p>The resulting <code>ykush</code> executable then provides a few very simple commands to control the USB ports, and I only used two:<br /></p>
+
+<p>To turn one of the three ports:</p>
+
+<pre><code>ykush -d [port number]  
+</code></pre>
+
+<p>To turn it off:</p>
+
+<pre><code>ykush -u [port number] 		
+</code></pre>
+
+<p>I archived this executable binary (for raspberry 1 &amp; 2) <a href="https://github.com/jheyman/androidautowake">here</a>.</p>
+
+<h4 id="compile-adb">Compile adb</h4>
+
+<p><a href="http://forum.xda-developers.com/showthread.php?p=55619695#post55619695">These</a> useful instructions were used to compile a version of android SDK’s <code>adb</code> tool, that is the almighty command line utility to communicate with an android device over USB. The version compiled below is old, but for such a simple task as sending a key input command, it works fine, and using a very specific git tag to get source code and build it provides some level of protection against evolutions of the source code that might break these instructions. Anyway, here they are:</p>
+
+<pre><code>sudo apt-get update
+sudo apt-get install git build-essential libncurses5-dev libssl-dev
+mkdir aosp
+cd aosp
+git clone https://android.googlesource.com/platform/system/core.git system/core
+git clone https://android.googlesource.com/platform/external/zlib.git external/zlib
+cd system/core
+git checkout 32e2f1be039482762303378113c817ba99466953 
+cd ../../external/zlib
+git checkout 8d977782c1cfe9d75cc9a464439c2ff1e27e1665
+cd ../..
+cd system/core/adb
+</code></pre>
+
+<p>Then create a <code>Makefile</code> file in this directory with the following content:</p>
+
+<pre><code>SRCS+= adb.c
+SRCS+= adb_client.c
+SRCS+= commandline.c
+SRCS+= console.c
+SRCS+= file_sync_client.c
+SRCS+= fdevent.c
+SRCS+= get_my_path_linux.c
+SRCS+= services.c
+SRCS+= sockets.c
+SRCS+= transport.c
+SRCS+= transport_local.c
+SRCS+= transport_usb.c
+SRCS+= usb_linux.c
+SRCS+= usb_vendors.c
+SRCS+= adb_auth_host.c
+
+VPATH+= ../libcutils
+SRCS+= socket_inaddr_any_server.c
+SRCS+= socket_local_client.c
+SRCS+= socket_local_server.c
+SRCS+= socket_loopback_client.c
+SRCS+= socket_loopback_server.c
+SRCS+= socket_network_client.c
+SRCS+= load_file.c
+
+VPATH+= ../libzipfile
+SRCS+= centraldir.c
+SRCS+= zipfile.c
+
+VPATH+= ../../../external/zlib/src
+SRCS+= adler32.c
+SRCS+= compress.c
+SRCS+= crc32.c
+SRCS+= deflate.c
+SRCS+= infback.c
+SRCS+= inffast.c
+SRCS+= inflate.c
+SRCS+= inftrees.c
+SRCS+= trees.c
+SRCS+= uncompr.c
+SRCS+= zutil.c
+
+CPPFLAGS+= -DADB_HOST=1
+CPPFLAGS+= -DHAVE_FORKEXEC=1
+CPPFLAGS+= -DHAVE_SYMLINKS
+CPPFLAGS+= -DHAVE_TERMIO_H
+CPPFLAGS+= -DHAVE_OFF64_T
+CPPFLAGS+= -D_GNU_SOURCE
+CPPFLAGS+= -D_XOPEN_SOURCE
+CPPFLAGS+= -DWORKAROUND_BUG6558362
+CPPFLAGS+= -I.
+CPPFLAGS+= -I../include
+CPPFLAGS+= -I../../../external/zlib
+
+CFLAGS+= -O2 -g -Wall -Wno-unused-parameter
+#LDFLAGS= -static
+LIBS= -lrt -lpthread -lssl -lcrypto
+
+TOOLCHAIN= 
+CC= $(TOOLCHAIN)gcc
+LD= $(TOOLCHAIN)gcc
+
+OBJS= $(SRCS:.c=.o)
+
+all: adb
+
+adb: $(OBJS)
+	$(LD) -o $@ $(LDFLAGS) $(OBJS) $(LIBS)
+
+clean:
+	rm -rf $(OBJS)
+</code></pre>
+
+<p>And finally compile <code>adb</code>:</p>
+
+<pre><code>make adb
+</code></pre>
+
+<p>the resulting <code>adb</code> binary should be put in the same directory as the script.<br />
+ I archived the resulting binary (for raspberry 1 &amp; 2) <a href="https://github.com/jheyman/androidautowake">here</a>.</p>
+
+<h4 id="setup-usb-device-access-rights">Setup USB device access rights</h4>
+
+<p>To be able to access the android device over USB without root permission, I created a file <code>51-android.rules</code> in directory <code>/etc/udev/rules.d/</code>, with the following content:</p>
+
+<pre><code>SUBSYSTEM=="usb", ATTR{idVendor}=="0408", MODE="0666", GROUP="plugdev"
+</code></pre>
+
+<p>Of course, the “0408” vendorId should be modified to suit the vendorId of your specific device.</p>
+
+<h4 id="python-script">Python script</h4>
+
+<p>As usual, since there is no strong performance constraint anywhere in this project, a python script to manage the overall logic is just fine. The script’s sequence is detailed step by step below, and the source code is available <a href="https://github.com/jheyman/androidautowake">here</a>.</p>
+
+<h5 id="initialise-gpio-pins">Initialise GPIO pins</h5>
+
+<p>The selected GPIO receiving the sensor signal is configured as an input, with pull-down when inactive. Once this is done the script perform the following steps in an infinite loop.</p>
+
+<pre><code>GPIO.setup(SENSOR_PIN, GPIO.IN, GPIO.PUD_DOWN)
+</code></pre>
+
+<h5 id="wait-for-detection">Wait for detection</h5>
+
+<p>Wait for a rising edge on the input GPIO, using the interrupt-driven mechanism provided in RPi.GPIO library. This way no CPU cycles are lost polling the GPIO value.</p>
+
+<pre><code>RPi.GPIO.wait_for_edge(SENSOR_PIN, GPIO.RISING)
+</code></pre>
+
+<h5 id="wake-device">Wake device</h5>
+
+<p>Turn on the USB port towards the device, using <code>ykush</code>utility:</p>
+
+<pre><code>./ykush -u 1
+</code></pre>
+
+<p>And then wait until USB communication becomes available. Indeed, after powering the USB port, there is a delay before the device on the other end detects it (on my device, it is about 4 seconds). This active wait is done by continuously executing the <code>adb devices</code> command, until the deviceID of our device shows up in the output.<br /></p>
+
+<p><strong>Note</strong>: the expected deviceID is specified in the <code>.ini</code>config file.<br /></p>
+
+<p>Then use<code>adb</code> to send a simulated user input corresponding to the action of waking up the device:</p>
+
+<pre><code>./adb shell input keyevent 224
+</code></pre>
+
+<p>Note: 224 is KEYCODE_WAKEUP, which behaves similar to key event “power” but has no effect if devices is already awake.</p>
+
+<h5 id="wait-for-screen-off">Wait for screen off</h5>
+
+<p>After whatever timeout value is configured inside the device, it will try to go back to sleep mode. To detect when this happens, we regularly execute this command:</p>
+
+<pre><code>./adb shell dumpsys power
+</code></pre>
+
+<p>and check whether <code>mPowerState=0</code> is present as part of the output. On the (ancient) android version that runs on the VSD220, this is a sign that screen is being turned off after the timeout. Other keys on the dumpsys output might be used for other versions of Android.<br /></p>
+
+<p><strong>Note</strong>: if during that wait time a new detection is made, we resend a wake command: this will have the effect of restarting the wake timer inside the device, so that it stays on as long as someone is nearby.</p>
+
+<h5 id="prepare-for-sleep">Prepare for sleep</h5>
+
+<p>For some reason, while USB is connected/powered the VSD220 device will never go back to complete sleep. So we switch off power on the USB port, which is equivalent to physically unplugging the cable, to give the device an opportunity to go back to full sleep mode.</p>
+
+<pre><code>./ykush -d 1
+</code></pre>
+
+<h5 id="prepare-for-next-wake">Prepare for next wake</h5>
+
+<p>This is just an optimization to allow a better reactivity when the next detection/wake happens: since USB communication is not available immediately after powering the interface, we turn it back on now, in advance. The only pitfall is to not turn it back on too quickly, because at least on my VSD220 it takes about ~15 seconds between the moment the screen goes off, and the moment the device enters full sleep mode (with screen completely off, not just dimmed). So after 30 seconds, the scripts turns USB power back on:</p>
+
+<pre><code>./ykush -u 1
+</code></pre>
+
+<p>Note that this 30 seconds wait is performed using a <code>wait_for_edge</code> call with a 30s timeout: this way, if a new detection occurs within this delay, we can catch it and handle it properly</p>
+
+<h3 id="lessons-learned">Lessons learned</h3>
+
+<ul>
+  <li>The RPi.GPIO library rocks, and with a recent enough version of it the <code>wait_for_edge</code> function allows to keep the CPU impact of monitoring a GPIO pin to the minimum.</li>
+  <li>Using a PIR sensor is straightforward.</li>
+  <li>Just like for USB, it seems like having an Ethernet cable connected to the VSD220 somehow prevents it from going to full sleep too. I did not investigate.</li>
+</ul>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/AndroidAutoWake/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

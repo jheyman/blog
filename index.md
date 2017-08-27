@@ -23,11 +23,17 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
+  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/Shapeoko/assembly_completed.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/Shapeoko">Experience with the Shapeoko3 benchtop 3D cutting machine</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
   <td><div id="container"  style="height:200px;"><img src="{{ site.baseurl }}/assets/images/BlueKey/NES_mugshot.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/BlueKey">BlueKey, a bluetooth HW password manager</a></td>
 </tr>
 </table>
-
 
 <table cellpadding="10">
 <tr>
@@ -35,7 +41,6 @@ tagline: A collection of my notes from various DIY projects/experimentations
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/ShoppingTracker">ShoppingTracker Android App</a></td>
 </tr>
 </table>
-
 
 <table cellpadding="10">
 <tr>
@@ -234,6 +239,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 <tr>
   <td><div id="container"><img src="{{ site.baseurl }}/assets/images/PHPSQLiteNotes/phpsqlite_logo.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/PHPSQLiteNotes">Miscellaneous PHP/SQlite notes</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container"><img src="{{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/fusion-360-logo.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/Fusion360SurvivalGuide">Fusion360 CAD/CAM tool Survival Guide</a></td>
 </tr>
 </table>
 

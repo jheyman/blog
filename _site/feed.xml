@@ -114,6 +114,14 @@
                 
                         
                         <item>
+                                <title>Fusion360 survival guide</title>
+                                <description>Personal notes about minimal knowledge required to use Fusion360</description>
+                                <link>http://jheyman.github.io/blog/pages/Fusion360SurvivalGuide/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Home data logging server</title>
                                 <description>Storing homedata with InfluxDB on Raspberry pi</description>
                                 <link>http://jheyman.github.io/blog/pages/HomeDataLoggingServer/</link>
@@ -229,6 +237,14 @@
                                 <title>DIY Emergency Ethernet Plug</title>
                                 <description>manually crimping an Ethernet plug with no appropriate tool</description>
                                 <link>http://jheyman.github.io/blog/pages/DIYEthernetPlug/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>A journey with the Shapeoko3 CNC</title>
+                                <description>Experimenting with a CNC mill</description>
+                                <link>http://jheyman.github.io/blog/pages/Shapeoko/</link>
                         </item>
                         
                 

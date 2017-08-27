@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Raspberry Pi tips and tricks</title>
+	<meta name="author" content="JH">
+	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Raspberry Pi tips and tricks" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="/index.html"><img src="/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Raspberry Pi tips and tricks</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>Below is a set of notes to myself regarding various tips and tricks I had to use across my projects based on Raspberry Pi:<br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#disable-onboard-sound-raspbian-wheezy" id="markdown-toc-disable-onboard-sound-raspbian-wheezy">Disable onboard sound (Raspbian Wheezy)</a></li>
+  <li><a href="#disable-onboard-sound-raspbian-jessie" id="markdown-toc-disable-onboard-sound-raspbian-jessie">Disable onboard sound (Raspbian Jessie)</a></li>
+  <li><a href="#set-usb-sound-card-as-alsa-default" id="markdown-toc-set-usb-sound-card-as-alsa-default">Set USB sound card as ALSA default</a></li>
+  <li><a href="#customizing-hostname" id="markdown-toc-customizing-hostname">Customizing hostname</a></li>
+  <li><a href="#determine-installed-distribution" id="markdown-toc-determine-installed-distribution">Determine installed distribution</a></li>
+  <li><a href="#enabling-i2c-bus" id="markdown-toc-enabling-i2c-bus">Enabling I2C bus</a></li>
+  <li><a href="#using-an-external-rtc" id="markdown-toc-using-an-external-rtc">Using an external RTC</a>    <ul>
+      <li><a href="#testing-the-module" id="markdown-toc-testing-the-module">Testing the module</a></li>
+      <li><a href="#automating-the-rtc-init-at-boot" id="markdown-toc-automating-the-rtc-init-at-boot">Automating the RTC init at boot</a></li>
+    </ul>
+  </li>
+  <li><a href="#wifi-robustness" id="markdown-toc-wifi-robustness">Wifi robustness</a></li>
+</ul>
+
+<hr />
+
+<h3 id="disable-onboard-sound-raspbian-wheezy">Disable onboard sound (Raspbian Wheezy)</h3>
+
+<p>Edit <code>/etc/modules</code>, comment out <code>snd_bcm2835</code>, and reboot</p>
+
+<hr />
+
+<h3 id="disable-onboard-sound-raspbian-jessie">Disable onboard sound (Raspbian Jessie)</h3>
+
+<p>Add <code>blacklist snd_bcm2835</code> in <code>/etc/modprobe.d/alsa-blacklist.conf</code>, and reboot</p>
+
+<hr />
+
+<h3 id="set-usb-sound-card-as-alsa-default">Set USB sound card as ALSA default</h3>
+
+<p>On Raspbian jessie, to set an external USB sound card as the default card used by ALSA (instead of the internal bcm2835 snd card), edit</p>
+
+<pre><code>/usr/share/alsa/alsa.conf
+</code></pre>
+
+<p>and change <code>defaults.ctl.card</code> and <code>defaults.pcm.card</code> to the id of the USB snd card (“1” in my case):</p>
+
+<pre><code>defaults.ctl.card 1
+defaults.pcm.card 1
+</code></pre>
+
+<hr />
+
+<h3 id="customizing-hostname">Customizing hostname</h3>
+<p>By default, any raspberry pi has the hostname <code>raspberrypi</code> assigned to it, which may turn out to be a problem when deploying multiple raspberry pis in a single local network (for example, if two or more pis share folders over the network using samba, only one of them will be seen due to the hostname conflict). To customize the hostname of each individual raspi, refer to <a href="/pages/LinuxTipsAndTricks">this page</a>.</p>
+
+<hr />
+
+<h3 id="determine-installed-distribution">Determine installed distribution</h3>
+
+<p>To check which linux distribution is installed on a pi:</p>
+
+<pre><code>cat /etc/os-release
+</code></pre>
+
+<hr />
+
+<h3 id="enabling-i2c-bus">Enabling I2C bus</h3>
+
+<p>The Raspberry Pi’s I2C bus capability is not enabled by default. Below are instructions to configure it.<br /></p>
+
+<p><strong>For older Raspbian versions (pre-2014)</strong>:</p>
+
+<pre><code>sudo nano /etc/modprobe.d/raspi-blacklist.conf
+</code></pre>
+
+<p>then comment out the following line (with a <code>#</code>)</p>
+
+<pre><code>blacklist i2c-bcm2708
+</code></pre>
+
+<p><strong>For newer Raspbian versions (post-2014)</strong>:</p>
+
+<pre><code>sudo raspi-config
+</code></pre>
+
+<p>and select <code>Advanced Options</code> and <code>I2C</code> menu.<br /></p>
+
+<p><strong>Then for all raspbian versions</strong>:<br /></p>
+
+<p>Edit <code>/etc/modules</code>:</p>
+
+<pre><code>sudo nano /etc/modules
+</code></pre>
+
+<p>and add the lines:</p>
+
+<pre><code>i2c-bcm2708
+i2c-dev
+</code></pre>
+
+<p>To enable access to /dev/i2C without root permissions, create a custom rule file:</p>
+
+<pre><code>sudo nano /etc/udev/rules.d/99-i2c.rules
+</code></pre>
+
+<p>and fill it with this content:</p>
+
+<pre><code>SUBSYSTEM==\"i2c-dev\", MODE=\"0666\"   
+</code></pre>
+
+<p>Installing the i2C tools will turn out to be useful, as well as the python binding to access i2C:</p>
+
+<pre><code>sudo aptitude install i2c-tools python-smbus
+</code></pre>
+
+<p>Finally, reboot the pi:</p>
+
+<pre><code>sudo reboot
+</code></pre>
+
+<p>Test the I2C bus using:</p>
+
+<pre><code>sudo i2cdetect -y 1
+</code></pre>
+
+<p>or</p>
+
+<pre><code>sudo i2cdetect -y 0
+</code></pre>
+
+<hr />
+
+<h3 id="using-an-external-rtc">Using an external RTC</h3>
+
+<p>One of my raspberrys is installed in a setup where power gets turned off with no ability to perform a graceful SW shutdown beforehand. This has at least one side effect: normally, the “fake hw clock” and NTP daemons regularly adjust system time from the internet using NTP, write down the latest system time in a file at shutdown time, and read the latest system time in this file at boot. When no SW shutdown is performed, this file does not get updated, therefore at next boot the system time is whatever was last properly written in the fake hw clock file (probably a loooong time ago). After a while, NTP daemon kicks in and re-adjusts the time properly, but still, this means that in the meantime all the logs have a wrong time stamp, which is quite confusing.<br /></p>
+
+<p>One solution is to use an actual, battery-backed real time clock module, and let the pi get its system time from there. I bought such a module (DS3231) for a few bucks:</p>
+
+<p><img src="/assets/images/RaspberryPiTipsAndTricks/RTC_back.png" alt="RTC back" />
+<img src="/assets/images/RaspberryPiTipsAndTricks/RTC_front.png" alt="RTC front" /></p>
+
+<p>and configured it as described below.</p>
+
+<h4 id="testing-the-module">Testing the module</h4>
+
+<p>Considering I2C is properly enabled on the pi, and the RTC module properly connected on I2C GPIOs, the following command:</p>
+
+<pre><code>sudo i2cdetect -y 1
+</code></pre>
+
+<p>should detect the RTC module at address 0x68 (note: for some pi models, use “0” instead of “1”)</p>
+
+<pre><code>     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+60: -- -- -- -- -- -- -- -- 68 -- -- -- -- -- -- -- 
+70: -- -- -- -- -- -- -- --                         
+</code></pre>
+
+<p>Then, load the RTC driver for this module and configure it:</p>
+
+<pre><code>sudo modprobe rtc-ds1307
+sudo bash
+echo ds1307 0x68 &gt; /sys/class/i2c-adapter/i2c-1/new_device
+exit
+</code></pre>
+
+<p><strong>Note</strong>: DS3231 is just a better version of DS1307 module, so using the ds1307 driver is fine.<br /></p>
+
+<p>It should now be possible to read time from the RTC using:</p>
+
+<pre><code>sudo hwclock -r
+</code></pre>
+
+<p>To adjust the RTC internal time, force a time sync (using NTP over internet)</p>
+
+<pre><code>sudo ntpd -gq
+</code></pre>
+
+<p>and initialize the internal memory of the RTC from the current system time using:</p>
+
+<pre><code>sudo hwclock -w
+</code></pre>
+
+<h4 id="automating-the-rtc-init-at-boot">Automating the RTC init at boot</h4>
+
+<p>The following instructions will make sure that the RTC driver gets loaded, and system time initialized from RTC, at each boot:</p>
+
+<pre><code>sudo nano /etc/modules
+</code></pre>
+
+<p>add:</p>
+
+<pre><code>rtc-ds1307
+</code></pre>
+
+<p>then edit:</p>
+
+<pre><code>sudo nano /etc/init.d/hwclock.sh
+</code></pre>
+
+<p>and copy/paste this procedure at the beginning:</p>
+
+<pre><code>init_rtc_device()
+{
+  [ -e /dev/rtc0 ] &amp;&amp; return 0;
+
+  # load i2c and RTC kernel modules
+  modprobe i2c-dev
+  modprobe rtc-ds1307
+
+  # iterate over every i2c bus as we're supporting Raspberry Pi rev. 1 and 2
+  # (different I2C busses on GPIO header!)
+  for bus in $(ls -d /sys/bus/i2c/devices/i2c-*);
+  do
+    echo ds1307 0x68 &gt;&gt; $bus/new_device;
+    if [ -e /dev/rtc0 ];
+    then
+      log_action_msg "RTC found on bus `cat $bus/name`";
+      break; # RTC found, bail out of the loop
+    else
+      echo 0x68 &gt;&gt; $bus/delete_device
+    fi
+  done
+}
+</code></pre>
+
+<p>Modify the “start)” part to call this procedure, as well as comment out the udev detection:</p>
+
+<pre><code>case "$1" in
+   start)
+       [...]
+      
+      init_rtc_device
+
+#      if [ -d /run/udev ] || [ -d /dev/.udev ]; then
+#      return 0
+#      fi
+</code></pre>
+
+<p>Finally, remove the old “fake hw clock” daemon and associated cron jobs:</p>
+
+<pre><code>sudo update-rc.d hwclock.sh enable
+sudo update-rc.d fake-hwclock remove
+sudo apt-get remove fake-hwclock
+sudo rm /etc/cron.hourly/fake-hwclock
+sudo rm /etc/init.d/fake-hwclock
+</code></pre>
+
+<p>and reboot (<strong>note</strong>: for a pi with no internet connection, you may want to disable NTP daemon too)</p>
+
+<hr />
+
+<h3 id="wifi-robustness">Wifi robustness</h3>
+<p>Wifi dongles can pull quite a lot of power from the USB ports, sometimes resulting in all kinds of nasty intermittent issues. Below are a few things to maximize wifi connection availability:</p>
+<ul>
+  <li>Using a powered USB hub. When space is not a problem, a good externally powered USB hub will go a long way improving the overall stability.</li>
+  <li>Check that power management is turned off on the Wifi device, using:</li>
+</ul>
+
+<pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt</code></pre>
+
+<p>If this returns <code>1</code>, power management is enabled. If it is, the wifi dongle may go to sleep after a while, and there goes your remote connection. To disable power management on Wifi dongles using the 8192cu / 8188cus chipset,  create and edit a new file  <code>/etc/modprobe.d/8192cu.conf</code></p>
+
+<pre><code>sudo nano /etc/modprobe.d/8192cu.conf
+</code></pre>
+
+<p>and paste the following:</p>
+
+<pre><code># Disable power saving
+options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1
+</code></pre>
+
+<p>Then reboot and check power management is now OFF:</p>
+
+<pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt
+</code></pre>
+
+<p>should now return 0.</p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/RaspberryPiTipsAndTricks/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+        <channel>
+                <title>Hot glue and homemade bits</title>
+                <description>A collection of notes on various DIY projects</description>
+                <link></link>
+                <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+                
+                        
+                
+                        
+                        <item>
+                                <title>Wake an Android device with a PIR sensor</title>
+                                <description>Waking up an android device with a presence sensor</description>
+                                <link>/pages/AndroidAutoWake/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Charging & autobackup dock for Android devices</title>
+                                <description>EMbedding a backup capability inside a device charger</description>
+                                <link>/pages/AndroidBackup/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Android debug tips and tricks</title>
+                                <description>Various android debugging tips I keep forgetting about</description>
+                                <link>/pages/AndroidDebugTipsAndTricks/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>FTDI Programmer for Arduino</title>
+                                <description>How to make a cheap programmer for arduino custom PCBs</description>
+                                <link>/pages/ArduinoFTDICable/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Arduino tips and tricks</title>
+                                <description>Various arduino tips I keep forgetting about</description>
+                                <link>/pages/ArduinoTipsAndTricks/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Arduino under the hood</title>
+                                <description>Some details about how arduino programs actually work</description>
+                                <link>/pages/ArduinoUnderTheHood/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>BlueKey, a bluetooth hardware password manager</title>
+                                <description>BlueKey, a bluetooth hardware password manager</description>
+                                <link>/pages/BlueKey/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>DIY Emergency Ethernet Plug</title>
+                                <description>manually crimping an Ethernet plug with no appropriate tool</description>
+                                <link>/pages/DIYEthernetPlug/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Homemade PCBs</title>
+                                <description>How to etch your own PCBs</description>
+                                <link>/pages/EtchingCustomPCB/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Fusion360 survival guide</title>
+                                <description>Personal notes about minimal knowledge required to use Fusion360</description>
+                                <link>/pages/Fusion360SurvivalGuide/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Audio notifications from Google calendars</title>
+                                <description>Playing audio reminders of events extracted from google calendars</description>
+                                <link>/pages/GoogleCalendarAudioNotifier/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Graph viewer widget for Android</title>
+                                <description>an Android homescreen widget to show data graphs</description>
+                                <link>/pages/GraphViewerWidget/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Home data logging server</title>
+                                <description>Storing homedata with InfluxDB on Raspberry pi</description>
+                                <link>/pages/HomeDataLoggingServer/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Home automation hub Android app</title>
+                                <description>An Android app as a comman center for home automation</description>
+                                <link>/pages/HomeHubApp/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Giant wall-mounted home tablet</title>
+                                <description>How to customize a smart display to use as a wall-mounted home tablet</description>
+                                <link>/pages/HomeHubTablet/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Hue control on Raspberry Pi</title>
+                                <description>Interacting with Hue lighting system</description>
+                                <link>/pages/HueRaspberryControl/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Home intercom/paging system</title>
+                                <description>Leveraging raspberry pi to build an intercom system</description>
+                                <link>/pages/Intercom/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>LED Matrix Strip</title>
+                                <description>A display based on 8x8 LED matrices</description>
+                                <link>/pages/LEDMatrixStrip/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Linux tips and tricks</title>
+                                <description>Various linux tips I keep forgetting about</description>
+                                <link>/pages/LinuxTipsAndTricks/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Multi-Room Home Audio</title>
+                                <description>A multi-room audio setup based on raspberry pi and squeezelite</description>
+                                <link>/pages/MultiRoomHomeAudio/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Museum of Horrors</title>
+                                <description>A collection of ugly prototypes</description>
+                                <link>/pages/MuseumOfHorrors/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Oldschool demo effects with OpenGL</title>
+                                <description>Oldschool demo effects with OpenGL</description>
+                                <link>/pages/OpenGLOldschool/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Photo Frame Android Widget</title>
+                                <description>A dead simple widget displaying a random photo</description>
+                                <link>/pages/PhotoFrameWidget/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>PHP SQLite notes</title>
+                                <description>Various notes about using PHP and SQLite</description>
+                                <link>/pages/PHPSQLiteNotes/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Setup Nginx and PHP on Raspberry Pi</title>
+                                <description>Setting up Nginx and PHP on Raspberry Pi</description>
+                                <link>/pages/PiWebServerAndPHP/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>PostitList android widget</title>
+                                <description>A custom post-it list widget for Android devices</description>
+                                <link>/pages/PostitListWidget/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Raspberry Pi tips and tricks</title>
+                                <description>Various raspberry pi tips</description>
+                                <link>/pages/RaspberryPiTipsAndTricks/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>A journey with the Shapeoko CNC</title>
+                                <description>Experimenting with a CNC mill</description>
+                                <link>/pages/Shapeoko/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>ShoppingList android widget</title>
+                                <description>A custom shopping list widget for Android devices</description>
+                                <link>/pages/ShoppingListWidget/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Shopping Tracker Android app</title>
+                                <description>And Android app to keep track of shopping budget</description>
+                                <link>/pages/ShoppingTracker/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Sketchup survival guide</title>
+                                <description>Personal notes about minimal knowledge required to use Sketchup</description>
+                                <link>/pages/SketchupSurvivalGuide/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Standalone Arduino-compatible circuits</title>
+                                <description>How to make standalone arduino circuits</description>
+                                <link>/pages/StandaloneCustomArduino/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Tools of the trade</title>
+                                <description>A list of useful tools for DIY projects</description>
+                                <link>/pages/Tools/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Music server on Raspberry pi</title>
+                                <description>How to install a DLNA/UPnP music server on Raspberry Pi</description>
+                                <link>/pages/UPnPOnRaspberryPi/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Using Jekyll to build this site</title>
+                                <description>Notes on using Jekyll framework</description>
+                                <link>/pages/UsingJekyll/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Homemade Video Surveillance</title>
+                                <description>A basic video surveillance system with raspberry pi</description>
+                                <link>/pages/VideoSurveillance/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Auto-computed values in Visio diagrams with VBA</title>
+                                <description>Experiments with Microsoft Visio VBA API</description>
+                                <link>/pages/VisioAutoCompute/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Dynamic dataflows in Visio diagrams with VBA</title>
+                                <description>Experiments with Microsoft Visio VBA API</description>
+                                <link>/pages/VisioAutoFlow/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Visio tips & tricks</title>
+                                <description>tips with Microsoft Visio VBA API</description>
+                                <link>/pages/VisioTips/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Voice Controlled Radio</title>
+                                <description>A FM Radio controlled by voice commands</description>
+                                <link>/pages/VoiceControlledRadio/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>wireless water meter</title>
+                                <description>Implementing a water metering system with wireless reporting/monitoring</description>
+                                <link>/pages/WirelessWaterMeter/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Z-Wave home automation</title>
+                                <description>Leveraging Zwave technology for home automation</description>
+                                <link>/pages/ZwaveHomeAutomation/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>ZWave control Widget</title>
+                                <description>Simplistic android widget to check/control Zwave devices</description>
+                                <link>/pages/ZWaveWidget/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Various tinkering endeavours</title>
+                                <description>A collection of my notes from various DIY projects/experimentations</description>
+                                <link>/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Tag index</title>
+                                <description></description>
+                                <link>/tags</link>
+                        </item>
+                        
+                
+        </channel>
+</rss>

@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Fusion360 survival guide</title>
+	<meta name="author" content="JH">
+	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Fusion360 survival guide" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="/index.html"><img src="/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Fusion360 survival guide</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>Below is a memo to myself for basic use of the Fusion360 CAD/CAM tool from Autodesk. There are plenty of resources/tutorials out there, but this just captures the bare minimum that I considered worthy of noting for my usecase, as a refresher for when it will have been months since I last used it, and I need to roll a quick and dirty design<br /></p>
+
+<p>Fusion360 is based on a monthly/yearly subscription fee, but is (at the time of writing) “free for startups, hobbyists, and enthusiasts”. My favorite modelling tool so far was Sketchup Make, but what brought me to Fusion360 is the fact that it has embedded support for CAM (Computer Aided Manufacturing), and more specifically has a post-processor that generates G-code for my <a href="(/pages/Shapeoko)">Shapeoko</a>.<br /></p>
+
+<p>It has integrated version management (very useful) and also implements many kinds of simulations, animation and renderings, and is heavily oriented towards cloud-based/collaborative work, but this not what matters the most in my case.<br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#installation" id="markdown-toc-installation">Installation</a></li>
+  <li><a href="#basic-shortcuts" id="markdown-toc-basic-shortcuts">Basic shortcuts</a>    <ul>
+      <li><a href="#mouse-buttons" id="markdown-toc-mouse-buttons">Mouse buttons</a></li>
+      <li><a href="#keyboard-shortcuts" id="markdown-toc-keyboard-shortcuts">Keyboard shortcuts</a></li>
+    </ul>
+  </li>
+  <li><a href="#fusion360-workflow" id="markdown-toc-fusion360-workflow">Fusion360 workflow</a>    <ul>
+      <li><a href="#parametric-modeling-basics" id="markdown-toc-parametric-modeling-basics">Parametric modeling basics</a></li>
+      <li><a href="#cam-part" id="markdown-toc-cam-part">CAM part</a></li>
+    </ul>
+  </li>
+  <li><a href="#components" id="markdown-toc-components">Components</a></li>
+</ul>
+
+<h3 id="installation">Installation</h3>
+
+<p>As of writing this, no native Linux version of Fusion360 is available, so I went and downloaded/installed the Windows version.</p>
+
+<h3 id="basic-shortcuts">Basic shortcuts</h3>
+
+<p>Life is too short to click on the tools icons, the following shortcuts are must-know to get any decent productivity in Fusion360.</p>
+
+<ul>
+  <li><strong>S</strong> = command search</li>
+</ul>
+
+<p>If there is a single shortcut to memorize it is this one: it opens up a search window, where you type in some words of the command you are looking for, and it will find all close matches:</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/search_box.png" alt="search_nox" /></p>
+
+<h4 id="mouse-buttons">Mouse buttons</h4>
+
+<ul>
+  <li>Shift + mouse middle-button = <strong>orbit</strong> view</li>
+  <li>mouse middle-button = <strong>pan</strong> view</li>
+  <li>Mouse wheel = <strong>zoom</strong> in/out</li>
+  <li>double click mouse wheel = <strong>zoom to fit window</strong></li>
+</ul>
+
+<h4 id="keyboard-shortcuts">Keyboard shortcuts</h4>
+
+<ul>
+  <li><strong>P</strong> = push-pull tool</li>
+  <li><strong>L</strong> = line tool</li>
+  <li><strong>R</strong> = rectangle tool</li>
+  <li><strong>C</strong> = circle tool</li>
+  <li><strong>D</strong> = dimension tool</li>
+</ul>
+
+<h3 id="fusion360-workflow">Fusion360 workflow</h3>
+
+<p>Fusion360 has three main modeling principles:</p>
+
+<ul>
+  <li><strong>free-form</strong> modeling, using T-splines</li>
+  <li><strong>solid</strong> modeling, through a sequence of creating and combining basic primitive shapes and operations</li>
+  <li><strong>parametric</strong> modeling, using 2D sketches defining precise dimensions and relations between sketch elements.</li>
+  <li><strong>mesh</strong> modeling, importing pre-existing 3D objects and modeling around them.</li>
+</ul>
+
+<p>For my needs I have been experimenting with parametric modeling mostly, and love the design approach of being able to define the critical dimensions and relations between parts, and let the modeller figure out other dimensions/shapes. The true power of Fusion360 is indeed in its workflow, that allows to go back to a previous version of the design, change one dimension somewhere, and NOT have to correct many other dimensions accordingly because the tool will take care of that given the predefined relations and constraints.</p>
+
+<h4 id="parametric-modeling-basics">Parametric modeling basics</h4>
+
+<ul>
+  <li>Setting up axis orientation</li>
+</ul>
+
+<p>By default, the X/Y/Z axes are displayed with Y axis up:
+<img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_origin.png" alt="origin" /></p>
+
+<p>Even though this is arbitrary, I like to have my axis setup the same way as the physical axes on my Shapeoko, with Z being up, X being the width dimension, and Y being the depth. This can be set in the <code>Preferences</code> menu, with the “Z up” option in the <code>Default Modeling Orientation</code> setting</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/preferences_Zaxis.png" alt="preferences Z-axis" /></p>
+
+<p>After modifying this and creating a NEW model, the axes are oriented the way I like:
+<img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_origin_customized.png" alt="origin customized" /></p>
+
+<ul>
+  <li>
+    <p>A <strong>sketch</strong> can be drawn on a plane or a face. One of the 3 planes of the coordinate system can be used to kickstart a model, and later any face of an object can be used to define a sketch on it. In this example I chose the X/Y plane to start the sketch, the view automatically changes to orthogonal view of the X/Y plane:
+<img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_startingsketch.png" alt="parametricmodelling_startingsketch" /></p>
+  </li>
+  <li>
+    <p>Then proceed to draw a quick and dirty outline of the target shape with the line tool, lengths and angles do not matter yet:
+<img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_unconstrainedshape.png" alt="parametricmodelling_unconstrainedshape" /></p>
+  </li>
+  <li>
+    <p>and then the real Fusion360 power comes in: the ability to apply <strong>constraints</strong> on/between edges:</p>
+  </li>
+</ul>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_constraints.png" alt="parametricmodelling_constraints" /></p>
+
+<ul>
+  <li>For example, here is the result of just
+    <ul>
+      <li>clicking on the <code>Perpendicular</code> constraint then selecting the top and left lines</li>
+      <li>clicking on the <code>Horizontal/Vertical</code> constraint then selecting the bottom right line</li>
+      <li>clicking on the <code>Horizontal/Vertical</code> constraint then selecting the top line</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_constrainedshape1.png" alt="parametricmodelling_constrainedshape1" /></p>
+
+<ul>
+  <li>Next up, setting specific dimensions on these edges. Here is the result after using the <strong>dimension tool</strong> (D shortcut), clicking on each of the three edges to specify their length:</li>
+</ul>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_constrainedshape2.png" alt="parametricmodelling_constrainedshape2" /></p>
+
+<p>Note: at this point the sketch still has blue lines, which means some of its dimensions are still unconstrained. This is not necessarily a bad thing, it just shows what is locked and what is still free to be resized as a consequence of other model changes.</p>
+
+<ul>
+  <li>the dimension tool can also be used to constrain the angle of the right part to e.g. 25°, by selecting the two edges forming the angle, and typing in the desired angle value, which results in:</li>
+</ul>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_constrainedshape3.png" alt="parametricmodelling_constrainedshape3" /></p>
+
+<p>Note: the sketch is now fully black, which means it is fully defined/constrained.</p>
+
+<ul>
+  <li>the <code>Press Pull</code> tool can then be used to extrude the 2D sketch into a 3D shape:</li>
+</ul>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/parametricmodelling_extrudedshape.png" alt="parametricmodelling_extrudedshape" /></p>
+
+<h4 id="cam-part">CAM part</h4>
+
+<p>Once the 3D object is modelled, the CAM module of Fusion360 can be used to generate toolpaths. The first step is to setup the stock dimensions and zero point:</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/CAM_setupstock.png" alt="CAM_setupstock" /></p>
+
+<p>Then, a 2D or 3D milling operation must be created. For this simple case I chose a <strong>2D contour</strong>. The first element to be selected is the endmill type, here I chose a square 6mm endmill:</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/CAM_toolselection.png" alt="CAM_toolselection" /></p>
+
+<p>Then select the geometry to be machined, in this case I just want to cut out the piece from the stock so I select the contour of the base of the shape</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/CAM_contourselection.png" alt="CAM_contourselection" /></p>
+
+<p>And then setup the different milling heights (depths):</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/CAM_setheights.png" alt="CAM_postprocess" /></p>
+
+<p>(Bottom Heights = stock bottom means it will mill through the full stock thickness, i.e. cut out the piece completely)</p>
+
+<p>A very useful feature of Fusion360 is the ability to simulate/preview the toolpath execution:</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/2Dcontour.gif" alt="2Dcontour" /></p>
+
+<p>Finally, the post-process menu allows to configure &amp; launch the G-code file generation:</p>
+
+<p><img src="/assets/images/Fusion360SurvivalGuide/CAM_postprocess.png" alt="CAM_postprocess" /></p>
+
+<h3 id="components">Components</h3>
+
+<p><strong>Components</strong> are the basic structuring entities of the model, they define a group of shapes/features that “belong” together. Most often a component corresponds to one solid piece of the modelled object.
+So it is good habit to create component from the beginning, to manipulate sub-assemblies of a given design more easily.</p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/Fusion360SurvivalGuide/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
