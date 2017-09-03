@@ -831,6 +831,69 @@ Lessons learned:
 * When milling fast in pine in the direction of the grain, the endmill has a tendency to rip long thin strips of wood instead of individual chips, which can accumulate in the dust shoe and cause trouble. I should try with a slightly lower feedrate to see if this still happens, and/or try a downcut endmill to see if the effect is the same.
 * Pine + upcut endmill = lots of manual clean-up afterwards.
 
+### Case #4 : hard wood plaques
+
+For this next case, I wanted to give a try to milling hard(er) wood, and use the opportunity to build small plaques for friends. I found a Beech wood cutting board at a nearby store, and decided to use it as stock to cut two small plaques.
+
+The text and sign were milled using a V-carve toolpath, and an outside contour toolpath was used to cut the plaques from the stock.
+
+Pocket (1st plaque): 
+
+* 3.175mm 1-flute square endmill
+* RPM = 12500
+* Feedrate = 457mm/min
+* depth of cut per pass = 0.7mm
+
+V-carve (2nd plaque): 
+
+* 90° V-bit
+* RPM = 13500
+* Feedrate = 1100mm/min
+
+Cutout:
+
+* 6mm 2-flute square endmill
+* RPM = 12500
+* Feedrate = 1905 mm/min
+* depth of cut = 1mm
+
+I used (strong) double-sided tape to hold the stock in place, and even for hard wood like this it worked remarkably well.
+
+![plaques_from_cuttingboard]({{ site.baseurl }}/assets/images/Shapeoko/plaques_from_cuttingboard.png)
+
+After cutting tabs and some clean-up/sanding, the first plaque came out nicely I think: 
+
+![plaque_atelier_milled]({{ site.baseurl }}/assets/images/Shapeoko/plaque_atelier_milled.png)
+
+I was a bit scared of the feedrate value CC produced for the outline cut, and reduced the depth of cut to be on the safe side. The cut was quite smooth at that feedrate, so I may try pushing the DOC a bit further next time. 
+
+I painted the front of the plaque, let the paint dry, and then sanded the top (edge & letters), which gave me this:
+
+![plaque_atelier_finished]({{ site.baseurl }}/assets/images/Shapeoko/plaque_atelier_finished.png)
+
+I messed up the painting part in the process, but anyway I got a chance to experiment with two-tone design, and for a door tag this turned out to be good enough.
+
+I was not very pleased with the quality of the V-carving of the second plaque though:
+
+![plaque_behappy_milled]({{ site.baseurl }}/assets/images/Shapeoko/plaque_behappy_milled.png)
+
+Even though I felt the feedrate was relatively high already, I suspect it was not high enough, and the darker spots are probably due to rubbing of the V-bit for a bit too long at that place.
+
+Again I tried a two-tone thing, spray painting the front face, letting the paint dry, and then sanding the surface:
+
+![plaque_behappy_finished]({{ site.baseurl }}/assets/images/Shapeoko/plaque_behappy_finished.png)
+
+Clearly, there is an issue with the right side of the smiley face. It turns out it is shallower than the left side, so I will have to look into that (the original cutting board had depth differences from the start, this might be it)
+
+I cut two small feet and installed them in the back, to have it stand as a desk ornament:
+![plaque_behappy_feet]({{ site.baseurl }}/assets/images/Shapeoko/plaque_behappy_feet.png)
+
+Lessons learned:
+
+* surprisingly, milling Beech turned out to be less eventful than milling pine. I started trusting CC and G-wizard scary-high recommanded feedrates, and used DOC as a much better way to keep it safe.
+* again, I'm surprised by the quality of the cut I get from my (yet) uncalibrated machine. The bottom of the "Atelier" plaque pocked barely showed any marks of the toolpath, and the letters outlines were quite sharp and nice (until I messed up the painting, that is)
+* either I got the V-carving settings wrong, or my cheapo ebay V-bit is not sharp enough. I'm inclined to think it is the latter, it does not even *look* sharp...
+
 ---
 
 ## Plunge rate and Plunge depth
@@ -889,6 +952,12 @@ which looked nice in simulation:
 That's 2300+ shapes, and their 2300+ associated toolpaths, so CC is unexpectedly robust I would say
 
 The Python script is available [here](https://github.com/jheyman/shapeoko/blob/master/generated_designs/testHeightMap.py)
+
+For the sake of actually making something based on this experiment, I generated a 9x9 pattern based on a bell-curve:
+
+![heightmap_9x9]({{ site.baseurl }}/assets/images/Shapeoko/heightmap_9x9.png)
+
+The python script for this is [here](https://github.com/jheyman/shapeoko/blob/master/generated_designs/testHeightMapSmallBellCurve.py), and the generated CC project file is [here](https://github.com/jheyman/shapeoko/blob/master/generated_designs/generated_small_bellcurve.c2d).
 
 ---
 

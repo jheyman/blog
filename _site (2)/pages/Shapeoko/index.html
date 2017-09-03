@@ -7,10 +7,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>A journey with the Shapeoko CNC</title>
+	<title>A journey with the Shapeoko3 CNC</title>
 	<meta name="author" content="JH">
 	<link href='/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
-	<link href="http://feeds.feedburner.com/" rel="alternate" title="A journey with the Shapeoko CNC" type="application/atom+xml">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="A journey with the Shapeoko3 CNC" type="application/atom+xml">
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
 </head>
 <body>
@@ -34,7 +34,7 @@
 			<header>
 				<div class="unit-head">
 					<div class="unit-inner unit-head-inner">
-						<h1 class="h2 entry-title">A journey with the Shapeoko CNC</h1>
+						<h1 class="h2 entry-title">A journey with the Shapeoko3 CNC</h1>
 					</div><!-- unit-inner -->
 				</div><!-- unit-head -->
 			</header>
@@ -44,12 +44,12 @@
 					
 <h2 id="overview">Overview</h2>
 
-<p>I had been thinking about getting a CNC machine for years, for all these project moments when I told myself “wouldn’t it be nice if I had a way to cut this in a cleaner way than what I can manage manually?”. For a long time I told myself the investment was not worth it, but I eventually bit the bullet and purchased one, more for the sake of getting a little CNC experience than for a real specific need.</p>
+<p>I had been thinking about getting a CNC machine for years, for all these project moments when I told myself “wouldn’t it be nice if I had a way to cut this enclosure/part in a cleaner/faster way?”. For a long time I told myself the investment was not worth it in my case, but I eventually decided to go for it anyway, more for the sake of getting a little CNC experience than for a real specific need.</p>
 
 <p>A quick search left me with three main options:</p>
 
 <ul>
-  <li><strong>building one from scratch</strong>: definitely the most interesting in terms of learning experience, but beyond the time it would take, I felt I would end-up with a sub-par machine and would get frustrated in the end.</li>
+  <li><strong>building one from scratch</strong>: probably the most interesting in terms of learning experience, but beyond the time it would take, I felt I would end-up with a sub-par machine and would get frustrated in the end.</li>
   <li><strong>buying a cheapo kit from Asia</strong>: definitely the cheapest option, but even though I buy dirt cheap electronic components there all the time, I am not willing to spend several hundred dollars and not be quite sure of what result I will get in the end.</li>
   <li><strong>buying a high-quality kit</strong> while still staying in the hobbyist budget range: Google soon narrowed it down to these two options, which have common DNA:
     <ul>
@@ -60,7 +60,7 @@
 </ul>
 
 <p>I finally decided on the <strong>Shapeoko3</strong> (the standard size version) after a bit more browsing on the interwebs.
-1100$ + shipping + import taxes is a lot of money for a casual CNC experience, but it is also very good value for money considering the quality and versatility of what you get, and I could not find any decent equivalent product locally in Europe anyway.</p>
+1100$ + shipping + import taxes is a lot of money for a casual CNC experience, but it is also very good value for money considering the quality and versatility of what you get, and I could not find any decent equivalent product locally in Europe.</p>
 
 <ul id="markdown-toc">
   <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
@@ -122,6 +122,7 @@
       <li><a href="#case-1-milling-pine-wood" id="markdown-toc-case-1-milling-pine-wood">Case #1: milling Pine wood</a></li>
       <li><a href="#case-2--milling-plastic" id="markdown-toc-case-2--milling-plastic">Case #2 : milling plastic</a></li>
       <li><a href="#case-3-basic-wooden-box" id="markdown-toc-case-3-basic-wooden-box">Case #3: basic wooden box</a></li>
+      <li><a href="#case-4--hard-wood-plaques" id="markdown-toc-case-4--hard-wood-plaques">Case #4 : hard wood plaques</a></li>
     </ul>
   </li>
   <li><a href="#plunge-rate-and-plunge-depth" id="markdown-toc-plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</a></li>
@@ -130,14 +131,14 @@
   <li><a href="#router-calibration" id="markdown-toc-router-calibration">Router calibration</a></li>
   <li><a href="#abusing-carbide-create" id="markdown-toc-abusing-carbide-create">Abusing Carbide Create</a></li>
   <li><a href="#misc-notes" id="markdown-toc-misc-notes">Misc notes</a></li>
-  <li><a href="#lessons-learnt-so-far" id="markdown-toc-lessons-learnt-so-far">Lessons learnt (so far)</a></li>
+  <li><a href="#lessons-learned-so-far" id="markdown-toc-lessons-learned-so-far">Lessons learned (so far)</a></li>
 </ul>
 
 <hr />
 
 <h2 id="safety-disclaimer">Safety disclaimer</h2>
 
-<p>a CNC like the Shapeoko can cut though plastic, wood, and aluminum, includes a router that spins a bit at several tens of thousand RPMs, and moves in three directions under the control of some software that may or may not have bugs, executing a program that YOU designed : it is in short a beast that is only partially tamed, so as the manual says, “Use common sense” if you don’t want to loose an eye or finger.</p>
+<p>a CNC like the Shapeoko can cut though plastic, wood, and aluminum, includes a router that spins a cutting tool at several tens of thousand RPMs, and moves in three dimensions under the control of software that may or may not have bugs, executing a program that YOU designed : it is in short a beast that is only partially tamed, so as the manual says, “Use common sense” if you don’t want to loose an eye or finger.</p>
 
 <p>Safety goggles are your friend:
 <img src="/assets/images/Shapeoko/goggles.png" alt="goggles" /></p>
@@ -177,11 +178,11 @@
 <h2 id="hw-build-and-sw-setup">HW build and SW setup</h2>
 
 <h3 id="unpacking">Unpacking</h3>
-<p>After crossing the atlantic ocean (shipping: 233$, ouch), and clearing French Customs (an additional 180 euros in taxes, ouch), the bulky package arrived on my front door:</p>
+<p>After crossing the atlantic ocean (shipping: 233$, ouch), and clearing French Customs (an additional 180 euros in import taxes, ouch), the bulky package arrived on my front door:</p>
 
 <p><img src="/assets/images/Shapeoko/external_packaging.png" alt="ext packaging" /></p>
 
-<p>A very nice thing is that this is only the outer packaging, that took the small hits during transport, while the actual shapeoko cardboard package is inside, in perfect condition:</p>
+<p>A nice thing is that this is only the outer packaging, that took the small hits during transport, while the actual shapeoko cardboard package is inside:</p>
 
 <p><img src="/assets/images/Shapeoko/internal_packaging.png" alt="int packaging" /></p>
 
@@ -189,7 +190,7 @@
 
 <p><img src="/assets/images/Shapeoko/parts_boxes.png" alt="parts_boxes" /></p>
 
-<p>Overall, while I was slightly worried about the long distance shipping, everything came out of the box in perfect condition. I must also say I got a very good feeling about the quality of all parts: it all looked and felt very sturdy, and precisely machined. As I live in the Old World I did not really care that much about the “made in the USA” statement originally, but it clearly shows.</p>
+<p>Overall, while I was slightly worried about the long distance shipping, everything came out of the box in perfect condition. I must also say I got a very good feeling about the quality of all parts: it all looked and felt like quality parts. As I live in the Old World I did not really care that much about “made in the USA” before the purchase, but it clearly shows.</p>
 
 <h3 id="assembly">Assembly</h3>
 
@@ -1064,6 +1065,77 @@ I had cut the first version by hand, and with two small 3mm LEDs and the OLED di
   <li>Pine + upcut endmill = lots of manual clean-up afterwards.</li>
 </ul>
 
+<h3 id="case-4--hard-wood-plaques">Case #4 : hard wood plaques</h3>
+
+<p>For this next case, I wanted to give a try to milling hard(er) wood, and use the opportunity to build small plaques for friends. I found a Beech wood cutting board at a nearby store, and decided to use it as stock to cut two small plaques.</p>
+
+<p>The text and sign were milled using a V-carve toolpath, and an outside contour toolpath was used to cut the plaques from the stock.</p>
+
+<p>Pocket (1st plaque):</p>
+
+<ul>
+  <li>3.175mm 1-flute square endmill</li>
+  <li>RPM = 12500</li>
+  <li>Feedrate = 457mm/min</li>
+  <li>depth of cut per pass = 0.7mm</li>
+</ul>
+
+<p>V-carve (2nd plaque):</p>
+
+<ul>
+  <li>90° V-bit</li>
+  <li>RPM = 13500</li>
+  <li>Feedrate = 1100mm/min</li>
+</ul>
+
+<p>Cutout:</p>
+
+<ul>
+  <li>6mm 2-flute square endmill</li>
+  <li>RPM = 12500</li>
+  <li>Feedrate = 1905 mm/min</li>
+  <li>depth of cut = 1mm</li>
+</ul>
+
+<p>I used (strong) double-sided tape to hold the stock in place, and even for hard wood like this it worked remarkably well.</p>
+
+<p><img src="/assets/images/Shapeoko/plaques_from_cuttingboard.png" alt="plaques_from_cuttingboard" /></p>
+
+<p>After cutting tabs and some clean-up/sanding, the first plaque came out nicely I think:</p>
+
+<p><img src="/assets/images/Shapeoko/plaque_atelier_milled.png" alt="plaque_atelier_milled" /></p>
+
+<p>I was a bit scared of the feedrate value CC produced for the outline cut, and reduced the depth of cut to be on the safe side. The cut was quite smooth at that feedrate, so I may try pushing the DOC a bit further next time.</p>
+
+<p>I painted the front of the plaque, let the paint dry, and then sanded the top (edge &amp; letters), which gave me this:</p>
+
+<p><img src="/assets/images/Shapeoko/plaque_atelier_finished.png" alt="plaque_atelier_finished" /></p>
+
+<p>I messed up the painting part in the process, but anyway I got a chance to experiment with two-tone design, and for a door tag this turned out to be good enough.</p>
+
+<p>I was not very pleased with the quality of the V-carving of the second plaque though:</p>
+
+<p><img src="/assets/images/Shapeoko/plaque_behappy_milled.png" alt="plaque_behappy_milled" /></p>
+
+<p>Even though I felt the feedrate was relatively high already, I suspect it was not high enough, and the darker spots are probably due to rubbing of the V-bit for a bit too long at that place.</p>
+
+<p>Again I tried a two-tone thing, spray painting the front face, letting the paint dry, and then sanding the surface:</p>
+
+<p><img src="/assets/images/Shapeoko/plaque_behappy_finished.png" alt="plaque_behappy_finished" /></p>
+
+<p>Clearly, there is an issue with the right side of the smiley face. It turns out it is shallower than the left side, so I will have to look into that (the original cutting board had depth differences from the start, this might be it)</p>
+
+<p>I cut two small feet and installed them in the back, to have it stand as a desk ornament:
+<img src="/assets/images/Shapeoko/plaque_behappy_feet.png" alt="plaque_behappy_feet" /></p>
+
+<p>Lessons learned:</p>
+
+<ul>
+  <li>surprisingly, milling Beech turned out to be less eventful than milling pine. I started trusting CC and G-wizard scary-high recommanded feedrates, and used DOC as a much better way to keep it safe.</li>
+  <li>again, I’m surprised by the quality of the cut I get from my (yet) uncalibrated machine. The bottom of the “Atelier” plaque pocked barely showed any marks of the toolpath, and the letters outlines were quite sharp and nice (until I messed up the painting, that is)</li>
+  <li>either I got the V-carving settings wrong, or my cheapo ebay V-bit is not sharp enough. I’m inclined to think it is the latter, it does not even <em>look</em> sharp…</li>
+</ul>
+
 <hr />
 
 <h2 id="plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</h2>
@@ -1079,8 +1151,7 @@ On my TODO list are:</p>
 
 <ul>
   <li>
-    <p>spindle runout measurement and/or wasteboard surface profiling. I ordered a cheap dial indicator, we’ll see how far it gets me.
-<img src="/assets/images/Shapeoko/dialindicator.png" alt="dialindicator" /></p>
+    <p>spindle runout measurement and/or wasteboard surface profiling. I ordered a cheap dial indicator, we’ll see how far it gets me.</p>
   </li>
   <li>
     <p>X/Y/Z linear calibration i.e. tuning the number of steps per mm parameters in GRBL to compensate for imprecisions in belt drive.</p>
@@ -1090,11 +1161,15 @@ On my TODO list are:</p>
   </li>
 </ul>
 
+<p>(to be continued)</p>
+
 <hr />
 
 <h2 id="feeds--speeds-calibration">Feeds &amp; Speeds calibration</h2>
 
 <p>This great <a href="http://www.precisebits.com/tutorials/calibrating_feeds_n_speeds.htm">tutorial</a> presents an experimental way to determine the right feeds and speeds for a given material/endmill combination. I definitely want to try that someday, in addition to the theoretical approach/G-wizarding.</p>
+
+<p>(to be continued)</p>
 
 <hr />
 
@@ -1126,6 +1201,12 @@ On my TODO list are:</p>
 
 <p>The Python script is available <a href="https://github.com/jheyman/shapeoko/blob/master/generated_designs/testHeightMap.py">here</a></p>
 
+<p>For the sake of actually making something based on this experiment, I generated a 9x9 pattern based on a bell-curve:</p>
+
+<p><img src="/assets/images/Shapeoko/heightmap_9x9.png" alt="heightmap_9x9" /></p>
+
+<p>The python script for this is <a href="https://github.com/jheyman/shapeoko/blob/master/generated_designs/testHeightMapSmallBellCurve.py">here</a>, and the generated CC project file is <a href="https://github.com/jheyman/shapeoko/blob/master/generated_designs/generated_small_bellcurve.c2d">here</a>.</p>
+
 <hr />
 
 <h2 id="misc-notes">Misc notes</h2>
@@ -1136,7 +1217,7 @@ On my TODO list are:</p>
 
 <hr />
 
-<h2 id="lessons-learnt-so-far">Lessons learnt (so far)</h2>
+<h2 id="lessons-learned-so-far">Lessons learned (so far)</h2>
 
 <ul>
   <li>the Shapeoko3 is a GREAT machine. I’m already pleased with its performance, and my machine is not even properly calibrated yet.</li>

@@ -122,6 +122,7 @@
       <li><a href="#case-1-milling-pine-wood" id="markdown-toc-case-1-milling-pine-wood">Case #1: milling Pine wood</a></li>
       <li><a href="#case-2--milling-plastic" id="markdown-toc-case-2--milling-plastic">Case #2 : milling plastic</a></li>
       <li><a href="#case-3-basic-wooden-box" id="markdown-toc-case-3-basic-wooden-box">Case #3: basic wooden box</a></li>
+      <li><a href="#case-4--hard-wood-plaques" id="markdown-toc-case-4--hard-wood-plaques">Case #4 : hard wood plaques</a></li>
     </ul>
   </li>
   <li><a href="#plunge-rate-and-plunge-depth" id="markdown-toc-plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</a></li>
@@ -1060,6 +1061,77 @@ I had cut the first version by hand, and with two small 3mm LEDs and the OLED di
   <li>Pine + upcut endmill = lots of manual clean-up afterwards.</li>
 </ul>
 
+<h3 id="case-4--hard-wood-plaques">Case #4 : hard wood plaques</h3>
+
+<p>For this next case, I wanted to give a try to milling hard(er) wood, and use the opportunity to build small plaques for friends. I found a Beech wood cutting board at a nearby store, and decided to use it as stock to cut two small plaques.</p>
+
+<p>The text and sign were milled using a V-carve toolpath, and an outside contour toolpath was used to cut the plaques from the stock.</p>
+
+<p>Pocket (1st plaque):</p>
+
+<ul>
+  <li>3.175mm 1-flute square endmill</li>
+  <li>RPM = 12500</li>
+  <li>Feedrate = 457mm/min</li>
+  <li>depth of cut per pass = 0.7mm</li>
+</ul>
+
+<p>V-carve (2nd plaque):</p>
+
+<ul>
+  <li>90° V-bit</li>
+  <li>RPM = 13500</li>
+  <li>Feedrate = 1100mm/min</li>
+</ul>
+
+<p>Cutout:</p>
+
+<ul>
+  <li>6mm 2-flute square endmill</li>
+  <li>RPM = 12500</li>
+  <li>Feedrate = 1905 mm/min</li>
+  <li>depth of cut = 1mm</li>
+</ul>
+
+<p>I used (strong) double-sided tape to hold the stock in place, and even for hard wood like this it worked remarkably well.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/plaques_from_cuttingboard.png" alt="plaques_from_cuttingboard" /></p>
+
+<p>After cutting tabs and some clean-up/sanding, the first plaque came out nicely I think:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/plaque_atelier_milled.png" alt="plaque_atelier_milled" /></p>
+
+<p>I was a bit scared of the feedrate value CC produced for the outline cut, and reduced the depth of cut to be on the safe side. The cut was quite smooth at that feedrate, so I may try pushing the DOC a bit further next time.</p>
+
+<p>I painted the front of the plaque, let the paint dry, and then sanded the top (edge &amp; letters), which gave me this:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/plaque_atelier_finished.png" alt="plaque_atelier_finished" /></p>
+
+<p>I messed up the painting part in the process, but anyway I got a chance to experiment with two-tone design, and for a door tag this turned out to be good enough.</p>
+
+<p>I was not very pleased with the quality of the V-carving of the second plaque though:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/plaque_behappy_milled.png" alt="plaque_behappy_milled" /></p>
+
+<p>Even though I felt the feedrate was relatively high already, I suspect it was not high enough, and the darker spots are probably due to rubbing of the V-bit for a bit too long at that place.</p>
+
+<p>Again I tried a two-tone thing, spray painting the front face, letting the paint dry, and then sanding the surface:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/plaque_behappy_finished.png" alt="plaque_behappy_finished" /></p>
+
+<p>Clearly, there is an issue with the right side of the smiley face. It turns out it is shallower than the left side, so I will have to look into that (the original cutting board had depth differences from the start, this might be it)</p>
+
+<p>I cut two small feet and installed them in the back, to have it stand as a desk ornament:
+<img src="http://jheyman.github.io/blog/assets/images/Shapeoko/plaque_behappy_feet.png" alt="plaque_behappy_feet" /></p>
+
+<p>Lessons learned:</p>
+
+<ul>
+  <li>surprisingly, milling Beech turned out to be less eventful than milling pine. I started trusting CC and G-wizard scary-high recommanded feedrates, and used DOC as a much better way to keep it safe.</li>
+  <li>again, I’m surprised by the quality of the cut I get from my (yet) uncalibrated machine. The bottom of the “Atelier” plaque pocked barely showed any marks of the toolpath, and the letters outlines were quite sharp and nice (until I messed up the painting, that is)</li>
+  <li>either I got the V-carving settings wrong, or my cheapo ebay V-bit is not sharp enough. I’m inclined to think it is the latter, it does not even <em>look</em> sharp…</li>
+</ul>
+
 <hr />
 
 <h2 id="plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</h2>
@@ -1124,6 +1196,12 @@ On my TODO list are:</p>
 <p>That’s 2300+ shapes, and their 2300+ associated toolpaths, so CC is unexpectedly robust I would say</p>
 
 <p>The Python script is available <a href="https://github.com/jheyman/shapeoko/blob/master/generated_designs/testHeightMap.py">here</a></p>
+
+<p>For the sake of actually making something based on this experiment, I generated a 9x9 pattern based on a bell-curve:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/heightmap_9x9.png" alt="heightmap_9x9" /></p>
+
+<p>The python script for this is <a href="https://github.com/jheyman/shapeoko/blob/master/generated_designs/testHeightMapSmallBellCurve.py">here</a>, and the generated CC project file is <a href="https://github.com/jheyman/shapeoko/blob/master/generated_designs/generated_small_bellcurve.c2d">here</a>.</p>
 
 <hr />
 
