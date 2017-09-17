@@ -123,13 +123,15 @@
       <li><a href="#case-2--milling-plastic" id="markdown-toc-case-2--milling-plastic">Case #2 : milling plastic</a></li>
       <li><a href="#case-3-basic-wooden-box" id="markdown-toc-case-3-basic-wooden-box">Case #3: basic wooden box</a></li>
       <li><a href="#case-4--hard-wood-plaques" id="markdown-toc-case-4--hard-wood-plaques">Case #4 : hard wood plaques</a></li>
+      <li><a href="#case-5--bamboo" id="markdown-toc-case-5--bamboo">Case #5 : bamboo</a></li>
     </ul>
   </li>
   <li><a href="#plunge-rate-and-plunge-depth" id="markdown-toc-plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</a></li>
   <li><a href="#shapeoko-calibration--tuning" id="markdown-toc-shapeoko-calibration--tuning">Shapeoko calibration / tuning</a></li>
   <li><a href="#feeds--speeds-calibration" id="markdown-toc-feeds--speeds-calibration">Feeds &amp; Speeds calibration</a></li>
-  <li><a href="#router-calibration" id="markdown-toc-router-calibration">Router calibration</a></li>
+  <li><a href="#router-rpm-calibration" id="markdown-toc-router-rpm-calibration">Router RPM calibration</a></li>
   <li><a href="#abusing-carbide-create" id="markdown-toc-abusing-carbide-create">Abusing Carbide Create</a></li>
+  <li><a href="#maintenance" id="markdown-toc-maintenance">Maintenance</a></li>
   <li><a href="#misc-notes" id="markdown-toc-misc-notes">Misc notes</a></li>
   <li><a href="#lessons-learned-so-far" id="markdown-toc-lessons-learned-so-far">Lessons learned (so far)</a></li>
 </ul>
@@ -950,6 +952,7 @@ It seems like the topic of workholding is a rabbit hole in itself, so I tried to
 <p><img src="/assets/images/Shapeoko/pine_feed_speed_chips.png" alt="pine_feed_speed_chips" /></p>
 
 <p>It is difficult to judge results from this picture, but my findings were:</p>
+
 <ul>
   <li>chiploads around 0.01mm is definitely too small: the chips do not look right, and the general look of the cut itself is not very good, and these were the cuts that produce the most chatter/unpleasant cutting sounds</li>
   <li>chiploads around 0.02-0.03mm are better</li>
@@ -1004,6 +1007,7 @@ I had cut the first version by hand, and with two small 3mm LEDs and the OLED di
 <p>Good enough, but I obviously did a mistake while measuring dimensions to align the display slot.</p>
 
 <p>Lessons learned:</p>
+
 <ul>
   <li>small bits and plastic…probably not the easiest combination to experiment with as a beginner</li>
   <li>I still need to figure out if my calculated feed rate was really too slow (hence the melted plastic)</li>
@@ -1071,7 +1075,7 @@ I had cut the first version by hand, and with two small 3mm LEDs and the OLED di
 
 <p>The text and sign were milled using a V-carve toolpath, and an outside contour toolpath was used to cut the plaques from the stock.</p>
 
-<p>Pocket (1st plaque):</p>
+<p>Pocket (1st plaque &amp; panda):</p>
 
 <ul>
   <li>3.175mm 1-flute square endmill</li>
@@ -1128,12 +1132,72 @@ I had cut the first version by hand, and with two small 3mm LEDs and the OLED di
 <p>I cut two small feet and installed them in the back, to have it stand as a desk ornament:
 <img src="/assets/images/Shapeoko/plaque_behappy_feet.png" alt="plaque_behappy_feet" /></p>
 
+<p>Finally, something I did as a random way to use the remaining of the Beech stock I had:</p>
+
+<p><img src="/assets/images/Shapeoko/panda_milled.png" alt="panda_milled" /></p>
+
+<p>(legalese: credits go to [Freepik] from www.flaticon.com)</p>
+
+<p>And I tried some black &amp; white painting:</p>
+
+<p><img src="/assets/images/Shapeoko/panda_painted.png" alt="panda_painted" /></p>
+
+<p>I spray-painted it white, then applied masking tape over the areas that were to remain white, cut the masking tape flush on the borders, and spray-painted it black.
+This turned out to be more messy than expected, and the black/white frontiers are irregular, so the ends results looks a bit “meh”. I actually liked it better raw in fact.</p>
+
 <p>Lessons learned:</p>
 
 <ul>
-  <li>surprisingly, milling Beech turned out to be less eventful than milling pine. I started trusting CC and G-wizard scary-high recommanded feedrates, and used DOC as a much better way to keep it safe.</li>
+  <li>surprisingly, milling Beech or Bamboo turned out to be less eventful than milling pine. I started trusting CC and G-wizard scary-high recommanded feedrates, and used DOC as a much better way to keep it safe.</li>
   <li>again, I’m surprised by the quality of the cut I get from my (yet) uncalibrated machine. The bottom of the “Atelier” plaque pocked barely showed any marks of the toolpath, and the letters outlines were quite sharp and nice (until I messed up the painting, that is)</li>
   <li>either I got the V-carving settings wrong, or my cheapo ebay V-bit is not sharp enough. I’m inclined to think it is the latter, it does not even <em>look</em> sharp…</li>
+  <li>I need to work on my painting skills…a lot.</li>
+</ul>
+
+<h3 id="case-5--bamboo">Case #5 : bamboo</h3>
+
+<p>Finally, I experimented with milling bamboo, which turned out smoothly:</p>
+
+<p><img src="/assets/images/Shapeoko/plaque_ainhoa.png" alt="plaque_ainhoa" /></p>
+
+<p>Settings:</p>
+
+<ul>
+  <li>3.175mm 2-flute square endmill</li>
+  <li>RPM = 12500</li>
+  <li>Feedrate = 930mm/min</li>
+  <li>depth of cut per pass = 0.7mm</li>
+</ul>
+
+<p>(CC default values were 6250 RPM and 467mm/min, I just doubled each to meet the min RPM of the makita, while keeping the same resulting chipload)</p>
+
+<p>I also milled a few 5mm wide by 2.7mm deep pockets in the back, and glued small magnets in them:</p>
+
+<p><img src="/assets/images/Shapeoko/plaque_ainhoa_magnets.png" alt="plaque_ainhoa_magnets" /></p>
+
+<p>While I was at it, I did a few coasters, and tried something new: using double-side tape under the positions were the shapes will be cut, and not using any tabs:</p>
+
+<p><img src="/assets/images/Shapeoko/bamboo_coasters_doublesidedtape.png" alt="bamboo_coasters_doublesidedtape" /></p>
+
+<p>The bamboo cutting board I used as stock, taped to the wasteboard:</p>
+
+<p><img src="/assets/images/Shapeoko/bamboo_coasters_readyforjob.png" alt="bamboo_coasters_readyforjob" /></p>
+
+<p>And after running the job:</p>
+
+<p><img src="/assets/images/Shapeoko/bamboo_coasters_milled.png" alt="bamboo_coasters_milled" /></p>
+
+<p>The panda one moved a bit during the very final pass (not enough double-sided tape under this one…), but otherwise things turned out pretty well:</p>
+
+<p><img src="/assets/images/Shapeoko/bamboo_coasters_finished.png" alt="bamboo_coasters_finished" /></p>
+
+<p>(again: credits go to [Freepik] from www.flaticon.com)</p>
+
+<p>Lessons learned:</p>
+<ul>
+  <li>bamboo is easy, gives very clean-looking edges, with very little sanding required.</li>
+  <li>double-sided tape is great for milling small objects, and it is possible to get away from using tabs (and having to clean them up afterwards)</li>
+  <li>but bamboo sticks less than some other woods, so a little rough pre-sanding before using the tape is good.</li>
 </ul>
 
 <hr />
@@ -1146,19 +1210,62 @@ I had cut the first version by hand, and with two small 3mm LEDs and the OLED di
 
 <h2 id="shapeoko-calibration--tuning">Shapeoko calibration / tuning</h2>
 
-<p>For my current casual/beginner wood milling needs, my uncalibrated-but-decently-squared Shapeoko is fine, but I suspect that sooner or later I will need better precision, and will want to measure and correct mechanical alignments.
-On my TODO list are:</p>
+<p>For my current casual/beginner wood milling needs, my uncalibrated-but-decently-squared Shapeoko is fine, but in the spirit of getting better precision, I had a go at calibrating various parameters:</p>
 
 <ul>
-  <li>
-    <p>spindle runout measurement and/or wasteboard surface profiling. I ordered a cheap dial indicator, we’ll see how far it gets me.</p>
-  </li>
-  <li>
-    <p>X/Y/Z linear calibration i.e. tuning the number of steps per mm parameters in GRBL to compensate for imprecisions in belt drive.</p>
-  </li>
-  <li>
-    <p>Tramming/squaring the spindle, i.e. correcting for angulation between the spindle axis and the wasteboard plane</p>
-  </li>
+  <li>X/Y/Z linear calibration</li>
+</ul>
+
+<p>GRBL uses three values referred as <code>$100</code>, <code>$101</code> and <code>$102</code>, which correspond to the number of motor steps to be commanded to move by one millimeter on the X, Y and Z axes respectively.
+Adjusting these values is a way to compensate for slight inaccuracies induced by mechanical play between the belt and the motor pulley, and by belt stretching.</p>
+
+<p>The easiest way it to just cut a piece of a given size, i.e. 100mm x 100mm, and then measure precisely the <em>actual</em> X and Y size of the piece, and adjust the calibration values in the inverse proportion:
+By default, the shapeoko uses 40 mm/step for each axis.</p>
+
+<pre><code>$100 = (programmed X size / actual X size) * 40
+
+$101 = (programmed Y size / actual Y size) * 40
+</code></pre>
+
+<p>Similarly, Z-axis can be calibrated by cutting a pocket of known depth and measuring how deep the milledp pocket actually is</p>
+
+<pre><code>$102 = (programmed pocket depth / actual pocket depth) * 40
+</code></pre>
+
+<p>Out of curiosity, I bought a dial indicator to figure out how accurate the spindle movements were on small distances,</p>
+
+<p><img src="/assets/images/Shapeoko/linear_calibration_dialindicator.png" alt="linear_calibration_dialindicator.png" /></p>
+
+<p>mounted it so that I could measure small scale movements :</p>
+
+<p><img src="/assets/images/Shapeoko/linear_calibration_dialindicatormounted.png" alt="linear_calibration_dialindicatormounted" /></p>
+
+<p>and figured out appropriate calibration factors:</p>
+
+<p><img src="/assets/images/Shapeoko/linear_calibration_results.png" alt="linear_calibration_results" /></p>
+
+<p>I did the same kind of tests on longer lengths (milling squares of various width and heights on a piece of scrap stock), and unsurprisingly the error is not fully linear, so one must make a choice to favor precision at small lengths or at long lengths. In the end, based on my data I picked an average ratio of 0.997 for X and 0.993 for Y, adjusted accordingly:</p>
+
+<pre><code>$100 = (1/0.997) * 40 = 40.120
+
+$101 = (1/0.993) * 40 = 40.282
+</code></pre>
+
+<p>I then rerun the same job with calibrated values, and measured all dimenstions:</p>
+
+<p><img src="/assets/images/Shapeoko/linear_calibration_longdistances_milledstock.png" alt="linear_calibration_longdistances_milledstock" /></p>
+
+<p>measurements before/after calibration are summarized below:</p>
+
+<p><img src="/assets/images/Shapeoko/linear_calibration_results_longdistances.png" alt="linear_calibration_results_longdistances" /></p>
+
+<p>So overall I got somewhere around 0.2% error, which is more than precise enough for what I do. I’m pretty sure the measurement error and natural variations in the machine are of the same order of magnitude anyway.</p>
+
+<p>Remaining on my TODO list are:</p>
+
+<ul>
+  <li>spindle runout measurement and/or wasteboard surface profiling.</li>
+  <li>Tramming/squaring the spindle, i.e. correcting for angulation between the spindle axis and the wasteboard plane</li>
 </ul>
 
 <p>(to be continued)</p>
@@ -1173,11 +1280,36 @@ On my TODO list are:</p>
 
 <hr />
 
-<h2 id="router-calibration">Router calibration</h2>
+<h2 id="router-rpm-calibration">Router RPM calibration</h2>
 
-<p>For now I trust the Makita manual about the RPM’s I am supposed to get when moving the dial to a given position, but this is quite inaccurate and the stated values are probably not quite right anyway. So I ordered a dirt cheap laser tachometer, to be able to check and adjust the <strong>actual</strong> rotation speed of the router. I am not sure what I will get for the 12 euros it cost me, but I still hope it will turn out be “good enough” for my needs.</p>
+<p>I initially trusted the Makita manual about the RPM I would get when turning the speed dial to a given index, but felt the need to verify the <em>actual</em> RPM I was getting, and more importantly how exactly to place the dial, since there is no marking on the router body, and one can only guess that the index should be aligned “somewhere in the middle”. So I went crazy and spent 12 euros on a tachometer to check this.</p>
 
-<p>(to be continued)</p>
+<p>The tachometer is just a glorified laser pointer, that measures reflected light off a rotating object, and counts the number of light intensity transitions per second. So the help this process, a piece of white tape must be placed on the rotating part, and the laser aimed at it.</p>
+
+<p>I used a small piece of the reflective white tape that came with the tachometer, and placed it on the nut of the router:</p>
+
+<p><img src="/assets/images/Shapeoko/tachometer_whitetape.png" alt="tachometer_whitetape" /></p>
+
+<p>Then turned on the router, and tweaked the dial position to get as close to 12000 RPM as possible (since this is the RPM I use most often, it makes sense to use it as the reference point for my calibration):</p>
+
+<p><img src="/assets/images/Shapeoko/tachometer_measurement.png" alt="tachometer_measurement.png" /></p>
+
+<p>And finally marked the exact associated position of the “2” index on the dial on the router body:</p>
+
+<p><img src="/assets/images/Shapeoko/tachometer_routercalibration.png" alt="tachometer_routercalibration.png" /></p>
+
+<p>Interestingly, the mark is not exactly in the middle, so it was worth checking, and the mark gives a useful visual indication to tune the dial in any case. I know that a 5-10% error in the RPM is not going to affect the chipload that much, but when experimenting with feeds and speeds I might as well get the RPM I am asking for, not 10% less or 10% more.</p>
+
+<p>Moving the dial indexes aligned to this calibrated mark, I measured:</p>
+
+<ul>
+  <li>1 =&gt; 9546 RPM (manual says 10000)</li>
+  <li>2 =&gt; 11998 RPM (manual says 12000)</li>
+  <li>3 =&gt; 16880 RPM (manual says 17000)</li>
+  <li>4 =&gt; 21900 RPM (manual says 22000)</li>
+  <li>5 =&gt; 26600 RPM (manual says 27000)</li>
+  <li>6 =&gt; 29949 RPM (manual says 30000)</li>
+</ul>
 
 <hr />
 
@@ -1209,10 +1341,23 @@ On my TODO list are:</p>
 
 <hr />
 
+<h2 id="maintenance">Maintenance</h2>
+
+<p>Even when using a dust shoe, some amount of fine dust ends up going everywhere on the machine over time. It’s not a problem, until it accumulates beyond a certain level, and may cause subtle imprecisions in the gantry movements for example.</p>
+
+<p>Here is a snapshot of one of the wheels after using the machine intermittently for a couple of weeks, despite using a dust shoe and manually vaccuuming after jobs:</p>
+
+<p><img src="/assets/images/Shapeoko/maintenance_dirtywheel.png" alt="maintenance_dirtywheel" /></p>
+
+<p>No big deal, but I prefer to keep things tidy, so I try to clean-up around wheels &amp; belts every few weeks using Q-tips. We’ll see if I can sustain that discipline on the long run…or maybe stop worrying about it.</p>
+
+<hr />
+
 <h2 id="misc-notes">Misc notes</h2>
 
 <ul>
-  <li>Makita Carbon brushes replacement parts reference is CB-411</li>
+  <li>Makita Carbon brushes replacement parts reference is CB-411. I ordered a couple of those, since sooner or later they need to be replaced and I’ll be glad I have them on hand.</li>
+  <li>Instructions page to update to GRBL1.1 &amp; CarbideMotion 4 is <a href="http://docs.carbide3d.com/support/carbideupdater">here</a></li>
 </ul>
 
 <hr />

@@ -158,3 +158,10 @@ Custom themes should be placed inside `_theme_packages` folder, then installed v
 
 A cool multi-platform tool to compile LESS stylesheets I have been using is [**Koala**](http://koala-app.com/)
 
+### Using jekyll on Windows10
+
+I followed the instructions for installing Ubuntu's **bash** on Windows10, descrinbed [here](https://jekyllrb.com/docs/windows/), and got it to work well enough. As indicated, auto-regeneration does not not (i.e. watch option). I use this command line when working from bash on Windows:
+
+	jekyll serve --baseurl= --no-watch
+
+ 
