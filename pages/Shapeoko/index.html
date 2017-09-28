@@ -124,10 +124,15 @@
       <li><a href="#case-3-basic-wooden-box" id="markdown-toc-case-3-basic-wooden-box">Case #3: basic wooden box</a></li>
       <li><a href="#case-4--hard-wood-plaques" id="markdown-toc-case-4--hard-wood-plaques">Case #4 : hard wood plaques</a></li>
       <li><a href="#case-5--bamboo" id="markdown-toc-case-5--bamboo">Case #5 : bamboo</a></li>
+      <li><a href="#case-6-basic-box-v2" id="markdown-toc-case-6-basic-box-v2">Case #6: basic box v2</a></li>
     </ul>
   </li>
   <li><a href="#plunge-rate-and-plunge-depth" id="markdown-toc-plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</a></li>
-  <li><a href="#shapeoko-calibration--tuning" id="markdown-toc-shapeoko-calibration--tuning">Shapeoko calibration / tuning</a></li>
+  <li><a href="#shapeoko-calibration--tuning" id="markdown-toc-shapeoko-calibration--tuning">Shapeoko calibration / tuning</a>    <ul>
+      <li><a href="#xyz-linear-calibration" id="markdown-toc-xyz-linear-calibration">X/Y/Z linear calibration</a></li>
+      <li><a href="#trammingsquaring-the-spindle" id="markdown-toc-trammingsquaring-the-spindle">Tramming/squaring the spindle</a></li>
+    </ul>
+  </li>
   <li><a href="#feeds--speeds-calibration" id="markdown-toc-feeds--speeds-calibration">Feeds &amp; Speeds calibration</a></li>
   <li><a href="#router-rpm-calibration" id="markdown-toc-router-rpm-calibration">Router RPM calibration</a></li>
   <li><a href="#abusing-carbide-create" id="markdown-toc-abusing-carbide-create">Abusing Carbide Create</a></li>
@@ -656,11 +661,17 @@ There is always the option of creating a DIY dust shoe, but this time I had neit
 
 <p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/dust_bucket.png" alt="dust_bucket" /></p>
 
-<p>It is good enough as a starting setup, but I think I will had a more efficient cyclone-type filtering system later.</p>
-
 <p>Here is a view of the full setup:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/dust_vacuum_full.png" alt="dust_vacuum_full" /></p>
+
+<p>It was good enough as a starting setup, but after I while during long jobs I realized a significant part of the chips/dust was passing through the bucket and into the vacuum cleaner dust bag. Which is not good for the vacuum cleaner itself, and had me swap the dust bag regularly, so I upgraded to a more efficient solution : I ordered a cheap (16$) cyclone dust collector, and fastened it onto the bucket:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/cyclone.png" alt="cyclone" /></p>
+
+<p>The hose from the dust shoe is the horizontal one, and the hose to the vaccum cleaner is the vertical one on top. It’s a glorified piece of plastic, but is very efficient at separating chips &amp; dust from the air. Here’s a short video of the cyclone in action, you can literally see the spiral of chips being sucked through it and down into the bucket:</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/n4rJ7C456zA" frameborder="0" allowfullscreen=""></iframe>
 
 <hr />
 
@@ -1198,6 +1209,36 @@ This turned out to be more messy than expected, and the black/white frontiers ar
 * double-sided tape is great for milling small objects, and it is possible to get away from using tabs (and having to clean them up afterwards)
 * but bamboo sticks less than some other woods, so a little rough pre-sanding before using the tape is good.</p>
 
+<h3 id="case-6-basic-box-v2">Case #6: basic box v2</h3>
+
+<p>I had another go at the basic wooden box, this time with oak, and fixing a few design issues (e.g. the cover was initially thicker than the bottom part). The modified project is <a href="https://github.com/jheyman/shapeoko/blob/master/wooden_boxes/basic_box_v2.c2d">here</a>.</p>
+
+<p>Since this job would sure produce a LOT of chips given the size of the pockets, I needed to have the dust shoe in place, and this does not work too well with clamps, so I figured I would try double-sided tape (yes, on oak). Also, I was getting tired to using tabs and having to clean them up afterwards, so I made sure to put tape underneath the cutout parts too, got rid of the tabs, and did a full-depth profile cut instead.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/oakbox_preparation.png" alt="oakbox_preparation" /></p>
+
+<p>I used these parameters:</p>
+
+<ul>
+  <li>Carbide’s #201 3-flute 1/4” square endmill</li>
+  <li>15.000 RPM</li>
+  <li>Feedrate 2000mm/min</li>
+  <li>DOC 2mm</li>
+  <li>plunge rate 200mm/min</li>
+</ul>
+
+<p>and it turned out just fine. A little chatter now and then during the job, but nothing too heavy (and nothing that went away by reducing the feedrate, so my feeling is this must have been caused by some vibration linked to the relatively elastic holding provided by the double-sided tape).</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/oakbox_result.png" alt="oakbox_result" /></p>
+
+<p>The top and bottom parts stayed in place till the end, and I had very little sanding/clean-up to do afterwards, so +1 for double-sided tape!</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/oakbox_sanded.png" alt="oakbox_sanded" /></p>
+
+<p>I finished it by V-carving a little something on the top cover, and applying tongue oil</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/oakbox_carved.png" alt="oakbox_carved" /></p>
+
 <hr />
 
 <h2 id="plunge-rate-and-plunge-depth">Plunge rate and Plunge depth</h2>
@@ -1208,11 +1249,9 @@ This turned out to be more messy than expected, and the black/white frontiers ar
 
 <h2 id="shapeoko-calibration--tuning">Shapeoko calibration / tuning</h2>
 
-<p>For my current casual/beginner wood milling needs, my uncalibrated-but-decently-squared Shapeoko is fine, but in the spirit of getting better precision, I had a go at calibrating various parameters:</p>
+<p>For my current casual/beginner wood milling needs, my uncalibrated-but-decently-squared Shapeoko was fine, but in the spirit of getting better precision, I had a go at calibrating various parameters:</p>
 
-<ul>
-  <li>X/Y/Z linear calibration</li>
-</ul>
+<h3 id="xyz-linear-calibration">X/Y/Z linear calibration</h3>
 
 <p>GRBL uses three values referred as <code>$100</code>, <code>$101</code> and <code>$102</code>, which correspond to the number of motor steps to be commanded to move by one millimeter on the X, Y and Z axes respectively.
 Adjusting these values is a way to compensate for slight inaccuracies induced by mechanical play between the belt and the motor pulley, and by belt stretching.</p>
@@ -1259,14 +1298,41 @@ $101 = (1/0.993) * 40 = 40.282
 
 <p>So overall I got somewhere around 0.2% error, which is more than precise enough for what I do. I’m pretty sure the measurement error and natural variations in the machine are of the same order of magnitude anyway.</p>
 
-<p>Remaining on my TODO list are:</p>
+<h3 id="trammingsquaring-the-spindle">Tramming/squaring the spindle</h3>
 
-<ul>
-  <li>spindle runout measurement and/or wasteboard surface profiling.</li>
-  <li>Tramming/squaring the spindle, i.e. correcting for angulation between the spindle axis and the wasteboard plane</li>
-</ul>
+<p>The spindle may have a slight tilt angle and not be perfectly vertical with respect to the waste board. The first time I started caring about this is when I noticed these slight stripes at the bottom of a pocket:</p>
 
-<p>(to be continued)</p>
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/spindle_alignment_Xaxis_marks.png" alt="spindle_alignment_Xaxis_marks" /></p>
+
+<p>Nothing huge, but a sign that the endmill was probably slightly tilted. The fact that the stripes were only visible in one direction (corresponding to the endmill travelling along the X axis), and no visible stripes in the other direction, probably indicated that the spindle was tilted towards the front/back, but not (too much) to towards the left or right.</p>
+
+<p>There are many ways to square the spindle (using a dedicated tramming device, a dial indicator mounted on an extension arm fastened in the collet, …), but first things first, I went for a very basic check: checking how square the spindle mount was with respect to the wasteboard. I placed a (decent) square on the wasteboard, and checked the left (and right) side of the spindle mount (to check for left/right tilt angle):</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/spindle_alignment_check_Yaxis_overview.png" alt="spindle_alignment_check_Yaxis_overview" /></p>
+
+<p>and then the front side (to check for front/back tilt angle)</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/spindle_alignment_check_Xaxis_overview.png" alt="spindle_alignment_check_Xaxis_overview" /></p>
+
+<p>On the left/right side, the mount happened to be almost perfectly square:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/spindle_alignment_check_Yaxis.png" alt="spindle_alignment_check_Yaxis" /></p>
+
+<p>so no correction needed there. On the front/back side though, I did find a non-negligeable tilt angle:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/spindle_alignment_check_Xaxis_before.png" alt="spindle_alignment_check_Xaxis_before" /></p>
+
+<p>So it seemed like I need to correct this tilt angle. I loosened the 8 screws on the left and right side of the gantry, to get some wiggle room. Then I rotated the gantry a bit in the opposite direction of the tilt angle I noticed, fastened the 8 screws again, and re-checked:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/spindle_alignment_check_Xaxis_after.png" alt="spindle_alignment_check_Xaxis_after" /></p>
+
+<p>Not perfect, but MUCH better. Since I modified the machine geometry slightly during this adjustement, I re-surfaced the wasteboard to make sure it was parallel to X/Y axis again.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/resurfacing.png" alt="resurfacing" /></p>
+
+<p>I re-run the initial pocketing job, and sure enough the situation improved significantly: you can still see some stripes, but they are much less visible.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/oakbox_detail.png" alt="oakbox_detail" /></p>
 
 <hr />
 
@@ -1347,7 +1413,7 @@ $101 = (1/0.993) * 40 = 40.282
 
 <p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko/maintenance_dirtywheel.png" alt="maintenance_dirtywheel" /></p>
 
-<p>No big deal, but I prefer to keep things tidy, so I try to clean-up around wheels &amp; belts every few weeks using Q-tips. We’ll see if I can sustain that discipline on the long run…or maybe stop worrying about it.</p>
+<p>No big deal, but I prefer to keep things tidy, so I try to clean-up around wheels &amp; belts every few weeks using Q-tips and/or a toothbrush. We’ll see if I can sustain that discipline on the long run…or maybe stop worrying about it.</p>
 
 <hr />
 
@@ -1356,6 +1422,7 @@ $101 = (1/0.993) * 40 = 40.282
 <ul>
   <li>Makita Carbon brushes replacement parts reference is CB-411. I ordered a couple of those, since sooner or later they need to be replaced and I’ll be glad I have them on hand.</li>
   <li>Instructions page to update to GRBL1.1 &amp; CarbideMotion 4 is <a href="http://docs.carbide3d.com/support/carbideupdater">here</a></li>
+  <li>Cleaning endmills: I use acetone, which removes any remains of plastic/glue/sticky things very efficiently.</li>
 </ul>
 
 <hr />
