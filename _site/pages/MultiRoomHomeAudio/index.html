@@ -142,14 +142,14 @@
 
 <h4 id="installing-logitech-media-server">Installing Logitech Media Server</h4>
 
-<p>Install notes are taken from <a href="http://allthingspi.webspace.virginmedia.com/lms.php">here</a> and reused as is, except that LMS 7.7.3 is used:</p>
+<p>Install notes are taken from <a href="http://raspberry-at-home.com/logitech-media-server/">here</a> and reused as is, except that LMS 7.7.3 is used:</p>
 
 <pre><code>sudo apt-get update &amp;&amp; sudo apt-get dist-upgrade 
 sudo apt-get install libjpeg8 libpng12-0 libgif4 libexif12 libswscale2 libavcodec53
 wget http://downloads.slimdevices.com/LogitechMediaServer_v7.7.3/logitechmediaserver_7.7.3_all.deb 
 sudo dpkg -i logitechmediaserver_7.7.3_all.deb
 sudo service logitechmediaserver stop
-wget http://allthingspi.webspace.virginmedia.com/files/lms-rpi-raspbian.tar.gz 
+wget http://raspberry-at-home.com/files/lms-rpi-raspbian.tar.gz
 tar -zxvf lms-rpi-raspbian.tar.gz
 sudo patch /usr/share/perl5/Slim/bootstrap.pm lms-rpi-bootstrap.patch
 sudo mv arm-linux-gnueabihf-thread-multi-64int /usr/share/squeezeboxserver/CPAN/arch/5.14/ 

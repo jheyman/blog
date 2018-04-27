@@ -21,12 +21,21 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 ### Projects
 
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/Shapeoko1YearLater/emergency_stop.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/Shapeoko1YearLater">Shapeoko3 CNC, feedback one year later</a></td>
+</tr>
+</table>
+
 <table cellpadding="10">
 <tr>
   <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/Shapeoko/assembly_completed.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/Shapeoko">Experience with the Shapeoko3 benchtop 3D cutting machine</a></td>
 </tr>
 </table>
+
 
 <table cellpadding="10">
 <tr>

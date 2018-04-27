@@ -243,4 +243,20 @@ Then reboot and check power management is now OFF:
 should now return 0.
 
 
+### Grabbing a screenshot remotely from SSH
+
+
+When using the hevywieght variant of the Raspberry pi Raspbian distribution, with X server/GUI, the following can be used to capture a screenhost remotely from an SSH shell:
+
+install 'scrot' if not done already:
+
+	sudo apt-get install scrot
+
+then use it to grab the screenshot. The trick is to specify the DISPLAY:
+
+	DISPLAY=:0 scrot file.png
+
+
+
+
 

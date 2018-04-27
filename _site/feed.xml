@@ -58,6 +58,14 @@
                 
                         
                         <item>
+                                <title>Qt On Raspberry Pi</title>
+                                <description>Qt On Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/QtOnRaspberryPi/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>PHP SQLite notes</title>
                                 <description>Various notes about using PHP and SQLite</description>
                                 <link>http://jheyman.github.io/blog/pages/PHPSQLiteNotes/</link>
@@ -258,6 +266,14 @@
                 
                         
                         <item>
+                                <title>Shapeoko3, one year later.</title>
+                                <description>Feedback on the Shapeoko experience after 1 year</description>
+                                <link>http://jheyman.github.io/blog/pages/Shapeoko1YearLater/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Arduino under the hood</title>
                                 <description>Some details about how arduino programs actually work</description>
                                 <link>http://jheyman.github.io/blog/pages/ArduinoUnderTheHood/</link>
@@ -357,6 +373,14 @@
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Qt On Raspberry Pi</title>
+                                <description>Qt On Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/QtOnRaspberryPi/index.wip</link>
                         </item>
                         
                 

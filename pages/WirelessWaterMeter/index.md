@@ -275,7 +275,7 @@ The `apscheduler` python library is also required:
 
 As well as the `requests` library for remote logging
 
-	sudo pip install requests
+	sudo pip install --index-url=https://pypi.python.org/simple/ requests
 
 ### Logging scripts
 
