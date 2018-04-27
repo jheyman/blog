@@ -57,6 +57,7 @@
     </ul>
   </li>
   <li><a href="#wifi-robustness" id="markdown-toc-wifi-robustness">Wifi robustness</a></li>
+  <li><a href="#grabbing-a-screenshot-remotely-from-ssh" id="markdown-toc-grabbing-a-screenshot-remotely-from-ssh">Grabbing a screenshot remotely from SSH</a></li>
 </ul>
 
 <hr />
@@ -317,6 +318,20 @@ options 8192cu rtw_power_mgnt=0 rtw_enusbss=1 rtw_ips_mode=1
 </code></pre>
 
 <p>should now return 0.</p>
+
+<h3 id="grabbing-a-screenshot-remotely-from-ssh">Grabbing a screenshot remotely from SSH</h3>
+
+<p>When using the hevywieght variant of the Raspberry pi Raspbian distribution, with X server/GUI, the following can be used to capture a screenhost remotely from an SSH shell:</p>
+
+<p>install ‘scrot’ if not done already:</p>
+
+<pre><code>sudo apt-get install scrot
+</code></pre>
+
+<p>then use it to grab the screenshot. The trick is to specify the DISPLAY:</p>
+
+<pre><code>DISPLAY=:0 scrot file.png
+</code></pre>
 
 
 				</div><!-- entry-content -->

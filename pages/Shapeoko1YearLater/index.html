@@ -1,0 +1,696 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Shapeoko3, one year later.</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Shapeoko3, one year later." type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Shapeoko3, one year later.</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<h2 id="overview">Overview</h2>
+
+<p>When I bought the Shapeoko3, it was the first time I dipped my toe in world of CNC, and at the time I shared my experience <a href="http://jheyman.github.io/blog/pages/Shapeoko">here</a>. After about one year of using it, I figured it would be a good time to look back and share my updated feedback about CNC in general and the Shapeoko3 in particular, so here goes.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#tldr" id="markdown-toc-tldr">TL;DR</a></li>
+  <li><a href="#gear" id="markdown-toc-gear">Gear</a>    <ul>
+      <li><a href="#shapeoko3" id="markdown-toc-shapeoko3">Shapeoko3</a>        <ul>
+          <li><a href="#shapeoko-model--work-area" id="markdown-toc-shapeoko-model--work-area">Shapeoko model / Work Area</a></li>
+          <li><a href="#community--support" id="markdown-toc-community--support">Community / Support</a></li>
+          <li><a href="#calibration--tuning" id="markdown-toc-calibration--tuning">Calibration &amp; tuning</a></li>
+          <li><a href="#maintenance" id="markdown-toc-maintenance">Maintenance</a></li>
+          <li><a href="#crashes" id="markdown-toc-crashes">Crashes</a></li>
+          <li><a href="#cadcam-software" id="markdown-toc-cadcam-software">CAD/CAM Software</a></li>
+        </ul>
+      </li>
+      <li><a href="#endmills" id="markdown-toc-endmills">Endmills</a></li>
+      <li><a href="#vaccum-system" id="markdown-toc-vaccum-system">Vaccum system</a></li>
+      <li><a href="#enclosure" id="markdown-toc-enclosure">Enclosure</a></li>
+      <li><a href="#wasteboard" id="markdown-toc-wasteboard">Wasteboard</a></li>
+      <li><a href="#control-box" id="markdown-toc-control-box">Control box</a></li>
+      <li><a href="#rpm-tachymeter" id="markdown-toc-rpm-tachymeter">RPM Tachymeter</a></li>
+    </ul>
+  </li>
+  <li><a href="#feeds-and-speeds" id="markdown-toc-feeds-and-speeds">Feeds and Speeds</a></li>
+  <li><a href="#work-routine" id="markdown-toc-work-routine">Work routine</a></li>
+  <li><a href="#workholding" id="markdown-toc-workholding">Workholding</a></li>
+  <li><a href="#a-year-of-projects" id="markdown-toc-a-year-of-projects">A year of projects</a>    <ul>
+      <li><a href="#v-carve--mdf--awesomeness" id="markdown-toc-v-carve--mdf--awesomeness">V-carve + MDF = awesomeness</a></li>
+      <li><a href="#diamong-drag-bit" id="markdown-toc-diamong-drag-bit">Diamong drag bit</a></li>
+      <li><a href="#lamps-lamps-everywhere-" id="markdown-toc-lamps-lamps-everywhere-">Lamps, lamps everywhere !</a></li>
+      <li><a href="#oak" id="markdown-toc-oak">Oak</a></li>
+      <li><a href="#copper-cladpcbs" id="markdown-toc-copper-cladpcbs">Copper clad/PCBs</a></li>
+      <li><a href="#hdpe" id="markdown-toc-hdpe">HDPE</a></li>
+      <li><a href="#bamboo" id="markdown-toc-bamboo">Bamboo</a></li>
+    </ul>
+  </li>
+  <li><a href="#where-to-now-" id="markdown-toc-where-to-now-">Where to now ?</a></li>
+</ul>
+
+<hr />
+
+<h2 id="tldr">TL;DR</h2>
+
+<p>It’s been almost a year now. Still not bored, enjoying the Shapeoko as much as I did on day one. Developing a mild addiction to CNC in general. Friends &amp; family very happy with the unexpected gifts.</p>
+
+<hr />
+
+<h2 id="gear">Gear</h2>
+
+<p>First, some feedback on the setup I have been using.</p>
+
+<h3 id="shapeoko3">Shapeoko3</h3>
+
+<p>In short: I would buy it again without thinking twice. I almost expected to get bored and move on to something else after a while, but instead I need my weekly dose now. As far as I am concerned, the Shapeoko is the perfect mix of a hobby and a productivity tool: sometimes I just turn it on to get things done, just like any other power tool, and the workflow is simple enough to do just that. Other times, I’m in the mood to experiment/learn/tweak, play with various CAD/CAM solutions, consider HW upgrades, try new types of endmills, optimize feeds and speeds…and I have yet to find a case where I felt the Shapeoko design was limiting any of this.</p>
+
+<p>Other hobbyist-grade CNC machines out there are probably quite fine too, but so far I have not had any regrets nor impulse to compare/change.</p>
+
+<p>I am particularly happy that in these times of cloud-based-anything, the Shapeoko can be used in a purely local setup with no internet connection involved.</p>
+
+<h4 id="shapeoko-model--work-area">Shapeoko model / Work Area</h4>
+
+<p>I bought the standard size Shapeoko, the actual max work area I can use is 40cm wide by 35cm deep. For 90% of what I have done so far, this was large enough (or at least I designed parts within these limits). There are a few occasions where I would have liked the extended area of a Shapeoko3XL, and Carbide does sell an extension kit to transform a standard shapeoko into and XL, but my garage space will not allow it anyway.</p>
+
+<h4 id="community--support">Community / Support</h4>
+
+<p>Along with my CNC addiction came a slight addiction to the Shapeoko forum: it’s been a year, and I have been checking it almost daily since I bought the machine. It’s like AA minus the guilt: great people, great advice, lots of inspiration and motivation to DO things with machine, experiment new materials or techniques…</p>
+
+<p>The Carbide3D email support was top notch when I had a few issues initially (see original blog page), I see on the forum it still is, and luckily for me I have not had to use it at all for a year (which also talks for the quality of the machine).</p>
+
+<h4 id="calibration--tuning">Calibration &amp; tuning</h4>
+
+<p>In the first weeks, I focused a lot on squaring/tramming/calibrating the machine. This was definitely useful, as I think it gave me a solid setup to start actual projects, without the frustration of geometry issues in the CNCed parts. Over the last year, I stopped worrying about getting optimal accuracy/precision, and as I am not working on parts requiring very tight tolerances (e.g. metal), I have not had any noticeable precision issue (that a light sanding could not fix).</p>
+
+<h4 id="maintenance">Maintenance</h4>
+
+<p>My Shapeoko undergoes moderate use, I would say it runs one or two times a week, for jobs between 10 min and 1 hour. Overall, over one year the mechanical maintenance effort was minimal, which was a good surprise. I just had to :</p>
+
+<ul>
+  <li>re-tighten Z-axis belt once</li>
+  <li>re-tighten the router holder once</li>
+</ul>
+
+<p>I bought spare carbon brushes for the Makita router, to anticipate the unavoidable moment when they will be all used up, and the router will stop working. But so far, so good.</p>
+
+<p>For cleaning my endmills, I use acetone, which does a very good job at removing gummed up tape&amp;glue from the tip.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/acetone.png" alt="image" /></p>
+
+<h4 id="crashes">Crashes</h4>
+
+<p>Either I am very careful or not daring enough, but I have not had a single machine crash in the last ~10 months. The one crash I did have was all on me: I changed tool in the middle of a job, and in the process of re-zeroing the machine, I used the Carbide Motion feature to return to “previous zero + 6mm” height…forgetting that my new tool was longer than the first one, so this “previous Z + 6mm” ended up being inside the material…silly mistake, that I will not be doing twice.</p>
+
+<p>One “close call” I had was the first time I used G-code generated from Vectric V-carve, using the default post-processor that…does not retract the endmill along Z before starting. More on this below.</p>
+
+<h4 id="cadcam-software">CAD/CAM Software</h4>
+
+<p>The Shapeoko comes with a software suite that covers the full CNC workflow:</p>
+
+<ul>
+  <li><em>Carbide Create</em> for designing parts and carving toolpaths, and generating the G-code to be sent to the machine controller.</li>
+  <li><em>Carbide Motion</em> for talking to the machine controller, i.e. jogging, zeroing, and running a job.</li>
+</ul>
+
+<p>Carbide Create was perfect for me as a CNC beginner, I used it for about 9 months and really liked it, I think Carbide3D did an excellent job of providing a tool that is simple enough to be up and running quickly, and not have to spend weeks learning tens of menus/features. However after a while a few things made me consider moving to a different tool though:</p>
+
+<ul>
+  <li>there is no toolpath execution time estimation. I have been using an online viewer (<a href="https://nraynaud.github.io/webgcode/">this one</a>), which provides this missing info, but it gets old after a while.</li>
+  <li>there is no easy way to import parts/vectors from one project into another project, or put parts in a library of some kind to be reused.</li>
+  <li>Large projects with lots of vectors are not managed well, to the point where the interface freezes when trying to import a complex SVG file.</li>
+  <li>but above all of this, there is (in my configuration at least) a VERY annoying SW crash that happens from time to time upon doing “Ctrl+Z”, which I use a lot. Nothing like loosing 15 minutes of work to get you mad. I developed a habit of hitting “Save” very often, but honestly that is not something one should have to worry about.</li>
+  <li>Carbide Create being proprietary SW (closed source), I could not investigate the crash myself either.</li>
+</ul>
+
+<p>Most people (as far as I can tell from the forum) turn to Adobe’s Fusion360 as they outgrow Carbide Create, I tried it and it is indeed a fantastic CAD/CAM suite, but it just felt overwhelming/too feature-rich and not quite for me yet.</p>
+
+<p>I heard about Vectric V-Carve on the forum, tried it and finally bought it:</p>
+
+<ul>
+  <li>despite the name, it is a full-fledged CAD/CAM SW, not just for V-carving.</li>
+  <li>it includes the full workflow from drawing the vectors, to creating the toolpaths, to previewing them (with a nicer rendering than Carbide Create), to simulating toolpaths and estimating their runtime, and finally exporting custom G-code.</li>
+  <li>it is EXPENSIVE (330 euros), but after using it for a while now I must admit it is also worth it. No offense to Carbide Create (and no comparison either, how fair would it be to compare a 350$ product to a free software…), but it just does everything better, bug free, while staying just as simple. No regrets.</li>
+</ul>
+
+<p><strong>Note</strong>: the one issue I had initially though, is that the “Shapeoko” post-processor that comes with V-Carve, generates G-code that does NOT have a tool change command at the beginning of the job. And my routine relies on this tool change (that Carbide Create did generate, and Carbide Motion manages), to make sure everything was in order, start the router, close the enclosure, and finally start the actual carving. So my first run of V-carve generated G-code almost resulted in a crash, since I did not have time to start the router before it starting moving…I hit the emergency button just in time.</p>
+
+<p>But luckily, it is very easy to write a custom post-processor for V-carve, so I just copy/pasted the Shapeoko one, and added the “M6 T1” (G-code for tool change) in the post-processor so that it gets included in the generated G-code.</p>
+
+<p>I am still using <em>Carbide Motion</em> as my only machine controller, it has the basic feature set that works for me:</p>
+
+<ul>
+  <li>jogging and zeroing</li>
+  <li>loading a job</li>
+  <li>running a job with pause/resume/stop functions,</li>
+</ul>
+
+<p>I initially installed Carbide Motion 3, and now I upgraded to Carbide Motion 4 (with the associated update of the GRBL SW version inside the Shapeoko) to get a nice smooth jogging that CM3 lacked, and get the feedrate override function (quite useful when trying to figure out optimal feeds &amp; speeds for a new material)</p>
+
+<p>Since I have now established a precise workflow for running jobs without mistakes, and considering I do not see any specific limitations in CM4, I will stick with it for now if only by lazyness.</p>
+
+<p><strong>Note</strong>: it has one minor but annoying bug, when loading a new file, the associated data (e.g. min/max X/Y/Z covered) does not get refreshed sometimes, the values from the previous file are displayed. Once you know it and “trust” that the file was properly loaded, one can live with it.</p>
+
+<h3 id="endmills">Endmills</h3>
+
+<p>Here’s a list of the endmills I have, and how often I <em>actually</em> use them for the kind of projects I do:</p>
+
+<ul>
+  <li>1/4” 3-flute square endmill (Carbide’s #201) =&gt; the workhorse, used weekly.</li>
+  <li>1/4” 3-flute ballnose endmill (Carbide’s #202) =&gt; infrequently, but very useful in some situations (rounded pocket edges)</li>
+  <li>1/8” 2-flute square endmill (Carbide’s #101) =&gt; second most used endmill.</li>
+  <li>1/8” 2-flute ballnose endmill (Carbide’s #102)  =&gt; infrequently</li>
+  <li>0.063” 2-flute square endmill (Carbide’s #111) =&gt; very rarely</li>
+  <li>0.063” 2-flute ballnose endmill (Carbide’s #112) =&gt; very rarely</li>
+  <li>0.032” 2-flute square endmill (Carbide’s #121) =&gt; never used.</li>
+  <li>0.032” 2-flute ballnose endmill (Carbide’s #122) =&gt; never used.</li>
+  <li>60deg V-bit  =&gt; not used much so far, no specific reason, I just like the outcome of V-carving with the 90° one better.</li>
+  <li>90deg V-bit  =&gt; I did a lot of MDF V-carving, some oak.</li>
+  <li>Diamond drag bit =&gt; used a couple of times for very specific projets (see below). Expensive, but worth every penny.</li>
+  <li>Fly cutter =&gt; just used a couple of times to surface the wasteboard</li>
+  <li>PCB carving endmill =&gt; very specific, but mandatory to do…PCBs (which I do from time to time)</li>
+  <li>various other cheap endmills from eBay =&gt; never used, or was disappointed with the results.</li>
+</ul>
+
+<p>It’s difficult as a beginner to figure out which endmills to purchase first, and it really depends on the type of projects. Luckily for me I won a set of Carbide3D endmills in one of their contests, so this problem went away quickly.</p>
+
+<p>The other thing that is difficult to evaluate is how quickly they wear out and should be replaced. I suppose the answer is “it depends” (on the material being cut and how many hours of cutting the endmills see), in practice after a year I have not bought any new endmills yet.</p>
+
+<h3 id="vaccum-system">Vaccum system</h3>
+
+<p>Lessons learned this year:</p>
+
+<ul>
+  <li>the “dust bucket + cyclone dust collector + any shop vac” combo is working really good.</li>
+  <li>no regret about buying the (slightly expensive) Suckit dust boot: in daily use it’s quite convenient to use, and does the job well. I have no experience with cheaper/homemade dust boot, but the effort was not worth the trouble for me. It is quite sturdy, yet I managed to damage it a little (all my fault):</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/dust_boot_injury.png" alt="image" /></p>
+
+<h3 id="enclosure">Enclosure</h3>
+
+<p>My conclusions so far:</p>
+
+<ul>
+  <li>I’m glad I built one (so many things nearby waiting to fall on the Shapeoko…)</li>
+  <li>The reduction in noise is significant, now the main noise is the vaccum system. But as long as I can run jobs late in the evening without my neighbour (or wife) complaining, I’m fine.</li>
+  <li>Some people build enclosures where the machine is close to the ground: I would never do that, I appreciate being able to reach in the machine at waist level, for loading/unloading material, changing endmills, etc…</li>
+</ul>
+
+<h3 id="wasteboard">Wasteboard</h3>
+
+<p>Obvious conclusion #1: a wasteboard is indeed mandatory (unless you are ok with ruining the bed of your shapeoko), and#2 : surfacing it is also mandatory to get nice flat pocket bottoms.
+I wondered how often I would have to change or resurface my wasteboard, but it turns out that we minimal caution in designing the toolpaths, it barely gets scratched during jobs. I re-surfaced it once in one year. 6 months or so after re-surfacing, it looks like this (i.e. in need of a new resurfacing):</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/wasteboard_surface.png" alt="image" /></p>
+
+<p>So overall, not much maintenance involved.</p>
+
+<h3 id="control-box">Control box</h3>
+
+<p>After a few months of using the machine, I added this custom control box to the side of the machine:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/emergency_stop.png" alt="image" /></p>
+
+<p>The obvious added value is the big red emergency stop, and it also puts the buttons for turning the machine/enclosure lights/router/vacuum system on and off, right under my hand. Very convenient.</p>
+
+<h3 id="rpm-tachymeter">RPM Tachymeter</h3>
+
+<p>The cheap laser tachymeter I bought turned out to be useful: everytime I have to adjust RPM on the router, I use it and do not bother looking at the dial indicator on the router anymore. It provides a much more precise (hence repeatable) control of the RPM, so once I figure out a good value for a given material and feedrate, no surprises.</p>
+
+<hr />
+
+<h2 id="feeds-and-speeds">Feeds and Speeds</h2>
+
+<p>So, like every other beginner this is the point I worried the most about initially. While I understood the concept/math around feeds and speeds, several elements made things awkward at first:</p>
+
+<ul>
+  <li>Carbide Create is setup to provide appropriate values for the Nomad CNC, not the Shapeoko. Which by the way is not cool (I’m looking at you Carbide3d! How hard would it have been to introduce a setting in CC to select Shapeoko vs Nomad?). So very often, Carbide Create suggested values ended up being completely unpractical with a Shapeoko and Makita router (e.g. RPM values below 10.000RPM…so each time I had to use a higher RPM, I add to compensate feedrate accordingly, not very fun)</li>
+  <li>the various tables of recommanded feeds and speeds for the Shapeoko are nice, but…half the time, the combination of material &amp; endmill that I was using turned out to not be included in the table.</li>
+  <li>So I tried to take the “easy” (and expensive) way out: buying G-wizard. I really tried to learn it, and I’m sure it’s the perfect tool for people for people who know what they are doing already, but one thing threw me off: the turtle/hare slider. It is supposed to reflect how “aggressive” you want your feeds and speeds to be, which is a nice idea, but in all the scenarios I used, the output recommanded values varied WILDY when moving this slider, which confused me a lot (after hearing and reading everywhere that there is often one sweet spot for each material/endmill combination…it did not seem to make sense). To each his own, I just gave up.</li>
+</ul>
+
+<p>So in the end, I now rely on the good old method of trial &amp; error, and reusing feeds and speeds that worked for me. Below is a summary of values I have been using across various projects. They are by no mean optimized, nor recommanded, but they WORK for me so I am capturing them here for my own use.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Material</th>
+      <th style="text-align: center">Endmill</th>
+      <th style="text-align: center">#Flutes</th>
+      <th style="text-align: center"> RPM</th>
+      <th style="text-align: center">Feedrate (mm/min)</th>
+      <th style="text-align: center">Depth of Cut</th>
+      <th style="text-align: center"> Plunge Rate (mm/min)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Beech</td>
+      <td style="text-align: center">6mm square</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">1905</td>
+      <td style="text-align: center">1mm</td>
+      <td style="text-align: center">476</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Beech</td>
+      <td style="text-align: center">3.175mm square</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">425</td>
+      <td style="text-align: center">0.7mm</td>
+      <td style="text-align: center">100</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Bamboo</td>
+      <td style="text-align: center">3.175mm square</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">12500</td>
+      <td style="text-align: center">1000</td>
+      <td style="text-align: center">0.7mm</td>
+      <td style="text-align: center">100</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Bamboo</td>
+      <td style="text-align: center">6.35mm square</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">15000</td>
+      <td style="text-align: center">1524</td>
+      <td style="text-align: center">1.5mm</td>
+      <td style="text-align: center">200</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Oak</td>
+      <td style="text-align: center">6.35mm square</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">15000</td>
+      <td style="text-align: center">1980</td>
+      <td style="text-align: center">2mm</td>
+      <td style="text-align: center">200</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Oak</td>
+      <td style="text-align: center">0.063” square</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">635</td>
+      <td style="text-align: center">0.8mm</td>
+      <td style="text-align: center">381</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Acrylic</td>
+      <td style="text-align: center">6.35mm square</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">2000</td>
+      <td style="text-align: center">1.5mm</td>
+      <td style="text-align: center">635</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">HDPE</td>
+      <td style="text-align: center">6.35mm square</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">1250</td>
+      <td style="text-align: center">2mm</td>
+      <td style="text-align: center">100</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">HDPE</td>
+      <td style="text-align: center">3.175mm ballnose</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">840</td>
+      <td style="text-align: center">0.7mm</td>
+      <td style="text-align: center">100</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">MDF</td>
+      <td style="text-align: center">6.35mm square</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">1905</td>
+      <td style="text-align: center">1mm</td>
+      <td style="text-align: center">476</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">MDF</td>
+      <td style="text-align: center">V-bit 90°</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">15000</td>
+      <td style="text-align: center">1000</td>
+      <td style="text-align: center">6mm</td>
+      <td style="text-align: center">350</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="work-routine">Work routine</h2>
+
+<p>My routine for running a job has stayed the same after one year, and it goes like this:</p>
+
+<ul>
+  <li>initially, everything powered off</li>
+  <li>open the enclosure</li>
+  <li>load the stock material on the machine bed, mark the zero point (usually the center of the stock)</li>
+  <li>double dose of safety: I make sure that both the switch on the Makita router itself, AND the router power switch on the control box, are OFF.</li>
+  <li>move the gantry (GENTLY/SLOWLY) by hand towards the front</li>
+  <li>remove the bottom part of the Suckit Dust boot</li>
+  <li>insert the selected collet and endmill, fasten them tightly, and put the Makita switch to on (router power switch still OFF)</li>
+  <li>on the laptop connected to the machine, launch Carbide Motion</li>
+  <li>turn on the Shapeoko, hear the stepper motors click in place</li>
+  <li>Hit the “Connect” button, load the G-code file.</li>
+  <li>Go to Jog menu, do the Homing, then Jog to the center ref position, then manually in X and Y using the “Fast” setting to be more or less above the zero point marked on the stock.</li>
+  <li>Jog down along Z, still on “Fast setting”, and stop the movement around 1cm before the surface</li>
+  <li>Switch to “1mm” jogging step, and continue moving the endmill towards the surface, until it is about 1-2mm away from it</li>
+  <li>Switch to “.1mm” jogging step, insert a piece of paper under the tip of the endmill, and jog down step by step until the moment when the endmill tip touches the paper just enough that it cannot be wiggled around freely anymore, but still allows to pull it out.</li>
+  <li>In Carbide Motion, in “Set Zero” menu, click on “Clear all offsets” then on “Zero All”</li>
+  <li>In the Run menu, click on “Start”: since the generated G-code includes a tool change command, the gantry will retract on Z, then Carbide Motion will stop and pop-up the window requesting to check the tool.</li>
+  <li>This when I close the front door of the enclosure, then switch on the router power, then switch on the vacuum power.</li>
+  <li>Finally click “Continue” in the tool check/change pop-up window, and the job starts.</li>
+  <li>after the job completes, turn off the router, turn off the shapeoko</li>
+  <li>open the enclosure, manually vacuum the extra chips lying around</li>
+  <li>clean the tip of the endmill as necessary.</li>
+</ul>
+
+<h2 id="workholding">Workholding</h2>
+
+<p>For the first few months, I used clamps to hold stock onto the wasteboard. And made a nice clamp organizer too:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/clamp_tray.png" alt="image" /></p>
+
+<p>But it always felt like a burden to position/fasten/release clamps everytime, and above all I really disliked the fact that to make sure the dust boot would not interfere with the clamps during a job, I had to reduce the carving area to something smaller than the stock. Then one day on the forum I heard about the “CA glue &amp; tape” workholding method, tried it, loved it, and I have not looked back since then. My clamps are now collecting dust in a corner, crying.</p>
+
+<p>At least for working with wood/plastics, this method feels so much greater than any other for me. It goes like this:</p>
+
+<ul>
+  <li>requirements: any kind of CA glue (called “Superglue” over here), and pretty much any kind of masking tape (I used cheap rolls sold by 4)</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/tape_and_glue.png" alt="image" /></p>
+
+<ul>
+  <li>tools involved:</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/tape_and_glue_tools.png" alt="image" /></p>
+
+<ul>
+  <li>stick a few strips of masking tape on the bottom of the stock
+    <ul>
+      <li>use the roller to push/flaten the tape against the stock</li>
+    </ul>
+  </li>
+  <li>stick corresponding strips of masking tape on the wasteboard
+    <ul>
+      <li>use the roller to push/flaten the tape against the wasteboard</li>
+    </ul>
+  </li>
+  <li>apply a few zigzags of CA glue on the masking tape on the wasteboard side</li>
+  <li>position the stock on top of it, push and hold firmly for 10 seconds…and you are done.</li>
+</ul>
+
+<p>The holding force in X and Y direction is surprisingly good, I have not had a single piece of stock fly away during a job.
+Once the job has finished, just insert the scraping tool between the wasteboard and the bottom of the stock, pull vertically (gently), and the piece will come loose easily.</p>
+
+<hr />
+
+<h2 id="a-year-of-projects">A year of projects</h2>
+
+<p>As a memory lane for myself, and potential inspiration for others, here’s a recap of some of the projects I did in that first year of using the Shapeoko.</p>
+
+<h3 id="v-carve--mdf--awesomeness">V-carve + MDF = awesomeness</h3>
+
+<p>V-carving is one of the first thing I tried after buying the Shapeoko, after all it is a very typical use of CNC. But at the time, I tried it using a cheap V-bit off eBay and used pine as the stock material, which turned out to be a good recipe for disappointment. Months laters, I saw this Aztec/Star Wars calendar thread on the forum, and decided to give it a try. And I discovered that a decent V-bit (I used the one from Carbide3D store) and MDF can do WONDERS for a beginner:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/MDF_Vcarving_raw.png" alt="image" /></p>
+
+<p>After the classical trick of spraying copper paint, then using black acrylic paint in recesses, and wipe the excess pain on the surface, I ended up with this:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/MDF_Vcarving_finished.png" alt="image" /></p>
+
+<p>Yes, it has been done a million times before, Yes, I am not supposed to use this design because of copyright, etc…but the look on my nephew’s face when I offered it to him was worth it.</p>
+
+<h3 id="diamong-drag-bit">Diamong drag bit</h3>
+
+<p>This is one of the bits I bought last, because it is crazy expensive (for a bit). As the name says it has a small diamond tip, mounted on a spring-loaded rod, and is intended to be dragged on the surface of the material, without any rotation (i.e. router stays OFF)</p>
+
+<p>This was the opportunity for me to try something I had been wanting to do for a while, an edge-lit acrylic piece:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/edge_lit_lamp.png" alt="image" /></p>
+
+<h3 id="lamps-lamps-everywhere-">Lamps, lamps everywhere !</h3>
+
+<p>Then I went through a “LED Lamp” phase, and experimented with various custom design. First, a rip-off of the Heng lamp, that turns on when the two magnets are brought close to each other in the center:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/Heng_style_lamp.png" alt="image" /></p>
+
+<p>Then, inspired by a thread on the forum I tried a dodecahedron design:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/LEDlamp_dodecahedron.png" alt="image" /></p>
+
+<p>But MDF is not nice enough for the living room, so I tried doing the classic cube LED lamp, with oak and thick acrylic:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/cubelamp_parts.png" alt="image" /></p>
+
+<p>It turned out ok, but light diffusion leaved a lot to be desired:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/cubelamp_finished.png" alt="image" /></p>
+
+<p>So I gave it another try, changed the design a bit : oak + plastic diffuser strips + LED strips:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/pentalamp_parts.png" alt="image" /></p>
+
+<p>Assembled the lamp one layer at a time:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/pentalamp_layer.png" alt="image" /></p>
+
+<p>and got this, which is now permanently in the living room:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/pentalamp_finished.png" alt="image" /></p>
+
+<h3 id="oak">Oak</h3>
+
+<p>My first time cutting hardwood was for this oak maze, which, while not very original, turned out to look nice, with the acrylic cover on top:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/oakmaze.png" alt="image" /></p>
+
+<h3 id="copper-cladpcbs">Copper clad/PCBs</h3>
+
+<p>I gave Carbide Copper a try, it’s the online (and free!) tool from Carbide3D to generate G-code to carve PCBs out of copper clad boards. I quickly learned that having a perfectly flat and level support was of paramount importance, and used a surfaced piece of HDPE to hold the board for carving:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/PCB_raw_copperclad.png" alt="image" /></p>
+
+<p>I used a sharp PCB engraving bit, and watched the magic happen:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/PCB_engraving.png" alt="image" /></p>
+
+<h3 id="hdpe">HDPE</h3>
+
+<p>I tried cutting HDPE, more by curiosity than need. For some reason at that time I was not using the dust shoe, so I got this nice picture of “HDPE snow”</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/raspi_HDPE_case_prep.png" alt="image" /></p>
+
+<p>Anyway, I used this HDPE block to carve a custom enclosure for one of my Raspberry Pi boards:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/raspi_HDPE_case.png" alt="image" /></p>
+
+<h3 id="bamboo">Bamboo</h3>
+
+<p>I have been cutting a LOT of bamboo this year. I like the look of it, but above all it cleans-up very easily after cutting with very minimal sanding, and gives nice and sharp edges. It’s like cheating, and being able to produce nice looking parts while you are still a beginner, with zero effort!</p>
+
+<p>I did a few set of “puzzle coasters” for family and friends:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/coasters.png" alt="image" /></p>
+
+<p>Then did a very basic but useful towel paper dispenser, now in use in the kitchen:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/towel_paper_holder.png" alt="image" /></p>
+
+<p>While I was in the kitchen, I did this spice rack thing:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/spice_rack.png" alt="image" /></p>
+
+<p>And finally, I cut a custom phone holder/charging/automatic data backup station for our phones and tablet:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/phone_charger_empty.png" alt="image" /></p>
+
+<p>It turned out to be very convenient, and is now used daily.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/phone_charger_loaded.png" alt="image" /></p>
+
+<p>Side note: the cashier at Ikea is giving my a weird look when I come back to buy another batch of 10 bamboo cutting boards…what can I do, this is the cheapest source of bamboo I found, and bamboo quality is consistently good?</p>
+
+<hr />
+
+<h2 id="where-to-now-">Where to now ?</h2>
+
+<p>What a fun year. Future will tell whether I will get bored and move on, or use the Shapeoko only when I have a specific need, or still enjoy using it for the sake of using it and learning news tricks.
+Right now I have a few things on my todo/gear lust list:</p>
+
+<ul>
+  <li>Roughing + Finish workflow
+    <ul>
+      <li>I have run all projets without separating the jobs into roughing toolpaths following by finishing toolpaths, and I should learn how to do this (now that I outgrew Carbide Create)</li>
+    </ul>
+  </li>
+  <li>Nomad…
+    <ul>
+      <li>for smaller/finer CNC jobs, I would really like to give the Nomad a try someday. I cannot justify buying it right now, but who knows.</li>
+    </ul>
+  </li>
+  <li>Additional endmills
+    <ul>
+      <li>one type I would like to try is a compression endmill, to get nice clean edges on top of the material.</li>
+    </ul>
+  </li>
+  <li>Touch probe
+    <ul>
+      <li>I do not mind the manual zeroing procedure, but for sure it would be cool to get the Carbide3D probe and automate/simplify this step.</li>
+    </ul>
+  </li>
+  <li>Laser module / laser cutter upgrade
+    <ul>
+      <li>They sell laser kits to be mounted on the gantry, which can pretty much transform the Shapeoko into a laser cutter too. But I don’t know enough about practical laser cutting yet, and it SEEMS to me that it would be a better idea to get a real/dedicated laser cutter instead, and not have to care about thermal cooling, eye protection, changing the bed of the shapeoko, etc…so we will see. I have been monitoring the release of the Dremel laser cutter (a.k.a Laser cutter for rich dummies), but who knows when it will actually be released (for real).</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/Shapeoko1YearLater/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
