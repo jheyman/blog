@@ -10,6 +10,14 @@
                 
                         
                         <item>
+                                <title>Qt On Raspberry Pi</title>
+                                <description>Qt On Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/QtOnRaspberryPi/index.comingsoon</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Graph viewer widget for Android</title>
                                 <description>an Android homescreen widget to show data graphs</description>
                                 <link>http://jheyman.github.io/blog/pages/GraphViewerWidget/</link>
@@ -373,14 +381,6 @@
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/</link>
-                        </item>
-                        
-                
-                        
-                        <item>
-                                <title>Qt On Raspberry Pi</title>
-                                <description>Qt On Raspberry Pi</description>
-                                <link>http://jheyman.github.io/blog/pages/QtOnRaspberryPi/index.wip</link>
                         </item>
                         
                 
