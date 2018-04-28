@@ -42,7 +42,248 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<h1 id="coming-soon-">COMING SOON !</h1>
+<h2 id="overview">Overview</h2>
+
+<p>A few years after developing an <a href="http://jheyman.github.io/blog/pages/HomeHubApp">Android app</a> to manage my home automation, it was time to upgrade it. The VSD220 touch display with its embedded ARM processor running Android was a cool device to use, but it struggled to keep up with the load, and things were not a smooth as I would have liked. Also, Android development feels so awkward and overly complicated sometimes, so I needed some fresh air.</p>
+
+<p>I considered buying a regular/non-smart display monitor with touch capability, and plugging it to a Raspberry Pi3. But then I checked the VSD220 user manual and found out that not only is there an HDMI connector to use the display with an external source, but also the touch capability is available by just connecting to the microUSB port on the side. Perfect !</p>
+
+<p>The next good surprise was that when plugging the VSD220 to the Raspberry pi3 (via HDMI + USB) installed with a Raspbian Stretch (Mar 2018 / Desktop version), the touch capabilty worked out of the box. Cool!</p>
+
+<p>I then considered various GUI frameworks, but not for long, as I have a (positive) bias towards Qt: it’s been there for ever (I remember hacking basic GUI in the 2000’s), it still has a decent open source version, and its internal mechanics just feel so simple and right.</p>
+
+<p>So the next step was to get Qt installed on the Raspberry Pi. One choice that must be made is whether one wants to develop on the Raspberry itself (in the desktop environment, which after all is very usable on an RPi3), or use a separate host PC to cross-compile code for the Pi. I want for the latter, even though it is (slightly) more complex to setup. No regrets, it’s just so convenient to use QtCreator on a real PC, and just hit “Run” to execute the app remotely on the Pi.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#qt-install-on-host-pc-and-on-raspberry-pi" id="markdown-toc-qt-install-on-host-pc-and-on-raspberry-pi">Qt Install on Host PC and on Raspberry Pi</a>    <ul>
+      <li><a href="#rpi-preparation" id="markdown-toc-rpi-preparation">RPi preparation</a></li>
+    </ul>
+  </li>
+  <li><a href="#qtcreator-setup-on-the-host" id="markdown-toc-qtcreator-setup-on-the-host">QtCreator setup on the Host</a></li>
+  <li><a href="#compilation-of-the-virtual-keyboard" id="markdown-toc-compilation-of-the-virtual-keyboard">Compilation of the Virtual Keyboard</a>    <ul>
+      <li><a href="#configuring-the-locale" id="markdown-toc-configuring-the-locale">Configuring the locale</a></li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="qt-install-on-host-pc-and-on-raspberry-pi">Qt Install on Host PC and on Raspberry Pi</h2>
+
+<p>I must admit this was not a piece of cake, there are many tutorials/instructions out there, and I struggled to get something running. 
+The most useful resources for me was <a href="https://wiki.qt.io/RaspberryPi2EGLFS#Qt_Creator">this page</a>, so I stuck to that as much as possible, with a few tweaks along the way. For my own convenience I captured everything below, but this is 99% taken from there.</p>
+
+<p>I chose to install <strong>Qt5.10</strong>, on a <strong>Raspberry Pi3 Model B+</strong>, installed with a <strong>Raspbian Stretch</strong> desktop image (2018-03-13-raspbian-stretch.img), and use a Linux host running <strong>Ubuntu 16.04 LTS</strong></p>
+
+<h3 id="rpi-preparation">RPi preparation</h3>
+
+<p>Flash the Raspbian Strech image to the Pi’s SD Card. XXX is whatever drive the SD Card is mounted to</p>
+
+<pre><code>sudo dd if=2018-03-13-raspbian-stretch.img of=/dev/XXXX bs=4M
+</code></pre>
+
+<p>Connect keyboard/mouse/screen to the Rpi and boot to desktop. 
+From the settings menu, change the GPU memory to 256 MB.</p>
+
+<p>Make sure you have the latest and greatest firwmware on the Pi:</p>
+
+<pre><code>[on RPi] sudo rpi-update
+[on RPi] reboot
+</code></pre>
+
+<p>prepare for installing required libraries:</p>
+
+<pre><code>[on RPi] sudo nano /etc/apt/sources.list
+</code></pre>
+
+<p>Uncomment the ‘deb-src’ line, and save.</p>
+
+<p>Installed the bunch of required libs:</p>
+
+<pre><code>[on RPi] sudo apt-get update
+[on RPi] sudo apt-get build-dep qt4-x11
+[on RPi] sudo apt-get build-dep libqt5gui5
+[on RPi] sudo apt-get install libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0
+[on RPi] sudo mkdir /usr/local/qt5pi
+[on RPi] sudo chown pi:pi /usr/local/qt5pi
+</code></pre>
+
+<p>Now, on the host PC, prepare a sysroot that will later get copied onto the Pi, and the cross-compiling toolchain:</p>
+
+<pre><code>[on Host PC] mkdir ~/raspi
+[on Host PC] cd ~/raspi
+[on Host PC] git clone https://github.com/raspberrypi/tools
+[on Host PC] mkdir sysroot sysroot/usr sysroot/opt
+[on Host PC] rsync -avz pi@raspberrypi.local:/lib sysroot
+[on Host PC] rsync -avz pi@raspberrypi.local:/usr/include sysroot/usr
+[on Host PC] rsync -avz pi@raspberrypi.local:/usr/lib sysroot/usr
+[on Host PC] rsync -avz pi@raspberrypi.local:/opt/vc sysroot/opt
+[on Host PC] wget https://raw.githubusercontent.com/riscv/riscv-poky/priv-1.10/scripts/sysroot-relativelinks.py
+[on Host PC] chmod +x sysroot-relativelinks.py
+[on Host PC] ./sysroot-relativelinks.py sysroot
+</code></pre>
+
+<p>Proceed to download Qt</p>
+
+<pre><code>[on Host PC] wget http://download.qt.io/official_releases/qt/5.10/5.10.1/single/qt-everywhere-src-5.10.1.tar.xz
+[on Host PC] tar xf qt-everywhere-src-5.10.1.tar.xz
+</code></pre>
+
+<p>And to configure it. This is an important step to get right.</p>
+
+<pre><code>[on Host PC] cd qt-everywhere-src-5.10.1
+[on Host PC] ./configure -release -skip qtwayland -skip qtlocation -nomake tests -nomake examples -opengl es2 -device linux-rasp-pi3-g++ -device-option CROSS_COMPILE=~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf- -sysroot ~/raspi/sysroot -opensource -confirm-license -make libs -prefix /usr/local/qt5pi -extprefix ~/raspi/qt5pi -hostprefix ~/raspi/qt5 -v -no-use-gold-linker
+</code></pre>
+
+<p>I added the “-skip wayland” and “-skip qtlocation” because the had build errors in my setup, related to a silly conflict somehwere between OpenGL ES2 and ES3 versions (error about glShaderSource function declaration conflict…). Since I will not need those features anyway, no point in debugging their build.</p>
+
+<p>Make sure this configure step completes with no indication of errors, and proceed to cross-compile Qt:</p>
+
+<pre><code>[on Host PC] make -j4 all
+[on Host PC] make install
+</code></pre>
+
+<p>Note: at some point I had an issue requiring to apt-get a library on the Host, and got this error:</p>
+
+<pre><code>libperl5.22 : Depends: perl-modules-5.22 (&gt;= 5.22.1-9ubuntu0.2) but 5.22.1-9 is to be installed
+</code></pre>
+
+<p>which I fixed with this :</p>
+
+<pre><code>sudo apt-get install --reinstall perl-modules-5.22
+</code></pre>
+
+<p>Now, copy the full result of the build to the RPi:</p>
+
+<pre><code>[on Host PC] cd ~/raspi
+[on Host PC] rsync -avz qt5pi pi@(IP address of the Rpi):/usr/local
+</code></pre>
+
+<p>Now SSH to the RPi to fix some library links:</p>
+
+<pre><code>[on RPi] echo /usr/local/qt5pi/lib | sudo tee /etc/ld.so.conf.d/00-qt5pi.conf
+[on RPi] sudo ldconfig
+[on RPi] sudo mv /usr/lib/arm-linux-gnueabihf/libEGL.so.1.0.0 /usr/lib/arm-linux-gnueabihf/libEGL.so.1.0.0_backup
+[on RPi] sudo mv /usr/lib/arm-linux-gnueabihf/libGLESv2.so.2.0.0 /usr/lib/arm-linux-gnueabihf/libGLESv2.so.2.0.0_backup
+[on RPi] sudo ln -s /opt/vc/lib/libEGL.so /usr/lib/arm-linux-gnueabihf/libEGL.so.1.0.0
+[on RPi] sudo ln -s /opt/vc/lib/libGLESv2.so /usr/lib/arm-linux-gnueabihf/libGLESv2.so.2.0.0
+[on RPi] sudo ln -s /opt/vc/lib/libEGL.so /opt/vc/lib/libEGL.so.1
+[on RPi] sudo ln -s /opt/vc/lib/libGLESv2.so /opt/vc/lib/libGLESv2.so.2
+</code></pre>
+
+<hr />
+
+<h2 id="qtcreator-setup-on-the-host">QtCreator setup on the Host</h2>
+
+<p>The IDE that comes with Qt, QtCreator, is quite nice. It can be configured to talk to the Raspberry Pi as an embedded device target for the projects being built.</p>
+
+<p>It’s all very well explained in <a href="https://www.ics.com/blog/configuring-qt-creator-raspberry-pi">this page</a>, but again for my own convenience I capture the steps here.</p>
+
+<ul>
+  <li>Go to Options -&gt; Devices
+    <ul>
+      <li>Add
+        <ul>
+          <li>Generic Linux Device</li>
+          <li>Enter IP address, user &amp; password</li>
+          <li>Finish</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Go to Options -&gt; Compilers
+    <ul>
+      <li>Add
+        <ul>
+          <li>GCC</li>
+          <li>Compiler path: ~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Go to Options -&gt; Debuggers
+    <ul>
+      <li>Add
+        <ul>
+          <li>~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gdb</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Go to Options -&gt; Qt Versions
+    <ul>
+      <li>Check if an entry with ~/raspi/qt5/bin/qmake shows up. If not, add it.</li>
+    </ul>
+  </li>
+  <li>Go to Options -&gt; Build &amp; Run
+    <ul>
+      <li>Kits
+        <ul>
+          <li>Add
+            <ul>
+              <li>Generic Linux Device</li>
+              <li>Device: the one we just created</li>
+              <li>Sysroot: ~/raspi/sysroot</li>
+              <li>Compiler: the one we just created</li>
+              <li>Debugger: the one we just created</li>
+              <li>Qt version: the one we saw under Qt Versions</li>
+              <li>Qt mkspec: leave empty</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>When creating a new projet, add this</p>
+
+<pre><code>INSTALLS        = target
+target.files    = (whateverfilenameyoulike)
+target.path     = /home/pi
+</code></pre>
+
+<p>At the end of the <code>.pro</code> file</p>
+
+<hr />
+
+<h2 id="compilation-of-the-virtual-keyboard">Compilation of the Virtual Keyboard</h2>
+
+<p>To redo my homehub app, I needed to make sure I would get all required features from the Qt install. One that was not immediately obvious was the virtual keyboard, which given the fact that I am doing a touch-only application is vital to have, and is not included by default.</p>
+
+<p>Struggled a bit, found help <a href="https://stackoverflow.com/questions/42576436/how-to-use-the-qtvirtualkeyboard">here</a>, and did it this way:</p>
+
+<ul>
+  <li>In QtCreator, navigate to <code>qt-everywhere / .... /qtvirtualkeyboard</code>, open the <code>virtualkeyboard.pro</code> project file, and configure the build to “Raspberry / Release”, then Build.</li>
+  <li>I could not figure out (nor wanted to spend time to figure out) how to deploy resulting files to the target, so I copied them by hand on the Rpi:
+    <ul>
+      <li>the whole directory  <code>/build-qtvirtualkeyboard-Raspi3_Homehub-Debug/qml/QtQuick/VirtualKeyboard</code> must be copied into <code>~/raspi/qt5pi/qml/QtQuick</code></li>
+      <li>the file <code>/home/etabli/qt-everywhere-src-5.10.1/build-qtvirtualkeyboard-Raspi3_Homehub-Debug/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so</code> must be copied to <code>~/raspi/qt5pi/plugins/platforminputcontexts</code></li>
+      <li>then rsync the ~raspi folder, as done previously, to actually transfer files onto the RPi.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>At this point, launching a simple application with a unique text input field worked fine on the Pi, with the Virtual Keyboard showing up automatically when touching the text input field.</p>
+
+<h3 id="configuring-the-locale">Configuring the locale</h3>
+
+<p>By default, the virtual keyboard builds with English as the only language/locale for the keyboard. To add my own locale (French) I did this:</p>
+
+<ul>
+  <li>added the option <code>CONFIG+=lang-all</code> in the additional build options for qmake in QtCreator’s project settings.</li>
+  <li>rebuild the virtual keyboard project in QtCreator</li>
+  <li>did the folder sync thing again</li>
+</ul>
+
+<p>And finally, in the <code>main.qml</code> file of the project itself, inside the <code>InputPanel</code> item that should be there, I added this :</p>
+
+<pre><code>Component.onCompleted: {
+    VirtualKeyboardSettings.locale = "fr_FR";
+}
+</code></pre>
+
 
 				</div><!-- entry-content -->
 

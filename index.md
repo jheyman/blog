@@ -232,6 +232,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
+  <td><div id="container"><img src="{{ site.baseurl }}/assets/images/QtOnRaspberryPi/logo.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/QtOnRaspberryPi">Qt On Raspberry Pi</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
   <td><div id="container" style="height:100px;"><img src="{{ site.baseurl }}/assets/images/ArduinoTipsAndTricks/arduinologo.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/ArduinoTipsAndTricks">Arduino Tips And Tricks</a></td>
 </tr>
