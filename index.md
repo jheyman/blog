@@ -36,7 +36,6 @@ tagline: A collection of my notes from various DIY projects/experimentations
 </tr>
 </table>
 
-
 <table cellpadding="10">
 <tr>
   <td><div id="container"  style="height:200px;"><img src="{{ site.baseurl }}/assets/images/BlueKey/NES_mugshot.png"/></div></td>
@@ -234,6 +233,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 <tr>
   <td><div id="container"><img src="{{ site.baseurl }}/assets/images/QtOnRaspberryPi/logo.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/QtOnRaspberryPi">Qt On Raspberry Pi</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container"  style="height:200px;"><img src="{{ site.baseurl }}/assets/images/GmailParsingPython/logo.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/GmailParsingPython">Gmail parsing with Python</a></td>
 </tr>
 </table>
 

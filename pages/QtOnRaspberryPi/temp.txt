@@ -1,0 +1,26 @@
+<!--
+## App development
+
+Model/View structure:
+
+View is managed by QML
+Model is managed by a dedicated class AppModel
+
+AppModel is registered as an instantiable QML object type in a particular type namespace, by calling qmlRegisterType():
+
+qmlRegisterType<Message>("mynamespace", 1, 0, "AppModel");
+
+then in QML : 
+
+import mynamespace 1.0
+
+AppModel is instanciated by the main QML file => this is when its constructor runs.
+
+
+[FROM DOC]: Q_DECLARE_METATYPE(Type): This macro makes the type Type known to QMetaType as long as it provides a public default constructor, a public copy constructor and a public destructor. It is needed to use the type Type as a custom type in QVariant.
+
+
+To learn about QML ListView used from C++:
+https://www.youtube.com/watch?v=9BcAYDlpuT8&feature=youtu.be
+
+--!>

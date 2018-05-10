@@ -57,7 +57,7 @@ Installed the bunch of required libs:
 	[on RPi] sudo apt-get update
 	[on RPi] sudo apt-get build-dep qt4-x11
 	[on RPi] sudo apt-get build-dep libqt5gui5
-	[on RPi] sudo apt-get install libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0
+	[on RPi] sudo apt-get install libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0 gdbserver 
 	[on RPi] sudo mkdir /usr/local/qt5pi
 	[on RPi] sudo chown pi:pi /usr/local/qt5pi
 
@@ -74,6 +74,10 @@ Now, on the host PC, prepare a sysroot that will later get copied onto the Pi, a
 	[on Host PC] wget https://raw.githubusercontent.com/riscv/riscv-poky/priv-1.10/scripts/sysroot-relativelinks.py
 	[on Host PC] chmod +x sysroot-relativelinks.py
 	[on Host PC] ./sysroot-relativelinks.py sysroot
+
+While we are there, install a specific version of gdb on the Host, supporting Arm architecture AND python scripting in gdb (which the raspberry/tools version does not). This workaround is explained well [here](https://jeanleflambeur.wordpress.com/2014/09/28/remote-debugging-on-the-raspberry-pi-from-qtcreator/):
+
+	sudo apt-get install gdb-multiarch
 
 Proceed to download Qt
 
@@ -132,10 +136,12 @@ It's all very well explained in [this page](https://www.ics.com/blog/configuring
 * Go to Options -> Compilers
   * Add
     * GCC
+    * Name it something like "Raspi GCC"
     * Compiler path: ~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++
 * Go to Options -> Debuggers
   * Add
-    * ~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gdb
+    * Name it something like "Raspi debugger"
+    * Set path to /usr/bin/gdb-multiarch 
 * Go to Options -> Qt Versions
   * Check if an entry with ~/raspi/qt5/bin/qmake shows up. If not, add it.
   
@@ -145,8 +151,8 @@ It's all very well explained in [this page](https://www.ics.com/blog/configuring
       * Generic Linux Device
       * Device: the one we just created
       * Sysroot: ~/raspi/sysroot
-      * Compiler: the one we just created
-      * Debugger: the one we just created
+      * Compiler: the one we just created ("Raspi GCC")
+      * Debugger: the one we just created ("Raspi debugger")
       * Qt version: the one we saw under Qt Versions
       * Qt mkspec: leave empty
 
@@ -188,4 +194,5 @@ And finally, in the `main.qml` file of the project itself, inside the `InputPane
 	Component.onCompleted: {
 	    VirtualKeyboardSettings.locale = "fr_FR";
 	}
+
 

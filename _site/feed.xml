@@ -10,14 +10,6 @@
                 
                         
                         <item>
-                                <title>Qt On Raspberry Pi</title>
-                                <description>Qt On Raspberry Pi</description>
-                                <link>http://jheyman.github.io/blog/pages/QtOnRaspberryPi/index.comingsoon</link>
-                        </item>
-                        
-                
-                        
-                        <item>
                                 <title>Graph viewer widget for Android</title>
                                 <description>an Android homescreen widget to show data graphs</description>
                                 <link>http://jheyman.github.io/blog/pages/GraphViewerWidget/</link>
@@ -357,6 +349,14 @@
                                 <title>Z-Wave home automation</title>
                                 <description>Leveraging Zwave technology for home automation</description>
                                 <link>http://jheyman.github.io/blog/pages/ZwaveHomeAutomation/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Gmail parsing using Python on Raspberry Pi</title>
+                                <description>Gmail parsing using Python on Raspberry Pi</description>
+                                <link>http://jheyman.github.io/blog/pages/GmailParsingPython/</link>
                         </item>
                         
                 

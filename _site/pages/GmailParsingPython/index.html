@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Gmail parsing using Python on Raspberry Pi</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Gmail parsing using Python on Raspberry Pi" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Gmail parsing using Python on Raspberry Pi</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<h2 id="overview">Overview</h2>
+
+<p>I wanted a dead simple way to log “todo” items remotely in my todolist server (which uses a simple PHP access to an SQlite database hosted on a raspberry pi, see <a href="https://github.com/jheyman/TodoList_ServerSide">here</a>
+The todo list is accessible via HTTP requests, so I initially wrote an Android app to view and create new items, but it turned out that I did not use it much, and after a few weeks I was back to sending emails to myself to keep track of things to do. And then the todo email would get burried under loads of subsequent emails, and I would forget about it.</p>
+
+<p>So, new plan: instead of fighting my natural tendency to send emails to myself, I embraced it and created a small Python script that runs on a rasperry pi, regularly checks a dedicated gmail account of mine, and checks for any email in the inbox with “todo” in the subject: if it finds any, it then performs an HTTP request on the todolist server, to create a new item with this email’s subject as the content/description. This lets me capture things todo from anywhere, and be confident that the action will not get lost in my inbox.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/GmailParsingPython/overview.png" alt="overview" /></p>
+
+<p>Note: of course there is no need to use two separate raspberry pis to do this, it just so happens that my todolist server runs on one of my raspberry, while I wanted to install this gmail monitoring script on another one.</p>
+
+<p>It is one of those (rare) projects where you think you will struggle for hours to get something running, but then try the first google link that looks right, and…succeed in 10 minutes. 
+I followed instructions from <a href="http://storiknow.com/automatic-cat-feeder-using-raspberry-pi-part-two/">this page</a>, and it all worked perfectly, so a tip of my hat to the author of this page.</p>
+
+<p>As I usually do, I duplicated the exact steps <strong>I</strong> took (which are 99% those from the pages…but not quite), in case the link gets broken, and more generally because there is a higher likelihood that I will understand my own notes than someone else’s, when I inevitably have to fix this two years from now…</p>
+
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#prerequisites" id="markdown-toc-prerequisites">Prerequisites</a></li>
+  <li><a href="#source-code" id="markdown-toc-source-code">Source code</a></li>
+  <li><a href="#getting-an-application-password-from-gmail" id="markdown-toc-getting-an-application-password-from-gmail">Getting an application password from Gmail</a></li>
+  <li><a href="#installing-the-service" id="markdown-toc-installing-the-service">Installing the service</a></li>
+</ul>
+
+<hr />
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>I am using a Raspberry Pi3 Model B+, installed with Raspbian Stretch. Not that it matters much, as long as it has python and pip. For the script to work, two python libraries must be installed though:</p>
+
+<ul>
+  <li>the email client to access the gmail account</li>
+  <li>the library to perform HTTP requests</li>
+</ul>
+
+<p>To do so:</p>
+
+<pre><code>sudo pip install imapclient
+sudo pip install requests
+</code></pre>
+
+<h2 id="source-code">Source code</h2>
+
+<p>The code is derived from <a href="http://storiknow.com/automatic-cat-feeder-using-raspberry-pi-part-two/">this page</a> again, and stored in a dedicated github <a href="https://github.com/jheyman/gmailtodogateway.git">repo</a> of mine.
+It’s just a big infinite loop, that does the following every 15 minutes:</p>
+
+<ul>
+  <li>search for emails in the inbox with “todo” in the subject</li>
+  <li>if any is found, use the rest of the subject line as text to create a new todo item via an HTTP request</li>
+  <li>logout from the server.</li>
+</ul>
+
+<h2 id="getting-an-application-password-from-gmail">Getting an application password from Gmail</h2>
+<p>To access the Gmail server, an application password is required:</p>
+
+<ul>
+  <li>Log into your gmail account</li>
+  <li>Go to the <a href="https://myaccount.google.com/security">Sign-in and security page</a></li>
+  <li>Under the Signing in to Google section, click the 2-Step Verification menu, then follow the instructions to <strong>enable 2-Step Verification</strong></li>
+  <li>Back in the Sign-in and security page right under the 2-Step Verification button go to the <strong>App passwords</strong> section.</li>
+  <li>Generate a password (16 digits+3 spaces) .</li>
+</ul>
+
+<h2 id="installing-the-service">Installing the service</h2>
+
+<p>To make the script into a background service</p>
+
+<ul>
+  <li>create a <code>/home/pi/gmailtodogateway directory</code> on the pi</li>
+  <li>copy <code>gmailtodogateway.py</code> in it and make sure it has execution rights</li>
+  <li>copy <code>gmailtodogateway.ini</code> in it and update it for your own case (gmail account name, and application code retrieved above)</li>
+  <li>copy the <code>gmailtodogateway.sh</code> script to <code>/etc/init.d</code>, make sure it has execution rights too</li>
+</ul>
+
+<p>Then activate this service using:</p>
+
+<pre><code>sudo update-rc.d gmailtodogateway.sh defaults
+</code></pre>
+
+<p>Upon next reboot (or <code>sudo service gmailtodogateway start</code>), the script should run, and capture logs in <code>gmailtodogateway.log</code> in the same directory.
+Then just send an email to the account mentionned in the .ini file, with “todo [whatever text]” in the subject (body can stay empty), it should be picked up by the script.</p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/GmailParsingPython/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
