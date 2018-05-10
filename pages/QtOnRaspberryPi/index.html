@@ -104,7 +104,7 @@ From the settings menu, change the GPU memory to 256 MB.</p>
 <pre><code>[on RPi] sudo apt-get update
 [on RPi] sudo apt-get build-dep qt4-x11
 [on RPi] sudo apt-get build-dep libqt5gui5
-[on RPi] sudo apt-get install libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0
+[on RPi] sudo apt-get install libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev libxcb-xinerama0 gdbserver 
 [on RPi] sudo mkdir /usr/local/qt5pi
 [on RPi] sudo chown pi:pi /usr/local/qt5pi
 </code></pre>
@@ -122,6 +122,11 @@ From the settings menu, change the GPU memory to 256 MB.</p>
 [on Host PC] wget https://raw.githubusercontent.com/riscv/riscv-poky/priv-1.10/scripts/sysroot-relativelinks.py
 [on Host PC] chmod +x sysroot-relativelinks.py
 [on Host PC] ./sysroot-relativelinks.py sysroot
+</code></pre>
+
+<p>While we are there, install a specific version of gdb on the Host, supporting Arm architecture AND python scripting in gdb (which the raspberry/tools version does not). This workaround is explained well <a href="https://jeanleflambeur.wordpress.com/2014/09/28/remote-debugging-on-the-raspberry-pi-from-qtcreator/">here</a>:</p>
+
+<pre><code>sudo apt-get install gdb-multiarch
 </code></pre>
 
 <p>Proceed to download Qt</p>
@@ -197,6 +202,7 @@ From the settings menu, change the GPU memory to 256 MB.</p>
       <li>Add
         <ul>
           <li>GCC</li>
+          <li>Name it something like “Raspi GCC”</li>
           <li>Compiler path: ~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++</li>
         </ul>
       </li>
@@ -206,7 +212,8 @@ From the settings menu, change the GPU memory to 256 MB.</p>
     <ul>
       <li>Add
         <ul>
-          <li>~/raspi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gdb</li>
+          <li>Name it something like “Raspi debugger”</li>
+          <li>Set path to /usr/bin/gdb-multiarch</li>
         </ul>
       </li>
     </ul>
@@ -225,8 +232,8 @@ From the settings menu, change the GPU memory to 256 MB.</p>
               <li>Generic Linux Device</li>
               <li>Device: the one we just created</li>
               <li>Sysroot: ~/raspi/sysroot</li>
-              <li>Compiler: the one we just created</li>
-              <li>Debugger: the one we just created</li>
+              <li>Compiler: the one we just created (“Raspi GCC”)</li>
+              <li>Debugger: the one we just created (“Raspi debugger”)</li>
               <li>Qt version: the one we saw under Qt Versions</li>
               <li>Qt mkspec: leave empty</li>
             </ul>
