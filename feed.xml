@@ -266,9 +266,25 @@
                 
                         
                         <item>
+                                <title>Python tips and tricks</title>
+                                <description>Various Python tips I keep forgetting about</description>
+                                <link>http://jheyman.github.io/blog/pages/PythonTipsAndTricks/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Shapeoko3, one year later.</title>
                                 <description>Feedback on the Shapeoko experience after 1 year</description>
                                 <link>http://jheyman.github.io/blog/pages/Shapeoko1YearLater/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>Anycubic Kossel Linear Plus 3D printer kit</title>
+                                <description>Build and use log of an Anycubic Kossel Linear Plus 3D printer</description>
+                                <link>http://jheyman.github.io/blog/pages/Anycubic3DPrinter/</link>
                         </item>
                         
                 
@@ -373,6 +389,14 @@
                                 <title>BlueKey, a bluetooth hardware password manager</title>
                                 <description>BlueKey, a bluetooth hardware password manager</description>
                                 <link>http://jheyman.github.io/blog/pages/BlueKey/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>RS485 sniffer</title>
+                                <description>a simple tool to listen on RS485 and log data over Ethernet</description>
+                                <link>http://jheyman.github.io/blog/pages/RS485Sniffer/</link>
                         </item>
                         
                 
