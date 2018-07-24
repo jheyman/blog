@@ -21,6 +21,19 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 ### Projects
 
+<table cellpadding="10">
+<tr>
+  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/RS485Sniffer/assembled_sniffer.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/RS485Sniffer">RS-485 communication sniffer</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/Anycubic3DPrinter/assembly_completed.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/Anycubic3DPrinter">Intro to 3D printing with the Anycubic Kossel</a></td>
+</tr>
+</table>
 
 <table cellpadding="10">
 <tr>
@@ -212,6 +225,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 <tr>
   <td><div id="container"><img src="{{ site.baseurl }}/assets/images/LinuxTipsAndTricks/logo-linux.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/LinuxTipsAndTricks">Linux Tips And Tricks</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
+  <td><div id="container"><img src="{{ site.baseurl }}/assets/images/PythonTipsAndTricks/logo-python.png"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/PythonTipsAndTricks">Python Tips And Tricks</a></td>
 </tr>
 </table>
 
