@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Visio layer automatic highlighter</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Visio layer automatic highlighter" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Visio layer automatic highlighter</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<p>I often need to show different views of a given complex structure, and I do not want to make separate diagrams since this would turn out to be completely unmaintainable and prone to many inconsistencies between the individual diagrams. For all but the simplest diagrams, this is not practical. So I like using the <strong>Layers</strong> in Visio, creating one layer per target view, and adding the shapes related to this view in said layer.</p>
+
+<p>However, Visio layers have one annoying shortcoming: when a given object is included in <strong>several</strong> layers, Visio just does not provide a proper way to give a specific color to the shape depending on the active layer. Yes, Layers do have a “color” property that can be set in the Layer menu, and yes Visio will color shapes based on this layer color setting, but this only works when shapes belong to a single layer. As soon as a shape is part of several layers, Visio does not even try to use the predefined layer’s colors and defaults to displaying the original shape’s color:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioLayerHighlighter/visio_layerColors.png" alt="image" /></p>
+
+<p>Notice how the shape belonging to layer 1 only took the red color of layer1, while the other shapes that belong to several layers did NOT pick-up the color of the corresponding layers.</p>
+
+<p>Well this makes sense, as Visio has no way to know which layer of the multiple ones applied to a shape should take “priority”, because (as far as I know) there is no Z-ordering of layers. So anyway, I started looking for a simple way to highlight the shapes belonging to one given layer by giving them a predefined color, while fading all other shapes not belonging to this layer by giving them another darker color. This, and a way to select which layer is currently highlighted, would fulfill my original need.</p>
+
+<hr />
+
+<h3 id="table-of-contents">Table of Contents</h3>
+
+<ul id="markdown-toc">
+  <li><a href="#table-of-contents" id="markdown-toc-table-of-contents">Table of Contents</a></li>
+  <li><a href="#vba-to-the-rescue" id="markdown-toc-vba-to-the-rescue">VBA to the rescue</a></li>
+  <li><a href="#layer-selector" id="markdown-toc-layer-selector">Layer selector</a></li>
+  <li><a href="#parsing-all-shapes" id="markdown-toc-parsing-all-shapes">Parsing all shapes</a></li>
+  <li><a href="#highlighting-the-shapes" id="markdown-toc-highlighting-the-shapes">Highlighting the shapes</a></li>
+  <li><a href="#results" id="markdown-toc-results">Results</a></li>
+  <li><a href="#source-code" id="markdown-toc-source-code">Source code</a></li>
+</ul>
+
+<h3 id="vba-to-the-rescue">VBA to the rescue</h3>
+
+<p>Using VBA (Visual Basic for Applications), it is quite easy to change any of the properties of shapes on the page. The layer highlighter scheme is as follows:</p>
+
+<ul>
+  <li>a combox box is added to the page, and filled with a selection of layer names</li>
+  <li>the VBA code reacts to the layer selection from the combox box by:
+    <ul>
+      <li>parsing all shapes on the page, and for each shape:
+        <ul>
+          <li>creating a backup of the original line color, line width, and text color of the shape in a dynamically created user property</li>
+          <li>determining if it belongs to the selected layer:
+            <ul>
+              <li>if so  =&gt; change its line color, line weight, and text color to specific predefined values chosen for highlighting this specific layer.</li>
+              <li>if not =&gt; change its line color, line weight, and text color to specific predefined chosen for fading this specific layer.</li>
+            </ul>
+          </li>
+          <li>if the selected layer is “None”, restore the original line color/line width/text color</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="layer-selector">Layer selector</h3>
+
+<p>The combobox selector is added to the page by going to the Developer tab, switching to Design mode, and then inserting the combox box from the insert activeX controls menu:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioLayerHighlighter/visio_insert_combobox.png" alt="image" /></p>
+
+<p>To populate the combobox with the list of selectable layers, I just added these few lines in the callback function that gets executed when the Visio document is opened:</p>
+
+<pre><code>Private Sub Document_DocumentOpened(ByVal Doc As IVDocument)		
+    ' Create the combox entries
+    ComboBox1.AddItem ("layer1")
+    ComboBox1.AddItem ("layer2")
+    ComboBox1.AddItem ("layer3")
+    ComboBox1.AddItem ("None")
+    ComboBox1.Text = ComboBox1.List(3)
+End Sub
+</code></pre>
+
+<p>The last line makes sure that upon opening the document, the selection is set to “None” by default:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioLayerHighlighter/visio_Nolayerhighlighted.png" alt="image" /></p>
+
+<p><strong>Note</strong> : I struggled a bit to find where to adjust the text size in the combox box, to make it practical when viewing the diagram all zoomed out. The combox box text size can be modified by editing the “Font” line in the combo box properties. There is a small “…” button on the right, that allows not only to select the Font name, but also the text size.</p>
+
+<p>The test file I used covers various cases to make sure the code works as intended:</p>
+
+<ul>
+  <li>shapes that do not belong to any layer</li>
+  <li>shapes that belong to one layer only</li>
+  <li>shapes that belong to multiple layers</li>
+  <li>grouped shaped (more on this later)</li>
+</ul>
+
+<p>The callback to handle combox selection from the user is a simple <code>Select/Case</code> statement that calls the highlighting function:</p>
+
+<pre><code>Private Sub ComboBox1_Change()
+    Select Case ComboBox1.Value
+        ' Format :
+        ' highlight_shapes &lt;layer_name&gt;, &lt;highlight_line_color&gt;, &lt;highlight_text_color&gt;, &lt;highlight_line_width&gt;, &lt;faded_line_color&gt;, &lt;faded_text_color&gt;
+    Case "layer1":
+        highlight_shapes "layer1", "RGB(255, 0, 0)", "RGB(0, 0, 0)", "4 pt", "RGB(127, 127, 127)", "RGB(127, 127, 127)"
+    Case "layer2":
+        highlight_shapes "layer2", "RGB(0, 255, 0)", "RGB(0, 0, 0)", "4 pt", "RGB(127, 127, 127)", "RGB(127, 127, 127)"
+    Case "layer3":
+        highlight_shapes "layer3", "RGB(0, 0, 255)", "RGB(0, 0, 0)", "4 pt", "RGB(127, 127, 127)", "RGB(127, 127, 127)"
+    Case "None":
+        highlight_shapes "None", "&lt;none&gt;", "&lt;none&gt;", "&lt;none&gt;", "&lt;none&gt;", "&lt;none&gt;"
+    End Select
+End Sub
+</code></pre>
+
+<h3 id="parsing-all-shapes">Parsing all shapes</h3>
+
+<p>Parsing all shapes on the current Page is as simple as :</p>
+
+<pre><code>For Each shp In Visio.ActivePage.Shapes
+	(...Do something with the shape...)
+Next shp
+</code></pre>
+
+<p>However there is a small catch: in Visio, shapes can be grouped. A group of shapes is itself a Shape, that contains sub-shapes. So when looping over the <code>Visio.ActivePage.Shapes</code>, one gets the top-level shapes only, i.e. shapes that are not in any group and top-level group shapes, but not the sub-shapes inside a group. For this highlighting effect, because changing the line color/text color/line width of a group of shapes will not give the intended result, what we want is modifying the properties of each individual “leaf” shape.</p>
+
+<p>So I wrote a small function that recursively collects all shapes contained inside a group shape, down to the lowest grouping level:</p>
+
+<pre><code>Public Function subShapes(ByVal shp As Shape) As collection
+Dim collection As New collection
+Dim tempcollection As New collection
+     ' If shape is a group, need to parse grouped sub-shapes:
+     If shp.Type = visTypeGroup Then
+         ' add all the grouped shaped in the list
+         For Each subshp In shp.Shapes
+             Set tempcollection = subShapes(subshp)
+             For Each tempShp In tempcollection
+                collection.Add tempShp
+             Next tempShp
+         Next
+         ' also add the group Shape itself in the list
+         collection.Add shp
+     Else
+        ' shape is not a group: just add this shape only to the list.
+         collection.Add shp
+     End If   
+     Set subShapes = collection
+End Function
+</code></pre>
+
+<p>Then a higher level function parses shapes on the page, and in the case of a group Shape, collects sub-shapes using the previous function:</p>
+
+<pre><code>Public Function findAllShapes() As collection
+Dim collection As New collection
+Dim tempcollection As New collection
+Dim x As Shape
+Dim shp As Shape
+    For Each shp In Visio.ActivePage.Shapes
+        Set tempcollection = subShapes(shp)
+        For Each tempShp In tempcollection
+            collection.Add tempShp
+        Next tempShp
+    Next shp
+    Set findAllShapes = collection 
+End Function
+</code></pre>
+
+<h3 id="highlighting-the-shapes">Highlighting the shapes</h3>
+
+<p>The backup of the shape’s original line color is done by dynamically creating a user property using the <code>AddNamedRow</code> function, then storing the current line color in it:</p>
+
+<pre><code>If Not shp.CellExists("Prop.originalLineColorBackup", 0) Then
+    shp.AddNamedRow visSectionProp, "originalLineColorBackup", visTagDefault
+    shp.Cells("Prop.originalLineColorBackup") = shp.Cells("Linecolor")
+End If	
+</code></pre>
+
+<p>and similarly for line width, and text color.</p>
+
+<p>Once we detect that a shape belongs to the selected layer, changing its line color, line width, and text color properties is as simple as:</p>
+
+<pre><code>shp.Cells("Linecolor").FormulaU = highlight_line_color
+shp.CellsSRC(visSectionCharacter, 0, visCharacterColor).FormulaU = highlight_text_color
+shp.CellsSRC(visSectionObject, visRowLine, visLineWeight).FormulaU = highlight_line_width
+</code></pre>
+
+<h3 id="results">Results</h3>
+
+<p>Selecting Layer1 results in this to be displayed:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioLayerHighlighter/visio_layer1highlighted.png" alt="image" /></p>
+
+<p>selecting Layer2 gives:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioLayerHighlighter/visio_layer2highlighted.png" alt="image" /></p>
+
+<p>while selecting Layer3 shows:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/VisioLayerHighlighter/visio_layer3highlighted.png" alt="image" /></p>
+
+<h3 id="source-code">Source code</h3>
+
+<p>The VBA source code and Visio test files are available <a href="https://github.com/jheyman/visiolayerhighlighter">here</a></p>
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/VisioLayerHighlighter/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

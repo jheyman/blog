@@ -23,6 +23,13 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
+  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/VisioLayerHighlighter/visio_layers_highlight.gif"/></div></td>
+  <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/VisioLayerHighlighter">Visio layer automatic highlighter</a></td>
+</tr>
+</table>
+
+<table cellpadding="10">
+<tr>
   <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/RS485Sniffer/assembled_sniffer.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/RS485Sniffer">RS-485 communication sniffer</a></td>
 </tr>
