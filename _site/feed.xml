@@ -178,6 +178,14 @@
                 
                         
                         <item>
+                                <title>RS485 multi-channel 10Mbps sniffer</title>
+                                <description>a simple tool to listen on RS485 and log data over Ethernet</description>
+                                <link>http://jheyman.github.io/blog/pages/RS485Sniffer_FPGASoC/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Audio notifications from Google calendars</title>
                                 <description>Playing audio reminders of events extracted from google calendars</description>
                                 <link>http://jheyman.github.io/blog/pages/GoogleCalendarAudioNotifier/</link>
