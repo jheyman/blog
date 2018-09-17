@@ -71,8 +71,11 @@
   <li><a href="#infill" id="markdown-toc-infill">Infill</a></li>
   <li><a href="#calibration-tests" id="markdown-toc-calibration-tests">Calibration tests</a></li>
   <li><a href="#firmware-backup--restore" id="markdown-toc-firmware-backup--restore">Firmware backup &amp; restore</a></li>
+  <li><a href="#migrating-to-marlin-119-firmware" id="markdown-toc-migrating-to-marlin-119-firmware">Migrating to Marlin 1.1.9 firmware</a></li>
+  <li><a href="#re-calibrating-with-marlin-119" id="markdown-toc-re-calibrating-with-marlin-119">Re-calibrating with Marlin 1.1.9</a></li>
   <li><a href="#upgrades" id="markdown-toc-upgrades">Upgrades</a></li>
   <li><a href="#lithophaneand-ringing" id="markdown-toc-lithophaneand-ringing">Lithophane…and ringing</a></li>
+  <li><a href="#nozzle-trouble" id="markdown-toc-nozzle-trouble">Nozzle trouble</a></li>
   <li><a href="#misc" id="markdown-toc-misc">Misc</a></li>
   <li><a href="#conclusion" id="markdown-toc-conclusion">Conclusion</a></li>
 </ul>
@@ -533,13 +536,16 @@ I loaded the <a href="https://www.thingiverse.com/thing:2058190">3D model</a> of
 
 <p>I adjusted these values (<code>Control</code> menu, <code>Motion</code>, then scroll down to find X/Y/Z/E steps/mm), printed the object again, and measured it:</p>
 
-<p>Unfortunately….the X/Y/Z/E steps/mm params are not properly stored to memory, so upon power cycle of the machine the values are lost somehow, which makes the calibration pointless. I will have to investigate, maybe a bug fix of the firmware will address this. It’s not a huge deal as the default calibration parameters are good for most uses, but it is still annoying that the firmware does not store these permamently.</p>
+<p>Unfortunately….the X/Y/Z/E steps/mm params were not properly stored to memory, so upon power cycle of the machine the values were lost somehow, which made the calibration pointless. 
+This seems to be a limitation (bug?) of Anycubic’s Kossel firmware version (as of early 2018).</p>
+
+<p>This issue initially led me to consider modifying the firmware myself, since source code is available: the AnyCubic site provides a source code file <a href="http://cn-hk.file.qizhu18.com/anycubic3d.com/upload/201803/03/201803031411086886.zip">here</a> that supposedly corresponds to the firmware installed on the machine. I archived my own backup copy <a href="https://github.com/jheyman/KosselLinearPlusCustomz/blob/master/firmware/ANYCUBIC_Kossel_Source_Code.zip">here</a>, because who knows how long the company will be around. The firmware is derived from Marlin, which is readily available to download too, but requires customization to work with the Kossel.</p>
+
+<p>I did not bother diving into the firmware until 6 months later, when I was nudged in the comments section of this page (thank you John Borg!) towards trying the Marlin 1.1.9 firmware, with Kossel modifications. But before anything, I needed to make sure I could come back to the original state of the machine, just in case.</p>
 
 <h2 id="firmware-backup--restore">Firmware backup &amp; restore</h2>
 
-<p>The calibration issue led me to consider modifying the firmware myself, since source code is available: the AnyCubic site provides a source code file <a href="http://cn-hk.file.qizhu18.com/anycubic3d.com/upload/201803/03/201803031411086886.zip">here</a> that supposedly corresponds to the firmware installed on the machine. I archived my own backup copy <a href="https://github.com/jheyman/KosselLinearPlusCustomz/blob/master/firmware/ANYCUBIC_Kossel_Source_Code.zip">here</a>, because who knows how long the company will be around. The firmware is derived from Marlin, which is readily available to download, but has plenty of custom modifications, which would be painful to have to redo on a stock Marlin firmware.</p>
-
-<p>Anyway, before starting the roll my own customized version of the firmware, I figured it would be mandatory to first make a backup of the binary firmware installed on the machine. Since the Kossel controller is designed around an ATMega2560 microcontroller, the usual Arduino tools apply, and one can use the <code>avrdude</code> command line tool to make a copy of the firmware stored in the machine Flash memory:</p>
+<p>Before starting the roll a new customized version of the firmware, I figured it would be mandatory to first make a backup of the binary firmware installed on the machine. Since the Kossel controller is designed around an ATMega2560 microcontroller, the usual Arduino tools apply, and one can use the <code>avrdude</code> command line tool to make a copy of the firmware stored in the machine Flash memory:</p>
 
 <pre><code>etabli@bids-etabli:~/arduino-1.8.1/hardware/tools/avr/bin$ ./avrdude -C ../etc/avrdude.conf -p m2560 -c stk500v2 -P /dev/ttyUSB0 -b 115200 -U flash:r:flash_backup_file.hex:i
 
@@ -572,6 +578,96 @@ Similarly, the following command does the same operation but stores the firmware
 </code></pre>
 
 <p>Writing/restoring the flash/eeprom files uses almost the same commands but just using <code>-U flash:w:flash_backup_file.bin</code> and <code>-U eeprom:w:eeprom_backup_file.bin</code></p>
+
+<h2 id="migrating-to-marlin-119-firmware">Migrating to Marlin 1.1.9 firmware</h2>
+
+<p>The vanilla version of Marlin 1.1.9 can be downloaded <a href="https://github.com/MarlinFirmware/Marlin">here</a>.</p>
+
+<p>Customizing Marlin to work for a specific printer boils down to updating two files:</p>
+
+<ul>
+  <li>Configuration.h</li>
+  <li>Configuration_adv.h</li>
+</ul>
+
+<p>I started from the <a href="https://www.thingiverse.com/thing:3071086">link</a> John recommended, which pointed to files and video from this Da Hai Zhu guy, that I remember from earlier Kossel video browsing as being the best I could find at the time. I just had to do a few tweaks, since DaHai’s configuration is for the pulley version of the Kossel, while I have the linear plus version. Also, I compared each modified parameter to their original value in Anycubic’s linear plus firmware source code, and found a few discrepancies with Dahai’s values, so I chose to stick to Anycubic values for those.</p>
+
+<p>Anyhow, I archived my customized version of Marlin 1.1.9 <a href="https://github.com/jheyman/KosselLinearPlusCustomz/tree/master/firmware/Marlin-1.1.9_customized">here</a>.</p>
+
+<p>The rest went smoothly:</p>
+
+<ul>
+  <li>Launch Arduino IDE</li>
+  <li>Open the file <code>Marlin.ino</code> (which loads all other required files in the IDE)</li>
+  <li>Compile it</li>
+  <li>Connect the Kossel to the PC via a USB cable</li>
+  <li>Setup the Arduino IDE:
+    <ul>
+      <li>Board: Arduino/Genuino Mega or Mega 2560</li>
+      <li>Processor: ATMega2560 (Mega2560)</li>
+    </ul>
+  </li>
+  <li>then click <code>Upload</code> and….hold your breath. The upload took what felt like forever, in reality about 30 seconds, but I still sighed in relief upon seeing the completion message.</li>
+</ul>
+
+<p>The updated firmware’s splashscreen showed up, all good.</p>
+
+<h2 id="re-calibrating-with-marlin-119">Re-calibrating with Marlin 1.1.9</h2>
+
+<p>All steps are very well explained in DaHai’s <a href="https://www.youtube.com/results?search_query=marlin+1.1.9+kossel">video</a>, I capture them here for my own convenience:</p>
+
+<ul>
+  <li>Install/connect the leveling probe (I have version 2)</li>
+  <li>Launch <code>Prepare</code> / <code>Delta Calibration</code> / <code>AutoCalibration</code>
+    <ul>
+      <li>this is fairly long as it will go down and probe multiple points, 7 times in a row.</li>
+    </ul>
+  </li>
+  <li>Launch <code>Prepare</code> / <code>Delta Calibration</code> / <code>Set Delta height</code>
+    <ul>
+      <li>the head will  come down and probe the height once</li>
+    </ul>
+  </li>
+  <li>Do <code>Prepare</code> / <code>Delta Calibration</code> / <code>Store settings</code>
+    <ul>
+      <li>the machine will beep once to acknowledge</li>
+    </ul>
+  </li>
+  <li>REMOVE the probe</li>
+  <li>Change <code>Prepare</code> / <code>Move Axis</code> / <code>Soft Endstops</code> to <code>Off</code>
+    <ul>
+      <li>note: the <code>Move Axis</code> menu is not available until at least one homing has not been performed.</li>
+    </ul>
+  </li>
+  <li>Now, using the <code>Move Z-axis</code> menu, move Z down, first in large steps (10mm) to ~10mm height, then in smaller 1mm steps to ~1mm height</li>
+  <li>At this point, slide a piece of paper under the nozzle, switch to the smallest steps of 0.1mm, and bring the nozzle down by 0.1mm increments UNTIL the paper cannot be moved freely underneath. When this happens, raise Z by 0.1mm</li>
+  <li>Make a note of the Z offset. If e.g. the paper can still be moved at Z=000.5mm, but cannot be moved at Z=000.4mm, then note an average Z offset of 000.45mm for the next steps.
+    <ul>
+      <li>Note: the offset may be positive or negative.</li>
+    </ul>
+  </li>
+  <li>Go to <code>Prepare</code> / <code>Delta Calibration</code> / <code>Delta Settings</code>, and adjust the <code>Height</code> setting by SUBTRACTING the Z offset you noted.
+    <ul>
+      <li>Note: the subtraction can end up being an addition if the captured Z-offset is negative</li>
+    </ul>
+  </li>
+  <li>Do <code>Prepare</code> / <code>Auto Home</code></li>
+  <li>Go to <code>Control</code> / <code>Motion</code> and adjust the <code>Probe Z-offset</code> by SUBTRACTING the Z offset you noted, as already done for the <code>Height</code>.</li>
+  <li>Do <code>Control</code> / <code>Store settings</code></li>
+  <li>Do <code>Prepare</code> / <code>Auto Home</code></li>
+  <li>Now use the <code>Prepare</code> / <code>Move Axis</code> / <code>Move Z-axis</code> again to manually check whether the new settings are just right: lower the nozzle cautiously, using finer increments as you get closer to the bed surface, slide a piece of paper under the nozzle, and check that now the nozzle should come in contact with the paper at Z=000.0 (+/- 0.1mm).
+    <ul>
+      <li>If this is the case, all good. Else, adjust the two params (<code>Height</code> and <code>Probe Z-offset</code>) by the remaining offset, as explained above, and re-test.</li>
+    </ul>
+  </li>
+  <li>Raise the nozzle and REATTACH the probe</li>
+  <li>Do <code>Prepare</code> / <code>Level Bed</code></li>
+  <li>Do <code>Control</code> / <code>Store settings</code></li>
+  <li>Do <code>Prepare</code> / <code>Auto Home</code></li>
+  <li>REMOVE the probe</li>
+</ul>
+
+<p>Once this is all done, you should have a nicely calibrated machine ready to print with a great-looking first layer.</p>
 
 <h2 id="upgrades">Upgrades</h2>
 
@@ -628,11 +724,15 @@ Similarly, the following command does the same operation but stores the firmware
 
 <p>Anyway, I could not find a definitive way to get rid of these vertical lines, and it seems like they might be in part to the limited 8-bit resolution of the controller board. Higher-end controller boards exist in 32-bit flavor, and seem to go a long way to have a more precise control of the extruder head trajectory, and therefore have nicer looking walls with much more subtle artefacts. I will consider upgrading to such a controller in the future, but for now this is not a big deal on most models, so I learned to live with it.</p>
 
+<h2 id="nozzle-trouble">Nozzle trouble</h2>
+
+<p>After a few weeks of use, I started getting intermittent “clonk” sounds, and noticed the extruder wheel was jerking back slightly each time. The problem came and went, from one print to the other. For some reason I convinced myself that the extruder was trying to push the filament too much, i.e. that the extrusion rate was too high. After a lot of head scratching and tests, it dawned on me that maybe the nozzle itself was the problem. On a hunch, I swapped the nozzle for a new one, and sure enough, immediately all the next prints were normal, no more clonking sound. This was my first-hand experience of a coggled nozzle, and a facepalm moment too for having lost so much time investigating elsewhere.</p>
+
+<p>I did not bother unclogging the original nozzle, which I had abused over time anyway, and considering it’s not very expensive to replace anyway.</p>
+
 <h2 id="misc">Misc</h2>
 
 <ul>
-  <li>The source code for the Marlin firmware customized by AnyCubic is available <a href="https://github.com/ANYCUBIC-3D/ANYCUBIC_Kossel_Source_Code">here</a>. I have never tried to rebuild and reflash it though…</li>
-  <li>The stock Marlin firmware is available <a href="https://github.com/MarlinFirmware/Marlin/">here</a></li>
   <li>I archived a copy of the Kossel user manuel <a href="http://jheyman.github.io/blog/assets/images/Anycubic3DPrinterUpgraded AnycubicKossel_user manual_English(20170918)">here</a> in case I lose the paper one.</li>
   <li>Here’s a view of the stock Trigorilla controller board:</li>
 </ul>
@@ -642,7 +742,7 @@ Similarly, the following command does the same operation but stores the firmware
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>I honestly would not have thought that I could get a decent 3D printer for 250 euros. It may not be perfect, but after a few months of using it I can confirm it suits my needs perfectly, i.e. it just works when I need it, performs quite well, is a lot of fun to use and watch printing stuff. I now need to get into fixing the few quirks of this firmware, to get it properly calibrated, but to be honest that will be more for the fun of hacking the firmware than to meet a real need for precision.</p>
+<p>I honestly would not have thought that I could get a decent 3D printer for 250 euros. It may not be perfect, but after a few months of using it I can confirm it suits my needs perfectly, i.e. it just works when I need it, performs quite well, is a lot of fun to use and watch printing stuff. After 6 months or so I migrated to Marlin v1.1.9 with Kossel-specific customizations, and I feel more in control now that I know for sure what code &amp; settings are actually running the machine, and knowing that I have the ability to change them if needed.</p>
 
 				</div><!-- entry-content -->
 
