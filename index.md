@@ -79,7 +79,7 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
-  <td><div id="container" style="height:200px;"><img src="{{ site.baseurl }}/assets/images/AndroidBackup/logo.png"/></div></td>
+  <td><div id="container" style="height:300px;"><img src="{{ site.baseurl }}/assets/images/AndroidBackup/phone_charger_loaded.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/AndroidBackup">Android charging & autobackup dock</a></td>
 </tr>
 </table>

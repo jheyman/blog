@@ -172,6 +172,14 @@ It is still a big mess of USB cables in there, so I ordered shorter USB cables w
 
 There you go, no more dangling cables, and under its inconspicuous look it wakes up at 3am every night to take care of my precious photos & contacts.
 
+### Casing, revisited
+
+I later bought a CNC, which was a good opportunity to redo a custom wood casing (see [here]({{ site.baseurl }}/pages/Shapeoko1YearLater) if interested), in a completely different form factor, and customized for our three devices:
+
+![phone_charger_loaded]({{ site.baseurl }}/assets/images/AndroidBackup/phone_charger_loaded.png)
+
+It has been sitting there in the hallway for a couple of years now, and faithfully charges and backups our gizmos. And the beauty of CNC is, if someday we get a new phone that won't fit, just adapt the design and re-cut a fresh one !
+
 ### Notes & Lessons learned
 
 * `adb` is quite a very versatile tool.  
