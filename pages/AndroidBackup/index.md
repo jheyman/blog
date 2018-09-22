@@ -85,6 +85,10 @@ This 4-ports version will be just right to sync 3 devices + power the Pi.
 
 When working with multiple android devices plugged to the same USB host, the `-s <deviceId>` option needs to be added to specify which device the adb command is addressed to.
 
+Note: originally, the android device will not be detected by adb until USB debugging is activated on the phone, AND communication between the PC and the phone is authorized by the user.
+See [here]({{ site.baseurl }}/pages/AndroidDebugTipsAndTricks/#detecting-devices-host) for details.
+
+
 #### Installing & starting Android rsync daemon
 
 Since I want to perform an incremental backup only, I use `rsync` to only get new/modified files. To avoid having to install an rsync app on the device, I retrieved a binary version compiled for Android ([here](http://github.com/pts/rsyncbin/raw/master/rsync.rsync4android)), and it gets pushed onto the device through adb.

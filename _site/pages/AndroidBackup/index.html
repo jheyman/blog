@@ -149,6 +149,9 @@ Also, since I want this hub to stay on permanently, I stayed away from cheapest 
 
 <p>When working with multiple android devices plugged to the same USB host, the <code>-s &lt;deviceId&gt;</code> option needs to be added to specify which device the adb command is addressed to.</p>
 
+<p>Note: originally, the android device will not be detected by adb until USB debugging is activated on the phone, AND communication between the PC and the phone is authorized by the user.
+See <a href="http://jheyman.github.io/blog/pages/AndroidDebugTipsAndTricks/#detecting-devices-host">here</a> for details.</p>
+
 <h4 id="installing--starting-android-rsync-daemon">Installing &amp; starting Android rsync daemon</h4>
 
 <p>Since I want to perform an incremental backup only, I use <code>rsync</code> to only get new/modified files. To avoid having to install an rsync app on the device, I retrieved a binary version compiled for Android (<a href="http://github.com/pts/rsyncbin/raw/master/rsync.rsync4android">here</a>), and it gets pushed onto the device through adb.</p>
