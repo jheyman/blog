@@ -295,9 +295,11 @@ sudo rm /etc/init.d/fake-hwclock
 <hr />
 
 <h3 id="wifi-robustness">Wifi robustness</h3>
-<p>Wifi dongles can pull quite a lot of power from the USB ports, sometimes resulting in all kinds of nasty intermittent issues. Below are a few things to maximize wifi connection availability:
-- Using a powered USB hub. When space is not a problem, a good externally powered USB hub will go a long way improving the overall stability. 
-- Check that power management is turned off on the Wifi device, using:</p>
+<p>Wifi dongles can pull quite a lot of power from the USB ports, sometimes resulting in all kinds of nasty intermittent issues. Below are a few things to maximize wifi connection availability:</p>
+<ul>
+  <li>Using a powered USB hub. When space is not a problem, a good externally powered USB hub will go a long way improving the overall stability.</li>
+  <li>Check that power management is turned off on the Wifi device, using:</li>
+</ul>
 
 <pre><code>cat /sys/module/8192cu/parameters/rtw_power_mgnt</code></pre>
 

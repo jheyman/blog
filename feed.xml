@@ -178,8 +178,8 @@
                 
                         
                         <item>
-                                <title>RS485 multi-channel 10Mbps sniffer</title>
-                                <description>a simple tool to listen on RS485 and log data over Ethernet</description>
+                                <title>RS485 multi-channel FPGA SoC sniffer</title>
+                                <description>a spy tool to listen on RS485 and log data over Ethernet</description>
                                 <link>http://jheyman.github.io/blog/pages/RS485Sniffer_FPGASoC/</link>
                         </item>
                         
@@ -418,9 +418,25 @@
                 
                         
                         <item>
+                                <title>Shapeoko3, two years later.</title>
+                                <description>Feedback on the Shapeoko experience after 2 years</description>
+                                <link>http://jheyman.github.io/blog/pages/Shapeoko2YearsLater/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>RS485 multi-channel FPGA SoC sniffer</title>
+                                <description>a spy tool to listen on RS485 and log data over Ethernet</description>
+                                <link>http://jheyman.github.io/blog/pages/RS485Sniffer_FPGASoC/index.wip</link>
                         </item>
                         
                 

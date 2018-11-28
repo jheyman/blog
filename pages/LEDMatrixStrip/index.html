@@ -239,11 +239,14 @@ At this point, changing the messages on the display required updating the Arduin
 
 <p>For this project, 9600 baud rate is ok for me, so I just changed the device name for something easily recognizable (“LEDdisplay”) and adjusted the PIN number (not that I cared if anyone hijacked my LED display…)</p>
 
-<p>Since I needed a way to attach this bluetooth module to the rest of the LED strip, I created a small PCB to host it, and deal with two required tricks at the same time:
-* The BT input/output pins use 3.3V logic, whereas my arduino chip only supported 5V logic. Even though my initial tests showed that it just worked anyway, it was better to include a voltage divider between the TX output of the arduino and the RXD input pin of the BT module.  A 1.2k and a 2.2k resistor did the job. In the other direction (from BT TX to Arduino RX), no voltage scaler is required since the arduino will take the 3.3V logic just fine.</p>
-
+<p>Since I needed a way to attach this bluetooth module to the rest of the LED strip, I created a small PCB to host it, and deal with two required tricks at the same time:</p>
 <ul>
-  <li>The BT module RX/TX will be connected to the TX/RX of the arduino, via the same connector as the one I use for plugging the FTDI programmer. To avoid any problems due to having both the programmmer and the BT module connected on the same pins, I added a simple switch on the VCC of the BT module. This way, when the switch is off, the FTDI programmer has exclusive access to the arduino TX/RX lines.</li>
+  <li>
+    <p>The BT input/output pins use 3.3V logic, whereas my arduino chip only supported 5V logic. Even though my initial tests showed that it just worked anyway, it was better to include a voltage divider between the TX output of the arduino and the RXD input pin of the BT module.  A 1.2k and a 2.2k resistor did the job. In the other direction (from BT TX to Arduino RX), no voltage scaler is required since the arduino will take the 3.3V logic just fine.</p>
+  </li>
+  <li>
+    <p>The BT module RX/TX will be connected to the TX/RX of the arduino, via the same connector as the one I use for plugging the FTDI programmer. To avoid any problems due to having both the programmmer and the BT module connected on the same pins, I added a simple switch on the VCC of the BT module. This way, when the switch is off, the FTDI programmer has exclusive access to the arduino TX/RX lines.</p>
+  </li>
 </ul>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/HomemadePCBs/PCB_bluetooth.png" alt="bluetooth PCB" /></p>

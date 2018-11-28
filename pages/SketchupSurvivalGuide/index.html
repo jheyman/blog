@@ -46,8 +46,43 @@
 
 <p><strong>Warning</strong>: Sketchup can turn out to be quite addictive. I initially wanted to test it as a simple visual support to remodel one room, and 100 hours later I ended up having modelled the whole house, with every room and associated furniture, plus outdoor areas.</p>
 
+<ul id="markdown-toc">
+  <li><a href="#setup" id="markdown-toc-setup">Setup</a></li>
+  <li><a href="#rule-1-memorizing-basic-shortcuts" id="markdown-toc-rule-1-memorizing-basic-shortcuts">Rule #1: memorizing basic shortcuts</a>    <ul>
+      <li><a href="#space--selection-mode" id="markdown-toc-space--selection-mode">Space = selection mode</a></li>
+      <li><a href="#p--push-pull" id="markdown-toc-p--push-pull"><code>P</code> = push-pull</a></li>
+      <li><a href="#t--tape-measure--guide-lines" id="markdown-toc-t--tape-measure--guide-lines">T = tape measure / guide lines</a></li>
+      <li><a href="#m--move" id="markdown-toc-m--move">M = move</a></li>
+      <li><a href="#l--line" id="markdown-toc-l--line">L = line</a></li>
+      <li><a href="#r--rectangle" id="markdown-toc-r--rectangle">R = rectangle</a></li>
+      <li><a href="#c--circle" id="markdown-toc-c--circle">C = circle</a></li>
+      <li><a href="#mouse-middle-button--orbit-view" id="markdown-toc-mouse-middle-button--orbit-view">Mouse middle-button = orbit view</a></li>
+      <li><a href="#shift--mouse-middle-button--pan-view" id="markdown-toc-shift--mouse-middle-button--pan-view">Shift + mouse middle-button = pan view</a></li>
+      <li><a href="#mouse-wheel--zoom" id="markdown-toc-mouse-wheel--zoom">Mouse wheel = zoom</a></li>
+      <li><a href="#singledoubletriple-click" id="markdown-toc-singledoubletriple-click">Single/Double/Triple-click</a></li>
+    </ul>
+  </li>
+  <li><a href="#rule-2-precise-actions-or-nothing" id="markdown-toc-rule-2-precise-actions-or-nothing">Rule #2: precise actions or nothing</a></li>
+  <li><a href="#rule-3-using-groups-and-components-everywhere" id="markdown-toc-rule-3-using-groups-and-components-everywhere">Rule #3: Using groups and components everywhere</a></li>
+  <li><a href="#rule-4-use-scene-views" id="markdown-toc-rule-4-use-scene-views">Rule #4: Use Scene views</a></li>
+  <li><a href="#rule-5-clean-upheal-the-surfaces-as-you-go" id="markdown-toc-rule-5-clean-upheal-the-surfaces-as-you-go">Rule #5: Clean-up/heal the surfaces as you go</a></li>
+  <li><a href="#rule-6-know-the-other-useful-stuff" id="markdown-toc-rule-6-know-the-other-useful-stuff">Rule #6: Know the other useful stuff</a>    <ul>
+      <li><a href="#follow-me-tool" id="markdown-toc-follow-me-tool">Follow-me tool</a></li>
+      <li><a href="#array-of-objects" id="markdown-toc-array-of-objects">Array of objects</a></li>
+      <li><a href="#autofold" id="markdown-toc-autofold">Autofold</a></li>
+      <li><a href="#layers" id="markdown-toc-layers">Layers</a></li>
+      <li><a href="#section-cuts" id="markdown-toc-section-cuts">Section cuts</a></li>
+    </ul>
+  </li>
+  <li><a href="#sketchup-companion-for-house-remodeling" id="markdown-toc-sketchup-companion-for-house-remodeling">Sketchup companion for house (re)modeling</a></li>
+  <li><a href="#exporting-to-stl-file" id="markdown-toc-exporting-to-stl-file">Exporting to STL file</a></li>
+  <li><a href="#sub-mm-precision-measurement" id="markdown-toc-sub-mm-precision-measurement">Sub-mm precision measurement</a></li>
+</ul>
+
 <h3 id="setup">Setup</h3>
 <p>All right, here is the one (and only) grudge I have against Sketchup: it does not have a native linux client. You might be able to use it under linux with Wine, but last time I checked this required a workaround which in the end prevented the use of any additional Sketchup plugin, which is a big drawback for me. Also, performance when working on large models can become a severe limitation in these conditions. In the end I took the easy way out, I dual-boot to Windows and use Sketchup there.</p>
+
+<p>Update as of October 2018: an online/browser-based version of Sketchup came out (“Sketchup Free”), and it perform surprisingly well. After loosing another couple of hours trying to get a working Wine-based setup for Sketchup on Linux, I finally switched to this online app and it is quite fine for the (small) models I create. The hints below were originally written for the desktop app, but most shortcuts still work in the online version, which is abig relief.</p>
 
 <h3 id="rule-1-memorizing-basic-shortcuts">Rule #1: memorizing basic shortcuts</h3>
 
@@ -208,6 +243,19 @@ Two modes:</p>
 <p>A simple laser distance measurer has proved to be an invaluable help to capture distances in the real world, while modelling the rooms in my house in Sketchup:</p>
 
 <p><img src="http://jheyman.github.io/blog/assets/images/Tools/laser_distance_measurer.png" alt="laser distance measurer" /></p>
+
+<h3 id="exporting-to-stl-file">Exporting to STL file</h3>
+
+<p>If using the desktop version of Sketchup, the easiest way to export the Sketchup model to an STL file, is obviously to install the “STL Export” plugin. However, at some point I ran into trouble while executing Sketchup with Wine under Linux, which is a minor nightmare by itself. The STL export plugin gave a blank window, due to some obscure dependency with IE or something. A workaround I found somewhere is to use the <strong>Ruby Console</strong> (in the <code>Windows</code> menu), and type:</p>
+
+<pre><code>CommunityExtensions::STL::Exporter.export("Z:/home/etabli/model.stl", Sketchup.active_model.active_entities, {'selection_only' =&gt; false, 'export_units' =&gt; 'Model Units', 'stl_format' =&gt; 'ASCII'})
+</code></pre>
+
+<p>If using the online Sketchup app, just click on the Folder icon, then <code>Export</code> then <code>STL</code>. As of late 2018, this exports the WHOLE model, not just the selection. This is a minor inconvenience, which I guess will get fixed in later updates of Sketchup Free.</p>
+
+<h3 id="sub-mm-precision-measurement">Sub-mm precision measurement</h3>
+
+<p>By default, at least when choosing the “mm” template, even though it is possible to specify a precise sub-mm value when drawing an item, the ruler tool will report e.g. the annoying <code>~4mm</code> format when the actual value is 3.8mm. This is easily solved by adjusting the <code>Precision</code> setting. In Sketchup Free for example, setting <code>Precision</code> to 1 decimal place (“0.0”) instead of the default of 0 decimal place (“0”) results in the ruler tool providing the value at 0.1mm precision. More precision can be added as needed.</p>
 
 
 				</div><!-- entry-content -->

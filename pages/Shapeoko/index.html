@@ -99,8 +99,8 @@
   </li>
   <li><a href="#feeds-and-speeds-theory" id="markdown-toc-feeds-and-speeds-theory">Feeds and Speeds (theory)</a></li>
   <li><a href="#initial-milling-tests" id="markdown-toc-initial-milling-tests">Initial milling tests</a>    <ul>
-      <li><a href="#st-test--milling-depron" id="markdown-toc-st-test--milling-depron">1st test : milling Depron</a></li>
-      <li><a href="#nd-test-engraving" id="markdown-toc-nd-test-engraving">2nd test: engraving</a></li>
+      <li><a href="#1st-test--milling-depron" id="markdown-toc-1st-test--milling-depron">1st test : milling Depron</a></li>
+      <li><a href="#2nd-test-engraving" id="markdown-toc-2nd-test-engraving">2nd test: engraving</a></li>
     </ul>
   </li>
   <li><a href="#enclosure" id="markdown-toc-enclosure">Enclosure</a></li>
@@ -599,7 +599,7 @@ Seasoned CNC machinists apparently have a whole range of rules, databases, and t
 
 <p>Next step was to start some actual milling !</p>
 
-<h3 id="st-test--milling-depron">1st test : milling Depron</h3>
+<h3 id="1st-test--milling-depron">1st test : milling Depron</h3>
 
 <p>I wanted to start with a very soft (i.e. forgiving) material, and I had some depron foam at hand, so this looked like the perfect stock to practice on. I used a very basic pattern in Carbide Create (source file is <a href="https://github.com/jheyman/shapeoko/blob/master/depron_milling/depron_test1_FR1524.c2d">here</a>, corresponding G-code is <a href="https://github.com/jheyman/shapeoko/blob/master/depron_milling/depron_test1_FR1524.nc">here</a>), zeroed on the surface, and hit “Run”:</p>
 
@@ -607,7 +607,7 @@ Seasoned CNC machinists apparently have a whole range of rules, databases, and t
 
 <p>So far, so good. Edges are not very clean, but the intent was not to optimize feeds &amp; speeds on this one.</p>
 
-<h3 id="nd-test-engraving">2nd test: engraving</h3>
+<h3 id="2nd-test-engraving">2nd test: engraving</h3>
 
 <p>As a learning exercise and test, I decided to engrave the metal tag that ships with the Shapeoko.
 Since I would need to get it right in a single run, I tried it beforehand on an old plastic membership card:</p>
@@ -1204,10 +1204,12 @@ This turned out to be more messy than expected, and the black/white frontiers ar
 
 <p>(again: credits go to [Freepik] from www.flaticon.com)</p>
 
-<p>Lessons learned:
-* bamboo is easy, gives very clean-looking edges, with very little sanding required.
-* double-sided tape is great for milling small objects, and it is possible to get away from using tabs (and having to clean them up afterwards)
-* but bamboo sticks less than some other woods, so a little rough pre-sanding before using the tape is good.</p>
+<p>Lessons learned:</p>
+<ul>
+  <li>bamboo is easy, gives very clean-looking edges, with very little sanding required.</li>
+  <li>double-sided tape is great for milling small objects, and it is possible to get away from using tabs (and having to clean them up afterwards)</li>
+  <li>but bamboo sticks less than some other woods, so a little rough pre-sanding before using the tape is good.</li>
+</ul>
 
 <h3 id="case-6-basic-box-v2">Case #6: basic box v2</h3>
 
