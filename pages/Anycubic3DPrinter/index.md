@@ -232,10 +232,10 @@ The manual advises to do a test print, by using the `Print from SD card` menu an
 ## Slicer
 
 There are multiple choices out there for the slicer software, I choose the easy route and went for the de-facto standard: Ultimaker Cura. 
-I installed Cura 3.3.1, but did NOT launch it yet. By default, the version I used (3.3.1) did not have a profile for the Kossel, so I installed [this one](https://www.thingiverse.com/thing:2367365), which I also backed-up [here](https://github.com/jheyman/KosselLinearPlusCustomz/tree/master/Cura_profile).
+I installed Cura, but did NOT launch it yet. By default, the version I used did not have a profile for the Kossel, so I derived one from [this one](https://www.thingiverse.com/thing:2367365), which I backed-up [here](https://github.com/jheyman/KosselLinearPlusCustomz/tree/master/Cura_profile). Note: I updated it it slightly, removing the "ID" parameter, otherwise I got format errors with Cura 3.5.x.
 
-* On Windows, the `anycubic_plus.def` file goes in `C:\Program Files\Ultimaker Cura 3.x\` 
-* On Linux, put the json file under `~/.local/share/cura/3.3/definitions`
+* On Windows, the `anycubic_plus.def` file goes in `C:\Program Files\Ultimaker Cura 3.x\resources\definitions` 
+* On Linux, put the json file under `~/.local/share/cura/3.x/definitions`
 
 Then when launching Cura for the first time, the printer setup wizard will pick up the Kossel profile file, and one can select it from the list of available printers (`AnycubicLinear Plus` in the `Other` section)
 
@@ -529,7 +529,7 @@ All steps are very well explained in DaHai's [video](https://www.youtube.com/res
 * Do `Prepare` / `Auto Home`
 * REMOVE the probe
 
-Once this is all done, you should have a nicely calibrated machine ready to print with a great-looking first layer. 
+Once this is all done, you should have a nicely calibrated machine ready to print with a great-looking first layer. BUT, better safe than sorry, after this whole procedure, I suggest you triple-check that Z=0 really corresponds to the bed surface on the newly recalibrated machine. Just move the Z-axis manually (as described in the procedure) and check with a piece of paper that contact happens very close to Z=0.000. If contact happens for a small positive Z (say Z=0.5), restart/redo the calibration until it's ok, otherwise the first job you launch will ruin your bed when the nozzle comes scratching it. Do not ask how I know...
 
 ## Upgrades
 
@@ -579,6 +579,24 @@ typical reasons for ringing:
 I first tried to add these [rod dampeners](https://www.thingiverse.com/thing:2105393), assuming the ringing was due to subtle vibration in the rods, but it changed nothing.
 
 Anyway, I could not find a definitive way to get rid of these vertical lines, and it seems like they might be in part to the limited 8-bit resolution of the controller board. Higher-end controller boards exist in 32-bit flavor, and seem to go a long way to have a more precise control of the extruder head trajectory, and therefore have nicer looking walls with much more subtle artefacts. I will consider upgrading to such a controller in the future, but for now this is not a big deal on most models, so I learned to live with it.
+
+## Vase mode
+
+There is an interesting (experimental) mode in Cura, that allows to only print the outer profile of a model, as a single spiral line of filament. Obviously it only works for models that are have no geometry "inside", hence the popular name of this mode: "Vase" mode since this is what it works best for, making nice looking vases...
+
+The option is actually called `Spiralize outer contour` in Cura's `Special Modes` settings: 
+
+![Cura_vase_mode]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/Cura_vase_mode.png)
+
+And here are a few results: 
+
+![spiral_vase]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/spiral_vase.png)
+
+![spiral_vase2]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/spiral_vase2.png)
+
+![spiral_vase3]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/spiral_vase3.png)
+
+The regularity of the printed surface is SO much better than when using the regular printing mode.
 
 ## Nozzle trouble
 

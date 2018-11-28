@@ -30,6 +30,7 @@ Below is a set of notes to myself regarding various Linux tips and tricks, mainl
 ### Networking
 
 * To check which UDP and TCP ports are currently in use: `netstat -atun` and/or `(sudo) lsof -i`
+* To check which process listens on a given port use `netstat -tulpn | grep LISTEN`
 * To search for all IP addresses used in the local 192.168.0.xxx subnet: `nmap -sP 192.168.0.0/24`
 * To check the open ports on a specific IP address: `nmap 192.168.0.xxx`
 * To check ethernet bandwidth, install iperf `sudo apt-get install iperf` then on server side: `iperf -s`, and on client side: `iperf -c <IP of the server>`

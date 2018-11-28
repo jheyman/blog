@@ -10,8 +10,13 @@ Below are a few notes about basic usage of the Sketchup 3D modeler, mostly as a 
 
 **Warning**: Sketchup can turn out to be quite addictive. I initially wanted to test it as a simple visual support to remodel one room, and 100 hours later I ended up having modelled the whole house, with every room and associated furniture, plus outdoor areas.
 
+* TOC
+{:toc}
+
 ### Setup
 All right, here is the one (and only) grudge I have against Sketchup: it does not have a native linux client. You might be able to use it under linux with Wine, but last time I checked this required a workaround which in the end prevented the use of any additional Sketchup plugin, which is a big drawback for me. Also, performance when working on large models can become a severe limitation in these conditions. In the end I took the easy way out, I dual-boot to Windows and use Sketchup there.
+
+Update as of October 2018: an online/browser-based version of Sketchup came out ("Sketchup Free"), and it perform surprisingly well. After loosing another couple of hours trying to get a working Wine-based setup for Sketchup on Linux, I finally switched to this online app and it is quite fine for the (small) models I create. The hints below were originally written for the desktop app, but most shortcuts still work in the online version, which is abig relief.
 
 ### Rule #1: memorizing basic shortcuts
 
@@ -156,4 +161,17 @@ Useful to see inside a complex 3D objects without having to move or delete anyth
 A simple laser distance measurer has proved to be an invaluable help to capture distances in the real world, while modelling the rooms in my house in Sketchup:
 
 ![laser distance measurer]({{ site.baseurl }}/assets/images/Tools/laser_distance_measurer.png)
+
+### Exporting to STL file
+
+If using the desktop version of Sketchup, the easiest way to export the Sketchup model to an STL file, is obviously to install the "STL Export" plugin. However, at some point I ran into trouble while executing Sketchup with Wine under Linux, which is a minor nightmare by itself. The STL export plugin gave a blank window, due to some obscure dependency with IE or something. A workaround I found somewhere is to use the **Ruby Console** (in the `Windows` menu), and type:
+
+	CommunityExtensions::STL::Exporter.export("Z:/home/etabli/model.stl", Sketchup.active_model.active_entities, {'selection_only' => false, 'export_units' => 'Model Units', 'stl_format' => 'ASCII'})
+
+If using the online Sketchup app, just click on the Folder icon, then `Export` then `STL`. As of late 2018, this exports the WHOLE model, not just the selection. This is a minor inconvenience, which I guess will get fixed in later updates of Sketchup Free.
+
+### Sub-mm precision measurement
+
+By default, at least when choosing the "mm" template, even though it is possible to specify a precise sub-mm value when drawing an item, the ruler tool will report e.g. the annoying `~4mm` format when the actual value is 3.8mm. This is easily solved by adjusting the `Precision` setting. In Sketchup Free for example, setting `Precision` to 1 decimal place ("0.0") instead of the default of 0 decimal place ("0") results in the ruler tool providing the value at 0.1mm precision. More precision can be added as needed.
+
 

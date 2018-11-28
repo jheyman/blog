@@ -13,6 +13,40 @@ Below is a set of notes to myself regarding various Arduino debugging tips and t
 
 --- 
 
+### Re-flash the bootloader
+
+Sooner or later, one gets the dreaded `avrdude:stk500_recv():programmer is not responding` error when trying to reprogram an arduino. Sometimes it's the IDE/port, but sometimes it indicates that the bootloader in the Arduino is toast.
+Luckily, it is very easy to re-burn the bootloader using **another** Arduino:
+
+Connect the "master" Arduino" and the "target" Arduino like this: 
+
+|**Master** =>|**Target**|
+|VCC/5V =>| Raw (if 3.3V target) or VCC |
+|GND    =>| GND |
+|Pin 10 =>| RST |
+|Pin 11 =>| Pin 11 | 
+|Pin 12 =>| Pin 12 | 
+|Pin 13 =>| Pin 13 | 
+
+<br>
+**Note**: basically this boils down to:
+
+* supplying power to the target board
+* connect the two using an SPI connection (pins 11/12/13 correspond to SCK/MOSI/MISO signals)
+* giving a mean for the master to reset the target upon completion
+
+Then, from the Arduino IDE, 
+
+* select the type of the master arduino (e.g. Arduino Uno) and the serial port, 
+* open the "ArduinoISP" sketch (File -> Examples -> ArduinoISP ->ArduinoISP)
+* upload this sketch to the master board
+* change the board type to the one of the target (e.g. Arduino Pro or Pro Mini)
+* adjust the speed and processor (Tool-> Processor -> ATmega328 (xxV, yyMHz)
+* select the master of the programmer (Tools > Programmer -> Arduino as ISP)
+* burn the bootloader on the target (Menu -> Burn Bootloader)
+
+and voilà.
+
 ### Enable non-root access to serial port(s) in Arduino IDE
 
 When launching the arduino IDE without root privileges, by default access to serial ports to communicate with the boards is not permitted and will produce an error when trying to flash a program. The following command allows to grant access to user [username] to serial ports, e.g. `/dev/ttyS0` or `/dev/ttyACM0`:

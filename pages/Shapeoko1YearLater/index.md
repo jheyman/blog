@@ -94,7 +94,7 @@ I heard about Vectric V-Carve on the forum, tried it and finally bought it:
 **Note**: the one issue I had initially though, is that the "Shapeoko" post-processor that comes with V-Carve, generates G-code that does NOT have a tool change command at the beginning of the job. And my routine relies on this tool change (that Carbide Create did generate, and Carbide Motion manages), to make sure everything was in order, start the router, close the enclosure, and finally start the actual carving. So my first run of V-carve generated G-code almost resulted in a crash, since I did not have time to start the router before it starting moving...I hit the emergency button just in time. 
 
 But luckily, it is very easy to write a custom post-processor for V-carve, so I just copy/pasted the Shapeoko one, and added the "M6 T1" (G-code for tool change) in the post-processor so that it gets included in the generated G-code.
-
+I archived it [here](https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_cm_mm.pp).
 I am still using *Carbide Motion* as my only machine controller, it has the basic feature set that works for me:
 
 * jogging and zeroing
@@ -189,6 +189,7 @@ So in the end, I now rely on the good old method of trial & error, and reusing f
 | Oak | 6.35mm square | 3 |15000 |1980 |2mm |200 |
 | Oak | 0.063" square | 2 |12000 | 635 | 0.8mm | 381 |
 | Acrylic | 6.35mm square | 3 |12000 | 2000 |1.5mm |635 |
+| Acrylic | 3.175mm square | 2 |12000 | 700 |0.7mm |150 |
 | HDPE | 6.35mm square | 3 |12000 |1250 |2mm |100 |
 | HDPE | 3.175mm ballnose | 2 |12000 |840 |0.7mm |100 |
 | MDF | 6.35mm square | 2 |12000 |1905 |1mm |476 |

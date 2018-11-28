@@ -45,6 +45,7 @@
 <p>Below is a set of notes to myself regarding various Arduino debugging tips and tricks<br /></p>
 
 <ul id="markdown-toc">
+  <li><a href="#re-flash-the-bootloader" id="markdown-toc-re-flash-the-bootloader">Re-flash the bootloader</a></li>
   <li><a href="#enable-non-root-access-to-serial-ports-in-arduino-ide" id="markdown-toc-enable-non-root-access-to-serial-ports-in-arduino-ide">Enable non-root access to serial port(s) in Arduino IDE</a></li>
   <li><a href="#enable-full-compilation-traces" id="markdown-toc-enable-full-compilation-traces">Enable full compilation traces</a></li>
   <li><a href="#measure-execution-time" id="markdown-toc-measure-execution-time">Measure execution time</a></li>
@@ -66,6 +67,69 @@
 </ul>
 
 <hr />
+
+<h3 id="re-flash-the-bootloader">Re-flash the bootloader</h3>
+
+<p>Sooner or later, one gets the dreaded <code>avrdude:stk500_recv():programmer is not responding</code> error when trying to reprogram an arduino. Sometimes it’s the IDE/port, but sometimes it indicates that the bootloader in the Arduino is toast.
+Luckily, it is very easy to re-burn the bootloader using <strong>another</strong> Arduino:</p>
+
+<p>Connect the “master” Arduino” and the “target” Arduino like this:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Master</strong> =&gt;</td>
+      <td><strong>Target</strong></td>
+    </tr>
+    <tr>
+      <td>VCC/5V =&gt;</td>
+      <td>Raw (if 3.3V target) or VCC</td>
+    </tr>
+    <tr>
+      <td>GND    =&gt;</td>
+      <td>GND</td>
+    </tr>
+    <tr>
+      <td>Pin 10 =&gt;</td>
+      <td>RST</td>
+    </tr>
+    <tr>
+      <td>Pin 11 =&gt;</td>
+      <td>Pin 11</td>
+    </tr>
+    <tr>
+      <td>Pin 12 =&gt;</td>
+      <td>Pin 12</td>
+    </tr>
+    <tr>
+      <td>Pin 13 =&gt;</td>
+      <td>Pin 13</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br />
+<strong>Note</strong>: basically this boils down to:</p>
+
+<ul>
+  <li>supplying power to the target board</li>
+  <li>connect the two using an SPI connection (pins 11/12/13 correspond to SCK/MOSI/MISO signals)</li>
+  <li>giving a mean for the master to reset the target upon completion</li>
+</ul>
+
+<p>Then, from the Arduino IDE,</p>
+
+<ul>
+  <li>select the type of the master arduino (e.g. Arduino Uno) and the serial port,</li>
+  <li>open the “ArduinoISP” sketch (File -&gt; Examples -&gt; ArduinoISP -&gt;ArduinoISP)</li>
+  <li>upload this sketch to the master board</li>
+  <li>change the board type to the one of the target (e.g. Arduino Pro or Pro Mini)</li>
+  <li>adjust the speed and processor (Tool-&gt; Processor -&gt; ATmega328 (xxV, yyMHz)</li>
+  <li>select the master of the programmer (Tools &gt; Programmer -&gt; Arduino as ISP)</li>
+  <li>burn the bootloader on the target (Menu -&gt; Burn Bootloader)</li>
+</ul>
+
+<p>and voilà.</p>
 
 <h3 id="enable-non-root-access-to-serial-ports-in-arduino-ide">Enable non-root access to serial port(s) in Arduino IDE</h3>
 

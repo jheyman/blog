@@ -225,7 +225,9 @@ See <a href="http://jheyman.github.io/blog/pages/AndroidDebugTipsAndTricks/#dete
 <pre><code>adb shell dumpsys input | grep -i SurfaceOrientation
 </code></pre>
 
-<p>Once this remote operation is complete, a <code>Contacts.vcf</code> has been created on the SD card and can be retrieved with:</p>
+<p>Depending on the device’s menu layout, sometimes the menu entry to be clicked on is not visible on the screen, and a swipe gesture is needed to bring it in view. This can be just as easily done with the command <code>adb shell input swipe &lt;x1&gt; &lt;y2&gt; &lt;x2&gt; &lt;y2&gt; &lt;swipe_duration&gt;</code>.</p>
+
+<p>Once these remote operations are complete, a <code>Contacts.vcf</code> has been created on the SD card and can be retrieved with:</p>
 
 <pre><code>adb pull &lt;contacts.vcf filepath&gt; &lt;backup destination&gt;
 </code></pre>

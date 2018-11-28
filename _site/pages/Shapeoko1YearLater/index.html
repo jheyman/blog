@@ -169,9 +169,9 @@
 
 <p><strong>Note</strong>: the one issue I had initially though, is that the “Shapeoko” post-processor that comes with V-Carve, generates G-code that does NOT have a tool change command at the beginning of the job. And my routine relies on this tool change (that Carbide Create did generate, and Carbide Motion manages), to make sure everything was in order, start the router, close the enclosure, and finally start the actual carving. So my first run of V-carve generated G-code almost resulted in a crash, since I did not have time to start the router before it starting moving…I hit the emergency button just in time.</p>
 
-<p>But luckily, it is very easy to write a custom post-processor for V-carve, so I just copy/pasted the Shapeoko one, and added the “M6 T1” (G-code for tool change) in the post-processor so that it gets included in the generated G-code.</p>
-
-<p>I am still using <em>Carbide Motion</em> as my only machine controller, it has the basic feature set that works for me:</p>
+<p>But luckily, it is very easy to write a custom post-processor for V-carve, so I just copy/pasted the Shapeoko one, and added the “M6 T1” (G-code for tool change) in the post-processor so that it gets included in the generated G-code.
+I archived it <a href="https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_cm_mm.pp">here</a>.
+I am still using <em>Carbide Motion</em> as my only machine controller, it has the basic feature set that works for me:</p>
 
 <ul>
   <li>jogging and zeroing</li>
@@ -341,6 +341,15 @@ I wondered how often I would have to change or resurface my wasteboard, but it t
       <td style="text-align: center">2000</td>
       <td style="text-align: center">1.5mm</td>
       <td style="text-align: center">635</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Acrylic</td>
+      <td style="text-align: center">3.175mm square</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">12000</td>
+      <td style="text-align: center">700</td>
+      <td style="text-align: center">0.7mm</td>
+      <td style="text-align: center">150</td>
     </tr>
     <tr>
       <td style="text-align: center">HDPE</td>

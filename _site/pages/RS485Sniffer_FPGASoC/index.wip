@@ -1,0 +1,806 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>RS485 multi-channel FPGA SoC sniffer</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="RS485 multi-channel FPGA SoC sniffer" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">RS485 multi-channel FPGA SoC sniffer</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+
+It all started when I made a small tool for spying on an RS485 serial line, with the ability to send captured data over Ethernet to a remote logging station ([this](http://jheyman.github.io/blog/pages/RS485Sniffer) is the project I am referring to). It worked out just fine, but its ability to spy a single RS485 line at 1 Mbps max soon became too limiting for what I had to do. So I started thinking about an upgraded version, with the following specs:
+
+* capable of monitoring six RS485 UART lines in parallel
+* supporting bitrates up to 10Mbps
+* detecting end of messages using inter-message gap idle line detection.
+* timestamping of each incoming message.
+* ensuring that the capture of incoming data is real-time / very deterministic.
+* sending captured data over Ethernet as UDP packets.
+
+
+## Table of Contents
+
+* TOC
+{:toc}
+
+---
+
+## Overview
+
+Clearly, the easy approach from my initial projet of using an Arduino and its native UART interface, was not going to meet these specs: that many UART interfaces is highly unusual in a microcontroller (the Arduino Mega has four, close but not quite enough), and 10Mbps was too much to ask of an Arduino. Also, I wanted to be able to spy on other line protocols than regular UART. So I figured, this would be a good opportunity to get my hands dirty with FPGAs.
+
+Indeed, implementing many custom communication interfaces is one area where FPGAs really shine. The price of FPGA-based boards is well above the price of Arduino boards, but fortunately there are a few hobbyist/student-oriented FPGA boards out there that are somewhat affordable. I settled on the **DE0 Nano SoC** board, which is about 100 euros, so definitely not cheap, but very capable:
+
+![DE0_Nano_SoC_overview](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DE0_Nano_SoC_overview.png)
+
+The CycloneV System-on-Chip includes:
+
+*  an FPGA part with 40K programmable logic elements and 2460 Kbits embedded memory
+*  a dual-core ARM Cortex A9 processor with 1GB DDR3 memory, bootable over an SD card.
+
+while the board implements all the external interfaces visible on the picture. Here's how things are allocated between the FPGA and the ARM processors:
+
+![DE0_Nano_SoC_synoptic](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DE0_Nano_SoC_synoptic.png)
+
+Of interest for this project: 
+
+* the FPGA has access to the 2x40 pins of GPIOs, that I used to connect the RS485 modules
+* the ARM processors (HPS, i.e. Hard Processor System) have access to the DDR3 memory, that I used to buffer captured data, and to the Ethernet interface, that I used to send output data for remote logging.
+
+The HPS and FPGA domains can exchange data of a variety of communication bridges:
+
+![HPS_FPGA_bridges](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/HPS_FPGA_bridges.png)
+
+Of interest for this project:
+* the FPGA-to-HPS bridge, allows the FPGA to perform read/write accesses to the HPS's DDR3 memory
+
+My application design looks like this:
+
+![implementation_synoptic](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/implementation_synoptic.png)
+
+* each RS485 module is intended to be connected on the bus to be monitored
+* it converts the differential RS485 signal into single-ended RX signal ("RO", for Receiver Output)
+* since the module is also capable of emitting signals, I provisioned the use of the TX signal  ("DI", for Device Input), with its associated Transmit Enable signal ("RSE", for...inverted Receiver Output Enable)
+* each module's RX, TX and TX Enable are connected to a bank of GPIOs of the FPGA domain.
+* one UART IP block is implemented in the FPGA for each module/channel. Each IP block as a local FIFO (buffer) to store incoming data.
+* a softcore NIOS processor is implemented in the FPGA, itt code and data are stored in a local (On-chip) memory in the FPGA
+* the NIOS acts as a data transfer controller between the FPGA local FIFOs and the HPS's DDR3 memory: 
+    * it scans the UART FIFOs, reading available data in its onchip memory
+    * it then leverages a modular scatter-gather DMA (mSGDMA) module implemented in the FPGA, to schedule data transfers from the on-chip RAM to the DDR3.
+* the mSGDMA copies the data from the onchip RAM to the DDR3, in parallel to the NIOS execution.
+* on the HPS side, a (linux) SW application checks if any new data has arrived in DDR3, and if sends it over Ethernet as UDP packets.
+* a remote logging station collects the UDP packets, and logs them into a file. 
+
+## Hardware setup
+
+In addition to the DE0 Nano SoC board, I bought 6 of these RS485 modules
+
+![RS3485_module](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/RS3485_module.png)
+
+**IMPORTANT NOTE**: These are **3.3V** modules, based on the MAX3485 chip. Using 5V modules would not be compatible with DE0 Nano SoC, which has 3.3V GPIOs.
+
+The wiring is simple:
+
+* one VCC pin for 3.3V power supply 
+* one GND pin for ground
+* one RO pin for RX
+* one DI pin for TX
+* one RSE pin for TX Enable.
+
+The modules conveniently provide an RJ11 connector, so I also got a bunch of cheap RJ11 cable:
+
+![RJ10_cable](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/RJ10_cable.png)
+
+To connect the RS485 modules to the GPIO headers, I reused a ribbon cable connector:
+
+![GPIO_connector](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/GPIO_connector.png)
+
+I chose to use the following GPIOs for connecting the modules:
+
+![GPIO1_UARTpinout](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/GPIO1_UARTpinout.png)
+
+GND and 3.3V supply go to all modules, while each module has individual RX,TX, and TX Enable lines.
+
+Finally, I designed en enclosure in Sketchup, based on the DE0 Nano Soc dimensions:
+
+![DE0_Nano_SoC_mechanical_plan](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DE0_Nano_SoC_mechanical_plan.png)
+
+and 3D-printed the parts:
+
+![3D_printed_parts](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/3D_printed_parts.png)
+
+Here's the final integrated prototype:
+
+![final_prototype](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/SocSniffer_integrated.png)
+
+![SocSniffer_running](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/SocSniffer_running.png)
+
+![DE0_Nano_SoC_cover](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DE0_Nano_SoC_cover.png)
+
+
+## SoC design workflow
+
+Understanding the workflow was arguably the hardest part while learning how to use the DE0 Nano SoC. Even though the board comes with decent documentation, as soon as one wants to go beyond just reproducing the provided example, it is unavoidable to take a deep dive into the specific steps required to create a design leveraging both the FPGA and the HPS, and above all to understand the relationships between the different steps. 
+
+After spending (losing) a lot of time browsing various examples, I finally discovered [Sahand Kashani SoC-FPGA guide](https://github.com/sahandKashani/SoC-FPGA-Design-Guide/tree/master/DE0_Nano_SoC/SoC-FPGA%20Design%20Guide), which is truly a MASTERPIECE of a tutorial, that does into the fine details of everything, starting from scratch towards a fully functional design. Hats off to Sahand for writing such a comprehensive and extremely helpful document.
+
+The instructions below are directly taken/adapted from Sahand's, I just customized it to meet my needs, and log them here for my own future reference. 
+
+![workflow](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/workflow.png)
+
+
+
+TODO : describe workflow
+
+
+## FPGA/SoC design
+
+
+TODO synoptique toplevel VHDL (schema grahpique avec ports et connexions) + IPs + glue QSys
+
+![Quartus_snapshot_QSys_icon](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/Quartus_snapshot_QSys_icon.png)
+
+![QSys_HPS_settings_interfaces](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_HPS_settings_interfaces.png)
+![QSys_HPS_settings_peripheral_pins](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_HPS_settings_peripheral_pins.png)
+![QSys_SpanExpander_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_SpanExpander_settings.png)
+![QSys_OCMemory_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_OCMemory_settings.png)
+![QSys_MSGDMA_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_MSGDMA_settings.png)
+![QSys_NIOS_type_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_NIOS_type_settings.png)
+![QSys_NIOS_memory_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_NIOS_memory_settings.png)
+![QSys_HPSFPGALeds_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_HPSFPGALeds_settings.png)
+![QSys_Clock_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_Clock_settings.png)
+![QSys_NIOSFPGALeds_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_NIOSFPGALeds_settings.png)
+![QSys_Timer_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_Timer_settings.png)
+![QSys_UART_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_UART_settings.png)
+![QSys_UARTTxEnable_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_UARTTxEnable_settings.png)
+
+
+
+### QSys
+
+
+TODO: principle
+
+ouvrir "soc_system.qsys"
+
+TODO:  capture of QSys conf
+TODO : details of each IP configuration (snapshot)
+
+Sur les UART FIFOed: 
+- mode RX Gap detection, avec Timeout=2 characters = 2x8/baudrate secondes (16µs pour un lien 1 MHz)
+
+
+
+QSys peut être lancé de Quartus, ou à la main avec qsys-edit
+
+![Full_QSys_design_snapshot](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/Full_QSys_design_snapshot.png)
+
+
+### Quartus
+
+
+Top-level file: explications
+
+    library ieee;
+    use ieee.std_logic_1164.all;
+
+    entity DE0_Nano_SoC_top_level is
+        port(
+            -- ADC
+         -- ADC_CONVST       : out   std_logic;
+         -- ADC_SCK          : out   std_logic;
+         -- ADC_SDI          : out   std_logic;
+         -- ADC_SDO          : in    std_logic;
+
+            -- ARDUINO
+         -- ARDUINO_IO       : inout std_logic_vector(15 downto 0);
+         -- ARDUINO_RESET_N  : inout std_logic;
+
+            -- CLOCK
+            FPGA_CLK1_50     : in    std_logic;
+         -- FPGA_CLK2_50     : in    std_logic;
+         -- FPGA_CLK3_50     : in    std_logic;
+
+            -- KEY
+            KEY_N            : in    std_logic_vector(1 downto 0);
+
+            -- LED
+            LED              : out   std_logic_vector(7 downto 0);
+
+            -- SW
+         -- SW               : in    std_logic_vector(3 downto 0);
+
+            -- GPIO_0
+         -- GPIO_0           : inout std_logic_vector(35 downto 0);
+
+            -- GPIO_1
+            GPIO_1           : inout std_logic_vector(35 downto 0);
+
+            -- HPS
+            HPS_CONV_USB_N   : inout std_logic;
+            HPS_DDR3_ADDR    : out   std_logic_vector(14 downto 0);
+            HPS_DDR3_BA      : out   std_logic_vector(2 downto 0);
+            HPS_DDR3_CAS_N   : out   std_logic;
+            HPS_DDR3_CK_N    : out   std_logic;
+            HPS_DDR3_CK_P    : out   std_logic;
+            HPS_DDR3_CKE     : out   std_logic;
+            HPS_DDR3_CS_N    : out   std_logic;
+            HPS_DDR3_DM      : out   std_logic_vector(3 downto 0);
+            HPS_DDR3_DQ      : inout std_logic_vector(31 downto 0);
+            HPS_DDR3_DQS_N   : inout std_logic_vector(3 downto 0);
+            HPS_DDR3_DQS_P   : inout std_logic_vector(3 downto 0);
+            HPS_DDR3_ODT     : out   std_logic;
+            HPS_DDR3_RAS_N   : out   std_logic;
+            HPS_DDR3_RESET_N : out   std_logic;
+            HPS_DDR3_RZQ     : in    std_logic;
+            HPS_DDR3_WE_N    : out   std_logic;
+            HPS_ENET_GTX_CLK : out   std_logic;
+            HPS_ENET_INT_N   : inout std_logic;
+            HPS_ENET_MDC     : out   std_logic;
+            HPS_ENET_MDIO    : inout std_logic;
+            HPS_ENET_RX_CLK  : in    std_logic;
+            HPS_ENET_RX_DATA : in    std_logic_vector(3 downto 0);
+            HPS_ENET_RX_DV   : in    std_logic;
+            HPS_ENET_TX_DATA : out   std_logic_vector(3 downto 0);
+            HPS_ENET_TX_EN   : out   std_logic;
+            HPS_GSENSOR_INT  : inout std_logic;
+            HPS_I2C0_SCLK    : inout std_logic;
+            HPS_I2C0_SDAT    : inout std_logic;
+            HPS_I2C1_SCLK    : inout std_logic;
+            HPS_I2C1_SDAT    : inout std_logic;
+            HPS_KEY_N        : inout std_logic;
+            HPS_LED          : inout std_logic;
+            HPS_LTC_GPIO     : inout std_logic;
+            HPS_SD_CLK       : out   std_logic;
+            HPS_SD_CMD       : inout std_logic;
+            HPS_SD_DATA      : inout std_logic_vector(3 downto 0);
+            HPS_SPIM_CLK     : out   std_logic;
+            HPS_SPIM_MISO    : in    std_logic;
+            HPS_SPIM_MOSI    : out   std_logic;
+            HPS_SPIM_SS      : inout std_logic;
+            HPS_UART_RX      : in    std_logic;
+            HPS_UART_TX      : out   std_logic;
+            HPS_USB_CLKOUT   : in    std_logic;
+            HPS_USB_DATA     : inout std_logic_vector(7 downto 0);
+            HPS_USB_DIR      : in    std_logic;
+            HPS_USB_NXT      : in    std_logic;
+            HPS_USB_STP      : out   std_logic
+        );
+    end entity DE0_Nano_SoC_top_level;
+
+    architecture rtl of DE0_Nano_SoC_top_level is
+        component soc_system is
+            port(
+                clk_clk                                  : in    std_logic                     := 'X';
+                hps_0_ddr_mem_a                          : out   std_logic_vector(14 downto 0);
+                hps_0_ddr_mem_ba                         : out   std_logic_vector(2 downto 0);
+                hps_0_ddr_mem_ck                         : out   std_logic;
+                hps_0_ddr_mem_ck_n                       : out   std_logic;
+                hps_0_ddr_mem_cke                        : out   std_logic;
+                hps_0_ddr_mem_cs_n                       : out   std_logic;
+                hps_0_ddr_mem_ras_n                      : out   std_logic;
+                hps_0_ddr_mem_cas_n                      : out   std_logic;
+                hps_0_ddr_mem_we_n                       : out   std_logic;
+                hps_0_ddr_mem_reset_n                    : out   std_logic;
+                hps_0_ddr_mem_dq                         : inout std_logic_vector(31 downto 0) := (others => 'X');
+                hps_0_ddr_mem_dqs                        : inout std_logic_vector(3 downto 0)  := (others => 'X');
+                hps_0_ddr_mem_dqs_n                      : inout std_logic_vector(3 downto 0)  := (others => 'X');
+                hps_0_ddr_mem_odt                        : out   std_logic;
+                hps_0_ddr_mem_dm                         : out   std_logic_vector(3 downto 0);
+                hps_0_ddr_oct_rzqin                      : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_TX_CLK        : out   std_logic;
+                hps_0_io_hps_io_emac1_inst_TX_CTL        : out   std_logic;
+                hps_0_io_hps_io_emac1_inst_TXD0          : out   std_logic;
+                hps_0_io_hps_io_emac1_inst_TXD1          : out   std_logic;
+                hps_0_io_hps_io_emac1_inst_TXD2          : out   std_logic;
+                hps_0_io_hps_io_emac1_inst_TXD3          : out   std_logic;
+                hps_0_io_hps_io_emac1_inst_RX_CLK        : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_RX_CTL        : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_RXD0          : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_RXD1          : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_RXD2          : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_RXD3          : in    std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_MDIO          : inout std_logic                     := 'X';
+                hps_0_io_hps_io_emac1_inst_MDC           : out   std_logic;
+                hps_0_io_hps_io_sdio_inst_CLK            : out   std_logic;
+                hps_0_io_hps_io_sdio_inst_CMD            : inout std_logic                     := 'X';
+                hps_0_io_hps_io_sdio_inst_D0             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_sdio_inst_D1             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_sdio_inst_D2             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_sdio_inst_D3             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_CLK            : in    std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_STP            : out   std_logic;
+                hps_0_io_hps_io_usb1_inst_DIR            : in    std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_NXT            : in    std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D0             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D1             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D2             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D3             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D4             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D5             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D6             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_usb1_inst_D7             : inout std_logic                     := 'X';
+                hps_0_io_hps_io_spim1_inst_CLK           : out   std_logic;
+                hps_0_io_hps_io_spim1_inst_MOSI          : out   std_logic;
+                hps_0_io_hps_io_spim1_inst_MISO          : in    std_logic                     := 'X';
+                hps_0_io_hps_io_spim1_inst_SS0           : out   std_logic;
+                hps_0_io_hps_io_uart0_inst_RX            : in    std_logic                     := 'X';
+                hps_0_io_hps_io_uart0_inst_TX            : out   std_logic;
+                hps_0_io_hps_io_i2c0_inst_SDA            : inout std_logic                     := 'X';
+                hps_0_io_hps_io_i2c0_inst_SCL            : inout std_logic                     := 'X';
+                hps_0_io_hps_io_i2c1_inst_SDA            : inout std_logic                     := 'X';
+                hps_0_io_hps_io_i2c1_inst_SCL            : inout std_logic                     := 'X';
+                hps_0_io_hps_io_gpio_inst_GPIO09         : inout std_logic                     := 'X';
+                hps_0_io_hps_io_gpio_inst_GPIO35         : inout std_logic                     := 'X';
+                hps_0_io_hps_io_gpio_inst_GPIO40         : inout std_logic                     := 'X';
+                hps_0_io_hps_io_gpio_inst_GPIO53         : inout std_logic                     := 'X';
+                hps_0_io_hps_io_gpio_inst_GPIO54         : inout std_logic                     := 'X';
+                hps_0_io_hps_io_gpio_inst_GPIO61         : inout std_logic                     := 'X';
+                
+                    hps_fpga_leds_external_connection_export      : out   std_logic_vector(1 downto 0);
+                nios_activity_leds_external_connection_export : out   std_logic_vector(5 downto 0);
+                
+                    reset_reset_n                                : in    std_logic                 := 'X';      
+
+                    fifoed_avalon_uart_0_external_connection_rxd : in    std_logic                 := 'X'; 
+                fifoed_avalon_uart_0_external_connection_txd : out   std_logic;
+                    fifoed_avalon_uart_0_txenable_external_connection_export : out   std_logic := '0';
+                    
+                fifoed_avalon_uart_1_external_connection_rxd : in    std_logic                 := 'X';
+                fifoed_avalon_uart_1_external_connection_txd : out   std_logic;
+                fifoed_avalon_uart_1_txenable_external_connection_export : out   std_logic := '0';
+                
+                    fifoed_avalon_uart_2_external_connection_rxd : in    std_logic                 := 'X';
+                fifoed_avalon_uart_2_external_connection_txd : out   std_logic;
+                fifoed_avalon_uart_2_txenable_external_connection_export : out   std_logic := '0';
+                
+                    fifoed_avalon_uart_3_external_connection_rxd : in    std_logic                 := 'X';
+                fifoed_avalon_uart_3_external_connection_txd : out   std_logic;
+                fifoed_avalon_uart_3_txenable_external_connection_export : out   std_logic := '0';
+                
+                    fifoed_avalon_uart_4_external_connection_rxd : in    std_logic                 := 'X';
+                fifoed_avalon_uart_4_external_connection_txd : out   std_logic;
+                fifoed_avalon_uart_4_txenable_external_connection_export : out   std_logic := '0';
+                
+                    fifoed_avalon_uart_5_external_connection_rxd : in    std_logic                 := 'X';
+                fifoed_avalon_uart_5_external_connection_txd : out   std_logic;        
+                fifoed_avalon_uart_5_txenable_external_connection_export : out   std_logic := '0'
+              );
+        end component soc_system;
+
+    begin
+        soc_system_inst : component soc_system
+        port map(
+            clk_clk                                  => FPGA_CLK1_50,
+            hps_0_ddr_mem_a                          => HPS_DDR3_ADDR,
+            hps_0_ddr_mem_ba                         => HPS_DDR3_BA,
+            hps_0_ddr_mem_ck                         => HPS_DDR3_CK_P,
+            hps_0_ddr_mem_ck_n                       => HPS_DDR3_CK_N,
+            hps_0_ddr_mem_cke                        => HPS_DDR3_CKE,
+            hps_0_ddr_mem_cs_n                       => HPS_DDR3_CS_N,
+            hps_0_ddr_mem_ras_n                      => HPS_DDR3_RAS_N,
+            hps_0_ddr_mem_cas_n                      => HPS_DDR3_CAS_N,
+            hps_0_ddr_mem_we_n                       => HPS_DDR3_WE_N,
+            hps_0_ddr_mem_reset_n                    => HPS_DDR3_RESET_N,
+            hps_0_ddr_mem_dq                         => HPS_DDR3_DQ,
+            hps_0_ddr_mem_dqs                        => HPS_DDR3_DQS_P,
+            hps_0_ddr_mem_dqs_n                      => HPS_DDR3_DQS_N,
+            hps_0_ddr_mem_odt                        => HPS_DDR3_ODT,
+            hps_0_ddr_mem_dm                         => HPS_DDR3_DM,
+            hps_0_ddr_oct_rzqin                      => HPS_DDR3_RZQ,
+            hps_0_io_hps_io_emac1_inst_TX_CLK        => HPS_ENET_GTX_CLK,
+            hps_0_io_hps_io_emac1_inst_TX_CTL        => HPS_ENET_TX_EN,
+            hps_0_io_hps_io_emac1_inst_TXD0          => HPS_ENET_TX_DATA(0),
+            hps_0_io_hps_io_emac1_inst_TXD1          => HPS_ENET_TX_DATA(1),
+            hps_0_io_hps_io_emac1_inst_TXD2          => HPS_ENET_TX_DATA(2),
+            hps_0_io_hps_io_emac1_inst_TXD3          => HPS_ENET_TX_DATA(3),
+            hps_0_io_hps_io_emac1_inst_RX_CLK        => HPS_ENET_RX_CLK,
+            hps_0_io_hps_io_emac1_inst_RX_CTL        => HPS_ENET_RX_DV,
+            hps_0_io_hps_io_emac1_inst_RXD0          => HPS_ENET_RX_DATA(0),
+            hps_0_io_hps_io_emac1_inst_RXD1          => HPS_ENET_RX_DATA(1),
+            hps_0_io_hps_io_emac1_inst_RXD2          => HPS_ENET_RX_DATA(2),
+            hps_0_io_hps_io_emac1_inst_RXD3          => HPS_ENET_RX_DATA(3),
+            hps_0_io_hps_io_emac1_inst_MDIO          => HPS_ENET_MDIO,
+            hps_0_io_hps_io_emac1_inst_MDC           => HPS_ENET_MDC,
+            hps_0_io_hps_io_sdio_inst_CLK            => HPS_SD_CLK,
+            hps_0_io_hps_io_sdio_inst_CMD            => HPS_SD_CMD,
+            hps_0_io_hps_io_sdio_inst_D0             => HPS_SD_DATA(0),
+            hps_0_io_hps_io_sdio_inst_D1             => HPS_SD_DATA(1),
+            hps_0_io_hps_io_sdio_inst_D2             => HPS_SD_DATA(2),
+            hps_0_io_hps_io_sdio_inst_D3             => HPS_SD_DATA(3),
+            hps_0_io_hps_io_usb1_inst_CLK            => HPS_USB_CLKOUT,
+            hps_0_io_hps_io_usb1_inst_STP            => HPS_USB_STP,
+            hps_0_io_hps_io_usb1_inst_DIR            => HPS_USB_DIR,
+            hps_0_io_hps_io_usb1_inst_NXT            => HPS_USB_NXT,
+            hps_0_io_hps_io_usb1_inst_D0             => HPS_USB_DATA(0),
+            hps_0_io_hps_io_usb1_inst_D1             => HPS_USB_DATA(1),
+            hps_0_io_hps_io_usb1_inst_D2             => HPS_USB_DATA(2),
+            hps_0_io_hps_io_usb1_inst_D3             => HPS_USB_DATA(3),
+            hps_0_io_hps_io_usb1_inst_D4             => HPS_USB_DATA(4),
+            hps_0_io_hps_io_usb1_inst_D5             => HPS_USB_DATA(5),
+            hps_0_io_hps_io_usb1_inst_D6             => HPS_USB_DATA(6),
+            hps_0_io_hps_io_usb1_inst_D7             => HPS_USB_DATA(7),
+            hps_0_io_hps_io_spim1_inst_CLK           => HPS_SPIM_CLK,
+            hps_0_io_hps_io_spim1_inst_MOSI          => HPS_SPIM_MOSI,
+            hps_0_io_hps_io_spim1_inst_MISO          => HPS_SPIM_MISO,
+            hps_0_io_hps_io_spim1_inst_SS0           => HPS_SPIM_SS,
+            hps_0_io_hps_io_uart0_inst_RX            => HPS_UART_RX,
+            hps_0_io_hps_io_uart0_inst_TX            => HPS_UART_TX,
+            hps_0_io_hps_io_i2c0_inst_SDA            => HPS_I2C0_SDAT,
+            hps_0_io_hps_io_i2c0_inst_SCL            => HPS_I2C0_SCLK,
+            hps_0_io_hps_io_i2c1_inst_SDA            => HPS_I2C1_SDAT,
+            hps_0_io_hps_io_i2c1_inst_SCL            => HPS_I2C1_SCLK,
+            hps_0_io_hps_io_gpio_inst_GPIO09         => HPS_CONV_USB_N,
+            hps_0_io_hps_io_gpio_inst_GPIO35         => HPS_ENET_INT_N,
+            hps_0_io_hps_io_gpio_inst_GPIO40         => HPS_LTC_GPIO,
+            hps_0_io_hps_io_gpio_inst_GPIO53         => HPS_LED,
+            hps_0_io_hps_io_gpio_inst_GPIO54         => HPS_KEY_N,
+            hps_0_io_hps_io_gpio_inst_GPIO61         => HPS_GSENSOR_INT,
+              
+            hps_fpga_leds_external_connection_export => LED(7 downto 6),
+            nios_activity_leds_external_connection_export     => LED(5 downto 0),
+            reset_reset_n                            => KEY_N(0),
+              
+            fifoed_avalon_uart_0_external_connection_rxd => GPIO_1(3),
+            fifoed_avalon_uart_0_external_connection_txd => GPIO_1(1),
+            fifoed_avalon_uart_0_txenable_external_connection_export => GPIO_1(0),
+          
+            fifoed_avalon_uart_1_external_connection_rxd => GPIO_1(6),
+            fifoed_avalon_uart_1_external_connection_txd => GPIO_1(7),
+            fifoed_avalon_uart_1_txenable_external_connection_export => GPIO_1(9),
+              
+              fifoed_avalon_uart_2_external_connection_rxd => GPIO_1(14),
+            fifoed_avalon_uart_2_external_connection_txd => GPIO_1(15),
+            fifoed_avalon_uart_2_txenable_external_connection_export => GPIO_1(17),
+             
+            fifoed_avalon_uart_3_external_connection_rxd => GPIO_1(20),
+            fifoed_avalon_uart_3_external_connection_txd => GPIO_1(21),
+            fifoed_avalon_uart_3_txenable_external_connection_export => GPIO_1(23),
+              
+            fifoed_avalon_uart_4_external_connection_rxd => GPIO_1(26),
+            fifoed_avalon_uart_4_external_connection_txd => GPIO_1(27), 
+            fifoed_avalon_uart_4_txenable_external_connection_export => GPIO_1(29),
+              
+            fifoed_avalon_uart_5_external_connection_rxd => GPIO_1(32),
+            fifoed_avalon_uart_5_external_connection_txd => GPIO_1(33),  
+            fifoed_avalon_uart_5_txenable_external_connection_export => GPIO_1(35)
+              );
+    end;
+
+
+
+
+![DE0_Nano_Soc_GPIO_pinout](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DE0_Nano_Soc_GPIO_pinout.png)
+
+
+
+---
+
+
+
+
+
+
+## Software implementation
+
+The SW implementation is split between the two processing domains: a NIOS2 bare-metal application for the real-time capture, and a Linux application on the HPS side for the non-real time offloading of data over Ethernet to a remote host.
+ 
+
+### NIOS2 software
+
+The real timedata capture sequencing is handled in the NIOS2, as a single bare-metal application. Since there is no OS on the NIOS, and a single loop running, this part is very deterministic, by design. This is required to make sure the data capture can be performed accurately.
+
+The NIOS application:
+
+* initializes the FPGA devices (UARTs & mSGDMA)
+* enters an infinite loop that:
+	* scans each UART interface
+	* reads incoming data from the UART FIFO if any
+	* add a message timestamp
+	* programs the mSGDMA controller to push this data directly to a section of the HPS DDR3 memory.
+
+
+![memory_map](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/memory_map.png)
+
+![buffer_management](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/buffer_management.png)
+
+
+hypothèse simplificatrice: toujours transférer 4096 bytes.
+
+
+Lancement NIOS SBT:
+eclipse-nios2& depuis shell Altera
+
+
+New project & BSP => suivre instructions Sahand PLUS faire NIOS II => BSP_editor => régler "timestamp_timer" sur "timer0"
+
+![Eclipse_NIOS_project_snapshot](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/Eclipse_NIOS_project_snapshot.png)
+
+
+ET s'assurer que sys_clk est à NONE (sinontimestamp KO)
+
+![NIOS_BSP_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/NIOS_BSP_settings.png)
+
+commenter alt_timestamp_start, etc...
+
+
+=> SW pas lancé/bloqué à la mise sous tension
+=> option `enable_jtag_uart_ignore_fifo_full_error` dans BSP editor NIOS2 
+
+![NIOS2_BSP_settings_ignore_jtag_uart_error](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/NIOS2_BSP_settings_ignore_jtag_uart_error.png)
+
+BSP project => parler de system.h
+build = genere libhal_bsp.a, linké dans le projet appli nios
+
+
+
+
+Génération du .hex = Project / Make Targets / Build / mem_init_generate
+
+puis copie du répertoire mem_init sous hw/quartus
+
+
+
+console NIOS depuis un shell: 
+`nios2-terminal`
+
+pour voir les cables JTAG détectés: jtagconfig
+nios2-terminal -- cable=[cable number]
+
+
+
+TODO : lancement du SW NIOS ?
+
+
+
+
+
+
+
+
+
+
+### Pre-loader
+
+### Bootloader
+
+### Linux kernel
+
+### Linux rootfs
+
+### HPS software
+
+TODO
+The linux application running on the HPS is a very simple loop, that checks if new data is available in the section of DDR3 memory that is filled by the NIOS. If data has been received, it sends it over Ethernet as UDP packets, to a remote host. 
+
+Lancement DS-5 : 
+/usr/local/DS-5_v5.28.1/bin/eclipse&
+
+![DS5_HPS_project_snapshot](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DS5_HPS_project_snapshot.png)
+
+## Automating the build
+
+From /intelFPGA/18.0/embedded launch './embedded_command_shell.sh'
+    
+build:
+./automate.sh
+
+création carte SD:
+./automate.sh /dev/sdXXXXX 
+
+Note: si /dev/sdXXXX est monté par Ubuntu, peut y avoir une erreur de fdisk / busy => relancer.
+
+1er boot sur carte SD => exécution automatique du config_system.sh
+power-off puis redémarrer => shell via login sniffer/sniffer
+
+EXECUTION MANUELLE de config_post_install.sh
+
+
+
+## Testing
+
+For testing, I reused the Arduino setup from the original RS485 sniffer project, with a pushbutton to trigger sending a single message of predefined size on one channel. The limitation is that the Arduino's UART can only work at 1Mbps. TBC TBC TBC So, 10Mbps channels were tested by implementing loopbacks at the DE0 Nano GPIO outputs, between a 10 Mbps UART TX, and a corresponding RX.
+
+Arduino selected = "Arduino Pro or Pro Mini", processor  = 3.3V 8MHz
+
+![arduino_transmitter_diagram](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/arduino_transmitter_diagram.png)
+
+
+
+
+### NIOS startup
+
+eclipse-nios2 => right-click on Project => RUn As => NIOSII Hardware
+
+
+
+## Source code
+
+Source code is archived [here](url)
+
+
+--- 
+
+
+Memory map du CycloneV: https://www.intel.com/content/www/us/en/programmable/hps/cyclone-v/hps.html
+
+
+
+
+
+
+IP => AXI => Avalon => QSys
+
+
+
+
+
+
+|**Base Address** |**End Address**| **I/O Peripheral**|
+|0x00000000 | 0x3FFFFFFF | DDR3 Memory|
+|0xFFFF0000 | 0xFFFFFFFF | A9 On-chip Memory|
+|0xC8000000 | 0xC8007FFF | FPGA On-chip Memory|
+|0xFF200000 | 0xFF20000F | Green LEDs|
+|0xFF200040 | 0xFF20004F | Slider Switches|
+|0xFF200050 | 0xFF20005F | Pushbutton KEYs|
+|0xFF200060 | 0xFF20006F | JP1 Expansion|
+|0xFF200070 | 0xFF20007F | JP7 Expansion|
+|0xFF200100 | 0xFF20010F | Arduino Expansion|
+|0xFF200110 | 0xFF20011F | Arduino Reset|
+|0xFF201000 | 0xFF201007 | JTAG UART|
+|0xFF201008 | 0xFF20100F | Second JTAG UART|
+|0xFF202000 | 0xFF20201F | Interval Timer|
+|0xFF202020 | 0xFF20202F | Second Interval Timer|
+|0xFF204000 | 0xFF20401F | ADC|
+|0xFF709000 | 0xFF709063 | HPS GPIO1|
+|0xFFC04000 | 0xFFC040FC | HPS I2C0|
+|0xFFC08000 | 0xFFC08013 | HPS Timer0|
+|0xFFC09000 | 0xFFC09013 | HPS Timer1|
+|0xFFD00000 | 0xFFD00013 | HPS Timer2|
+|0xFFD01000 | 0xFFD01013 | HPS Timer3|
+|0xFFD0501C | 0xFFD0501F | FPGA Bridge|
+|0xFFFEC100 | 0xFFFEC1FC | GIC CPU Interface|
+|0xFFFED000 | 0xFFFEDFFC | GIC Distributor Interface|
+|0xFFFEC600 | 0xFFFEC60F | ARM A9 Private Timer|
+
+
+
+
+
+
+
+
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/RS485Sniffer_FPGASoC/index.wip" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+

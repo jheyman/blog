@@ -152,7 +152,9 @@ The only catch here is that obviously, touch coordinates will not be the same be
 
 	adb shell dumpsys input | grep -i SurfaceOrientation
 
-Once this remote operation is complete, a `Contacts.vcf` has been created on the SD card and can be retrieved with:
+Depending on the device's menu layout, sometimes the menu entry to be clicked on is not visible on the screen, and a swipe gesture is needed to bring it in view. This can be just as easily done with the command `adb shell input swipe <x1> <y2> <x2> <y2> <swipe_duration>`.
+
+Once these remote operations are complete, a `Contacts.vcf` has been created on the SD card and can be retrieved with:
 
 	adb pull <contacts.vcf filepath> <backup destination>
 
