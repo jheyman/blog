@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Shapeoko3, two years later.</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Shapeoko3, two years later." type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Shapeoko3, two years later.</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+
+
+## Overview
+
+[here](http://jheyman.github.io/blog/pages/Shapeoko). 
+[here](http://jheyman.github.io/blog/pages/Shapeoko1YeatLater). 
+
+* TOC
+{:toc}
+
+---
+
+## TL;DR
+
+todo
+
+Documenter technique pour faire les dogbones / dimensions classiques.
+	VCarve & resin inlay
+Al bed
+	HDZ
+Steel Belts
+UGS + pendant bluetooth
+	Utilisation de https://www.orbiter-forum.com/showthread.php?t=30829 (Oblitum Interception)
+			https://github.com/TaranVH/2nd-keyboard/tree/master/Intercept
+			+ TRICK CALCULATOR KEY remappée dans la registry windows en lancement de intercept.exe /apply xxx.ini
+			recopier les instructions documentées ici: https://community.carbide3d.com/t/bluetooth-keypad-for-ugs/12419/5
+
+Beaver probe
+XY calibjig
+
+Dial indicator versus test indicator
+
+
+chip thinning: schema de BobW => besoin d'augmenter le feedrate pour re-epaissir le chip si le radial cut width est <50% du diametre de la fraise
+
+
+ESSAIS ALU
+Essai CNC Alu
+First: Cutters: ZrN Coated cutters are a must.
+Second: Lube: I recommend my WD40 drip system for finish cuts
+Third: Air Blast (I recommend a cheap mist sprayer from eBay ($11) and just use it for air. Need to get those chips out of there
+Forth: Tighten EVERYTHNG
+Fifth: DOC and feeds, (This is what I like to recommend) 0.015 DOC at 15 IPM, then start increasing it by 0.005 and another 5 IPM, until it starts to make too much chatter/noise. Every machine/set up is a little different…find YOUR sweet spot.
+Sixth: I like 10k to 15k rpm, spindle speed. Some wild and crazy guys (Vince) like a LOT more speed, but his machine is (now) heavily modified
+This is the norm…
+I LOVE Fusion 360 Adaptive cutting, and that is a whole new ballgame and not something for you to start with
+
+
+
+
+
+---
+
+## G-code sender
+
+[VCarve post-processor for use with Carbide Motion](https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_cm_mm.pp)
+[VCarve post-processor for use with Universal G-Code sender](https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_ugs_mm.pp)
+
+documenter post-processor Fusion360 (celui de carbide + celui de Neil, avec adaptation G28 et M6)
+
+---
+
+## Touch probe
+
+TODO photo & usage in UGS
+
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/phone_charger_empty.png)
+
+
+--- 
+
+## Fusion360 
+
+
+
+* Roughing + Finish workflow
+	* I have run all projets without separating the jobs into roughing toolpaths following by finishing toolpaths, and I should learn how to do this (now that I outgrew Carbide Create)
+* Additional endmills
+	* one type I would like to try is a compression endmill, to get nice clean edges on top of the material. 
+* Touch probe
+	* I do not mind the manual zeroing procedure, but for sure it would be cool to get the Carbide3D probe and automate/simplify this step.
+* Laser module / laser cutter upgrade
+	* They sell laser kits to be mounted on the gantry, which can pretty much transform the Shapeoko into a laser cutter too. But I don't know enough about practical laser cutting yet, and it SEEMS to me that it would be a better idea to get a real/dedicated laser cutter instead, and not have to care about thermal cooling, eye protection, changing the bed of the shapeoko, etc...so we will see. I have been monitoring the release of the Dremel laser cutter (a.k.a Laser cutter for rich dummies), but who knows when it will actually be released (for real).
+
+---
+
+Aluminium
+
+- fasten endmill in the collet using the TWO wrenches
+
+https://www.youtube.com/watch?v=RH4AXz_rtPo
+
+creation of toolpaths, roughing & finishing:
+
+https://www.youtube.com/watch?v=Do_C_NLH5sw
+
+Gestion des "open pockets" quand on veut une rampe d'entree en hélice
+=> voir ici https://www.youtube.com/watch?v=fhVMybPl7KU et là 
+https://knowledge.autodesk.com/support/fusion-360/getting-started/caas/screencast/Main/Details/25383f32-7edc-418a-bfd6-60dc0be56d70.html
+
+=> préférable de cliquer plutôt sur un contour ou plutôt 
+
+Debugger un pb de génération de toolpath: https://www.nyccnc.com/2d-adaptive-not-generating-toolpath/
+
+Top des pb:
+- helical ramp diameter trop grand pour que ça passe
+- minimum cutting radius trop petit
+- stock to leave trop grand
+
+installation du post-processor SHapeoko : URL TBC (cf Winston), dispo sur site autodesk: https://cam.autodesk.com/hsmposts? (chercher carbide)
+
+Error: Unsupported 'mist' coolant.
+Error in operation: 'Adaptive1'
+Failed while processing onSection() for record 388.
+
+=> remplacer "mist" par "disablesd"
+
+Execution: probleme car Fusion insert par défaut un G28 G91 Z0 en début de prog, qui commande le déplacement vers la hauteur Zhome PREALABLEMENT stockée via G28.1
+=> faire HOME puis taper G28.1 pour être sûr que ce Z est OK.
+
+stickout to minimum + small margin
+JOB OK
+
+
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/Shapeoko2YearsLater/index.wip" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
