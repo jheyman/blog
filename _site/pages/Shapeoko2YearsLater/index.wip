@@ -42,68 +42,130 @@
 			<div class="bd">
 				<div class="entry-content">
 					
-<h2 id="overview">Overview</h2>
 
-<p><a href="http://jheyman.github.io/blog/pages/Shapeoko">here</a>. 
-<a href="http://jheyman.github.io/blog/pages/Shapeoko1YeatLater">here</a>.</p>
 
-<ul id="markdown-toc">
-  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
-  <li><a href="#tldr" id="markdown-toc-tldr">TL;DR</a></li>
-  <li><a href="#g-code-sender" id="markdown-toc-g-code-sender">G-code sender</a></li>
-  <li><a href="#touch-probe" id="markdown-toc-touch-probe">Touch probe</a></li>
-  <li><a href="#fusion360" id="markdown-toc-fusion360">Fusion360</a></li>
-</ul>
+## Overview
 
-<hr />
+[here](http://jheyman.github.io/blog/pages/Shapeoko). 
+[here](http://jheyman.github.io/blog/pages/Shapeoko1YeatLater). 
 
-<h2 id="tldr">TL;DR</h2>
+* TOC
+{:toc}
 
-<p>todo</p>
+---
 
-<hr />
+## TL;DR
 
-<h2 id="g-code-sender">G-code sender</h2>
+todo
 
-<p><a href="https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_cm_mm.pp">post-processor for use with Carbide Motion</a>
-<a href="https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_ugs_mm.pp">post-processor for use with Universal G-Code sender</a></p>
+Documenter technique pour faire les dogbones / dimensions classiques.
+	VCarve & resin inlay
+Al bed
+	HDZ
+Steel Belts
+UGS + pendant bluetooth
+	Utilisation de https://www.orbiter-forum.com/showthread.php?t=30829 (Oblitum Interception)
+			https://github.com/TaranVH/2nd-keyboard/tree/master/Intercept
+			+ TRICK CALCULATOR KEY remappée dans la registry windows en lancement de intercept.exe /apply xxx.ini
+			recopier les instructions documentées ici: https://community.carbide3d.com/t/bluetooth-keypad-for-ugs/12419/5
 
-<hr />
+Beaver probe
+XY calibjig
 
-<h2 id="touch-probe">Touch probe</h2>
+Dial indicator versus test indicator
 
-<p>TODO photo &amp; usage in UGS</p>
 
-<p><img src="http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/phone_charger_empty.png" alt="image" /></p>
+chip thinning: schema de BobW => besoin d'augmenter le feedrate pour re-epaissir le chip si le radial cut width est <50% du diametre de la fraise
 
-<hr />
 
-<h2 id="fusion360">Fusion360</h2>
+ESSAIS ALU
+Essai CNC Alu
+First: Cutters: ZrN Coated cutters are a must.
+Second: Lube: I recommend my WD40 drip system for finish cuts
+Third: Air Blast (I recommend a cheap mist sprayer from eBay ($11) and just use it for air. Need to get those chips out of there
+Forth: Tighten EVERYTHNG
+Fifth: DOC and feeds, (This is what I like to recommend) 0.015 DOC at 15 IPM, then start increasing it by 0.005 and another 5 IPM, until it starts to make too much chatter/noise. Every machine/set up is a little different…find YOUR sweet spot.
+Sixth: I like 10k to 15k rpm, spindle speed. Some wild and crazy guys (Vince) like a LOT more speed, but his machine is (now) heavily modified
+This is the norm…
+I LOVE Fusion 360 Adaptive cutting, and that is a whole new ballgame and not something for you to start with
 
-<ul>
-  <li>Roughing + Finish workflow
-    <ul>
-      <li>I have run all projets without separating the jobs into roughing toolpaths following by finishing toolpaths, and I should learn how to do this (now that I outgrew Carbide Create)</li>
-    </ul>
-  </li>
-  <li>Additional endmills
-    <ul>
-      <li>one type I would like to try is a compression endmill, to get nice clean edges on top of the material.</li>
-    </ul>
-  </li>
-  <li>Touch probe
-    <ul>
-      <li>I do not mind the manual zeroing procedure, but for sure it would be cool to get the Carbide3D probe and automate/simplify this step.</li>
-    </ul>
-  </li>
-  <li>Laser module / laser cutter upgrade
-    <ul>
-      <li>They sell laser kits to be mounted on the gantry, which can pretty much transform the Shapeoko into a laser cutter too. But I don’t know enough about practical laser cutting yet, and it SEEMS to me that it would be a better idea to get a real/dedicated laser cutter instead, and not have to care about thermal cooling, eye protection, changing the bed of the shapeoko, etc…so we will see. I have been monitoring the release of the Dremel laser cutter (a.k.a Laser cutter for rich dummies), but who knows when it will actually be released (for real).</li>
-    </ul>
-  </li>
-</ul>
 
-<hr />
+
+
+
+---
+
+## G-code sender
+
+[VCarve post-processor for use with Carbide Motion](https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_cm_mm.pp)
+[VCarve post-processor for use with Universal G-Code sender](https://github.com/jheyman/shapeoko/blob/master/vcarve_desktop/shapeoko_ugs_mm.pp)
+
+documenter post-processor Fusion360 (celui de carbide + celui de Neil, avec adaptation G28 et M6)
+
+---
+
+## Touch probe
+
+TODO photo & usage in UGS
+
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/phone_charger_empty.png)
+
+
+--- 
+
+## Fusion360 
+
+
+
+* Roughing + Finish workflow
+	* I have run all projets without separating the jobs into roughing toolpaths following by finishing toolpaths, and I should learn how to do this (now that I outgrew Carbide Create)
+* Additional endmills
+	* one type I would like to try is a compression endmill, to get nice clean edges on top of the material. 
+* Touch probe
+	* I do not mind the manual zeroing procedure, but for sure it would be cool to get the Carbide3D probe and automate/simplify this step.
+* Laser module / laser cutter upgrade
+	* They sell laser kits to be mounted on the gantry, which can pretty much transform the Shapeoko into a laser cutter too. But I don't know enough about practical laser cutting yet, and it SEEMS to me that it would be a better idea to get a real/dedicated laser cutter instead, and not have to care about thermal cooling, eye protection, changing the bed of the shapeoko, etc...so we will see. I have been monitoring the release of the Dremel laser cutter (a.k.a Laser cutter for rich dummies), but who knows when it will actually be released (for real).
+
+---
+
+Aluminium
+
+- fasten endmill in the collet using the TWO wrenches
+
+https://www.youtube.com/watch?v=RH4AXz_rtPo
+
+creation of toolpaths, roughing & finishing:
+
+https://www.youtube.com/watch?v=Do_C_NLH5sw
+
+Gestion des "open pockets" quand on veut une rampe d'entree en hélice
+=> voir ici https://www.youtube.com/watch?v=fhVMybPl7KU et là 
+https://knowledge.autodesk.com/support/fusion-360/getting-started/caas/screencast/Main/Details/25383f32-7edc-418a-bfd6-60dc0be56d70.html
+
+=> préférable de cliquer plutôt sur un contour ou plutôt 
+
+Debugger un pb de génération de toolpath: https://www.nyccnc.com/2d-adaptive-not-generating-toolpath/
+
+Top des pb:
+- helical ramp diameter trop grand pour que ça passe
+- minimum cutting radius trop petit
+- stock to leave trop grand
+
+installation du post-processor SHapeoko : URL TBC (cf Winston), dispo sur site autodesk: https://cam.autodesk.com/hsmposts? (chercher carbide)
+
+Error: Unsupported 'mist' coolant.
+Error in operation: 'Adaptive1'
+Failed while processing onSection() for record 388.
+
+=> remplacer "mist" par "disablesd"
+
+Execution: probleme car Fusion insert par défaut un G28 G91 Z0 en début de prog, qui commande le déplacement vers la hauteur Zhome PREALABLEMENT stockée via G28.1
+=> faire HOME puis taper G28.1 pour être sûr que ce Z est OK.
+
+stickout to minimum + small margin
+JOB OK
+
 
 
 				</div><!-- entry-content -->
@@ -175,7 +237,7 @@
 		};
 	load('//platform.twitter.com/widgets.js', 'tweetjs');
 	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
-	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/Shapeoko2YearsLater/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/Shapeoko2YearsLater/index.wip" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
 	}(document, 'script'));
 </script>
 <script>

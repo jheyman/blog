@@ -399,7 +399,7 @@ The Infill parameter is quite straightforward to understand, it defines how much
 
 ![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/top_cover_10percent_infill.png)
 
-## Calibration tests
+## Initial calibration tests
 
 As first sanity check of the accuracy/calibration of the machine, I printed [this](https://www.thingiverse.com/thing:916214) part: 
 
@@ -423,16 +423,7 @@ Through the LCD menus (`Control`, then `Motion`) I checked the current settings 
 * Z axis: 80 steps/mm
 * E axis: 96 steps/mm
 
-X dimension should be corrected by a factor of 40/40.25 = 0.9938 => X outer dimensions is slightly too large, so I need to reduce the nb of steps/mm: 80 * 0.9943 = 79.54
-
-Y dimension should be corrected by a factor of 40/40.32 = 0.9921 => X outer dimensions is slightly too large, so I need to reduce the nb of steps/mm: 80 * 0.9921 = 79.37
-
-Z dimension should be corrected by a factor of ~ 0.975, so 78 steps/mm
-
-I adjusted these values (`Control` menu, `Motion`, then scroll down to find X/Y/Z/E steps/mm), printed the object again, and measured it:
-
-Unfortunately....the X/Y/Z/E steps/mm params were not properly stored to memory, so upon power cycle of the machine the values were lost somehow, which made the calibration pointless. 
-This seems to be a limitation (bug?) of Anycubic's Kossel firmware version (as of early 2018).  
+I tried adjusting these values (`Control` menu, `Motion`, then scroll down to find X/Y/Z/E steps/mm), printed the object again, and measured it. Unfortunately....the X/Y/Z/E steps/mm params were not properly stored to memory, so upon power cycle of the machine the values were lost somehow, which made the calibration pointless. This seems to be a limitation (bug?) of Anycubic's Kossel firmware version (as of early 2018).  
 
 This issue initially led me to consider modifying the firmware myself, since source code is available: the AnyCubic site provides a source code file [here](http://cn-hk.file.qizhu18.com/anycubic3d.com/upload/201803/03/201803031411086886.zip) that supposedly corresponds to the firmware installed on the machine. I archived my own backup copy [here](https://github.com/jheyman/KosselLinearPlusCustomz/blob/master/firmware/ANYCUBIC_Kossel_Source_Code.zip), because who knows how long the company will be around. The firmware is derived from Marlin, which is readily available to download too, but requires customization to work with the Kossel. 
 
@@ -497,6 +488,8 @@ The rest went smoothly:
 
 The updated firmware's splashscreen showed up, all good. 
 
+**NOTE** : In this version of FW, baudrate is set to **250000** instead of the default 115200.
+
 ## Re-calibrating with Marlin 1.1.9
 
 All steps are very well explained in DaHai's [video](https://www.youtube.com/results?search_query=marlin+1.1.9+kossel), I capture them here for my own convenience:
@@ -530,14 +523,6 @@ All steps are very well explained in DaHai's [video](https://www.youtube.com/res
 * REMOVE the probe
 
 Once this is all done, you should have a nicely calibrated machine ready to print with a great-looking first layer. BUT, better safe than sorry, after this whole procedure, I suggest you triple-check that Z=0 really corresponds to the bed surface on the newly recalibrated machine. Just move the Z-axis manually (as described in the procedure) and check with a piece of paper that contact happens very close to Z=0.000. If contact happens for a small positive Z (say Z=0.5), restart/redo the calibration until it's ok, otherwise the first job you launch will ruin your bed when the nozzle comes scratching it. Do not ask how I know...
-
-## Upgrades
-
-After a while I upgraded the bed for the coated glass one that Anycubic makes (ordered for about 30 euros from Banggood):
-
-![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/ultrabase.png)
-
-While not strictly necessary, it is quite pleasant to use compared to the stock bed cover. After objects cool down, it takes very little force to pull them from the base, so basically the scraper becomes useless.
 
 ## Lithophane...and ringing 
 
@@ -604,9 +589,81 @@ After a few weeks of use, I started getting intermittent "clonk" sounds, and not
 
 I did not bother unclogging the original nozzle, which I had abused over time anyway, and considering it's not very expensive to replace anyway. 
 
+## Upgrades
+
+### Bed
+
+After a while I upgraded the bed for the coated glass one that Anycubic makes (ordered for about 30 euros from Banggood):
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/ultrabase.png)
+
+While not strictly necessary, it is quite pleasant to use compared to the stock bed cover. After objects cool down, it takes very little force to pull them from the base, so basically the scraper becomes useless.
+
+### Silent stepper drivers
+
+By far the most interesting upgrade I did is changing the original A4988 stepper drivers, for TMC2208 silent drivers (TMC2130 would have been a good choice too). Luckily, the stepper drivers are not soldered directly onto the Trigorilla board, but can be unplugged and replaced at will. I bought a set of 4 TMC2208s for about 20$, they came with (mandatory) heatsinks and a small screwdriver to adjust voltage (more on this below) :
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_modules.png)
+
+These TMC2208 modules tend to heat up during operation, so they require both the heatsink to be placed on the top of the PCB (the chip is soldered on the other side) AND to use a fan to have a constant air flow through the heatsinks. I chose to 3D print [this](https://www.thingiverse.com/thing:2884268) fan duct, so I bought a small 40x40mm 12V fan :
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_fan.png)
+
+I unplugged the machine, and disconnected the stepper motors cables (X/Y/Z/E0), and took a picture of the old A4988 drivers just in case:
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_old_drivers.png)
+
+and then I removed them, and located the GND and DIR signals on the PCB: it is CRITICAL to plug the new TMC2208 with the right orientation, and matching GND/DIR on the PCB and GND/DIR on the modules is the only sure way to do this:
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_locate_GND_DIR.png)
+
+With the four new drivers in place, notice how the small voltage potentiometer is NOT on the same side as it was with the A4988, so again locating GND/DIR is the only sure way to plug them correctly:
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_install_new_drivers.png)
+
+Then I installed the heatsinks, making sure they were oriented correctly for the airflow of the fan duct. Finally, I adjusted the **reference voltage** on each driver, which required to power on the machine:
+
+* I used a voltmeter to measure voltage between a GND point (I chose the connector circled in the bottom right of the picture below), and the tiny potentiometer of each driver (also circled below)
+* by default they had various values around 1V. I followed Da Hai's advice and went for 0.9V on the X/Y/Z drivers, and 1.1V on the E0 (extruder) driver. The adjustment is made by turning (VERY carefully) the potentiometer, with the tiny screwdriver, while making sure to not touch anything else.
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_install_heatsinks.png)
+
+Then I installed the fan duct (it just slides from the side and clips to the PCB, very smart design), and plugged the fan in FAN1 connector:
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/TMC2208_install_fan_duct.png)
+
+The final step was to make a few changes in the Marlin firmware, in `Configuration.h`file:
+
+First, the new fan to cool the 2208s is plugged on the available "FAN1" connector on the TriGorilla board but by default in the 1.1.9 firmware this output is not activated. I uncommented `#define USE_CONTROLLER_FAN`
+and set `#define CONTROLLER_FAN_PIN 7` (FAN1 happens to be pin7 on the board, while FAN0 is 9 and FAN2 is 44). With this modification, Marlin will turn on FAN1 whenever the stepper drivers are activated.
+
+Then, I had to toggle the value of `INVERT_X_DIR`, `INVERT_Y_DIR`, `INVERT_Z_DIR`, and `INVERT_E0_DIR`, to ensure proper direction of movement (don't ask, the TCM2208s just drive the motors in a different direction than the A4988 by default)
+
+Finally, I changed the `X_DRIVER_TYPE`, `Y_DRIVER_TYPE`, `Z_DRIVER_TYPE`, and `E0_DRIVER_TYPE` from `A4988` to `TMC2208_STANDALONE`
+
+I rebuilt the firmware in the Arduino IDE, powered the machine, and flashed the modified FW to the board, and voila : the motors are now silent, just the fan noise remains (especially considering the added fan, so you may want to pick a silent one: I later replaced the basic 40mm fan mentioned above by a silent one and it was worth it). 
+
+### Homing switches glitch filter
+
+For a long while, I had an intermittent issue when SOMETIMES, during the final homing at the end of a print, the printer would raise one axis only instead of raising each axis, and this would end up in crashing into the tower. Very unpleasant sound, and not very good for the machine. After a little googling, it seems that the most likely cause for this behavior is an electrical glitch happening during homing, on the stop switches signals: the controller will interpret the glitch as a detection that the switch has been triggered, and therefore will top motion on that axis since it considers it is homed. Anyhow, I tried SW cures in the firmware (SW debouncing of the signal) but it did not work, and I finally resorted to adding a 100nF capacitor in parallel on each of the three switches. The capacitors need to be placed as close as possible to the board, so I hacked three little extension cables with the 100nF cap soldered on them: 
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/homing_switch_filter_hack.png)
+
+and inserted these extensions between the switches headers on the board, and the switches wires:
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/homing_switch_filter_installed.png)
+
+Ever since I have not had the homing issue again, fingers crossed.
+
+**Note**: at some point I had a 'Probing failed' error during the calibration procedure: this was just because there is a hardcoded limit in the firmware to how "far" the Z probing is allowed to go until a contact is detected, and for certain combinations of steps/mm and Z height, the probe may reach this limit before reaching the bed. I modified the `Z_PROBE_LOW_POINT` parameter in `configuration.h` from -2 to -20 (millimeters) and got rid of that annoying issue.
+
+Also, I realized that at power-up, bed leveling in not active by default in Marlin, and it's very easy to forget about activating it. To address this I added the bed leveling acivation G-code command (`M420 S1`) in the header of the G-code post-processor in Cura:
+
+![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/activate_bed_leveling.png)
+
 ## Misc 
 
-* I archived a copy of the Kossel user manuel [here]({{ site.baseurl }}/assets/images/Anycubic3DPrinterUpgraded AnycubicKossel_user manual_English(20170918)) in case I lose the paper one.
+* I archived a copy of the Kossel user manuel [here](https://github.com/jheyman/KosselLinearPlusCustomz/blob/master/Upgraded%20AnycubicKossel_user%20manual_English(20170918).pdf) in case I lose the paper one.
 * Here's a view of the stock Trigorilla controller board:
 
 ![image]({{ site.baseurl }}/assets/images/Anycubic3DPrinter/trigorilla_board.png)

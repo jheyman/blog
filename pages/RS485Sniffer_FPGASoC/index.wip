@@ -669,3 +669,18 @@ IP => AXI => Avalon => QSys
 
 
 
+test perfo DMA sync/async:
+
+ASYNC
+
+64 bytes => 235µs
+
+SYNC
+
+1 => 51
+64 => 51
+512 => 136
+1024 => 136
+2048 => 136
+4096 => 136
+8192 => 136

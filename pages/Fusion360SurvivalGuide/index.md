@@ -99,9 +99,31 @@ Note: at this point the sketch still has blue lines, which means some of its dim
 
 Note: the sketch is now fully black, which means it is fully defined/constrained.
 
+* Rounded corners are made with the `Fillet` tool from the sketch menu, just select two connected lines:
+
+![parametricmodelling_fillet1]({{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/parametricmodelling_fillet1.png)
+
+and select the fillet radius: 
+
+![parametricmodelling_fillet2]({{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/parametricmodelling_fillet2.png)
+
+* The `Trim` tool from the sketch menu is quite useful to clean-up a sketch to get just the right/useful lines:
+
+![parametricmodelling_trim]({{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/parametricmodelling_trim.png)
+
+* A useful feature (that I used all the time in Sketchup) is **construction lines**, serving as a reference only. In Fusion360, to draw a construction line, just draw a normal line, then right-click on it and toggle the `Normal/Construction` menu item:
+
+![parametricmodelling_constructionline]({{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/parametricmodelling_constructionline.png)
+
+or just hit `X` for the same result.
+
 * the `Press Pull` tool can then be used to extrude the 2D sketch into a 3D shape:
 
 ![parametricmodelling_extrudedshape]({{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/parametricmodelling_extrudedshape.png)
+
+* I find the **cross-section** feature quite convenient, it is available in the `INSPECT` menu under  `Section analysis` , just select a plane, and drag the section plane to the offset of interest:
+
+![parametricmodelling_section]({{ site.baseurl }}/assets/images/Fusion360SurvivalGuide/parametricmodelling_section.png)
 
 #### CAM part
 

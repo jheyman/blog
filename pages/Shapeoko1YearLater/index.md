@@ -181,19 +181,29 @@ So, like every other beginner this is the point I worried the most about initial
 So in the end, I now rely on the good old method of trial & error, and reusing feeds and speeds that worked for me. Below is a summary of values I have been using across various projects. They are by no mean optimized, nor recommanded, but they WORK for me so I am capturing them here for my own use. 
 
 | Material    | Endmill  | #Flutes | RPM   | Feedrate (mm/min)  | Depth of Cut   | Plunge Rate (mm/min)   |
-|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|:----:|---:|:---:|:---:|:---:|:---:|:---:|
 | Beech | 6mm square | 2 |12000 |1905 |1mm |476 |
 | Beech | 3.175mm square | 1 |12000 |425 |0.7mm |100 |
 | Bamboo | 3.175mm square | 2 |12500 |1000 |0.7mm |100 |
 | Bamboo | 6.35mm square | 3 |15000 |1524 |1.5mm |200 |
+| Bamboo | V-bit 60° | 2 |15000 |800 |5mm |350 |
 | Oak | 6.35mm square | 3 |15000 |1980 |2mm |200 |
 | Oak | 0.063" square | 2 |12000 | 635 | 0.8mm | 381 |
 | Acrylic | 6.35mm square | 3 |12000 | 2000 |1.5mm |635 |
 | Acrylic | 3.175mm square | 2 |12000 | 700 |0.7mm |150 |
-| HDPE | 6.35mm square | 3 |12000 |1250 |2mm |100 |
+| HDPE | 6.35mm square | 3 |12000 |2850 |2mm |100 |
 | HDPE | 3.175mm ballnose | 2 |12000 |840 |0.7mm |100 |
 | MDF | 6.35mm square | 2 |12000 |1905 |1mm |476 |
 | MDF | V-bit 90° | 2 |15000 |1000 |6mm |350 |
+| Aluminium (pocket) | 6.35mm square <br>ZrN coated | 3 | 16000 | 1220 | 0.38mm | (ramping) |
+| Aluminium (contour) | 6.35mm square <br>ZrN coated | 3 | 16000 | 1220 | 0.38mm | (ramping) |
+| Aluminium (adaptive) | 6.35mm square <br>ZrN coated | 3 | 16000 | 2438 | 1.9mm<br> opt load 0.635mm | (ramping) |
+| Aluminium (pocket) | 3.175mm square <br>ZrN coated | 2 | 10000 | 508 | 0.305mm | (ramping) |
+| Aluminium (contour) | 3.175mm square <br>ZrN coated | 2 | 10000 | 508 | 0.254mm | (ramping) |
+| Aluminium (adaptive) | 3.175mm square <br>ZrN coated | 2 | 10000 | 762 | 0.762mm<br> opt load 0.305mm | (ramping) |
+| Aluminium (pocket) | 1.5875mm square <br>ZrN coated | 2 | 10000 | 355 | 0.2mm | (ramping) |
+| Aluminium (contour) | 1.5875mm square <br>ZrN coated | 2 | 10000 | 355 | 0.2mm | (ramping) |
+| Aluminium (adaptive) | 1.5875mm square <br>ZrN coated | 2 | 10000 | 762 | 0.5mm<br> opt load 0.23mm |  (ramping) |
 
 ---
 
