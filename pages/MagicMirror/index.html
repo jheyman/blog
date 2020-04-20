@@ -1,0 +1,836 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Homehub redux, MagicMirror edition</title>
+	<meta name="author" content="JH">
+	<link href='http://jheyman.github.io/blog/assets/themes/mytheme/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Homehub redux, MagicMirror edition" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<a href="http://jheyman.github.io/blog/index.html"><img src="http://jheyman.github.io/blog/assets/images/common/hotglue_and_homemade_bits.png" height="100%" class="center" /></a>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-page">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Homehub redux, MagicMirror edition</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					
+<hr />
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul id="markdown-toc">
+  <li><a href="#table-of-contents" id="markdown-toc-table-of-contents">Table of contents</a></li>
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#magicmirror2-framework" id="markdown-toc-magicmirror2-framework">MagicMirror2 framework</a>    <ul>
+      <li><a href="#nodejs--javascript" id="markdown-toc-nodejs--javascript">Node.js / javascript</a></li>
+    </ul>
+  </li>
+  <li><a href="#installing-magicmirror2" id="markdown-toc-installing-magicmirror2">Installing MagicMirror2</a>    <ul>
+      <li><a href="#preparing-the-pi" id="markdown-toc-preparing-the-pi">Preparing the Pi</a></li>
+      <li><a href="#installing-magicmirror" id="markdown-toc-installing-magicmirror">Installing MagicMirror</a></li>
+      <li><a href="#adding-modules" id="markdown-toc-adding-modules">Adding modules</a></li>
+      <li><a href="#configuration" id="markdown-toc-configuration">Configuration</a></li>
+    </ul>
+  </li>
+  <li><a href="#modules" id="markdown-toc-modules">Modules</a>    <ul>
+      <li><a href="#clock-weather-network-status" id="markdown-toc-clock-weather-network-status">Clock, Weather, network status</a></li>
+    </ul>
+  </li>
+  <li><a href="#custom-module-development" id="markdown-toc-custom-module-development">Custom module development</a>    <ul>
+      <li><a href="#code" id="markdown-toc-code">Code</a></li>
+      <li><a href="#css" id="markdown-toc-css">CSS</a></li>
+    </ul>
+  </li>
+  <li><a href="#module-debugging" id="markdown-toc-module-debugging">Module debugging</a>    <ul>
+      <li><a href="#client-side-debug-serveronly-mode--using-chrome-developer-tools" id="markdown-toc-client-side-debug-serveronly-mode--using-chrome-developer-tools">Client-side debug: Serveronly mode &amp; using Chrome developer tools</a></li>
+      <li><a href="#server-side-debug-visual-studio-code" id="markdown-toc-server-side-debug-visual-studio-code">Server-side debug: Visual Studio Code</a></li>
+      <li><a href="#tracking-config-issues" id="markdown-toc-tracking-config-issues">Tracking config issues</a></li>
+      <li><a href="#logs" id="markdown-toc-logs">Logs</a></li>
+      <li><a href="#misc-issues" id="markdown-toc-misc-issues">Misc issues</a></li>
+    </ul>
+  </li>
+  <li><a href="#custom-modules" id="markdown-toc-custom-modules">Custom modules</a>    <ul>
+      <li><a href="#photoframeslideshow-module" id="markdown-toc-photoframeslideshow-module">Photoframe/slideshow module</a></li>
+      <li><a href="#on-screen-menu-module" id="markdown-toc-on-screen-menu-module">On-screen menu module</a></li>
+      <li><a href="#shopping-list-module" id="markdown-toc-shopping-list-module">Shopping list module</a></li>
+      <li><a href="#virtual-keyboard-module" id="markdown-toc-virtual-keyboard-module">Virtual keyboard module</a></li>
+      <li><a href="#touchprompt-module" id="markdown-toc-touchprompt-module">TouchPrompt module</a></li>
+    </ul>
+  </li>
+  <li><a href="#power-management--user-presence-detection" id="markdown-toc-power-management--user-presence-detection">Power management / User presence detection</a></li>
+  <li><a href="#automating-magicmirror-startup" id="markdown-toc-automating-magicmirror-startup">Automating MagicMirror startup</a></li>
+  <li><a href="#source-code" id="markdown-toc-source-code">Source code</a></li>
+  <li><a href="#useful-links" id="markdown-toc-useful-links">Useful links</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+  <li><a href="#todo-list" id="markdown-toc-todo-list">Todo list</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>I had been using an all-in-one touchscreen display running Android for a long time as a <a href="http://jheyman.github.io/blog/pages//HomeHubTablet/">home hub</a> to display pictures, keep track of thing to do, control music,etc…:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/HomeHubApp/screenshot.png" alt="image" /></p>
+
+<p>It was all based on a <a href="http://jheyman.github.io/blog/pages//HomeHubApp/">custom Android application</a>, which was interesting to implement but also a LOT of work at the time. Learning Android development and having to navigate through its oddities is not a good memory…</p>
+
+<p>Anyway, flash forward a few years later and I realized that I kept having annoying intermittent issues with it:</p>
+
+<ul>
+  <li>the wifi module integrated in the display had a tendency to drop the connection every now and then.</li>
+  <li>the integrated CPU had always been a little underpowered, but after a few years of the file system aging, it became slower and slower.</li>
+  <li>the <a href="http://jheyman.github.io/blog/pages/AndroidAutoWake/">proximity-sensor-based wake-up mechanism</a> I had installed turned out not to be 100% efficient, due to the limited robustness of the internal Android system. More on this below.</li>
+</ul>
+
+<p>Also, I realized that over time I stopped using/caring about half of the features I had programmed in. It was time for restarting from scratch!</p>
+
+<p>The key things I wanted to do this time around were:</p>
+
+<ul>
+  <li>reuse the touchscreen display (trusty old ViewSonic VS220) itself: nothing wrong with it, and a 22” touchscreen is not so cheap.</li>
+  <li>NOT use the sluggish integrated CPU &amp; Android system. Fortunately, this all-in-one touchscreen has an external micro-HDMI input, so I figured I would buy a Raspberry Pi4, and use that, bypassing the internal CPU.</li>
+  <li>clean-up the interface to only keep the features I found myself ACTUALLY using everyday.</li>
+  <li>find a 100% robust way to put the display to sleep (for power saving) and back on, without any side effects.</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>I considered using <a href="https://kivy.org/">Kivy</a> since I like using Python on Raspberry Pi (who doesn’t), but while browsing around I stumbled upon <a href="https://magicmirror.builders/">MagicMirror2</a>, and it soon struck me as the ideal solution. Originally, it’s the go-to solution to implement…well magic mirrors, i.e. displays hidden behind two-way mirrors that people install in their hallway or bathroom, to show information through the mirror. Thousands of people have made their own, it’s a great project that is very accessible to non-programmers, and looks cool.</p>
+
+<p>I had no interest in the “mirror” part of it though, and I really, really needed to keep the touch functionality. While doable with a two-way mirror and IR touch frame, it was not what I needed, and who wants fingerprints all over their mirror anyway? Still, MagicMirror turned out to be a wonderfully simple framework to use, and with some tweaks to leverage the touch feature of the display, it got me exactly what I needed.</p>
+
+<p>My project ended up being like this:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/overview.png" alt="image" /></p>
+
+<ul>
+  <li>on the touchscreen display itself, I kept only the features I really wanted:
+    <ul>
+      <li>a large area covering most of the screen to show pictures, to act as a <strong>photoframe/slideshow</strong></li>
+      <li><strong>clock &amp; weather</strong> info, as is very typical on such a display.</li>
+      <li>a <strong>shopping list</strong>, with support for adding items using the touchscreen.</li>
+      <li>a <strong>touch menu</strong> in the bottom right corner to access miscellaneous actions that don’t need to be shown by default.</li>
+      <li>and a <strong>network devices status</strong> monitor in the top left corner just because…I needed something to fill that part, and it would tell me when one of my (many) raspberry Pis would be down.</li>
+    </ul>
+  </li>
+  <li>A <strong>Raspberry Pi 4</strong> runs <strong>MagicMirror</strong> and has its HDMI output connected to the display, as well as a USB connection that allows it to read touch events. It grabs data from the internet (e.g. weather) as well as pictures from a local NAS, and shopping list items from a local server.</li>
+  <li>A <strong>passive infrared sensor (PIR)</strong> module is used to detect user presence in the vicinity of the display, triggers a signal to the Pi, which in turn will activate a relay to turn the display on and off (more on this below).</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/fullscreen_example_landscape.png" alt="fullscreen_example_landscape" /></p>
+
+<h2 id="magicmirror2-framework">MagicMirror2 framework</h2>
+
+<p>The documentation is available <a href="https://docs.magicmirror.builders/">here</a>, but here’s my simplified view of it:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/MM_basics.png" alt="MM_basics" /></p>
+
+<ul>
+  <li>the MagicMirror (MM) framework does all the heavy lifting to render the final image to be displayed.</li>
+  <li>it’s based on <strong>“modules”</strong> that each contribute to filling one region of the display.</li>
+  <li>MM has one central configuration file (<strong>config.js</strong>) where one defines which modules are to be included, and which region of the display they are assigned to.</li>
+  <li>Each module contains code to generate the visual elements to be rendered in its associated region. In practice, each module implements a <strong><code>getDOM</code></strong> function that returns a block of HTML to be rendered.</li>
+  <li>Each module has a <strong>main file</strong> containing at least the <code>getDOM</code> code (to display things), and optionnally has an associated <strong><code>node_helper</code></strong> that handles data retrieval or any utility function that the module may need.</li>
+  <li>Each module has an optional <strong>CSS</strong> (Cascading Style Sheet) file to customize the way its associated HTML will be rendered.</li>
+  <li>MM also has a global <strong><code>custom.css</code></strong> stylesheet that can be used to override the default rendering options, for all modules.</li>
+  <li>Inside a module, the main part and the node_helper part (when present) can send data to each other using <strong>“socket notifications”</strong>.</li>
+  <li>Modules can send data to each other using <strong>“notifications”</strong>.</li>
+</ul>
+
+<p>What appealed to me is that…this is pretty much all there is to it. No complex framework API, no fancy design patterns that you have to navigate your way through (I’m looking at you Android!), you just have to know about these few elements and you’re done. Actually, you don’t even have to know about all this if you don’t intend on developing custom modules, reading a short overview of config.js would be enough to use existing modules.</p>
+
+<h3 id="nodejs--javascript">Node.js / javascript</h3>
+
+<p>MagicMirror is based on the <strong>Node.js</strong> framework, which is the extremely popular way to use Javascript/ECMAScript on the server side (rather than its original use in browsers/client-side). I must admit, this is the ONE thing that had me hesitating initially, as I generally don’t like using “web” technologies, had no previous knowledge about Javascript, and as far as I could tell at the time it had a pretty bad rep as a hair-pulling programming language.</p>
+
+<p>Anyway, I took a deep breath and proceeded to learn javascript, and while I am (obviously, after a couple of hours) still not good at it, I learned just enough to be able to do custom MM modules development (detailed below), and kinda liked the experience overall. I found this online book to be particularly helpful: <a href="https://eloquentjavascript.net/">Eloquent Javascript</a></p>
+
+<h2 id="installing-magicmirror2">Installing MagicMirror2</h2>
+
+<h3 id="preparing-the-pi">Preparing the Pi</h3>
+
+<p>I installed a vanilla Raspbian distribution on the Raspberry Pi 4, and just configured two things:</p>
+
+<ul>
+  <li>disabled the overscan such as not to have black borders displayed:
+    <ul>
+      <li><code>sudo nano /boot/config.txt</code></li>
+      <li>add <code>disable_overscan=1</code></li>
+    </ul>
+  </li>
+  <li>Activated the <code>Wait for network at boot</code> in Boot options during the initial confguration (<code>raspi-config</code>)
+    <ul>
+      <li>this ensures (among other things) that the Pi will wait until it has network connectivity before mounting mapped network drives, which I use in the slideshow module.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="installing-magicmirror">Installing MagicMirror</h3>
+
+<p>You should refer to the MagicMirror site/instructions, as I’m pretty sure that by the time you read this, the way to install MM on a Pi will have changed. I used a great one-liner/script to do everything:</p>
+
+<pre><code>bash -c "$(curl -sL https://raw.githubusercontent.com/sdetweil/MagicMirror_scripts/master/raspberry.sh)"
+</code></pre>
+
+<h3 id="adding-modules">Adding modules</h3>
+
+<p>By default, MM has a short list of basic modules (clock, weather, agenda, news headlines, etc…) which already allow one to make a very useful display. But where MM really shines is in its third-party modules: virtually anything you can think of has already been developed by someone out there, so definitely do some searching before developing something. A <a href="https://github.com/MichMich/MagicMirror/wiki/3rd-Party-Modules">list of the most popular 3rd-party modules</a> is available, and there are many more beyond that: Google around and chances are you will find interesting modules.</p>
+
+<p>The procedure to install a module is usually documented on the module’s github page, but in 99% of the cases it goes like this:</p>
+
+<ul>
+  <li>navigate to the <code>modules</code> subdirectory in MagicMirror directory.</li>
+  <li>type <code>git clone {the module's github repo}</code></li>
+  <li>navigate to the newly created subdirectory named after the module, usually <code>MMM-{module name}</code></li>
+  <li>type <code>npm install</code> (which will pull all necessary dependencies)</li>
+</ul>
+
+<p>That’s it. Then proceed to declare the module in MM’s configuration file:</p>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>MM looks into the <code>config.js</code> file under the <code>config</code> subdirectory to know which modules it must load, which parameter values they will use, and where to display them on the screen.</p>
+
+<p>This configuration file uses JSON format (which goes hand in hand with Javascript), so you need to spend 5 minutes learning about that format. <code>config.js</code> includes a list named <code>modules</code>, you just need to add an entry to the list to include the module you want, the entry will look something like this:</p>
+
+<pre><code>module: "MMM-SomeModule",
+position: "{name of the target region on the screen",
+config: {
+    ...{miscelaneous module-specific config params go here}...
+}
+</code></pre>
+
+<p>The <code>position</code> parameter must be selected among the following predefined region names:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/MM_regions.png" alt="MM_regions" /></p>
+
+<h2 id="modules">Modules</h2>
+
+<h3 id="clock-weather-network-status">Clock, Weather, network status</h3>
+
+<p>The <strong>clock</strong>, <strong>currentweather</strong> and <strong>weatherforecast</strong> modules come preinstalled, and they do exactly what you would expect.</p>
+
+<p>For <strong>clock</strong>, I just adjusted the GPS coordinates to match my city (you can look them up by searching your city on Google map, they show up in the URL):</p>
+
+<pre><code>	{
+		module: "clock",
+		disabled: false,
+		position: "top_right",
+		displaySeconds: false,
+		showSunTimes: true,
+		lat: 48.8668619,
+		lon: 2.1888326,
+	},
+</code></pre>
+
+<p>For <strong>currentweather</strong> I simply adjusted the <code>location</code> (which will be displayed), the <code>locationID</code> for my city, and my personal <code>appid</code> from openweathermap.org. Same thing for the <strong>weatherforecast</strong> entry.</p>
+
+<pre><code>	{
+		module: "currentweather",
+		disabled: false,
+		position: "top_right",
+		config: {
+			location: "Paris",
+			locationID: "2968815",  //ID from http://bulk.openweathermap.org/sample/city.list.json.gz; unzip the gz file and find your city
+			appid: "xxxxxxxxxxxxxxxxxxxxxxxxx"
+		}
+	},
+</code></pre>
+
+<p>These modules then show up like this on the screen : 
+<img src="http://jheyman.github.io/blog/assets/images/MagicMirror/clock_weather.png" alt="clock_weather" /></p>
+
+<p>For the upper left part of the screen that hosts a connectivity status monitor for some of my home devices (most of them RPis), I installed and configured the <strong><a href="https://github.com/ianperrin/MMM-NetworkScanner">MMM-NetworkScanner</a></strong> module. Pretty straightforward, I declared a list of IP addresses, and the icon to be displayed (the name for the icon must be one from the <strong>font-awesome</strong> list, check it out it’s great)</p>
+
+<pre><code>	{
+		module: 'MMM-NetworkScanner',
+		disabled: false,
+		position: 'top_left',
+		config: {
+			devices: [
+				{ ipAddress: "xxx.xxx.xxx.xxx", name: "NAS", icon: "laptop" },
+				{ ipAddress: "xxx.xxx.xxx.xxx", name: "cuisine", icon: "laptop" },
+				{ ipAddress: "xxx.xxx.xxx.xxx", name: "alarme", icon: "laptop" },
+				{ ipAddress: "xxx.xxx.xxx.xxx", name: "camera portail", icon: "laptop" },
+				{ ipAddress: "xxx.xxx.xxx.xxx", name: "central", icon: "laptop" },
+				{ ipAddress: "xxx.xxx.xxx.xxx", name: "garage", icon: "laptop" },
+			],
+			showUnknown: false,
+			showOffline: true,
+			keepAlive: 120,
+			updateInterval: 60
+		}
+	},
+</code></pre>
+
+<p>which results in this:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/network_monitor.png" alt="network_monitor" /></p>
+
+<h2 id="custom-module-development">Custom module development</h2>
+<p>Now for the fun part: developing custom modules. I initially thought that it would be YET another learning curve that would take me down a rabbit hole, but it turned out to be surprisingly simple. I have to say, never has developing a plug-in/module/custom piece of work for a framework felt so simple, as it should be.</p>
+
+<h3 id="code">Code</h3>
+<p>There are several boilerplate examples out there, as well as excellent tutorials on the <a href="https://forum.magicmirror.builders/">MM forum</a>, but for the sake of this writeup, here’s a very short glance: the core of the module is the <code>getDOM</code> function, which should return a <code>&lt;div&gt;</code> HTML structure containing all the elements for that module. Creating a module that would consist in a single clickable button would be as simple as:</p>
+
+<pre><code>getDom: function() {
+    this.container = document.createElement("div");
+    var SomeButton = document.createElement("button");
+    SomeButton.className = "myButton";
+    SomeButton.innerText = "Button!";
+    SomeButton.onclick = () =&gt; {
+        ...for example send a notifcation here...
+    }; 
+    this.container.appendChild(SomeButton);
+    return this.container;  
+}
+</code></pre>
+
+<p>Usually, the module should react to external notifications, and everything it takes is implementing the <code>notificationReceived</code> function:</p>
+
+<pre><code>notificationReceived: function(notification, payload, sender) {
+    if (notification === "NOTIFICATION_XYZ") {
+    	...do something useful here...
+    }
+}
+</code></pre>
+
+<p>If the module has an associated <code>node_helper</code>, it will listen to its incoming notifications by implementing <code>socketNotificationReceived</code>:</p>
+
+<pre><code>socketNotificationReceived: function(notification, payload) {
+    if (notification === "SOME_NOTIFICATION_FROM_NODE_HELPER") {
+        ...do something with data received from node_helper...
+    };
+}
+</code></pre>
+
+<p>Similarly, the <code>node_helper</code> code can boil down to just implementing the <code>socketNotificationReceived</code> function:</p>
+
+<pre><code>socketNotificationReceived: function(notification, payload) {
+    if (notification === "GRAB_DATA_SOMEWHERE") {
+     	...do the heavy lifting like getting data from the internet, and then send back this data using sendSocketNotification back to the main code...
+    }
+}
+</code></pre>
+
+<p>And…that’s it for the code mechanism. Obviously, the code in those functions can get arbitrarily complex, but I was surprised while reviewing code from many different third-party modules, that it often boiled down to just a couple of pages of code.</p>
+
+<h3 id="css">CSS</h3>
+
+<p>The other part of implementing a module is to take care of styling the HTML elements that <code>getDOM</code> returns. The same mechanism as for web pages is used, so it’s all a matter of learning just enough CSS to make the module look like it should. The CSS file for a module can have an arbitrary name, it’s the job of the main module to specify it by overriding the <code>getStyles</code> function:</p>
+
+<pre><code>getStyles: function() {
+    return ["mymodule.css"];
+}
+</code></pre>
+
+<p>Just looking at a few examples of CSS files for existing modules should get you up and running quickly.</p>
+
+<h2 id="module-debugging">Module debugging</h2>
+
+<p>So writing the module code is relatively easy, and one can usually start debugging it by adding traces in the code (<code>console.log</code> calls), but at some point, figuring out why it doesn’t behave as expected will be vastly more efficient if you have the right testing environment and tools. I am by no means up to date on the most relevant developer habits, but two things helped me immensely while debugging my MM modules:</p>
+
+<ul>
+  <li>the ability to run MagicMirror in “server” mode, and using a browser on a different computer to run the client/display part, then leverage the <strong>browser’s integrated developer tools</strong>.</li>
+  <li>using a <strong>javascript debugger</strong>.</li>
+</ul>
+
+<p>Details below are nothing fancy, but I’m sharing them in case it helps other beginner MM developers.</p>
+
+<h3 id="client-side-debug-serveronly-mode--using-chrome-developer-tools">Client-side debug: Serveronly mode &amp; using Chrome developer tools</h3>
+
+<p>To support this the <code>config.js</code> must be modified to allow connection from an external IP address. You can white-list a number of specific IPs, but for development I got lazy and allowed them all:</p>
+
+<pre><code>ipWhitelist: [],
+</code></pre>
+
+<p>That’s bad, security-wise etc…you know the drill. The port to be used is configured on that line:</p>
+
+<pre><code>port: 8080,
+</code></pre>
+
+<p>In the MagicMirror directory, run <code>node serveronly</code>, MM will run the server part. From any browser you can then open:</p>
+
+<pre><code>http://[IP address of the Pi]:8080
+</code></pre>
+
+<p>and this will render your MagicMirror display in the browser rather than on the Pi’s display. And then the real magic: now that MM client code runs in a browser, you can use the developer tools that many browser integrate, to debug the JS code. In my case I used Chrome, you can open the developer tools pane from the Settings button =&gt; More tools =&gt; Developer tools.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/Chrome_devtools.png" alt="Chrome_devtools" /></p>
+
+<p>From there you can browse the code, browse the HTML elements of the page, and use the integrated debugger to set breakpoints and inspect variables. One of the other killer features in Chrome developer tools is the ability to <strong>inspect</strong> graphical elements, hovering over a given area in the page will highlight the associated element in the HTML tree:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/Chrome_inspector.png" alt="Chrome_inspector" /></p>
+
+<p>Very useful to go and check the attributes of a given <code>&lt;div&gt;</code> in a module, change its CSS attributes on the fly to test different options, etc…</p>
+
+<p><strong>Tip</strong>: while debugging a MM setup with a serveronly + remote browser, I found it helpful to show the mouse cursor, by adding the following to <code>custom.css</code> file:</p>
+
+<pre><code>Html {
+    Cursor: default; 
+}
+</code></pre>
+
+<h3 id="server-side-debug-visual-studio-code">Server-side debug: Visual Studio Code</h3>
+
+<p>I had never tried Microsoft’s <strong>Visual Studio Code</strong> before, but since I stumbled upon a <a href="https://github.com/BretStateham/pinodevscode">great set of instructions</a> for debugging node applications that referred to it, I figured I would give it a try, and I’m very happy I did, it’s quite good.</p>
+
+<p>After installing Samba on the RPi, sharing the local MagicMirror directory and mapping it from a Windows PC, it was then very convenient to edit the module code in VS Code, save and reload MM. And where things got really interesting, was using the javascript debugger in VS Code. It’s all described in the instructions I linked above, but basically it involves launching MagicMirror in a special mode where it will standby and wait for a debugger connection:</p>
+
+<pre><code>sudo node --inspect-brk=192.168.xxx.xxx:9229 serveronly
+</code></pre>
+
+<p>Then from VSCode, after having configured the debugger configuration with the Pi’s IP address, run the debugger and enjoy stepping through the server-side code, breakpoints, watching variables, etc…</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/VSCode_debugger.png" alt="VSCode_debugger" /></p>
+
+<h3 id="tracking-config-issues">Tracking config issues</h3>
+
+<p>If upon launching MM, you end up with a blank screen, chances are there is a syntax error in your <code>config.js</code> file. The following command, executed from inside the MagicMirror directory, may help tracking down where the error is:</p>
+
+<pre><code>npm run config:check
+</code></pre>
+
+<p><strong>Note</strong>: I initially had to do <code>npm install jshint</code> for this to work</p>
+
+<h3 id="logs">Logs</h3>
+
+<p>One thing that caught me originally, is that when running in serveronly + browser mode, the <code>console.log</code> traces show up in different places:</p>
+
+<ul>
+  <li>the traces from node helpers will appear on the raspberry side in the console</li>
+  <li>the traces from the module’s main code will appear in the browser’s developer tools console.</li>
+</ul>
+
+<p><strong>Tip</strong>: on the browser side, if you have the <code>clock</code> module, there will be CLOCK_SECOND traces every second, which is annoying. Just type “-CLOCK_SECOND” in the console filter box to filter them out !</p>
+
+<h3 id="misc-issues">Misc issues</h3>
+
+<p>For some reason I did not bother tracking down, my MMM-PIR-Sensor module gave me this error upon launch in serveronly+browser mode, while I did not have it in normal mode:</p>
+
+<pre><code>symbol lookup error: /home/pi/MagicMirror/modules/MMM-PIR-Sensor/node_modules/epoll/build/Release/epoll.node: undefined symbol: _ZN2v816FunctionTemplate3NewEPNS_7IsolateEPFvRKNS_20FunctionCallbackInfoINS_5ValueEEEENS_5LocalIS4_EENSA_INS_9SignatureEEEiNS_19ConstructorBehaviorE
+</code></pre>
+
+<p>Which required a rebuild of the module, by going into the <code>MMM-PIR-Sensor</code> directory and doing:</p>
+
+<pre><code>npm install electron-rebuild
+node_modules/.bin/electron-rebuild
+</code></pre>
+
+<h2 id="custom-modules">Custom modules</h2>
+
+<p>Below are some notes about modules I either customized (at code level) or developed.</p>
+
+<h3 id="photoframeslideshow-module">Photoframe/slideshow module</h3>
+
+<p>This was the primary feature I wanted for my display: a slideshow that would pick one photo randomly from a predefined place (the NAS folder that contains all my pictures), and show it for a predefined time, before loading a new one. I found the <a href="https://github.com/darickc/MMM-BackgroundSlideshow">MMM-BackgroundSlideShow</a> module that did almost exactly that, and modified it to suit my needs:</p>
+
+<ul>
+  <li>
+    <p>the original module was implemented (at least at the time) to browse a predefined directory to return a list of images it contained, and then cycle through them in a sequence or in a random order. My problem was that this method does not scale up when the directory contains thousands of images, as mine does. So I modified the code such that each time the background image needs to be changed, it will go and search for (only) one image, walking the predefined directory recursively in a random manner, until it finds a suitable image (matching the list of allowed extensions), and return only that. The time to find and return that one picture is therefore almost independent from the total number of pictures. This strategy is implemented in the <code>getFiles</code> function in the <code>node_helper</code>.</p>
+  </li>
+  <li>
+    <p>I did not like the picture taking the full width of the display, overlapping the modules on the sides. While there are features (gradient) to optimize the contrast between the background image and overlapping module text, for me it looked weird on some images that had a white background. So I reduced the display width by hacking the <code>custom.css</code> a bit with :</p>
+  </li>
+</ul>
+
+<pre><code>.region.below {
+	width: 65%;
+	margin: 0 auto;
+	}
+</code></pre>
+
+<ul>
+  <li>
+    <p>I added my own take on displaying a title over the top of the image: given how I organize my photos, they have a meaningless name (e.g. DSC45123.jpg) but there’s always a meaningful name on the directory they’re in. Except I never followed a very strict naming convention, and my directory names have no space in them, so I added a regular expression to make the containing directory name more appealing, e.g. <code>SomeDirWithPicsFromApril2004</code> will be displayed as <code>Some Dir With Pics From April 2004</code></p>
+  </li>
+  <li>
+    <p>the original module had the capability to configure a list of directories NOT to parse, but it was inconvenient for me to go and add a long list of subdirectories manually in the config file, and add more as I added pictures to my collection, so instead I added the ability to filter subdirectories from being used is a given string is found in their name. I use “NOSHOW_”, I just prefix my directories on the NAS with that keyword, and the slideshow will ignore them.</p>
+  </li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/fullscreen_example_portrait.png" alt="fullscreen_example_portrait" /></p>
+
+<p>Since the original module already had the ability to change to the next picture, or pause, or resume, based on an external notification, I went and looked for a module that would allow me to do that by touching buttons on the screen, and that’s how I ended up using the next module.</p>
+
+<h3 id="on-screen-menu-module">On-screen menu module</h3>
+
+<p>The very convenient <a href="https://github.com/shbatm/MMM-OnScreenMenu">MMM-OnScreenMenu</a> module was exactly what I needed to be able to pause/resume/force a change in the slideshow. I only had to declare a suitable configuration:</p>
+
+<pre><code>	{
+		module: 'MMM-OnScreenMenu',
+		disabled: false,
+		position: 'bottom_right',
+		/* Valid positions: 'top_right', 'top_left', 'bottom_right', 'bottom_left' */
+		config: {
+			touchMode: true,
+			enableKeyboard: false,
+			menuItems: {
+				refresh: { title: "Refresh", icon: "recycle", source: "LOCAL" },
+				notify1: {
+					title: "SLIDESHOW_NEXT",
+					icon: "forward",
+					notification: "BACKGROUNDSLIDESHOW_NEXT",
+					payload: ""
+				},
+				notify2: {
+					title: "SLIDESHOW_PAUSE",
+					icon: "pause",
+					notification: "BACKGROUNDSLIDESHOW_PAUSE",
+					payload: ""
+				},
+				notify3: {
+					title: "SLIDESHOW_RESUME",
+					icon: "play",
+					notification: "BACKGROUNDSLIDESHOW_PLAY",
+					payload: ""
+				},
+			},
+		}
+	},
+</code></pre>
+
+<ul>
+  <li>I activated the “touchMode” since this is what makes sense on a touchscreen</li>
+  <li>I declared three user buttons, each of them programmed to send a specific notification to the slideshow module.</li>
+  <li>I kept the “Refresh” button that comes as a default, because why not, it may help someday when the display misbehaves after a network issue.</li>
+</ul>
+
+<p>By default, the on-screen menu is closed and does not take much space, on that lower right corner:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/onscreenmenu_closed.png" alt="onscreenmenu_closed" /></p>
+
+<p>Touching it reveals the user actions, and once a user action has been touched, it automatically closes itself again. Neat.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/onscreenmenu_open.png" alt="onscreenmenu_open" /></p>
+
+<h3 id="shopping-list-module">Shopping list module</h3>
+
+<p>Next up was developing a module for my #2 priority for this display: displaying my shopping list and having to ability to add items to the list from the screen. There are MANY MagicMirror modules for a variety of todo/shopping list (Google, Todoist, etc…), but I don’t like to rely on an external service for such a simple thing, so years ago I implemented my own small shopping list server, and associated <a href="http://jheyman.github.io/blog/pages//ShoppingListWidget/">Android app</a>. I’m still using the Android app on my phone, so I would just have to implement a MM module that interfaces to the existing server.</p>
+
+<p>I went for a simplistic design:</p>
+<ul>
+  <li>rendering the list items as HTML <code>&lt;li&gt;</code> elements</li>
+  <li>just one button to add items (which invokes the next module I’m covering below: the virtual keyboard)</li>
+  <li>I made the list items clickable, such that when I click on one of them, it prompts me whether I want to delete it (which involves yet another custom module, see below)</li>
+</ul>
+
+<p>Basically the code boils down to:</p>
+
+<pre><code>var addItem = document.createElement("button");
+addItem.className = "addItemButton";
+addItem.innerText = "+";
+addItem.setAttribute("name", "addItemButton");
+addItem.onclick = () =&gt; {
+    this.sendNotification("KEYBOARD", { key: keyboardInputID, style: "default"});											
+}; 
+</code></pre>
+
+<p>for the button, and :</p>
+
+<pre><code>function makeOnClickHandler(item) {
+    return function() {
+        self.sendNotification("PROMPT_YESNO", {text:"Delete "+ item +"?", yesNotification: {event: "DELETE_ITEM", payload: item}, noNotification: {event: '', payload: ''}});
+    };
+};
+
+for (let i = 0; i &lt; this.shoppingListItems.length; i++) {
+    var listItem = document.createElement("li");
+    listItem.className = "listItem";
+    listItem.id = "listItem"+i+"_"+this.shoppingListItems[i].item;
+    listItem.innerHTML = this.shoppingListItems[i].item;
+    listItem.onclick = makeOnClickHandler(this.shoppingListItems[i].item);
+    listContent.appendChild(listItem);
+}
+</code></pre>
+
+<p>for adding the list items, which the <code>node_helper</code> retrieves from the remote server by:</p>
+
+<pre><code>getItems: function (url) {
+    var self = this;
+    request({ url: url, method: 'GET' }, function (error, response, body) {
+        if (!error &amp;&amp; response.statusCode == 200) {
+            var json = JSON.parse(body);
+            // Send the json data back with the url to distinguish it on the receiving part
+            self.sendSocketNotification("MMM-ShoppingList_SHOPPINGLIST_ITEMS", json);
+        }
+    });
+},
+</code></pre>
+
+<p>Really, I love how straightforward it is, compared to the hoops I had to jump through to get the same result in Android…anyway, it ended up looking like this:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/shopping_list_example.png" alt="shopping_list_example" /></p>
+
+<h3 id="virtual-keyboard-module">Virtual keyboard module</h3>
+
+<p>To be able to add items to my shopping list, I absolutely needed to find a virtual/touch keyboard, or the whole thing would not make sense (yes, there are modules to input data remotely, but I did not want to have to grab my phone everytime I needed to add something while in front of my screen). A quick search led to the awesome <a href="https://github.com/lavolp3/MMM-Keyboard">MMM-Keyboard</a> module which turned out to be perfect. It was still under development the first time I used it, but the developer reacted quickly and got it up and running in no time. Kudos @lavolp3!</p>
+
+<p>The only small problem I had is that with the keyboard appearing over the photoframe/slideshow region, even though the keyboard was properly displayed on top, the touch events happening inside the slideshow area did not end up getting directed to the keyboard. I used an ugly but very efficient workaround, which was to force a very high Z-index on the region the keyboard was assigned to (lower left), by adding this to <code>custom.css</code>:</p>
+
+<pre><code>.region.bottom.left {
+    z-index: 999;
+}
+</code></pre>
+
+<p>When invoked (by sending it a specific notification), the keyboard is made visible:
+<img src="http://jheyman.github.io/blog/assets/images/MagicMirror/virtual_keyboard.png" alt="virtual_keyboard" /></p>
+
+<p>Upon touching “OK”, the content of the user input field is broadcasted as another notification in return, which the shopping list module catches.</p>
+
+<h3 id="touchprompt-module">TouchPrompt module</h3>
+
+<p>As I mentioned above, when I click on an item of the shopping list, it trigs an action to delete this item. But this would not work without a confirmation prompt, so I went on to implement a module to do just that: pop-up a prompt on request, with simple Yes/No buttons to confirm.</p>
+
+<p>The code most boils down to :</p>
+
+<pre><code>var YesButton = document.createElement("button");
+YesButton.className = "yesButton";
+YesButton.innerText = "YES";
+YesButton.setAttribute("name", "yesButton");
+YesButton.onclick = () =&gt; {
+    if (self.yesNotification.event != '') self.sendNotification(self.yesNotification.event, self.yesNotification.payload);
+    self.promptText = "";
+    self.showPrompt = false;
+    self.updateDom();
+}; 
+</code></pre>
+
+<p>(and similarly for the “No” button), the notification to be sent back is declared in the original notification from whichever module request the prompt. Finally a little CSS to style the buttons,</p>
+
+<pre><code>.MMM-TouchPrompt .yesButton {
+	background-color: #fff;
+	width: 80px;
+	height: 40px;
+	opacity: 0.8;
+	border: 0px solid #00000000;
+	border-radius: 20px;
+	color: #333;
+	font-size: 26px;
+	font-weight: bolder;
+	padding: 5px 5px;
+	text-decoration: none;
+	cursor: none;
+	margin: 0px 10px;
+}
+</code></pre>
+
+<p>And I got this:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/touch_prompt_example.png" alt="touch prompt" /></p>
+
+<h2 id="power-management--user-presence-detection">Power management / User presence detection</h2>
+
+<p>A feature I had on my previous implementation of this project was to power off the screen when no one was present around it, to save power. By the way I measured the power consumption of my VSD220 display, it draws approximately <strong>22W</strong> when it’s on, and <strong>&lt;1W</strong> when switched off, so there’s value in having a power saving strategy.</p>
+
+<p>I reused the PIR sensor approach I had already used in <a href="http://jheyman.github.io/blog/pages//AndroidAutoWake/">this project</a> to detect user presence in front of the display.</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/PIR_sensor.png" alt="PIR_sensor" /></p>
+
+<p>There’s a great <a href="https://github.com/jheyman/MMM-PIR-Sensor">MMM-PIR-Sensor</a> module available that conveniently supports reading a PIR sensor signal off a GPIO, and broadcast a USER_PRESENCE notification accordingly, so I started there.</p>
+
+<p>Now, I needed to switch on the monitor when user presence was detected, and switch it off when no user presence was detected anymore after a while. I initially tried to use MMM-PIR-Sensor’s integrated method for turning the RPi’s HDMI output on and off, unfortunately for some reason my (aging) VSD220 display did not quite manage the interruption of the HDMI signals so well, and turning the HDMI back on did not always result in the display resuming properly.</p>
+
+<p>So I went for a more radical approach that I knew would work 100% reliably: hacking the physical on/off button of the front of the display:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/onoff_button.png" alt="image" /></p>
+
+<p>which required to open the plastic casing (nothing too difficult with a little patience, lots of clips to go through without breaking anything…), the on/off button is managed by the part in the bottom left:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/display_internals_overview.png" alt="image" /></p>
+
+<p>Lifting that part revealed the on/off switch soldered on a PCB, so I just soldered two wires to those two pins of the switch:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/display_onoff_button_identification.png" alt="image" /></p>
+
+<p>And then put the PCB back in place, and ran the wires to where the display’s connectors are located in the back:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/display_onoff_button_wired.png" alt="image" /></p>
+
+<p>As I did not want to take any chances of an electrical interaction between the display and the Raspberry Pi’s GPIOs, I used a relay module to connect/disconnect the two wires (simulating the effect of pushing the physical button). So I proceeded to connect the PIR sensor and relay to the Pi, and on/off button wires to the two “NO” (normally open) pins on the relay output.</p>
+
+<p>The Raspberry Pi GPIO pinout is like this :
+<img src="http://jheyman.github.io/blog/assets/images/MagicMirror/RPi_GPIO_Pinout.png" alt="RPi pinout" /></p>
+
+<p>I wired it as follows:</p>
+<ul>
+  <li>pin 2 (5V) to PIR sensor 5V pin</li>
+  <li>pin 6 (GND) to PIR sensor GND pin</li>
+  <li>pin 8 (GPIO14) to PIR sensor signal</li>
+  <li>pin 4 (5V) to the relay’s “+” pin</li>
+  <li>pin 9 (GND) to the relay’s “-“ pin</li>
+  <li>pin 10 (GPIO15) to the relay’s “S” pin</li>
+</ul>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/raspi_wiring.png" alt="image" /></p>
+
+<p><strong>Afterthought</strong>: there is most probably no need for a relay, the on/off button could be wired directly and one GPIO configured with a pull-up resistor, and driving it to GND would close the circuit. However, first I did not want to bother checking the voltage compatibility, and second I kind of like the fact that the relay emits a clicking sound in this case: it’s an audible cue to the fact that the touchscreen did detect user presence.</p>
+
+<p>I forked the MMM-PIR-Sensor code to only keep the bare minimum I needed and adapt it to my usecase. I could almost have used the original module as is, it already has the capability to drive a relay signal instead of turning the HDMI output on and off. However, in my case the relay is there to simulate the <strong>momentary</strong> push of a physical button, so I needed to modify the code to close the relay, and re-open it about 100msec later. I also modified the code logic accordingly. Unfortunately, this momentary behavior of the on/off button means that I cannot know in the code whether the display is on or off, so I just assume it’s off at the beginning, and then just oggle it, which works.</p>
+
+<hr />
+
+<p>Here’s a final pic of the display mounted on the wall:</p>
+
+<p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/homehub_in_environment.png" alt="homehub_in_environment" /></p>
+
+<h2 id="automating-magicmirror-startup">Automating MagicMirror startup</h2>
+
+<p>Nothing special here, I followed the instructions and used <code>pm2</code> to autostart MagicMirror.</p>
+
+<h2 id="source-code">Source code</h2>
+
+<p>FWIW, below are the links to the github repos for my implementation:</p>
+
+<ul>
+  <li><a href="https://github.com/jheyman/MagicMirror_config">configuration file</a></li>
+  <li><a href="https://github.com/jheyman/MMM-PIR-Sensor">my version of MMM-PIR-Sensor</a></li>
+  <li><a href="https://github.com/jheyman/MMM-Keyboard">my version of MMM-Keyboard</a>, but you should grab the <a href="https://github.com/lavolp3/MMM-Keyboard">original one</a></li>
+  <li><a href="https://github.com/jheyman/MMM-BackgroundSlideshow">my version of the MMM-BackgroundSlideShow</a> , but you should grab the <a href="https://github.com/darickc/MMM-BackgroundSlideshow">original one</a></li>
+  <li><a href="https://github.com/jheyman/MMM-TouchPrompt">my MMM-TouchPrompt module</a></li>
+  <li><a href="https://github.com/jheyman/MMM-ShoppingList">my MMM-ShoppingList module</a>, most likely useless to you since it interacts with my local and very custom server.</li>
+  <li><a href="https://github.com/jheyman/MMM-OnScreenMenu">my version of MMM-OnScreenMenu</a>, but you should grab the <a href="https://github.com/shbatm/MMM-OnScreenMenu">original one</a></li>
+  <li><a href="https://github.com/jheyman/MMM-NetworkScanner">my version of MMM-NetworkScanner</a>, but you should grab the <a href="https://github.com/ianperrin/MMM-NetworkScanner">original one</a></li>
+</ul>
+
+<h2 id="useful-links">Useful links</h2>
+<p>The place to go if you are interested in module development, or even just in finding and using other people’s modules is the <a href="https://forum.magicmirror.builders/">MM forum</a>. Tons of great information and helpful people there.</p>
+
+<h2 id="lessons-learned">Lessons learned</h2>
+<ul>
+  <li>MagicMirror2 is a fantastic framework, I literally went from downloading it to having fully reimplemented my homehub display (including my own custom modules and learning Javascript in the process) within three weeks.</li>
+  <li>Javascript is not as terrible as I thought. Pretty sure I produced some really awful Javascript there, but as a means to an end it worked beautifully.</li>
+  <li>it took about 20 times shorter to implement this than I originally spent developing my Android-based touch app…and it felt much better while doing it.</li>
+</ul>
+
+<h2 id="todo-list">Todo list</h2>
+<ul>
+  <li>add (back) the ability to send the current photo by email</li>
+  <li>add module to control squeezebox music server</li>
+</ul>
+
+				</div><!-- entry-content -->
+
+				<br>
+				<hr>
+				<div class="misc-content">			
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'jheymantechblog'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->				
+			</div><!-- bd -->
+
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">JH</span> - <span class="fn email">bidsomail at gmail.com</span></address></li>
+						<li>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>, theme based on the_minimum from <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a></li>
+					</ul>
+				</div><!-- misc -->
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/pages/MagicMirror/" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43264312-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
