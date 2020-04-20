@@ -24,7 +24,7 @@ tagline: A collection of my notes from various DIY projects/experimentations
 
 <table cellpadding="10">
 <tr>
-  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/MagicMirror/touch_prompt_example.png"/></div></td>
+  <td><div id="container"  style="height:270px;"><img src="{{ site.baseurl }}/assets/images/MagicMirror/fullscreen_example_landscape.png"/></div></td>
   <td style="vertical-align:middle"><a href="{{ site.baseurl }}/pages/MagicMirror">Homehub redux using MagicMirror framework</a></td>
 </tr>
 </table>
