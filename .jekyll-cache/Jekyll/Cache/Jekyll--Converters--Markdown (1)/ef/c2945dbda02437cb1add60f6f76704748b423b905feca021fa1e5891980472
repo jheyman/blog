@@ -1,0 +1,178 @@
+I"=
+<p>This mini-project started when we got a Philips Hue Go light: I wanted to experiment with the associated developer API mostly out of curiosity, and quickly thought of a very simple application: turning on the Hue gradually in the morning at wake up time.<br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#setup" id="markdown-toc-setup">Setup</a></li>
+  <li><a href="#api-summary" id="markdown-toc-api-summary">API summary</a>    <ul>
+      <li><a href="#api-debugger" id="markdown-toc-api-debugger">API debugger</a></li>
+      <li><a href="#creatingauthorizing-a-user" id="markdown-toc-creatingauthorizing-a-user">Creating/authorizing a user</a></li>
+      <li><a href="#read-device-info" id="markdown-toc-read-device-info">Read device info</a></li>
+      <li><a href="#write-device-state" id="markdown-toc-write-device-state">Write device state</a></li>
+    </ul>
+  </li>
+  <li><a href="#color-system" id="markdown-toc-color-system">Color system</a></li>
+  <li><a href="#python-script" id="markdown-toc-python-script">Python script</a></li>
+  <li><a href="#wake-up-light-application" id="markdown-toc-wake-up-light-application">Wake-up light application</a></li>
+</ul>
+
+<hr />
+
+<h3 id="overview">Overview</h3>
+
+<p><img src="/assets/images/HueRaspberryControl/overview.png" alt="Overview" /></p>
+
+<p>The Hue lighting system is based on a central control point (the Hue bridge) communicating with light devices over Zigbee. There is then an official iPhone/Android application to control lighting (via access to this bridge), which I do not care about in this context.
+I considered doing without the bridge and controlling the lights directly from the raspberry pi with a zigbee module, but I did not want to invest a lot of time hacking around with an undocumented protocol, and the cost of the official Hue bridge (~50 euros) is reasonable (unlike the price of the bulbs…) so I went the easy way, bought the official bridge, and therefore only had to learn about the official (and very well documented) Hue API.<br /></p>
+
+<p>The bridge is connected by Ethernet (only) to the home router/LAN, and implements a nice REST API over port 80.<br /></p>
+
+<p>The Hue Go (small portable Hue light with embedded battery) and Hue bridge 2.0 are shown below:</p>
+
+<p><img src="/assets/images/HueRaspberryControl/hue_go_and_bridge.png" alt="Overview" /></p>
+
+<hr />
+
+<h3 id="setup">Setup</h3>
+
+<p>The only thing I configured specifically is the IP address of the bridge. It gets its IP dynamically over DHCP, and there is then a UPnP discovery mechanism to find it. To simplify things, I assigned it a static IP address in my LAN, in my router’s DHCP configuration. It can also be configured with a static IP address from the parameters section of the official control application, if needed.<br /></p>
+
+<p>On the raspberry pi, the <code>requests</code> library must be installed, it will enable very straightforward GET/PUT/POST HTTP requests to the bridge:</p>
+
+<pre><code>sudo apt-get install python-pip
+sudo pip install requests
+</code></pre>
+
+<hr />
+
+<h3 id="api-summary">API summary</h3>
+
+<p>The REST API very well documented on the Philips Hue developer site, notes below are captured only as a summary to myself.</p>
+
+<h4 id="api-debugger">API debugger</h4>
+<p>A browser-based API debugger is available at</p>
+
+<pre><code>http://[bridge IP address]/debug/clip.html
+</code></pre>
+
+<h4 id="creatingauthorizing-a-user">Creating/authorizing a user</h4>
+<p>Only authorized users registered inside the bridge’s whitelist can control the lights. Creating a whitelisted user is done by pushing the physical button on the bridge, and then POSTing a request at with content :</p>
+
+<pre><code>{"devicetype":"[some arbitrary identifier]"}.
+</code></pre>
+
+<p>The return data is of the form:</p>
+
+<pre><code>[
+	{
+		"success": {
+			"username": "[generated username]"
+		}
+	}
+]
+</code></pre>
+
+<p>The returned generated username must then be used to access/alter the state of the light devices.</p>
+
+<h4 id="read-device-info">Read device info</h4>
+
+<p>Sending a GET request on :</p>
+
+<pre><code>http://[bridge IP address]/api/[username]
+</code></pre>
+
+<p>returns a JSON structure containing all information on the network and devices controllable by user [username] on this bridge:</p>
+
+<pre><code>{
+	"lights": {xxxxx},
+	"groups": {xxxxx},
+	"config": {xxxxx},
+	"linkbutton": false,
+	"portalservices": true,
+	"portalconnection": "connected",
+	"portalstate": {xxxxx},
+	"factorynew": false,
+	"replacesbridgeid": null,
+	"backup": {xxxxx},
+	"whitelist": {xxxxx},
+	"schedules": {xxxx},
+	"scenes": {xxxxx},
+	"rules": {xxxx},
+	"sensors": {xxxxx}
+}
+</code></pre>
+
+<p>a GET request on :</p>
+
+<pre><code>http://[bridge IP address]/api/[username]/lights
+</code></pre>
+
+<p>returns info on all connected lights.<br /></p>
+
+<p>The state of a specific light can be accessed by performing a GET on :</p>
+
+<pre><code>http://[bridge IP address]/api/[username]/lights/[lightId]
+</code></pre>
+
+<h4 id="write-device-state">Write device state</h4>
+
+<p>The state of a specific light can be altered by sending a PUT request to :</p>
+
+<pre><code>http://[bridge IP address]/api/[username]/lights/[lightId]/state
+</code></pre>
+
+<p>containing a JSON-formatted body specifying which parameters to modify (see an example below).</p>
+
+<hr />
+
+<h3 id="color-system">Color system</h3>
+
+<p>The light color can be specified in a variety of ways, I selected the Hue/Saturation/Lightness system.</p>
+
+<ul>
+  <li>the <strong>Hue</strong> parameter is set using key <code>hue</code>, with a value….determined experimentally playing with the official app.</li>
+  <li>the <strong>Saturation</strong> parameter is set using key <code>sat</code> with a value from 0 to 254</li>
+  <li>the <strong>Brightness</strong> parameter is set using key <code>bri</code> with a value from 0 to 254</li>
+  <li>turning the light on or off is done using the <code>on</code> boolean parameter<br /></li>
+</ul>
+
+<p>Orange/Yellow example:</p>
+
+<pre><code>{"on":true, "sat":220, "bri":254,"hue":8378}
+</code></pre>
+
+<p>Blue example</p>
+
+<pre><code>{"on":true, "sat":229, "bri":254,"hue":41287}
+</code></pre>
+
+<hr />
+
+<h3 id="python-script">Python script</h3>
+
+<p>With <code>json</code> and <code>requests</code> libraries, access to the bridge boils down to a few lines, e.g.:</p>
+
+<pre><code>import requests
+import json
+
+url = "http://[Bridge IP address]/api/[username]/lights/1/state"
+
+data_on = {"on":True, "sat":254, "bri":254,"hue":5000}
+data_off = {"on":False}
+
+r = requests.put(url, json.dumps(data_on), timeout=5)
+</code></pre>
+
+<hr />
+
+<h3 id="wake-up-light-application">Wake-up light application</h3>
+
+<p>I chose to implement a simple script performing a ramp-up of light brightness at a fixed hue/saturation, and have this script called at the desired wake-up time by inserting the following line in the <code>crontab</code>:</p>
+
+<pre><code>37 6 * * 1-5 cd /home/pi/hueraspberrycontrol &amp;&amp; ./wakeup.py &amp;&amp; cd -
+</code></pre>
+
+<p>(trigs the scripts every day except saturday and sunday at 6:37am)<br /></p>
+
+<p>The code is available <a href="https://github.com/jheyman/hueraspberrycontrol">here</a>.</p>
+:ET

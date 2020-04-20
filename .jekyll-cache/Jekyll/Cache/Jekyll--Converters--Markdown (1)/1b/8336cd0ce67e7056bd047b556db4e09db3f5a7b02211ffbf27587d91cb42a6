@@ -1,0 +1,96 @@
+I"
+<p>This is a memo to myself of python things I have found useful to keep at hand.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#profiling-the-execution-of-a-script" id="markdown-toc-profiling-the-execution-of-a-script">Profiling the execution of a script</a></li>
+  <li><a href="#configuration-file" id="markdown-toc-configuration-file">Configuration file</a></li>
+  <li><a href="#logging-to-file" id="markdown-toc-logging-to-file">Logging to file</a></li>
+</ul>
+
+<hr />
+
+<h3 id="profiling-the-execution-of-a-script">Profiling the execution of a script</h3>
+
+<p>The following command runs the given script and prints out stats of where time was spent during code execution. Extremely useful when performance is important, to figure out where to start.</p>
+
+<pre><code>python -m cProfile -s cumtime script_being_profiled.py
+</code></pre>
+
+<hr />
+
+<h3 id="configuration-file">Configuration file</h3>
+
+<p>Config file has sections (name in brackets) and  params</p>
+
+<pre><code>[config]
+param = paramValue
+</code></pre>
+
+<p>Then from the script:</p>
+
+<pre><code>from ConfigParser import SafeConfigParser
+
+parser = SafeConfigParser()
+parser.read('config.ini')
+
+MY_PARAM = parser.get('config', 'param')
+</code></pre>
+
+<hr />
+
+<h3 id="logging-to-file">Logging to file</h3>
+
+<p>Python’s logging facility is very simple to use, and so much better than to sprinkle “print” statements all over the code.</p>
+
+<p>The following boilerplate init code works fine for me:</p>
+
+<pre><code>import logging
+import logging.handlers
+
+LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
+
+# Give the logger a unique name (good practice)
+logger = logging.getLogger(__name__)
+
+# Set the log level to LOG_LEVEL
+logger.setLevel(LOG_LEVEL)
+
+# Make a handler that writes to a file, making a new file at midnight and keeping 3 backups
+#handler = logging.handlers.TimedRotatingFileHandler(LOG_FILENAME, when="midnight", backupCount=3)
+# Handler writing to a file, rotating the file every 50MB
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=50000000)
+# Format each log message like this
+#formatter = logging.Formatter('%(asctime)s %(message)s')
+formatter = logging.Formatter("%(asctime)s %(message)s", "%d/%m %H:%M:%S")
+
+# Attach the formatter to the handler
+handler.setFormatter(formatter)
+# Attach the handler to the logger
+logger.addHandler(handler)
+
+# Make a class we can use to capture stdout and sterr in the log
+class MyLogger(object):
+	def __init__(self, logger, level):
+		"""Needs a logger and a logger level."""
+		self.logger = logger
+		self.level = level
+
+	def write(self, message):
+		# Only log if there is a message (not just a new line)
+		if message.rstrip() != "":
+			self.logger.log(self.level, message.rstrip())
+
+# Replace stdout with logging to file at INFO level
+sys.stdout = MyLogger(logger, logging.INFO)
+# Replace stderr with logging to file at ERROR level
+sys.stderr = MyLogger(logger, logging.ERROR)
+</code></pre>
+
+<p>then just use logger.info (or debug, or warning, …) instead of print wherever:</p>
+
+<pre><code>logger.info( '%s:OK' % myString)
+</code></pre>
+
+<hr />
+
+:ET

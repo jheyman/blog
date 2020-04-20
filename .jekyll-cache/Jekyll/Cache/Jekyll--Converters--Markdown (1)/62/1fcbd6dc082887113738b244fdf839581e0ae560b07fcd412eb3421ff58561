@@ -1,0 +1,158 @@
+I"�
+<p>Below is a set of notes to myself regarding various Linux tips and tricks, mainly applicable to Debian/Raspbian distributions:</p>
+
+<ul id="markdown-toc">
+  <li><a href="#installing--uninstalling-packages" id="markdown-toc-installing--uninstalling-packages">Installing / Uninstalling packages</a></li>
+  <li><a href="#customizing-hostname" id="markdown-toc-customizing-hostname">Customizing hostname</a></li>
+  <li><a href="#networking" id="markdown-toc-networking">Networking</a></li>
+  <li><a href="#services--daemons" id="markdown-toc-services--daemons">Services / Daemons</a></li>
+  <li><a href="#files--directories" id="markdown-toc-files--directories">Files &amp; Directories</a></li>
+  <li><a href="#console" id="markdown-toc-console">Console</a></li>
+  <li><a href="#text-search" id="markdown-toc-text-search">Text search</a></li>
+  <li><a href="#disk-space-clean-up" id="markdown-toc-disk-space-clean-up">Disk space clean-up</a></li>
+  <li><a href="#share-a-folder-with-samba" id="markdown-toc-share-a-folder-with-samba">Share a folder with SAMBA</a></li>
+  <li><a href="#automounting-a-fat-formatted-usb-drive" id="markdown-toc-automounting-a-fat-formatted-usb-drive">Automounting a FAT-formatted USB drive</a></li>
+  <li><a href="#authorize-ssh-access-from-a-known-machine-without-password" id="markdown-toc-authorize-ssh-access-from-a-known-machine-without-password">Authorize ssh access from a known machine without password</a></li>
+</ul>
+
+<hr />
+
+<h3 id="installing--uninstalling-packages">Installing / Uninstalling packages</h3>
+<ul>
+  <li>To install a package: <code>sudo apt-get install &lt;package/app name&gt;</code></li>
+  <li>To list installed packages: <code>dpkg --get-selections | grep -v deinstall</code></li>
+  <li>To remove an application/package: <code>sudo apt-get –purge remove &lt;package/app name&gt;</code></li>
+</ul>
+
+<hr />
+
+<h3 id="customizing-hostname">Customizing hostname</h3>
+<ul>
+  <li>Edit <code>/etc/hostname</code> and replace the currently assigned name with a new customzed name</li>
+  <li>Also edit <code>etc/hosts</code> and replace the current name on the last line starting with <code>127.0.0.1</code> with the new customized name.</li>
+  <li>Reboot</li>
+</ul>
+
+<hr />
+
+<h3 id="networking">Networking</h3>
+
+<ul>
+  <li>To check which UDP and TCP ports are currently in use: <code>netstat -atun</code> and/or <code>(sudo) lsof -i</code></li>
+  <li>To check which process listens on a given port use <code>netstat -tulpn | grep LISTEN</code></li>
+  <li>To search for all IP addresses used in the local 192.168.0.xxx subnet: <code>nmap -sP 192.168.0.0/24</code></li>
+  <li>To check the open ports on a specific IP address: <code>nmap 192.168.0.xxx</code></li>
+  <li>To check ethernet bandwidth, install iperf <code>sudo apt-get install iperf</code> then on server side: <code>iperf -s</code>, and on client side: <code>iperf -c &lt;IP of the server&gt;</code></li>
+</ul>
+
+<hr />
+
+<h3 id="services--daemons">Services / Daemons</h3>
+
+<ul>
+  <li>To create a daemon executed automatically at boot, create an executable script in /etc/init.d, following the recommanded format/template</li>
+  <li>To add this service: <code>sudo update-rc.d &lt;name of the script&gt; defaults</code></li>
+  <li>To remove the service: <code>sudo update-rc.d &lt;name of the script&gt; remove</code></li>
+  <li>To manually start/stop/get status from a service: <code>sudo service &lt;name&gt; start|stop|status</code> or <code>sudo /etc/init.d/&lt;name&gt; start|stop|status</code></li>
+  <li>To check that a particular daemon is running: <code>ps -A | grep &lt;daemon name&gt;</code></li>
+</ul>
+
+<hr />
+
+<h3 id="files--directories">Files &amp; Directories</h3>
+
+<ul>
+  <li>To display a file tree directly in the console : <code>tree -C &lt;dir&gt;</code></li>
+  <li>To find files modified in the last X days :<code>find . -mtime -X -print</code></li>
+  <li>To list all sub-directories and their size: <code>ls -p | grep “/” | xargs du -sh</code></li>
+  <li>To display the total size of a directory:  	<code>du -sh &lt;dir&gt;</code></li>
+  <li>To search &amp; replace over multiple files : <code>find . -name “*.c” -print | xargs sed -i ‘s/\bxxxx\b/yyyy/g’ </code></li>
+  <li>To find a file but excluding some sub-directory from the search: <code>find . &lt;....&gt; -not -path */dirToExclude/* </code></li>
+  <li>To search for a file in compresssed archives: <code>for file in $(find &lt;...&gt;);	do tar -tvf $file | grep “fichier”;</code></li>
+  <li>To sync the content of two directories: <code>rsync -a src/ dst/</code></li>
+  <li>to print content of a file with line numbers at the beginning of each line: <code>less -N &lt;file&gt;</code></li>
+  <li>To look for any stuff opened by anyone: <code>sudo lsof | grep &lt;name of interest&gt;</code></li>
+  <li>To delete all files smaller than a given size: <code>find . -size -100k -type f -delete</code></li>
+</ul>
+
+<hr />
+
+<h3 id="console">Console</h3>
+<ul>
+  <li>To come back to previous directory after a cd : <code>cd -</code></li>
+  <li>To get output traces both on stdout and in a file: <code>&lt;command&gt; | tee trace.log</code></li>
+  <li>To search in command history: <code>Ctrl+R</code></li>
+</ul>
+
+<hr />
+
+<h3 id="text-search">Text search</h3>
+<ul>
+  <li>to search text in files, printing found occurrence line number, recursively, ignoring case, ignoring binary files: <code>grep -nriI &lt;text&gt; &lt;search pattern&gt;</code></li>
+</ul>
+
+<hr />
+
+<h3 id="disk-space-clean-up">Disk space clean-up</h3>
+<ul>
+  <li><code>ncdu</code> (NCurses based Disk Usage) is just the simplest most efficient console-based way to spot largest directories, without having to remember any command line.</li>
+</ul>
+
+<hr />
+
+<h3 id="share-a-folder-with-samba">Share a folder with SAMBA</h3>
+<ul>
+  <li>Install SAMBA</li>
+</ul>
+<pre><code>sudo apt-get install samba samba-common-bin
+</code></pre>
+<ul>
+  <li>edit <code>/etc/samba/smb.conf</code>, customize the “workgroup” parameter (e.g. workgroup=WORKGROUP), then add an entry for the shared folder at the end of the config file, for example:</li>
+</ul>
+
+<pre><code>[DisplayNameOfTheShare]
+	comment= description of this shared dir
+	path=/path/to/folder
+	browseable=Yes
+	writeable=Yes
+	only guest=no
+	create mask=0777
+	directory mask=0777
+	public=no
+</code></pre>
+
+<ul>
+  <li>Add a samba user (e.g. pi) to access this folder:</li>
+</ul>
+
+<pre><code>smbpasswd -a pi
+</code></pre>
+
+<hr />
+
+<h3 id="automounting-a-fat-formatted-usb-drive">Automounting a FAT-formatted USB drive</h3>
+
+<ul>
+  <li>A memo to myself to auto-mount a FAT drive at boot WITH permissions for anyone to write (cf umask=0000 option), with this line in <code>/etc/fstab</code>:</li>
+</ul>
+
+<pre><code>/dev/sda1 /media/usb vfat auto,users,rw,uid=pi,gid=pi,umask=0000 0 0
+</code></pre>
+<hr />
+
+<h3 id="authorize-ssh-access-from-a-known-machine-without-password">Authorize ssh access from a known machine without password</h3>
+<ul>
+  <li>on the local machine that you wish to declare as authorized to access the remote machine, generate (if not already available) the ssh public key (just type Enter when prompted for passphrase):</li>
+</ul>
+<pre><code>ssh-keygen
+</code></pre>
+
+<ul>
+  <li>then send this public key to the remote machine you want to access without a password, e.g.:</li>
+</ul>
+<pre><code>ssh-copy-id -i ~/.ssh/id_rsa.pub pi@192.168.0.13
+</code></pre>
+
+<p>This will in practice copy the local machine’s public key (stored locally in <code>~/.ssh/id_rsa.pub</code> after executing <code>ssh-keygen</code>) into the <code>~/.ssh/authorized_keys</code> file on the remote machine.</p>
+
+:ET

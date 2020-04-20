@@ -1,0 +1,28 @@
+I"þ
+<p>This page tracks some notes regarding the installation of a music streaming server on raspberry pi running linux, with remote control capability from an Android device. The underlying technology is the DLNA (Digital Living Network Alliance) interoperability standard, using the UPnP (Universal Plug and Play) protocol for communication between difference devices in (typically) a home automation setup.</p>
+
+<p>In practice, we will use the <strong>minidlna</strong> server (now called ReadyMedia) to provide media content, and the <strong>BubbleUPnP</strong> server on top of that for adding advanced functions (access from the internet, OpenHome renderer for unified playlistâ€¦)</p>
+
+<p><img src="/assets/images/UPnPOnRaspberryPi/DLNA-UPNP_on_Raspi.png" alt="setup overview" /></p>
+
+<h2 id="server-part">Server part</h2>
+
+<p>The installation was performed by following <a href="http://blog.scphillips.com/2013/01/using-a-raspberry-pi-with-android-phones-for-media-streaming/">these</a> instructions, as is.</p>
+
+<p>Notes:</p>
+
+<ul>
+  <li>at the time this was installed, a hard-float version of java for raspberry pi was required. It could be found <a href="http://jdk8.java.net/fxarmpreview/">here</a></li>
+  <li><code>ffmpeg</code> is required to be installed on the raspi</li>
+  <li>to refresh the minidlna database on the raspi:</li>
+</ul>
+
+<pre><code>sudo service minidlna force-reload</code></pre>
+
+<p>Once the BubbleUPnP server is installed, a login/password should be configured using the admin panel accessible via <code>http://[IP address of the raspi]:58050</code></p>
+
+<h2 id="android-client-part">Android client part</h2>
+
+<p>Just install the BubbleUPnP app on any Android device, configure the IP address/post of the UPnP server (and renderer) running on the raspi.</p>
+
+:ET

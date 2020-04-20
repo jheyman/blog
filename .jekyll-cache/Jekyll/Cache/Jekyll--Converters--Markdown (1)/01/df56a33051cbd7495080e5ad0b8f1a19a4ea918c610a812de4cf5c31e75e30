@@ -1,0 +1,35 @@
+I"�
+<p>Because sometimes remembering past failures and ugly design attemtps is just as helpful as completing successful projects, this page logs a few of my own failed/aborted/bad projects.</p>
+
+<h3 id="handcrafted-led-matrix">Handcrafted LED matrix</h3>
+
+<p>A 16x8 homemade LED matrix I built while experimenting with Arduino and MAX7219.</p>
+
+<p><img src="/assets/images/MuseumOfHorrors/LED_display_board_front.png" alt="LED display board front" /></p>
+
+<p>You don’t want to know how long it took me to solder &amp; check everything…which was extremely pointless given that a pre-made LED matrix of similar
+dimensions can be bought for a few bucks.</p>
+
+<p><img src="/assets/images/MuseumOfHorrors/LED_display_board_back.png" alt="LED display board back" /></p>
+
+<p>Anyway here is a small video of the result:</p>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/cNmPKyyX4Ok" frameborder="0" allowfullscreen=""></iframe>
+
+<h3 id="led-pov-monster-v0">LED POV monster (v0)</h3>
+
+<p>Here is the V0 prototype of a rotating LED matrix that was intended as the base for a persistance of vision LED display in 3D.</p>
+
+<p><img src="/assets/images/MuseumOfHorrors/3DLEDPov_v0.png" alt="3DLEDPov v0" /></p>
+
+<p>Notice the massive use of hot-glue, ridiculously large motor, crude assembly, and the painfully designed electronic circuit created on a protoboard with parallel lanes of copper. I sure learned a lot about what <em>not</em> to do in this project.</p>
+
+<h3 id="led-pov-monster-v1">LED POV monster (v1)</h3>
+
+<p>A slightly nicer setup, that I intended to use to create a cylinder-based POV display, but never had the courage to complete</p>
+
+<p><img src="/assets/images/MuseumOfHorrors/3DLEDPov_v1.png" alt="3DLEDPov v1" /></p>
+
+<p>With RPM control knob and RPM value display, brushplate to power the rotating arms, and a nice brushless motor I salvaged from an old RC plane. Too bad I lost interest, maybe one day I will resurrect it.</p>
+
+:ET

@@ -19,6 +19,135 @@ tags: CNC shapeoko mill
 
 ## TL;DR
 
+### HDPE Wasteboard
+
+### ALuminium bed
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/al_bed_top_view.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/ali_bed_reception.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/ali_bed_feet_removal.jpeg)
+
+### Keypad
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/UGS_keypad.jpeg)
+
+### Heavy-duty Z axis
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/HDZ_assembly_WIP.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/HDZ_assembled.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/HDZ_tramming.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/HDZ_frontback_tramming.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/proximity_sensors.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/HDZ_installed.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/HDZ_suckit_arms.JPG)
+
+### Steel-core belts
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/steel_core_belt.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/steel_core_belt_installed.jpeg)
+
+### Fences
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/fences.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/fences_messy.jpeg)
+
+### Air jet/Mister
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/mister.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/air_compressor.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/mister.jpeg)
+
+### Spindle
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/spindle_before_install.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/80mm_mount.jpeg)
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/router_vs_spindle_sizes.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/ER_collets.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/spindle_grounding.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/spindle_wiring.jpeg)
+
+
+Pin 1 => U = black
+Pin 2 => V = grey
+Pin 3 => W = brown
+Pin 4 => Earth = yellow/green
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/VFD_wiring_1.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/VFD_wiring_2.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/VFD_wiring_3.jpeg)
+
+PWM to VI
+Ground to ACM
+DCM to FOR
+
+TODO document VFD settings
+
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/watercooling_bucket_closed.JPG)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/watercooling_bucket_open.JPG)
+
+### Tramming tool
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/mini_pro_tram.jpeg)
+
+### Custom dust shoe
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/black_HDPE_chipmess.JPG)
+
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/dust-shoe.png)
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/frame.png)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/frame_dust_shoe.jpeg)
+
+### workshop air filtration
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/JET_air_filtration.JPG)
+
+### LED lighting
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/LED_strip.jpeg)
+
+
+###Touch probe
+
+TODO img
+
+## Shapoeoko e-book !
+
+TODO
+
+## Laser
+
+TODO pics & instructions
+
+## Alternate G-code senders
+
+UGS and CNCjs
+
+
+## Projects
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/electronics_cover.jpg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/drag_engraving_dragon.jpeg)
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/first_al_piece.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/first_al_piece_designf360.png)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/Al_right_wrong_FS.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/al_cutting_chips_stock.JPG)
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/resin_coasters_hawai.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/resin_coasters_moto.jpeg)
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/endmills_collection.jpeg)
+
+
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/river_trivet_before_pour.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/river_trivet_pour_finished.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/river_triver_unmold.jpeg)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/river_trivet.jpeg)
+
 todo
 
 Documenter technique pour faire les dogbones / dimensions classiques.
@@ -72,7 +201,7 @@ documenter post-processor Fusion360 (celui de carbide + celui de Neil, avec adap
 TODO photo & usage in UGS
 
 
-![image]({{ site.baseurl }}/assets/images/Shapeoko1YearLater/phone_charger_empty.png)
+![image]({{ site.baseurl }}/assets/images/Shapeoko2YearsLater/phone_charger_empty.png)
 
 
 --- 

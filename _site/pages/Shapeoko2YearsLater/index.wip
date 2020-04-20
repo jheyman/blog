@@ -56,6 +56,135 @@
 
 ## TL;DR
 
+### HDPE Wasteboard
+
+### ALuminium bed
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/al_bed_top_view.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/ali_bed_reception.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/ali_bed_feet_removal.jpeg)
+
+### Keypad
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/UGS_keypad.jpeg)
+
+### Heavy-duty Z axis
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/HDZ_assembly_WIP.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/HDZ_assembled.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/HDZ_tramming.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/HDZ_frontback_tramming.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/proximity_sensors.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/HDZ_installed.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/HDZ_suckit_arms.JPG)
+
+### Steel-core belts
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/steel_core_belt.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/steel_core_belt_installed.jpeg)
+
+### Fences
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/fences.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/fences_messy.jpeg)
+
+### Air jet/Mister
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/mister.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/air_compressor.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/mister.jpeg)
+
+### Spindle
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/spindle_before_install.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/80mm_mount.jpeg)
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/router_vs_spindle_sizes.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/ER_collets.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/spindle_grounding.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/spindle_wiring.jpeg)
+
+
+Pin 1 => U = black
+Pin 2 => V = grey
+Pin 3 => W = brown
+Pin 4 => Earth = yellow/green
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/VFD_wiring_1.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/VFD_wiring_2.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/VFD_wiring_3.jpeg)
+
+PWM to VI
+Ground to ACM
+DCM to FOR
+
+TODO document VFD settings
+
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/watercooling_bucket_closed.JPG)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/watercooling_bucket_open.JPG)
+
+### Tramming tool
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/mini_pro_tram.jpeg)
+
+### Custom dust shoe
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/black_HDPE_chipmess.JPG)
+
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/dust-shoe.png)
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/frame.png)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/frame_dust_shoe.jpeg)
+
+### workshop air filtration
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/JET_air_filtration.JPG)
+
+### LED lighting
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/LED_strip.jpeg)
+
+
+###Touch probe
+
+TODO img
+
+## Shapoeoko e-book !
+
+TODO
+
+## Laser
+
+TODO pics & instructions
+
+## Alternate G-code senders
+
+UGS and CNCjs
+
+
+## Projects
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/electronics_cover.jpg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/drag_engraving_dragon.jpeg)
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/first_al_piece.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/first_al_piece_designf360.png)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/Al_right_wrong_FS.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/al_cutting_chips_stock.JPG)
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/resin_coasters_hawai.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/resin_coasters_moto.jpeg)
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/endmills_collection.jpeg)
+
+
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/river_trivet_before_pour.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/river_trivet_pour_finished.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/river_triver_unmold.jpeg)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/river_trivet.jpeg)
+
 todo
 
 Documenter technique pour faire les dogbones / dimensions classiques.
@@ -109,7 +238,7 @@ documenter post-processor Fusion360 (celui de carbide + celui de Neil, avec adap
 TODO photo & usage in UGS
 
 
-![image](http://jheyman.github.io/blog/assets/images/Shapeoko1YearLater/phone_charger_empty.png)
+![image](http://jheyman.github.io/blog/assets/images/Shapeoko2YearsLater/phone_charger_empty.png)
 
 
 --- 

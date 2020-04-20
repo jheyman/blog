@@ -1,0 +1,28 @@
+I"’
+<h3 id="local-testing-of-php-files">Local testing of php files</h3>
+
+<p>When developing a PHP script serving an HTTP request, I find it useful to be able to test the execution of the script locally on the server without having to involve the remote client. 
+To emulate the reception of values from the client inside the HTTP request, the following tip can be used:</p>
+
+<ul>
+  <li>Add something like this at the beginning of the script:</li>
+</ul>
+
+<pre><code>if (!isset($_SERVER["HTTP_HOST"])) {
+	parse_str($argv[1], $_REQUEST);
+}</code></pre>
+
+<ul>
+  <li>the script can parse the _REQUEST var as it will do in the real execution context, e.g.:</li>
+</ul>
+
+<pre><code>$dataId =  $_REQUEST['dataId'];
+$value = $_REQUEST['value'];</code></pre>
+
+<ul>
+  <li>to execute the script locally, passing along parameters from the command line:</li>
+</ul>
+
+<pre><code>php script.php 'dataId=123&amp;value=456'</code></pre>
+
+:ET

@@ -1,0 +1,84 @@
+I";
+<p>Below is a set of notes to myself regarding various Android debugging tips and tricks, mostly using <code>adb</code> command-line utility from Android SDK.</p>
+
+<ul id="markdown-toc">
+  <li><a href="#unlocking-developer-options-menu-device" id="markdown-toc-unlocking-developer-options-menu-device">Unlocking developer options menu (device)</a></li>
+  <li><a href="#detecting-devices-host" id="markdown-toc-detecting-devices-host">Detecting devices (host)</a></li>
+  <li><a href="#handling-multiple-connected-devices-host" id="markdown-toc-handling-multiple-connected-devices-host">Handling multiple connected devices (host)</a></li>
+  <li><a href="#get-logs-host" id="markdown-toc-get-logs-host">Get logs (host)</a></li>
+  <li><a href="#install-application-host" id="markdown-toc-install-application-host">Install application (host)</a></li>
+  <li><a href="#launch-application-host" id="markdown-toc-launch-application-host">Launch application (host)</a></li>
+  <li><a href="#simulate-user-inputs-host" id="markdown-toc-simulate-user-inputs-host">Simulate user inputs (host)</a></li>
+  <li><a href="#get-system-info-host" id="markdown-toc-get-system-info-host">Get system info (host)</a></li>
+  <li><a href="#get-touch-coordinates-device" id="markdown-toc-get-touch-coordinates-device">Get touch coordinates (device)</a></li>
+  <li><a href="#remote-screenshot-host" id="markdown-toc-remote-screenshot-host">Remote screenshot (host)</a></li>
+</ul>
+
+<hr />
+
+<h3 id="unlocking-developer-options-menu-device">Unlocking developer options menu (device)</h3>
+<ul>
+  <li>Locate the Build number field in the options, and tap it 7 times.</li>
+</ul>
+
+<h3 id="detecting-devices-host">Detecting devices (host)</h3>
+<ul>
+  <li>To be able to properly detect/see connected devices without running  <code>adb</code> as root:
+    <ul>
+      <li>determine USB vendorId of the target device using <code>lsusb</code></li>
+      <li>create a udev rules file (e.g. /etc/udev/rules.d/51-android.rules)</li>
+      <li>edit it and add <code>SUBSYSTEM=="usb", ATTR{idVendor}=="&lt;vendorId&gt;", MODE="0666", GROUP="plugdev"</code></li>
+      <li>restart udev: <code>sudo service udev restart</code></li>
+      <li>kill adb: <code>sudo killall adb̀</code></li>
+      <li>unplug and replug device</li>
+      <li>device should now be listed properly when executing <code>adb devices</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="handling-multiple-connected-devices-host">Handling multiple connected devices (host)</h3>
+<ul>
+  <li>To target <code>adb</code> commands at one specific device when several are connected, use: <code>adb -s &lt;target device ID&gt; shell</code></li>
+</ul>
+
+<h3 id="get-logs-host">Get logs (host)</h3>
+<ul>
+  <li>To get the timestamped logcat traces from a remote host : <code>adb logcat -v time &gt; logcat.txt</code></li>
+  <li>To clear the logcat: <code>adb logcat -c</code></li>
+</ul>
+
+<h3 id="install-application-host">Install application (host)</h3>
+<ul>
+  <li>To force the (re)install of an application package: <code>adb install -r app.apk</code></li>
+</ul>
+
+<h3 id="launch-application-host">Launch application (host)</h3>
+<ul>
+  <li>To launch a specific app: <code>./adb shell am start -n &lt;packageName&gt;/&lt;packageName&gt;.&lt;ActivityName&gt;</code></li>
+</ul>
+
+<h3 id="simulate-user-inputs-host">Simulate user inputs (host)</h3>
+<ul>
+  <li>Simulate a wake/power-on : <code>adb shell input keyevent 224</code></li>
+  <li>Simulate a power toggle : <code>adb shell input keyevent 26</code></li>
+  <li>Simulate a user touch at coordinates x,y : <code>adb shell input tap x y</code></li>
+</ul>
+
+<h3 id="get-system-info-host">Get system info (host)</h3>
+<ul>
+  <li>LARGE system info dump : <code>adb shell dumpsys</code></li>
+  <li>Power management system info dump : <code>adb shell dumpsys power</code></li>
+  <li>Dumpable subcategories: <code>adb shell dumpsys | grep "DUMP OF SERVICE"</code></li>
+</ul>
+
+<h3 id="get-touch-coordinates-device">Get touch coordinates (device)</h3>
+<ul>
+  <li>Activate the associated function in <code>Developer Options</code> menu in the device’s settings: a bar at the top of the screen will show x and y coordinates of any touched point.</li>
+</ul>
+
+<h3 id="remote-screenshot-host">Remote screenshot (host)</h3>
+<ul>
+  <li>To grab a screenshot from the host: <code>adb shell screencap -p | perl -pe 's/\x0D\x0A/\x0A/g' &gt; screenshot.png</code></li>
+</ul>
+
+:ET

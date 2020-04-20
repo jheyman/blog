@@ -1,0 +1,58 @@
+I"�
+<p>While I was looking through my archives, I stumbled upon this old piece of code I did back in 2004, when I was experimenting with openGL programming. It renders a few simple effects that have an oldschool-PC-demo feel, and it brought back fond memories so I figured I would archive it properly, and make a video capture of it before it was too late (i.e. SW environments tend to change a lot over the course of a decade, so I may not be able to execute this piece of code a few years from now…)<br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#reviving-the-source-code" id="markdown-toc-reviving-the-source-code">Reviving the source code</a></li>
+  <li><a href="#video" id="markdown-toc-video">Video</a></li>
+</ul>
+
+<hr />
+
+<h2 id="overview">Overview</h2>
+
+<p>First up, a text scroller over raster lines and a starfield:
+<img src="/assets/images/OpenGLOldschool/part1_small.png" alt="part1" /></p>
+
+<p>Then, more rasters and a sine scroller with typical chrome-like font:
+<img src="/assets/images/OpenGLOldschool/part2_small.png" alt="part2" /></p>
+
+<p>3D tunnel (slightly modernized with 3D text scroller):
+<img src="/assets/images/OpenGLOldschool/part3_small.png" alt="part3" /></p>
+
+<p>Variation around rasters gone wild and a 3D sine scroller:
+<img src="/assets/images/OpenGLOldschool/part4_small.png" alt="part4" /></p>
+
+<p>Anyone remembers when vertical rasters were a wow effect ?
+<img src="/assets/images/OpenGLOldschool/part5_small.png" alt="part5" /></p>
+
+<p>Twist scroller and sine deformation over a rotozoom:
+<img src="/assets/images/OpenGLOldschool/part6_small.png" alt="part6" /></p>
+
+<p>And finally rising water with bubbles, as a (remote) tribute to the legendary <a href="https://www.youtube.com/watch?v=gyzMYzwA6G8">fishtro</a>!
+<img src="/assets/images/OpenGLOldschool/part7_small.png" alt="part7" /></p>
+
+<h2 id="reviving-the-source-code">Reviving the source code</h2>
+
+<p>The implementation is in C++, using OpenGL for graphical rendering, and the BASS library for playing a soundtrack.<br /></p>
+
+<p>The source code is very poorly written, it has all sorts of “wow, I would never do it this way nowadays” parts, but it did put a smile on my face after 12 years (nostalgia!), so it deserves to end up in my github repo if only for that reason.<br /></p>
+
+<p>The code was originally developed in 2004 with whatever version of Visual Studio I had at that time. To rebuild it, I downloaded the latest free version of Visual Studio, i.e. Visual Studio Community 2015, and was pleasantly surprised that the automatic project migration worked just fine !<br /></p>
+
+<p>Only two settings were modified to get the code to build &amp; run:</p>
+
+<ul>
+  <li>remove <code>glaux.lib</code> from the kiner dependencies (this library is obsolete and does not exist  / is not necessary anymore)</li>
+  <li>disable the <code>SAFESEH</code> option (in Linker advanced options), since the old BASS.dll library I am using is not compatible with this option.</li>
+</ul>
+
+<p>There is an additional compilation option issue while building in Debug mode, which I did not care investigating.</p>
+
+<h2 id="video">Video</h2>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nfCnZal1CzI" frameborder="0" allowfullscreen=""></iframe>
+
+<p>The soundtrack is “Fellowship” from 1994 by <a href="https://en.wikipedia.org/wiki/Gustaf_Grefberg">Lizardking</a>, possibly one of the greatest demo music composer of old days.</p>
+
+:ET

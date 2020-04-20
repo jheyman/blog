@@ -178,6 +178,14 @@
                 
                         
                         <item>
+                                <title>Homehub redux, MagicMirror edition</title>
+                                <description>A complete doever of my homehub touchscreen based on the MagicMirror framework</description>
+                                <link>http://jheyman.github.io/blog/pages/MagicMirror/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
                                 <title>Multi-Room Home Audio</title>
                                 <description>A multi-room audio setup based on raspberry pi and squeezelite</description>
                                 <link>http://jheyman.github.io/blog/pages/MultiRoomHomeAudio/</link>
@@ -261,14 +269,6 @@
                                 <title>RS485 sniffer</title>
                                 <description>a simple tool to listen on RS485 and log data over Ethernet</description>
                                 <link>http://jheyman.github.io/blog/pages/RS485Sniffer/</link>
-                        </item>
-                        
-                
-                        
-                        <item>
-                                <title>RS485 multi-channel FPGA SoC sniffer</title>
-                                <description>a spy tool to listen on RS485 and log data over Ethernet</description>
-                                <link>http://jheyman.github.io/blog/pages/RS485Sniffer_FPGASoC/</link>
                         </item>
                         
                 
@@ -421,6 +421,14 @@
                                 <title>Various tinkering endeavours</title>
                                 <description>A collection of my notes from various DIY projects/experimentations</description>
                                 <link>http://jheyman.github.io/blog/</link>
+                        </item>
+                        
+                
+                        
+                        <item>
+                                <title>RS485 multi-channel FPGA SoC sniffer</title>
+                                <description>a spy tool to listen on RS485 and log data over Ethernet</description>
+                                <link>http://jheyman.github.io/blog/pages/RS485Sniffer_FPGASoC/index.md.old</link>
                         </item>
                         
                 

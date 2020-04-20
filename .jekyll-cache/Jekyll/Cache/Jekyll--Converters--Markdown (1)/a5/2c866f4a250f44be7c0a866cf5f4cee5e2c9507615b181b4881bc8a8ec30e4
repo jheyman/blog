@@ -1,0 +1,130 @@
+I""
+<p>I wanted to have a very simple homescreen widget for displaying pictures, and soon came to the conclusion that every single such app on the Android store was either a huge overkill for this simple need, or looked suspicious, or buggy, or all of that at the same time. So I rolled my own.<br /></p>
+
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#implementation" id="markdown-toc-implementation">Implementation</a>    <ul>
+      <li><a href="#server-side" id="markdown-toc-server-side">Server side</a>        <ul>
+          <li><a href="#getrandomimagepath" id="markdown-toc-getrandomimagepath">getRandomImagePath</a></li>
+          <li><a href="#getimage" id="markdown-toc-getimage">getImage</a></li>
+        </ul>
+      </li>
+      <li><a href="#client-side" id="markdown-toc-client-side">Client side</a>        <ul>
+          <li><a href="#photoframewidgetprovider" id="markdown-toc-photoframewidgetprovider">PhotoFrameWidgetProvider</a></li>
+          <li><a href="#photoframewidgetservice" id="markdown-toc-photoframewidgetservice">PhotoFrameWidgetService</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#result" id="markdown-toc-result">Result</a></li>
+  <li><a href="#lessons-learned" id="markdown-toc-lessons-learned">Lessons learned</a></li>
+</ul>
+
+<hr />
+
+<h3 id="introduction">Introduction</h3>
+
+<ul>
+  <li>I aimed for a minimalistic design: just a plain display of a photo, with no minimal associated UI/buttons, and an automatic refresh to display a new photo periodically. So the widget only has:
+    <ul>
+      <li>the photo to be displayed. A user touch on it triggers the reload of a new photo.</li>
+      <li>the display of the image path &amp; name, which helps to remember where/when the photo is from when it is picked randomly from a set of 50.000+ images…</li>
+      <li>a small email icon, to send the currently displayed image as an attachment.</li>
+    </ul>
+  </li>
+  <li>Since I did not want to rely on any local storage, the source of the images is a remote shared folder on a NAS accessed via the local network.</li>
+</ul>
+
+<h3 id="implementation">Implementation</h3>
+
+<p><img src="/assets/images/PhotoFrameWidget/photoframewidget_overview.png" alt="Overview" /></p>
+
+<h4 id="server-side">Server side</h4>
+
+<p>I happen to have a web server already running on a raspberry pi for oher purposes, so I just added two PHP files to handle the two HTTP requests described above.</p>
+
+<h5 id="getrandomimagepath">getRandomImagePath</h5>
+
+<p>The purpose of this script is to randomly pick one image present somewhere under a specified base directory, and return its full path, its size, and the image orientation from the EXIF data.<br /></p>
+
+<p><strong>Notes</strong>:</p>
+
+<ul>
+  <li>I initially implemented a full recursive parsing of all subdirectories, but it does not scale well when the number of directories and images grows to a large value. Instead, to keep things fast, I randomly pick one of the top level subdirectories, then randomly pick one of the subdirectories inside it, and so on, until there is no further subdirectory. The only drawback is that any image present in a directory that also has subdirectories will be ignored:this is not a concern for me since my photo directory structure only has images in the leaf directories anyway.</li>
+  <li>The base directory for the search happens to be a NAS shared directory in my case, but any directory path would do.</li>
+  <li>error management in case of missing EXIF orientation data is done at client side.</li>
+  <li>since I only have to send back three strings, I did not bother encoding them into a JSON structure, a single semi-colon-separated list of values sent back as a string does just fine.</li>
+</ul>
+
+<h5 id="getimage">getImage</h5>
+
+<p>This script takes as input the path of the image to be returned, and returns the image itself, wrapped in the appropriate HTTP header type depending on the image MIME format. The only trick here is the piece of code at the end of the script that ensures that no extra characters can be sent after image data bytes are sent by forcing the script to exit:</p>
+
+<pre><code>&lt;?php
+	...
+	$fp = fopen($path, 'rb');
+
+	// send the headers to tell receiver it is image data
+	$image_mime = image_type_to_mime_type(exif_imagetype($path));
+	header("Content-Type: ".$image_mime);
+	header("Content-Length: " . filesize($path));
+	
+	fpassthru($fp);
+	exit;
+?&gt;
+</code></pre>
+
+<h4 id="client-side">Client side</h4>
+
+<p>The widget graphical layout consists of:</p>
+
+<ul>
+  <li>a <code>LinearLayout</code> with
+    <ul>
+      <li>a <code>RelativeLayout</code> containing a <code>TextView</code> to display the image path &amp; name, and an <code>ImageView</code> for the email icon.</li>
+      <li>one <code>ImageView</code> to receive the bitmap</li>
+    </ul>
+  </li>
+  <li>around this, a <code>RelativeLayout</code> containing the above layout and a <code>ProgressBar</code>, that will be invisible by default, and made visible when loading is in progress. This way, the progress bar is layered on top of the rest of the widget
+<br /></li>
+</ul>
+
+<p>The <code>AndroidManifest.xml</code> contains the minimal setup required for a homescreen widget, and refers to the two main classes:</p>
+
+<h5 id="photoframewidgetprovider">PhotoFrameWidgetProvider</h5>
+
+<p>PhotoFrameWidgetProvider class handles the APP_UPDATE events that are triggered every 30 minutes, delegating the refresh of the widget’s <code>RemoteViews</code> to the background PhotoFrameWidgetService. It also deals with the user intent to send the currently displayed photo as an email attachment.</p>
+
+<h5 id="photoframewidgetservice">PhotoFrameWidgetService</h5>
+
+<p>This service performs a first HTTP GET request on a remote server to get the name and size of an image picked randomly by the server, and then performs a second GET request to receive the image data itself. The received data (from a remote image file e.g. PNG, JPG, …) is decoded into a Bitmap, which is then set to fill the layout’s <code>ImageView</code>. <br /></p>
+
+<p><strong>Notes</strong>:</p>
+
+<ul>
+  <li>the reason of the <strong>two-pass approach</strong> is that knowing the image size in advance of receiving the image data allows to specify an appropriate subsampling factor. Otherwise, the decoding to a Bitmap would happen by default at the original resolution, which can take huge amounts of memory for large photos, that the android device might not be able to provide.</li>
+  <li>therefore to be able to specify this <strong>subsampling</strong>, the <code>BitmapFactory::decodeResourceStream</code> that is normally used to create bitmaps from local resources is used, passing along a <code>BitmapFactory:Options</code> object with parameter <code>inSampleSize</code>equal to the ratio of the original image size to the (much smaller) target rendered image size.</li>
+  <li>since even downsampled images might still be too big, we first check for available memory before decoding resampled image.</li>
+  <li>the <strong>progress bar</strong> is initially invisible: whenever onUpdate is called, is becomes visible, and is made invisible again upon completion of the image reloading service execution.</li>
+  <li>the <strong>orientation</strong> of the image (gathered from its EXIF data by the server) is taken into account to rotate it before display, so that it always shows heads-up.</li>
+  <li>I also experimented with doing subsampling and rotation on server side to spare network bandwidth, but it turns out that in my case it was much slower than doing it on the client side (the server running on a raspberry pi model B).<br /></li>
+</ul>
+
+<p>Sending the photo as an email attachment boils down to sending an ACTION_SEND intent, with the content of the photo filled into the EXTRA_STREAM field. Whatever email client happens to be installed on the device	will receive this intent and handle it.</p>
+
+<h3 id="result">Result</h3>
+
+<p>Here is a screenshot of the widget running, installed on my <a href="/pages/HomeHubTablet">HomeHub</a> tablet (that happens to have a black background)</p>
+
+<p><img src="/assets/images/PhotoFrameWidget/screenshot.png" alt="screenshot" /></p>
+
+<p>The Android widget source code and PHP scripts are available <a href="https://github.com/jheyman/photoframewidget">here</a>.</p>
+
+<h3 id="lessons-learned">Lessons learned</h3>
+
+<ul>
+  <li>The source code is quite small &amp; simple, and suits my basic photo viewing need just fine.</li>
+  <li>I have pretty poor PHP skills, but for such a simple matter the hacked scripts I came up with are enough (not that they are secure in anyway though)</li>
+</ul>
+
+:ET

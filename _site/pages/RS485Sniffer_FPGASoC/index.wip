@@ -132,6 +132,8 @@ To connect the RS485 modules to the GPIO headers, I reused a ribbon cable connec
 
 I chose to use the following GPIOs for connecting the modules:
 
+TODO à corriger (swap RX0 et TXE)
+
 ![GPIO1_UARTpinout](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/GPIO1_UARTpinout.png)
 
 GND and 3.3V supply go to all modules, while each module has individual RX,TX, and TX Enable lines.
@@ -168,12 +170,41 @@ The instructions below are directly taken/adapted from Sahand's, I just customiz
 TODO : describe workflow
 
 
-## FPGA/SoC design
+From /intelFPGA/18.0/embedded launch `./embedded_command_shell.sh`, and launch Quartus:
 
+    quartus&
+
+Open `DE0_Nano_Soc_Sniffer.qpf`
+
+## FPGA/SoC design
 
 TODO synoptique toplevel VHDL (schema grahpique avec ports et connexions) + IPs + glue QSys
 
 ![Quartus_snapshot_QSys_icon](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/Quartus_snapshot_QSys_icon.png)
+
+
+
+
+### QSys
+
+
+TODO: QSys principle
+
+Open `soc_system.qsys`
+
+TODO:  capture of QSys conf
+TODO : details of each IP configuration (snapshot)
+
+Sur les UART FIFOed: 
+- mode RX Gap detection, avec Timeout=2 characters = 2x8/baudrate secondes (16µs pour un lien 1 MHz)
+
+
+
+QSys peut être lancé de Quartus, ou à la main avec qsys-edit
+
+![Full_QSys_design_snapshot](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/Full_QSys_design_snapshot.png)
+
+
 
 ![QSys_HPS_settings_interfaces](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_HPS_settings_interfaces.png)
 ![QSys_HPS_settings_peripheral_pins](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_HPS_settings_peripheral_pins.png)
@@ -190,25 +221,9 @@ TODO synoptique toplevel VHDL (schema grahpique avec ports et connexions) + IPs 
 ![QSys_UARTTxEnable_settings](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/QSys_UARTTxEnable_settings.png)
 
 
+Finir par menu "Generate" => Generate HDL"
 
-### QSys
-
-
-TODO: principle
-
-ouvrir "soc_system.qsys"
-
-TODO:  capture of QSys conf
-TODO : details of each IP configuration (snapshot)
-
-Sur les UART FIFOed: 
-- mode RX Gap detection, avec Timeout=2 characters = 2x8/baudrate secondes (16µs pour un lien 1 MHz)
-
-
-
-QSys peut être lancé de Quartus, ou à la main avec qsys-edit
-
-![Full_QSys_design_snapshot](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/Full_QSys_design_snapshot.png)
+Select "VHDL", uncheck "Create block symbol file (.bsf)” checkbox.
 
 
 ### Quartus
@@ -216,6 +231,7 @@ QSys peut être lancé de Quartus, ou à la main avec qsys-edit
 
 Top-level file: explications
 
+<pre><code>
     library ieee;
     use ieee.std_logic_1164.all;
 
@@ -503,20 +519,33 @@ Top-level file: explications
     end;
 
 
-
+</code></pre>
 
 ![DE0_Nano_Soc_GPIO_pinout](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DE0_Nano_Soc_GPIO_pinout.png)
 
 
-
----
-
+TODO à corriger (swap RX0 et TXE)
 
 
+![GPIO1_UARTpinout](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/GPIO1_UARTpinout.png)
 
 
 
-## Software implementation
+menu "Processing" => "Start compilation"
+
+
+Puis depuis le shell intel: 
+quartus_cpf –c hw/quartus/output_files/DE0_Nano_SoC_demo.sof sdcard/fat32/socfpga.rbf
+
+
+
+--- 
+
+## Software implementation
+
+
+
+
 
 The SW implementation is split between the two processing domains: a NIOS2 bare-metal application for the real-time capture, and a Linux application on the HPS side for the non-real time offloading of data over Ethernet to a remote host.
  
@@ -572,7 +601,7 @@ build = genere libhal_bsp.a, linké dans le projet appli nios
 
 Génération du .hex = Project / Make Targets / Build / mem_init_generate
 
-puis copie du répertoire mem_init sous hw/quartus
+puis copie du répertoire mem_init (généré sous DE0_Nano_SoC_Sniffer_NIOS) sous hw/quartus sous le nom mem_init_NIOS0 (ou 1 respectivement)
 
 
 
@@ -611,7 +640,29 @@ The linux application running on the HPS is a very simple loop, that checks if n
 Lancement DS-5 : 
 /usr/local/DS-5_v5.28.1/bin/eclipse&
 
+Ouvrir le workspace
+
+TODO : documenter (ou au moins référencer dans le doc de Sahand) la façon de créer le projet
+
+TODO : archiver ce workspace dans le projet!
+
 ![DS5_HPS_project_snapshot](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/DS5_HPS_project_snapshot.png)
+
+
+Executable dispo dans /home/etabli/DE0_Nano_SoC_Sniffer/sw/hps/application/DE0_Nano_Soc_Sniffer_HPS/Debug
+
+
+TODO
+
+To enable scp:
+
+    sudo apt-get install openssh-server 
+
+
+    scp DE0_Nano_SoC_demo/sdcard/fat32/socfpga.rbf root@192.168.0.55:/mnt/sdcard
+
+
+
 
 ## Automating the build
 
@@ -626,19 +677,23 @@ création carte SD:
 Note: si /dev/sdXXXX est monté par Ubuntu, peut y avoir une erreur de fdisk / busy => relancer.
 
 1er boot sur carte SD => exécution automatique du config_system.sh
+
 power-off puis redémarrer => shell via login sniffer/sniffer
 
 EXECUTION MANUELLE de config_post_install.sh
-
 
 
 ## Testing
 
 For testing, I reused the Arduino setup from the original RS485 sniffer project, with a pushbutton to trigger sending a single message of predefined size on one channel. The limitation is that the Arduino's UART can only work at 1Mbps. TBC TBC TBC So, 10Mbps channels were tested by implementing loopbacks at the DE0 Nano GPIO outputs, between a 10 Mbps UART TX, and a corresponding RX.
 
-Arduino selected = "Arduino Pro or Pro Mini", processor  = 3.3V 8MHz
+Arduino selected = "Arduino Pro or Pro Mini", processor  = ATMega328 3.3V 8MHz
 
 ![arduino_transmitter_diagram](http://jheyman.github.io/blog/assets/images/RS485Sniffer_FPGASoC/arduino_transmitter_diagram.png)
+
+
+on sniffer: log as root/sniffer
+
 
 
 
@@ -646,6 +701,8 @@ Arduino selected = "Arduino Pro or Pro Mini", processor  = 3.3V 8MHz
 ### NIOS startup
 
 eclipse-nios2 => right-click on Project => RUn As => NIOSII Hardware
+
+/home/etabli/NIOS_workspace_18.0
 
 
 
@@ -721,6 +778,12 @@ SYNC
 2048 => 136
 4096 => 136
 8192 => 136
+
+
+Lecture FIFO = lent
+5.5µs par byte.
+Ce qui limite la bande passante MAX multivoies à 1.4Mbps
+
 				</div><!-- entry-content -->
 
 				<br>
