@@ -347,11 +347,15 @@ This was the primary feature I wanted for my display: a slideshow that would pic
 
 ![fullscreen_example_portrait]({{ site.baseurl }}/assets/images/MagicMirror/fullscreen_example_portrait.png)
 
-Since the original module already had the ability to change to the next picture, or pause, or resume, based on an external notification, I went and looked for a module that would allow me to do that by touching buttons on the screen, and that's how I ended up using the next module.
+* A feature I re-implemented from my previous homehub is the ability to send the currently displayed image as an attachment in an email. This turned out to be extremely simple: I imported the `jimp` image manipulation library to use its `resize` feature to generate an email-friendly copy of the image file to be sent, and then leveraged the `nodemailer` library to create and send the associated email to a predefined list of recipients. A few lines of code and boom.
+
+* While I was at it, I added the ability to go back to the previous image, for those cases when I would walk in front of the screen, and it would refresh right when I wanted to send it by email.
+
+Since the original module already had the ability to change to the next picture, or pause, or resume, based on an external notification, and as I added a couple of actions myself, I went and looked for a module that would allow me to do that by touching buttons on the screen, and that's how I ended up using the next module.
 
 ### On-screen menu module
 
-The very convenient [MMM-OnScreenMenu](https://github.com/shbatm/MMM-OnScreenMenu) module was exactly what I needed to be able to pause/resume/force a change in the slideshow. I only had to declare a suitable configuration:
+The very convenient [MMM-OnScreenMenu](https://github.com/shbatm/MMM-OnScreenMenu) module was exactly what I needed to be able to pause/resume/force a change in the slideshow/send the current image as an email. I only had to declare a suitable configuration:
 
 		{
 			module: 'MMM-OnScreenMenu',
@@ -365,26 +369,37 @@ The very convenient [MMM-OnScreenMenu](https://github.com/shbatm/MMM-OnScreenMen
 					refresh: { title: "Refresh", icon: "recycle", source: "LOCAL" },
 					notify1: {
 						title: "SLIDESHOW_NEXT",
-						icon: "forward",
+						icon: "forward", /* from fontawesome.com list */
 						notification: "BACKGROUNDSLIDESHOW_NEXT",
 						payload: ""
 					},
 					notify2: {
 						title: "SLIDESHOW_PAUSE",
-						icon: "pause",
+						icon: "pause",/* from fontawesome.com list */
 						notification: "BACKGROUNDSLIDESHOW_PAUSE",
 						payload: ""
 					},
 					notify3: {
 						title: "SLIDESHOW_RESUME",
-						icon: "play",
+						icon: "play",/* from fontawesome.com list */
 						notification: "BACKGROUNDSLIDESHOW_PLAY",
+						payload: ""
+					},
+					notify4: {
+						title: "SLIDESHOW_PREVIOUS",
+						icon: "step-backward",/* from fontawesome.com list */
+						notification: "BACKGROUNDSLIDESHOW_PREVIOUS",
+						payload: ""
+					},
+					notify5: {
+						title: "SLIDESHOW_SEND_EMAIL",
+						icon: "envelope",/* from fontawesome.com list */
+						notification: "BACKGROUNDSLIDESHOW_SENDASEMAIL",
 						payload: ""
 					},
 				},
 			}
 		},
-
 
 * I activated the "touchMode" since this is what makes sense on a touchscreen
 * I declared three user buttons, each of them programmed to send a specific notification to the slideshow module.
@@ -590,5 +605,4 @@ The place to go if you are interested in module development, or even just in fin
 - it took about 20 times shorter to implement this than I originally spent developing my Android-based touch app...and it felt much better while doing it.
 
 ## Todo list
-- add (back) the ability to send the current photo by email
 - add module to control squeezebox music server
