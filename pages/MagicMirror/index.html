@@ -479,11 +479,20 @@ node_modules/.bin/electron-rebuild
 
 <p><img src="http://jheyman.github.io/blog/assets/images/MagicMirror/fullscreen_example_portrait.png" alt="fullscreen_example_portrait" /></p>
 
-<p>Since the original module already had the ability to change to the next picture, or pause, or resume, based on an external notification, I went and looked for a module that would allow me to do that by touching buttons on the screen, and that’s how I ended up using the next module.</p>
+<ul>
+  <li>
+    <p>A feature I re-implemented from my previous homehub is the ability to send the currently displayed image as an attachment in an email. This turned out to be extremely simple: I imported the <code>jimp</code> image manipulation library to use its <code>resize</code> feature to generate an email-friendly copy of the image file to be sent, and then leveraged the <code>nodemailer</code> library to create and send the associated email to a predefined list of recipients. A few lines of code and boom.</p>
+  </li>
+  <li>
+    <p>While I was at it, I added the ability to go back to the previous image, for those cases when I would walk in front of the screen, and it would refresh right when I wanted to send it by email.</p>
+  </li>
+</ul>
+
+<p>Since the original module already had the ability to change to the next picture, or pause, or resume, based on an external notification, and as I added a couple of actions myself, I went and looked for a module that would allow me to do that by touching buttons on the screen, and that’s how I ended up using the next module.</p>
 
 <h3 id="on-screen-menu-module">On-screen menu module</h3>
 
-<p>The very convenient <a href="https://github.com/shbatm/MMM-OnScreenMenu">MMM-OnScreenMenu</a> module was exactly what I needed to be able to pause/resume/force a change in the slideshow. I only had to declare a suitable configuration:</p>
+<p>The very convenient <a href="https://github.com/shbatm/MMM-OnScreenMenu">MMM-OnScreenMenu</a> module was exactly what I needed to be able to pause/resume/force a change in the slideshow/send the current image as an email. I only had to declare a suitable configuration:</p>
 
 <pre><code>	{
 		module: 'MMM-OnScreenMenu',
@@ -497,20 +506,32 @@ node_modules/.bin/electron-rebuild
 				refresh: { title: "Refresh", icon: "recycle", source: "LOCAL" },
 				notify1: {
 					title: "SLIDESHOW_NEXT",
-					icon: "forward",
+					icon: "forward", /* from fontawesome.com list */
 					notification: "BACKGROUNDSLIDESHOW_NEXT",
 					payload: ""
 				},
 				notify2: {
 					title: "SLIDESHOW_PAUSE",
-					icon: "pause",
+					icon: "pause",/* from fontawesome.com list */
 					notification: "BACKGROUNDSLIDESHOW_PAUSE",
 					payload: ""
 				},
 				notify3: {
 					title: "SLIDESHOW_RESUME",
-					icon: "play",
+					icon: "play",/* from fontawesome.com list */
 					notification: "BACKGROUNDSLIDESHOW_PLAY",
+					payload: ""
+				},
+				notify4: {
+					title: "SLIDESHOW_PREVIOUS",
+					icon: "step-backward",/* from fontawesome.com list */
+					notification: "BACKGROUNDSLIDESHOW_PREVIOUS",
+					payload: ""
+				},
+				notify5: {
+					title: "SLIDESHOW_SEND_EMAIL",
+					icon: "envelope",/* from fontawesome.com list */
+					notification: "BACKGROUNDSLIDESHOW_SENDASEMAIL",
 					payload: ""
 				},
 			},
@@ -733,7 +754,6 @@ YesButton.onclick = () =&gt; {
 
 <h2 id="todo-list">Todo list</h2>
 <ul>
-  <li>add (back) the ability to send the current photo by email</li>
   <li>add module to control squeezebox music server</li>
 </ul>
 
